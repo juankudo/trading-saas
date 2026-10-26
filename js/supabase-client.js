@@ -3,10 +3,10 @@
  * Conecta la aplicación con la base de datos PostgreSQL y Supabase Auth.
  */
 
-// Credenciales del proyecto Supabase (Reemplazar con tus credenciales de Supabase Dashboard -> Project Settings -> API)
+// Credenciales del proyecto Supabase
 const SUPABASE_CONFIG = {
-    url: window.ENV_SUPABASE_URL || "https://tu-proyecto.supabase.co",
-    anonKey: window.ENV_SUPABASE_ANON_KEY || "tu-clave-anon-publica-aqui"
+    url: window.ENV_SUPABASE_URL || "https://pwkesbkoqrvfrzyjolla.supabase.co",
+    anonKey: window.ENV_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB3a2VzYmtvcXJ2ZnJ6eWpvbGxhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwNDc3MzksImV4cCI6MjEwODYyMzczOX0.lBo9W1rbx0cPFAW8n6IWuKKmKZMsG6Bci3CF6Ra-4t4"
 };
 
 let supabaseClient = null;
@@ -29,20 +29,37 @@ function getSupabase() {
 async function apiSignUp(email, password, fullName) {
     const client = getSupabase();
     if (!client || SUPABASE_CONFIG.url.includes("tu-proyecto")) {
-        console.warn("Supabase no configurado aún, usando modo de prueba local.");
-        return registerUser(fullName, email, password);
+        console.warn("Supabase no configurado, usando modo local.");
+        const user = await registerUser(fullName, email, password);
+        return { user, session: true };
     }
 
     const { data, error } = await client.auth.signUp({
-        email: email,
+        email: email.trim().toLowerCase(),
         password: password,
         options: {
-            data: { full_name: fullName }
+            data: { full_name: fullName.trim() }
         }
     });
 
     if (error) throw error;
-    return data.user;
+
+    if (data.session && data.user) {
+        const userSession = {
+            id: data.user.id,
+            email: data.user.email,
+            name: fullName.trim() || data.user.email.split('@')[0],
+            created_at: data.user.created_at,
+            trial_ends_at: new Date(Date.now() + 14 * 86400000).toISOString(),
+            subscription: {
+                status: 'trialing',
+                plan: 'Pro Trial (14 días)'
+            }
+        };
+        saveUserSession(userSession);
+    }
+
+    return data;
 }
 
 /**
@@ -51,27 +68,33 @@ async function apiSignUp(email, password, fullName) {
 async function apiSignIn(email, password) {
     const client = getSupabase();
     if (!client || SUPABASE_CONFIG.url.includes("tu-proyecto")) {
-        console.warn("Supabase no configurado aún, usando modo de prueba local.");
+        console.warn("Supabase no configurado, usando modo local.");
         return loginUser(email, password);
     }
 
     const { data, error } = await client.auth.signInWithPassword({
-        email: email,
+        email: email.trim().toLowerCase(),
         password: password
     });
 
     if (error) throw error;
-    
+
     // Obtener perfil y suscripción
-    const profile = await apiFetchProfile(data.user.id);
-    const sub = await apiFetchSubscription(data.user.id);
+    let profile = null;
+    let sub = null;
+    try {
+        profile = await apiFetchProfile(data.user.id);
+        sub = await apiFetchSubscription(data.user.id);
+    } catch (e) {
+        console.warn("No se pudo obtener el perfil/suscripción aún:", e);
+    }
 
     const userSession = {
         id: data.user.id,
         email: data.user.email,
-        name: (profile && profile.full_name) || data.user.email.split('@')[0],
-        trial_ends_at: (sub && sub.trial_ends_at) || null,
-        subscription: sub || { status: 'trial', plan: 'Pro Trial' }
+        name: (profile && profile.full_name) || (data.user.user_metadata && data.user.user_metadata.full_name) || data.user.email.split('@')[0],
+        trial_ends_at: (sub && sub.trial_ends_at) || new Date(Date.now() + 14 * 86400000).toISOString(),
+        subscription: sub || { status: 'trialing', plan: 'Pro Trial' }
     };
 
     saveUserSession(userSession);
@@ -95,8 +118,11 @@ async function apiSignOut() {
 async function apiFetchProfile(userId) {
     const client = getSupabase();
     if (!client) return null;
-    const { data } = await client.from('profiles').select('*').eq('id', userId).single();
-    return data;
+    try {
+        const { data, error } = await client.from('profiles').select('*').eq('id', userId).maybeSingle();
+        if (error) return null;
+        return data;
+    } catch (e) { return null; }
 }
 
 /**
@@ -105,6 +131,9 @@ async function apiFetchProfile(userId) {
 async function apiFetchSubscription(userId) {
     const client = getSupabase();
     if (!client) return null;
-    const { data } = await client.from('subscriptions').select('*').eq('user_id', userId).single();
-    return data;
+    try {
+        const { data, error } = await client.from('subscriptions').select('*').eq('user_id', userId).maybeSingle();
+        if (error) return null;
+        return data;
+    } catch (e) { return null; }
 }

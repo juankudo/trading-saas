@@ -586,8 +586,14 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-password').value;
             try {
-                await apiSignUp(email, pass, name);
-                window.location.href = 'app.html';
+                const res = await apiSignUp(email, pass, name);
+                if (res && res.session) {
+                    window.location.href = 'app.html';
+                } else {
+                    showAuthAlert('register-alert', "¡Cuenta creada con éxito! Hemos enviado un correo de confirmación. Revisa tu bandeja de entrada para ingresar.", false);
+                    document.getElementById('reg-email').value = '';
+                    document.getElementById('reg-password').value = '';
+                }
             } catch (err) {
                 showAuthAlert('register-alert', err.message || "Error al registrarse");
             }
