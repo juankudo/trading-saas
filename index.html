@@ -11,13 +11,16 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-[#0b0f19] text-gray-200 antialiased selection:bg-emerald-500 selection:text-white">
 
     <!-- Top Announcement Bar -->
     <div class="bg-gradient-to-r from-emerald-950/80 via-emerald-900/60 to-slate-900 border-b border-emerald-800/40 py-2 px-4 text-center text-xs text-emerald-300 flex items-center justify-center gap-2">
         <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">NUEVO</span>
-        <span>Comienza tu prueba completa de 14 días sin ingresar tarjeta de crédito.</span>
+        <span>Comienza tus 14 días de prueba gratis. Cancela en cualquier momento con 1 clic.</span>
         <button onclick="openAuthModal('register')" class="underline hover:text-white font-semibold transition ml-1">Crear cuenta gratis &rarr;</button>
     </div>
 
@@ -114,7 +117,7 @@
 
                 <!-- Trust Micro-items -->
                 <div class="flex flex-wrap items-center justify-center gap-6 text-xs text-gray-400 font-medium">
-                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Sin tarjeta de crédito requerida</span>
+                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> 14 días de prueba ($0 cobrados hoy)</span>
                     <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Acceso Pro completo inmediato</span>
                     <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Pagos con Tarjeta (Stripe) y USDT (NOWPayments)</span>
                 </div>
@@ -357,7 +360,7 @@
                     <button onclick="openAuthModal('register')" class="w-full py-4 rounded-xl text-base font-extrabold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-xl shadow-emerald-500/20 transition mb-4">
                         Comenzar 14 Días Gratis
                     </button>
-                    <span class="text-[11px] text-gray-400 block mb-6">Sin tarjeta requerida para la prueba gratuita</span>
+                    <span class="text-[11px] text-gray-400 block mb-6">Prueba de 14 días con tarjeta ($0 hoy). Cancela antes del día 14 sin costo.</span>
 
                     <!-- Payment Badges Supported -->
                     <div class="border-t border-gray-800/80 pt-5">
@@ -388,8 +391,8 @@
 
                 <div class="space-y-4">
                     <div class="bg-[#111726] border border-gray-800 rounded-xl p-5">
-                        <h4 class="text-base font-bold text-white mb-2">¿Necesito ingresar mi tarjeta para la prueba de 14 días?</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed">No. Puedes registrarte solo con tu correo y nombre, y tu cuenta tendrá acceso Pro completo durante 14 días sin ningún compromiso de pago.</p>
+                        <h4 class="text-base font-bold text-white mb-2">¿Cómo funciona la prueba gratuita de 14 días con tarjeta?</h4>
+                        <p class="text-sm text-gray-400 leading-relaxed">Para activar tu prueba registras tu tarjeta de forma segura vía Stripe. Hoy se cobran $0.00 USD. Tendrás 14 días para probar la plataforma y, si no deseas continuar, puedes cancelar con un solo clic desde tu panel antes de que termine el plazo sin ningún costo.</p>
                     </div>
                     <div class="bg-[#111726] border border-gray-800 rounded-xl p-5">
                         <h4 class="text-base font-bold text-white mb-2">¿Cómo funcionan los pagos en Cripto (USDT / USDC)?</h4>
@@ -473,7 +476,7 @@
                         <i class="fa-solid fa-rocket"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Prueba Gratis de 14 Días</h3>
-                    <p class="text-xs text-gray-400 mt-1">Crea tu cuenta en segundos sin tarjeta</p>
+                    <p class="text-xs text-gray-400 mt-1">Activa tus 14 días gratis ($0 cobrados hoy). Cancela cuando quieras.</p>
                 </div>
 
                 <div id="register-alert" class="hidden"></div>
@@ -491,9 +494,10 @@
                         <label class="block text-xs font-semibold text-gray-300 mb-1.5">Contraseña (mínimo 6 caracteres)</label>
                         <input type="password" id="reg-password" minlength="6" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
-                    <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2">
-                        Activar 14 Días Gratis y Entrar
+                    <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-credit-card"></i> Activar 14 Días Gratis ($0 hoy)
                     </button>
+                    <span class="block text-[11px] text-gray-500 text-center mt-2">🔒 Procesado de forma 100% segura por Stripe. Cancela cuando quieras.</span>
                 </form>
 
                 <div class="mt-6 pt-5 border-t border-gray-800 text-center text-xs text-gray-400">
@@ -568,7 +572,7 @@
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-password').value;
             try {
-                await loginUser(email, pass);
+                await apiSignIn(email, pass);
                 window.location.href = 'app.html';
             } catch (err) {
                 showAuthAlert('login-alert', err.message || "Error al iniciar sesión");
@@ -582,7 +586,7 @@
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-password').value;
             try {
-                await registerUser(name, email, pass);
+                await apiSignUp(email, pass, name);
                 window.location.href = 'app.html';
             } catch (err) {
                 showAuthAlert('register-alert', err.message || "Error al registrarse");
