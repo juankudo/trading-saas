@@ -1,0 +1,27 @@
+# Variables de entorno y credenciales (claves secretas de Supabase, Stripe, etc.)
+.env
+.env.local
+.env.*.local
+*.env
+
+# Datos personales exportados por la app (no subir nunca)
+bitacora_*.json
+real_cuenta_*.json
+backtest_session_*.json
+trades_data_*.csv
+
+# Logs y caches
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node
+node_modules/
+dist/
+build/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store

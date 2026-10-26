@@ -1,0 +1,154 @@
+body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; scroll-behavior: smooth; transition: background-color 0.3s, color 0.3s; }
+        .bg-card { background-color: #161b22; border: 1px solid #30363d; }
+        .border-main { border-color: #30363d; }
+        .input-field { background-color: #0d1117; border: 1px solid #30363d; border-radius: 0.5rem; padding: 0.6rem 0.85rem; color: white; width: 100%; transition: all 0.2s; font-weight: 600; }
+        .input-field:focus { border-color: #3b82f6; outline: none; box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+        .btn-primary { background-color: #3b82f6; color: white; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: bold; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+        .btn-primary:hover { background-color: #2563eb; transform: translateY(-1px); }
+        .btn-secondary { background-color: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 0.6rem 1.2rem; border-radius: 0.5rem; font-weight: bold; transition: all 0.2s; }
+        .btn-secondary:hover { background-color: #30363d; color: white; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b949e; }
+
+        .preset-card { cursor: pointer; transition: all 0.2s; position: relative; border-radius: 0.75rem; }
+        .preset-card:hover { border-color: #3b82f6; background-color: #1f242d; }
+        .preset-card.active { border-color: #3b82f6; background-color: #1e293b; box-shadow: 0 0 0 1px #3b82f6; }
+
+        html { color-scheme: dark; }
+
+        /* Light Theme Styles */
+        html.light { color-scheme: light; }
+        html.light body { background-color: #eef1f5; color: #1f2937; }
+        html.light .bg-card { background-color: #ffffff; border-color: #e2e8f0; }
+        html.light .border-main { border-color: #e2e8f0; }
+        html.light .shadow-xl { box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04), 0 6px 20px rgba(15, 23, 42, 0.06) !important; }
+        html.light .input-field { background-color: #f8fafc; border-color: #cbd5e1; color: #0f172a; }
+        html.light .input-field:focus { background-color: #ffffff; border-color: #3b82f6; }
+        html.light .input-field::placeholder { color: #94a3b8; }
+        html.light .btn-secondary { background-color: #ffffff; color: #475569; border-color: #cbd5e1; }
+        html.light .btn-secondary:hover { background-color: #f1f5f9; color: #0f172a; }
+
+        html.light ::-webkit-scrollbar-track { background: #eef1f5; }
+        html.light ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+        html.light ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Ajustes dinámicos de legibilidad para utilidades de Tailwind en Modo Claro */
+        html.light .text-white { color: #0f172a !important; }
+        html.light .text-gray-300, html.light .text-gray-400 { color: #475569 !important; }
+        html.light .text-gray-500 { color: #64748b !important; }
+        html.light .text-gray-700 { color: #cbd5e1 !important; }
+        html.light .text-amber-400 { color: #d97706 !important; }
+
+        html.light .bg-gray-900\/60 { background-color: #f8fafc !important; }
+        html.light .bg-gray-900\/40 { background-color: #ffffff !important; }
+        html.light .bg-gray-800\/30 { background-color: #f1f5f9 !important; }
+
+        /* Selector robusto para el fondo oscuro personalizado y el mensaje vacío */
+        html.light .bg-\[#0d1117\],
+        html.light .bg-\[\#0d1117\],
+        html.light [class*="bg-[#0d1117]"],
+        html.light .bg-gray-900\/10 { background-color: #ffffff !important; }
+
+        html.light optgroup { background-color: #ffffff !important; color: #111827 !important; }
+
+        html.light .bg-gray-800 { background-color: #f1f5f9 !important; color: #334155 !important; }
+        html.light .hover\:bg-gray-700:hover { background-color: #e2e8f0 !important; }
+        html.light .hover\:text-white:hover { color: #0f172a !important; }
+        html.light .border-gray-800, html.light .border-gray-600 { border-color: #cbd5e1 !important; }
+
+        html.light .bg-blue-900\/50,
+        html.light .bg-blue-900\/40,
+        html.light .bg-blue-900\/30,
+        html.light .border-blue-900\/50,
+        html.light .border-blue-700,
+        html.light .border-blue-500\/40,
+        html.light [class*="border-blue-900/50"] { background-color: #eff6ff !important; border-color: #bfdbfe !important; }
+        html.light .border-blue-800\/50 { border-color: #bfdbfe !important; }
+
+        /* Botones azules: mantener texto blanco y hover azul legible */
+        html.light .bg-blue-600.text-white,
+        html.light .hover\:bg-blue-600:hover { color: #ffffff !important; }
+        html.light .hover\:bg-blue-600:hover { background-color: #2563eb !important; }
+
+        html.light .text-blue-300, html.light .text-blue-500\/70 { color: #2563eb !important; }
+        html.light .text-blue-400 { color: #2563eb !important; }
+        html.light .text-blue-400\/80 { color: #3b82f6 !important; }
+
+        /* Preset cards */
+        html.light .preset-card:hover { background-color: #f8fafc !important; border-color: #93c5fd !important; }
+        html.light .preset-card.active { background-color: #eff6ff !important; border-color: #3b82f6 !important; box-shadow: 0 0 0 1px #3b82f6; }
+
+        html.light .bg-red-900\/90 { background-color: #ef4444 !important; border-color: #dc2626 !important; color: #ffffff !important; }
+        html.light .text-red-600, html.light .text-red-500 { color: #dc2626 !important; }
+
+        /* Estado persistente de "copiado" (va después de los overrides para ganarles en ambos temas) */
+        .copy-done, html.light .copy-done { background-color: #f59e0b !important; color: #000000 !important; border-color: #fbbf24 !important; box-shadow: 0 0 10px rgba(245, 158, 11, 0.4) !important; }
+        .copy-done:hover, html.light .copy-done:hover { background-color: #fbbf24 !important; }
+
+        .theme-toggle-icon { color: #6b7280; transition: color 0.2s ease; }
+        html:not(.light) .theme-icon-moon { color: #818cf8; }
+        html.light .theme-icon-sun { color: #f59e0b; }
+
+        /* Panel lateral de la calculadora: al contraerse, los setups usan todo el ancho. */
+        .dashboard-grid { transition: grid-template-columns 0.35s ease, gap 0.35s ease; }
+        .calculator-column { min-width: 0; overflow: hidden; transition: opacity 0.25s ease, transform 0.35s ease; }
+        #presetsGrid { align-content: start; }
+        .calculator-panel-toggle {
+            position: absolute;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.25rem;
+            height: 2.25rem;
+            color: #60a5fa;
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 9999px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: left 0.35s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .calculator-panel-toggle:hover { border-color: #3b82f6; background-color: #1f2937; }
+        html.light .calculator-panel-toggle { background-color: #ffffff; border-color: #cbd5e1; }
+        html.light .calculator-panel-toggle:hover { background-color: #eff6ff; }
+
+        @media (min-width: 1024px) {
+            #calculatorWorkspace .calculator-panel-toggle {
+                top: 1rem;
+                left: calc(33.333% - 1.125rem);
+            }
+            #dashboardLayout {
+                grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+            }
+            #dashboardLayout .calculator-column { grid-column: 1 !important; }
+            #dashboardLayout .setups-column { grid-column: 2 !important; }
+            #dashboardLayout.calculator-collapsed {
+                grid-template-columns: 0 minmax(0, 1fr);
+                gap: 0;
+            }
+            #dashboardLayout.calculator-collapsed .calculator-column {
+                height: 0;
+                opacity: 0;
+                transform: translateX(calc(-100% - 1rem));
+                pointer-events: none;
+            }
+            #dashboardLayout.calculator-collapsed ~ .calculator-panel-toggle { left: 0.5rem; }
+            #dashboardLayout.calculator-collapsed .quick-calculation-row {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+                width: 100%;
+            }
+            #dashboardLayout.calculator-collapsed .quick-calculation-title { grid-column: 1; justify-self: start; }
+            #dashboardLayout.calculator-collapsed .quick-calculation-pips { grid-column: 2; }
+            #dashboardLayout.calculator-collapsed #presetsGrid {
+                grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+            }
+        }
+
+        @media (max-width: 1023px) {
+            #calculatorWorkspace .calculator-panel-toggle { top: 0.75rem; right: 0.75rem; }
+            .dashboard-grid.calculator-collapsed .calculator-column { display: none; }
+        }

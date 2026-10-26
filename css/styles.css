@@ -1,0 +1,316 @@
+body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; scroll-behavior: smooth; }
+        .bg-card { background-color: #161b22; border: 1px solid #30363d; }
+        .bg-card-hover:hover { background-color: #1f242d; }
+        .border-main { border-color: #30363d; }
+        .monthly-calendar-section { max-width: 1540px; }
+        .monthly-calendar-layout { display: flex; flex-direction: column; gap: 0.75rem; }
+        .monthly-year-panel { display: flex; width: fit-content; align-items: center; gap: 0.75rem; }
+        .account-group-card { position: relative; margin-right: 8px; margin-bottom: 8px; cursor: pointer; }
+        .account-group-stack { position: absolute; inset: 6px -4px -4px 6px; border: 1px solid #46566b; border-radius: 0.85rem; background: #111a26; pointer-events: none; transition: transform 180ms ease, border-color 180ms ease; }
+        .account-group-stack-back { inset: 11px -8px -8px 11px; border-color: #344255; background: #0f151e; }
+        .account-group-face { position: relative; z-index: 1; min-height: 176px; }
+        .account-group-card:hover .account-group-stack { border-color: #7086a4; transform: translate(2px, 2px); }
+        .account-group-card:hover .account-group-stack-back { transform: translate(3px, 3px); }
+                .monthly-month-card {
+            position: relative;
+            min-height: 176px;
+            overflow: visible;
+            cursor: pointer;
+            --monthly-accent: #30363d;
+
+            background-color: #161b22;
+            border-color: var(--monthly-accent);
+            border-width: 2px;
+            transform-origin: center center;
+            transition: transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 240ms ease, border-color 240ms ease, border-radius 180ms ease;
+        }
+        .monthly-month-card.monthly-month-current {
+            --monthly-accent: #3b82f6;
+            background-color: #132238;
+        }
+        .monthly-month-card.monthly-month-be {
+            --monthly-accent: #d69e2e;
+            background-color: #282313;
+        }
+        .monthly-month-card.monthly-month-best {
+            --monthly-accent: #16a36a;
+            background-color: #11251c;
+        }
+        .monthly-month-card.monthly-month-worst {
+            --monthly-accent: #dc4545;
+            background-color: #291819;
+        }
+        .monthly-month-card:hover,
+        .monthly-month-card:focus-visible {
+            z-index: 60;
+            transform: scale(1.30, 1.18);
+            box-shadow: 0 20px 42px rgba(0, 0, 0, 0.62), 0 0 0 1px var(--monthly-accent);
+        }
+        .monthly-month-details {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+            right: 0;
+            z-index: 61;
+            max-height: 0;
+            overflow: hidden;
+            padding: 0;
+            border: 2px solid var(--monthly-accent);
+            border-radius: 0.75rem;
+            background-color: inherit;
+            opacity: 0;
+            pointer-events: none;
+            transition: max-height 240ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 180ms ease, padding 240ms ease;
+        }
+        .monthly-month-card:hover .monthly-month-details,
+        .monthly-month-card:focus-visible .monthly-month-details {
+            max-height: min(340px, calc(100dvh - 8rem));
+            overflow-y: auto;
+            overscroll-behavior: contain;
+            padding: 0.75rem;
+            opacity: 1;
+            pointer-events: auto;
+        }
+        @media (hover: none) {
+            .monthly-month-card,
+            .monthly-month-card:hover,
+            .monthly-month-card:focus-visible {
+                transform: none;
+                box-shadow: none;
+            }
+            .monthly-month-details {
+                position: static;
+                max-height: none;
+                overflow: visible;
+                margin-top: 0.75rem;
+                padding: 0.75rem;
+                border: 2px solid var(--monthly-accent);
+                border-radius: 0.75rem;
+                opacity: 1;
+                pointer-events: auto;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .monthly-month-card,
+            .monthly-month-details { transition: none; }
+        }
+        @media (min-width: 1024px) {
+            .monthly-calendar-layout {
+                display: grid;
+                grid-template-columns: 112px minmax(0, 1fr);
+                align-items: start;
+                gap: 1rem;
+            }
+            .monthly-year-panel {
+                width: 112px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #monthly-grid {
+                width: min(100%, 1400px);
+                aspect-ratio: 1.85;
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                grid-template-rows: repeat(3, minmax(0, 1fr));
+                --monthly-grid-gap: clamp(0.5rem, 1.2vh, 1.25rem);
+                gap: var(--monthly-grid-gap);
+                margin-inline: auto;
+            }
+            #monthly-grid .monthly-month-card {
+                width: 100%;
+                height: 100%;
+                min-height: 0;
+                padding: clamp(0.5rem, 1.15vh, 1rem);
+            }
+        }
+        @media (min-width: 1024px) and (max-height: 760px) {
+            .monthly-year-panel { padding: 0.625rem; }
+            #monthly-grid {
+                aspect-ratio: 2.05;
+            }
+            #monthly-grid .monthly-month-card { padding: 0.5rem; }
+            #monthly-grid .monthly-month-card .monthly-primary-value { font-size: 1rem; line-height: 1.25rem; }
+        }
+        @media (min-width: 1024px) and (hover: hover) {
+            #monthly-grid .monthly-month-card:nth-child(4n + 1) .monthly-month-details,
+            #monthly-grid .monthly-month-card:nth-child(4n + 2) .monthly-month-details {
+                left: 0;
+                right: auto;
+                width: calc(250% + var(--monthly-grid-gap));
+            }
+            #monthly-grid .monthly-month-card:nth-child(4n + 3) .monthly-month-details,
+            #monthly-grid .monthly-month-card:nth-child(4n + 4) .monthly-month-details {
+                left: auto;
+                right: 0;
+                width: calc(250% + var(--monthly-grid-gap));
+            }
+            #monthly-grid .monthly-month-card:nth-child(n + 5) .monthly-month-details {
+                top: auto;
+                bottom: calc(100% + 0.5rem);
+            }
+        }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #0d1117; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b949e; }
+        #toast { transition: transform 0.3s ease, opacity 0.3s ease; }
+        /* Registro de Trades: texto más grande, crece en alto y no en ancho */
+        table.journal-table { font-size: 14px; }
+        .journal-table thead { font-size: 12px; }
+        .journal-table th { padding-top: 0.75rem; padding-bottom: 0.75rem; line-height: 1.25; vertical-align: bottom; }
+        .journal-table td { padding-top: 0.85rem; padding-bottom: 0.85rem; line-height: 1.4; }
+        .journal-table .text-\[11px\] { font-size: 12.5px; }
+        .journal-table .text-\[10px\] { font-size: 12px; }
+        .journal-table .text-lg { font-size: 1.25rem; }
+
+        /* Botón de tema (sol / luna) */
+        /* Celebración al superar una fase de fondeo */
+        .fondeo-celebration { position: fixed; inset: 0; z-index: 80; display: flex; align-items: center; justify-content: center; padding: 1rem; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(3px); overflow: hidden; animation: fondeo-fade-in 250ms ease; }
+        html.light .fondeo-celebration { background: rgba(15, 23, 42, 0.35); }
+        .fondeo-celebration-card { position: relative; z-index: 2; animation: fondeo-pop 520ms cubic-bezier(0.2, 1.4, 0.4, 1); }
+        .fondeo-celebration-trophy { animation: fondeo-bounce 1.2s ease-in-out infinite; }
+        .fondeo-confetti { position: absolute; top: -20px; z-index: 1; width: 10px; height: 16px; border-radius: 2px; opacity: 0.95; animation: fondeo-fall linear forwards; }
+        @keyframes fondeo-fade-in { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fondeo-pop { 0% { transform: scale(0.6); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes fondeo-bounce { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-10px) rotate(-6deg); } }
+        @keyframes fondeo-fall { to { transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin)); } }
+        @media (prefers-reduced-motion: reduce) {
+            .fondeo-celebration, .fondeo-celebration-card, .fondeo-celebration-trophy { animation: none; }
+            .fondeo-confetti { display: none; }
+        }
+
+        /* Botón de tema (sol / luna): se ilumina el icono del tema activo */
+        .theme-toggle-icon { color: #6b7280; transition: color 0.2s ease; }
+        html:not(.light) .theme-icon-moon { color: #818cf8; }
+        html.light .theme-icon-sun { color: #f59e0b; }
+
+        /* ===================== TEMA CLARO ===================== */
+        html.light body { background-color: #f4f6f9; color: #1f2937; }
+        html.light .bg-card { background-color: #ffffff; border-color: #d9dee5; }
+        html.light .bg-card-hover:hover { background-color: #f0f3f7; }
+        html.light .border-main { border-color: #d9dee5; }
+        html.light ::-webkit-scrollbar-track { background: #eef1f5; }
+        html.light ::-webkit-scrollbar-thumb { background: #c3cad4; }
+        html.light ::-webkit-scrollbar-thumb:hover { background: #9aa3af; }
+        html.light ::placeholder { color: #9ca3af; }
+
+        /* Fondos neutros */
+        html.light .bg-\[\#161b22\], html.light .bg-\[\#11151c\] { background-color: #ffffff; }
+        html.light .bg-\[\#112130\] { background-color: #e9f6ee; }
+        html.light .bg-gray-950, html.light .bg-gray-950\/60 { background-color: #eef1f5; }
+        html.light .bg-gray-900, html.light .bg-gray-900\/50, html.light .bg-gray-900\/60, html.light .bg-gray-900\/90 { background-color: #f3f5f8; }
+        html.light .bg-gray-800 { background-color: #e9edf2; }
+        html.light .bg-black\/85 { background-color: rgba(15, 23, 42, 0.45); }
+        html.light .hover\:bg-\[\#1a2129\]:hover { background-color: #f0f3f7; }
+        html.light .hover\:bg-gray-800:hover { background-color: #e5e9ef; }
+        html.light .hover\:bg-gray-700:hover { background-color: #dbe1e8; }
+
+        /* Textos neutros */
+        html.light .text-white { color: #111827; }
+        html.light .text-gray-200 { color: #1f2937; }
+        html.light .text-gray-300 { color: #374151; }
+        html.light .text-gray-400 { color: #4b5563; }
+        html.light .text-gray-500 { color: #6b7280; }
+        html.light .text-gray-600 { color: #9ca3af; }
+        html.light .hover\:text-white:hover { color: #111827; }
+        html.light .hover\:text-gray-300:hover { color: #374151; }
+        html.light .hover\:text-black:hover { color: #000000; }
+
+        /* Bordes neutros */
+        html.light .border-gray-600 { border-color: #c3cad4; }
+        html.light .border-gray-700, html.light .border-gray-800 { border-color: #d9dee5; }
+        html.light .hover\:border-gray-400:hover, html.light .focus\:border-gray-400:focus, html.light .focus\:border-gray-500:focus { border-color: #9ca3af; }
+        html.light [class*="focus:border-green"]:focus { border-color: #22c55e; }
+        html.light [class*="focus:border-blue"]:focus { border-color: #3b82f6; }
+        html.light [class*="focus:border-indigo"]:focus { border-color: #6366f1; }
+
+        /* Textos de color: tonos más oscuros para que se lean sobre fondo claro */
+        html.light :is([class^="text-green-"], [class*=" text-green-"]) { color: #15803d; }
+        html.light :is([class^="text-emerald-"], [class*=" text-emerald-"]) { color: #047857; }
+        html.light :is([class^="text-red-"], [class*=" text-red-"]) { color: #dc2626; }
+        html.light :is([class^="text-blue-"], [class*=" text-blue-"]) { color: #1d4ed8; }
+        html.light :is([class^="text-amber-"], [class*=" text-amber-"]) { color: #b45309; }
+        html.light :is([class^="text-yellow-"], [class*=" text-yellow-"]) { color: #a16207; }
+        html.light :is([class^="text-indigo-"], [class*=" text-indigo-"]) { color: #4338ca; }
+        html.light :is([class^="text-purple-"], [class*=" text-purple-"]) { color: #7e22ce; }
+        html.light :is([class^="text-teal-"], [class*=" text-teal-"]) { color: #0f766e; }
+        html.light [class*="hover:text-red-"]:hover { color: #b91c1c; }
+        html.light [class*="hover:text-blue-"]:hover { color: #1e40af; }
+        html.light [class*="hover:text-indigo-"]:hover { color: #3730a3; }
+        html.light [class*="hover:text-purple-"]:hover { color: #6b21a8; }
+
+        /* Fondos tintados (x-900 / x-950 con transparencia) → tintes suaves */
+        html.light :is([class^="bg-green-9"], [class*=" bg-green-9"]) { background-color: rgba(22, 163, 74, 0.12); }
+        html.light :is([class^="bg-emerald-9"], [class*=" bg-emerald-9"]) { background-color: rgba(16, 185, 129, 0.12); }
+        html.light :is([class^="bg-red-9"], [class*=" bg-red-9"]) { background-color: rgba(220, 38, 38, 0.10); }
+        html.light :is([class^="bg-blue-9"], [class*=" bg-blue-9"]) { background-color: rgba(37, 99, 235, 0.09); }
+        html.light :is([class^="bg-amber-9"], [class*=" bg-amber-9"]) { background-color: rgba(217, 119, 6, 0.12); }
+        html.light :is([class^="bg-indigo-9"], [class*=" bg-indigo-9"]) { background-color: rgba(79, 70, 229, 0.09); }
+        html.light :is([class^="bg-purple-9"], [class*=" bg-purple-9"]) { background-color: rgba(147, 51, 234, 0.09); }
+        html.light :is([class*="hover:bg-green-9"], [class*="hover:bg-emerald-9"]):hover { background-color: rgba(22, 163, 74, 0.18); }
+        html.light [class*="hover:bg-red-9"]:hover { background-color: rgba(220, 38, 38, 0.15); }
+        html.light [class*="hover:bg-blue-9"]:hover { background-color: rgba(37, 99, 235, 0.15); }
+        html.light :is([class*="hover:bg-indigo-8"], [class*="hover:bg-indigo-9"]):hover { background-color: rgba(79, 70, 229, 0.15); }
+        html.light :is([class*="hover:bg-purple-8"], [class*="hover:bg-purple-9"]):hover { background-color: rgba(147, 51, 234, 0.15); }
+
+        /* Bordes de color oscuros (x-700 / x-800 / x-900) */
+        html.light :is([class*=" border-green-7"], [class*=" border-green-8"], [class*=" border-green-9"], [class*=" border-emerald-7"], [class*=" border-emerald-8"], [class*=" border-emerald-9"]) { border-color: rgba(22, 163, 74, 0.40); }
+        html.light :is([class*=" border-red-7"], [class*=" border-red-8"], [class*=" border-red-9"]) { border-color: rgba(220, 38, 38, 0.35); }
+        html.light :is([class*=" border-blue-7"], [class*=" border-blue-8"], [class*=" border-blue-9"]) { border-color: rgba(37, 99, 235, 0.35); }
+        html.light :is([class*=" border-amber-7"], [class*=" border-amber-8"], [class*=" border-amber-9"]) { border-color: rgba(217, 119, 6, 0.40); }
+        html.light :is([class*=" border-indigo-7"], [class*=" border-indigo-8"], [class*=" border-indigo-9"]) { border-color: rgba(79, 70, 229, 0.35); }
+        html.light :is([class*=" border-purple-7"], [class*=" border-purple-8"], [class*=" border-purple-9"]) { border-color: rgba(147, 51, 234, 0.35); }
+        html.light :is([class*=" border-teal-7"], [class*=" border-teal-8"], [class*=" border-teal-9"]) { border-color: rgba(13, 148, 136, 0.35); }
+
+        /* Botones sólidos: mantener texto blanco y sus colores de hover */
+        html.light :is(.bg-green-500, .bg-green-600, .bg-green-700, .bg-blue-600, .bg-indigo-600, .bg-purple-600, .bg-red-600, .bg-amber-600, [class*="bg-teal-7"]) { color: #ffffff; }
+        html.light .hover\:bg-green-500:hover { background-color: #22c55e; color: #ffffff; }
+        html.light .hover\:bg-green-600:hover { background-color: #16a34a; color: #ffffff; }
+        html.light .hover\:bg-green-700:hover { background-color: #15803d; color: #ffffff; }
+        html.light .hover\:bg-blue-500:hover { background-color: #3b82f6; color: #ffffff; }
+        html.light .hover\:bg-blue-700:hover { background-color: #1d4ed8; color: #ffffff; }
+        html.light .hover\:bg-indigo-500:hover { background-color: #6366f1; color: #ffffff; }
+        html.light .hover\:bg-purple-500:hover { background-color: #a855f7; color: #ffffff; }
+        html.light .hover\:bg-purple-700:hover { background-color: #7e22ce; color: #ffffff; }
+        html.light .hover\:bg-red-700:hover { background-color: #b91c1c; color: #ffffff; }
+        html.light .hover\:bg-amber-500:hover { background-color: #f59e0b; color: #ffffff; }
+        html.light .hover\:bg-amber-700:hover { background-color: #b45309; color: #ffffff; }
+        html.light .hover\:bg-teal-600:hover { background-color: #0d9488; color: #ffffff; }
+        html.light :is(.bg-green-500, .bg-green-600, .bg-green-700, .bg-blue-600, .bg-indigo-600, .bg-purple-600, .bg-red-600, .bg-amber-600, [class*="bg-teal-7"]) :is(.text-white, [class*=" text-"]) { color: #ffffff; }
+
+        /* Tarjetas del calendario mensual y grupos de cuentas */
+        html.light .monthly-month-card { --monthly-accent: #d9dee5; background-color: #ffffff; }
+        html.light .monthly-month-card.monthly-month-current { --monthly-accent: #3b82f6; background-color: #eaf2ff; }
+        html.light .monthly-month-card.monthly-month-be { --monthly-accent: #d69e2e; background-color: #fdf6e3; }
+        html.light .monthly-month-card.monthly-month-best { --monthly-accent: #16a36a; background-color: #e9f7ef; }
+        html.light .monthly-month-card.monthly-month-worst { --monthly-accent: #dc4545; background-color: #fdecec; }
+        html.light .monthly-month-card:hover,
+        html.light .monthly-month-card:focus-visible { box-shadow: 0 16px 34px rgba(15, 23, 42, 0.18), 0 0 0 1px var(--monthly-accent); }
+        html.light .account-group-stack { border-color: #c3cad4; background: #eef2f7; }
+        html.light .account-group-stack-back { border-color: #d5dce6; background: #e5eaf1; }
+        html.light .account-group-card:hover .account-group-stack { border-color: #8e9bb0; }
+
+        /* Historial de balances: columnas estables y transiciones suaves */
+        #balance-history-table-container { view-transition-name: balance-history-table; }
+        #balance-history-table-container .journal-table { table-layout: fixed; font-size: 13px; }
+        #balance-history-table-container .journal-table thead th { vertical-align: middle; }
+        #balance-history-table-container .journal-table thead tr:last-child th { height: 44px; }
+        #balance-history-table-container .journal-table tbody tr { transition: background-color 0.15s ease; }
+        @keyframes balance-hist-out { from { opacity: 1; filter: blur(0); transform: scale(1); } to { opacity: 0; filter: blur(3px); transform: scale(0.985); } }
+        @keyframes balance-hist-in { from { opacity: 0; filter: blur(3px); transform: scale(0.985) translateY(6px); } to { opacity: 1; filter: blur(0); transform: none; } }
+        ::view-transition-group(balance-history-table) { animation-duration: 0.6s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
+        ::view-transition-old(balance-history-table) { animation: balance-hist-out 0.3s cubic-bezier(0.4, 0, 1, 1) both; }
+        ::view-transition-new(balance-history-table) { animation: balance-hist-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        @keyframes balance-group-glow {
+            0% { background-color: rgba(99, 102, 241, 0); box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0); }
+            35% { background-color: rgba(99, 102, 241, 0.18); box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.4); }
+            100% { background-color: rgba(99, 102, 241, 0); box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0); }
+        }
+        .balance-group-glow { animation: balance-group-glow 0.9s ease-out; }
+
+        /* Celebración de fase superada: confeti y modal */
+        #confettiCanvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 80; }
+        #phaseCelebrationModal .phase-celebration-pop { animation: phase-celebration-pop 0.5s cubic-bezier(0.22, 1.4, 0.36, 1) both; }
+        @keyframes phase-celebration-pop {
+            from { opacity: 0; transform: scale(0.9) translateY(14px); }
+            to { opacity: 1; transform: none; }
+        }

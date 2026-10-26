@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Lot Calculator Pro</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/styles.css">
+
+    <script src="js/theme.js"></script>
+</head>
+
+<body class="min-h-screen flex flex-col items-center p-2 sm:p-4">
+
+    <header class="w-full max-w-7xl flex justify-between items-center mb-4">
+        <div class="flex items-center gap-3">
+            <i class="fa-solid fa-calculator-combined text-2xl text-blue-500"></i>
+            <h1 class="text-xl font-bold text-white tracking-wide uppercase">Lot Calculator <span class="text-[10px] bg-blue-900/50 text-blue-400 border border-blue-700 px-1.5 py-0.5 rounded ml-1 uppercase tracking-tighter">Pro</span></h1>
+        </div>
+        <button onclick="toggleTheme()" class="bg-card border border-main text-xs px-3 py-1.5 rounded-lg flex items-center gap-2 transition shadow-sm">
+            <i class="fa-solid fa-sun theme-toggle-icon theme-icon-sun"></i>
+            <span class="text-gray-500">/</span>
+            <i class="fa-solid fa-moon theme-toggle-icon theme-icon-moon"></i>
+        </button>
+    </header>
+
+    <main id="calculatorWorkspace" class="w-full max-w-7xl relative">
+        <div id="dashboardLayout" class="dashboard-grid grid grid-cols-1 gap-4">
+            
+            <!-- Left: Inputs Principales -->
+            <div id="calculatorColumn" class="calculator-column lg:col-span-4 space-y-4">
+                <div class="bg-card p-5 rounded-xl border border-main shadow-xl relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-blue-600"></div>
+                    <h3 class="text-xs font-bold text-white uppercase mb-4 flex items-center justify-between gap-2">
+                        <span><i class="fa-solid fa-calculator text-blue-500 mr-1"></i> Calculadora</span>
+                        <span id="apiStatus" class="text-gray-500 text-[10px]" title="Cargando tasas de cambio..."><i class="fa-solid fa-circle-notch fa-spin"></i></span>
+                    </h3>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="col-span-2">
+                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-1">Instrumento</label>
+                            <select id="instrument" class="input-field text-sm" onchange="calculateMain()">
+                                <optgroup label="Forex Majors" class="bg-[#0d1117]">
+                                    <option value="fx" data-quote="USD">EURUSD</option>
+                                    <option value="fx" data-quote="USD">GBPUSD</option>
+                                    <option value="fx" data-quote="USD">AUDUSD</option>
+                                    <option value="fx" data-quote="USD">NZDUSD</option>
+                                    <option value="fx" data-quote="CAD">USDCAD</option>
+                                    <option value="fx" data-quote="CHF">USDCHF</option>
+                                    <option value="fx_jpy" data-quote="JPY">USDJPY</option>
+                                </optgroup>
+                                <optgroup label="Forex Crosses" class="bg-[#0d1117]">
+                                    <option value="fx_jpy" data-quote="JPY">GBPJPY</option>
+                                    <option value="fx_jpy" data-quote="JPY">EURJPY</option>
+                                    <option value="fx_jpy" data-quote="JPY">AUDJPY</option>
+                                    <option value="fx" data-quote="GBP">EURGBP</option>
+                                    <option value="fx" data-quote="AUD">EURAUD</option>
+                                    <option value="fx" data-quote="AUD">GBPAUD</option>
+                                </optgroup>
+                                <optgroup label="Metales" class="bg-[#0d1117]">
+                                    <option value="gold" data-quote="USD" selected>XAUUSD (ORO)</option>
+                                    <option value="silver" data-quote="USD">XAGUSD (PLATA)</option>
+                                </optgroup>
+                                <optgroup label="Índices" class="bg-[#0d1117]">
+                                    <option value="us30" data-quote="USD">US30 (DOW JONES)</option>
+                                    <option value="nas100" data-quote="USD">NAS100 (NASDAQ)</option>
+                                    <option value="dax" data-quote="EUR">GER40 (DAX)</option>
+                                </optgroup>
+                                <optgroup label="Crypto" class="bg-[#0d1117]">
+                                    <option value="btc" data-quote="USD">BTCUSD (BITCOIN)</option>
+                                    <option value="eth" data-quote="USD">ETHUSD (ETHEREUM)</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-1">Moneda Cuenta</label>
+                            <select id="accountCurrency" class="input-field text-sm" onchange="calculateMain(); renderPresets();">
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                                <option value="AUD">AUD</option>
+                                <option value="CAD">CAD</option>
+                                <option value="CHF">CHF</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-1">Balance</label>
+                            <input type="number" id="balance" placeholder="100000" class="input-field text-sm" oninput="calculateMain()">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-1">Riesgo (%)</label>
+                            <input type="number" id="riskPct" step="0.1" value="1.0" class="input-field text-sm" oninput="calculateMain()">
+                        </div>
+                        <div>
+                            <label class="block text-[9px] font-bold text-gray-500 uppercase mb-1">Stop Loss (<span id="unitLabel">Pips</span>)</label>
+                            <input type="number" id="slPips" step="0.1" placeholder="15.0" class="input-field text-sm border-blue-500/30" oninput="calculateMain()">
+                        </div>
+                    </div>
+
+                    <div class="pt-3 border-t border-main text-center">
+                        <p class="text-[9px] font-bold text-gray-500 uppercase mb-0.5">Lotaje Sugerido</p>
+                        <h2 id="resultLot" class="text-3xl font-black text-blue-500 mb-0.5">0.00</h2>
+                        <p id="riskAmount" class="text-sm font-black text-red-600 mb-2">$0.00 en riesgo</p>
+                        
+                        <button id="mainCopyBtn" onclick="copyLotage(this, document.getElementById('resultLot').innerText)" class="mx-auto flex items-center justify-center gap-2 text-xs bg-gray-800 hover:bg-gray-700 border border-gray-600 text-gray-300 px-4 py-1.5 rounded-full transition w-max">
+                            <i class="fa-regular fa-copy"></i> Copiar Lotaje
+                        </button>
+                    </div>
+
+                    <button onclick="saveCurrentAsPreset()" class="w-full btn-primary text-xs py-2 mt-4">
+                        <i class="fa-solid fa-floppy-disk"></i> Guardar Setup
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right: Presets -->
+            <div class="setups-column lg:col-span-8 space-y-4">
+                <div class="bg-card p-5 rounded-xl border border-main shadow-xl h-full flex flex-col">
+                    
+                    <!-- Header de Presets con input de Pips GIGANTE -->
+                    <div class="bg-gray-900/60 p-4 rounded-xl border border-blue-500/40 mb-4 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                        <div class="quick-calculation-row flex flex-col sm:flex-row justify-between items-center gap-4">
+                            <div class="quick-calculation-title text-center sm:text-left">
+                                <h3 class="text-sm font-bold text-white uppercase tracking-tight flex items-center justify-center sm:justify-start gap-2 mb-1">
+                                    <i class="fa-solid fa-bolt text-amber-500"></i> Cálculo Rápido de Setups
+                                </h3>
+                                <p class="text-[10px] text-gray-400">Ingresa los pips y selecciona los setups para calcular</p>
+                            </div>
+                            
+                            <div class="quick-calculation-pips flex items-center gap-2 bg-[#0d1117] p-2 rounded-lg border border-blue-900/50 shadow-inner">
+                                <span class="text-[11px] font-bold text-gray-400 uppercase ml-2">Stop Loss:</span>
+                                <input type="number" id="presetSlPips" placeholder="0.0" class="bg-transparent text-blue-400 text-3xl font-black w-28 outline-none text-center" oninput="calculateSelectedPresets()">
+                                <span class="text-[11px] font-bold text-blue-500/70 uppercase mr-2">Pips</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Botones de selección masiva -->
+                        <div class="flex flex-wrap justify-center sm:justify-start gap-2 mt-4 pt-3 border-t border-gray-800">
+                            <button onclick="selectAllPresets()" class="text-[10px] uppercase font-bold bg-blue-900/40 text-blue-300 px-4 py-1.5 rounded hover:bg-blue-600 hover:text-white border border-blue-800/50 transition flex items-center gap-1">
+                                <i class="fa-solid fa-check-double"></i> Seleccionar Todos
+                            </button>
+                            <button onclick="clearPresetSelection()" class="text-[10px] uppercase font-bold bg-gray-800 text-gray-400 px-4 py-1.5 rounded hover:bg-gray-700 hover:text-white transition flex items-center gap-1">
+                                <i class="fa-solid fa-xmark"></i> Ninguno
+                            </button>
+                            <button onclick="clearCopiedMarks()" class="text-[10px] uppercase font-bold bg-gray-800 text-gray-400 px-4 py-1.5 rounded hover:bg-gray-700 hover:text-white transition flex items-center gap-1">
+                                <i class="fa-solid fa-rotate-left"></i> Limpiar Copiados
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Grid de Presets -->
+                    <div id="presetsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-2 overflow-y-auto pr-1 pb-2 flex-grow max-h-[600px]">
+                        <!-- Presets dinámicos -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="calculatorToggle" onclick="toggleCalculatorPanel()" aria-controls="calculatorColumn" aria-expanded="true" title="Ocultar calculadora" class="calculator-panel-toggle">
+            <i id="calculatorToggleIcon" class="fa-solid fa-angles-left"></i>
+            <span id="calculatorToggleText" class="sr-only">Ocultar calculadora</span>
+        </button>
+    </main>
+
+    <!-- Modal for Saving Setup -->
+    <div id="saveSetupModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-main rounded-xl w-full max-w-sm p-5 shadow-2xl relative">
+            <button onclick="closeSaveModal()" class="absolute top-3 right-3 text-gray-500 hover:text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-floppy-disk text-blue-500"></i> Guardar Setup
+            </h3>
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Nombre del Setup</label>
+                    <input type="text" id="setupName" placeholder="Ej: Mi Fondeo 100k" class="input-field py-2">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-1">Grupo</label>
+                    <input type="text" id="setupGroup" placeholder="Ej: Cuentas FTMO" class="input-field py-2" list="existingGroupsList">
+                    <datalist id="existingGroupsList"></datalist>
+                </div>
+            </div>
+            <div class="flex gap-2 mt-5">
+                <button onclick="closeSaveModal()" class="flex-1 btn-secondary py-2 text-xs">Cancelar</button>
+                <button onclick="confirmSaveSetup()" class="flex-1 btn-primary py-2 text-xs">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal recordatorio pips XAUUSD -->
+    <div id="goldPipsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-card border border-main rounded-xl w-full max-w-sm p-5 shadow-2xl relative">
+            <button onclick="closeGoldPipsModal()" class="absolute top-3 right-3 text-gray-500 hover:text-white transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-base font-bold text-white mb-3 flex items-center gap-2">
+                <i class="fa-solid fa-coins text-amber-500"></i> Pips en XAUUSD
+            </h3>
+            <p class="text-xs text-gray-400 mb-3">La herramienta de medición del gráfico muestra el último valor 10 veces mayor. <b class="text-white">Divídelo entre 10</b> antes de ingresarlo.</p>
+
+            <div class="bg-gray-900/60 border border-main rounded-lg p-3 mb-3 text-center">
+                <p class="text-[9px] font-bold text-gray-500 uppercase mb-1.5">La herramienta marca</p>
+                <div class="inline-block bg-gray-800 text-gray-300 text-sm font-semibold px-3 py-1 rounded-md">
+                    25,553 (0,62%) <span class="text-red-600 font-black line-through">2.555,3</span>
+                </div>
+                <p class="text-gray-500 my-2"><i class="fa-solid fa-arrow-down"></i></p>
+                <p class="text-[9px] font-bold text-gray-500 uppercase mb-1">Ingresa en la calculadora</p>
+                <p class="text-2xl font-black text-blue-500">255,5 <span class="text-xs text-gray-500 font-bold">pips</span></p>
+            </div>
+
+            <label class="flex items-center gap-2 text-xs text-gray-400 cursor-pointer select-none mb-4">
+                <input type="checkbox" id="goldPipsDontShow" class="accent-blue-600 w-4 h-4">
+                No volver a mostrar este mensaje
+            </label>
+            <button onclick="closeGoldPipsModal()" class="w-full btn-primary py-2 text-xs">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Script de lógica -->
+    <script src="js/app.js"></script>
+</body>
+</html>
