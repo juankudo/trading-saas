@@ -143,28 +143,40 @@ alter table public.trades enable row level security;
 alter table public.balance_snapshots enable row level security;
 
 -- Políticas para Profiles
+drop policy if exists "Usuarios ven su propio perfil" on public.profiles;
 create policy "Usuarios ven su propio perfil" on public.profiles
     for select using (auth.uid() = id);
+
+drop policy if exists "Usuarios insertan su propio perfil" on public.profiles;
+create policy "Usuarios insertan su propio perfil" on public.profiles
+    for insert with check (auth.uid() = id);
+
+drop policy if exists "Usuarios actualizan su propio perfil" on public.profiles;
 create policy "Usuarios actualizan su propio perfil" on public.profiles
     for update using (auth.uid() = id);
 
 -- Políticas para Subscriptions
+drop policy if exists "Usuarios ven su suscripción" on public.subscriptions;
 create policy "Usuarios ven su suscripción" on public.subscriptions
     for select using (auth.uid() = user_id);
 
 -- Políticas para Accounts
+drop policy if exists "Usuarios gestionan sus cuentas" on public.accounts;
 create policy "Usuarios gestionan sus cuentas" on public.accounts
     for all using (auth.uid() = user_id);
 
 -- Políticas para Account Groups
+drop policy if exists "Usuarios gestionan sus grupos de cuentas" on public.account_groups;
 create policy "Usuarios gestionan sus grupos de cuentas" on public.account_groups
     for all using (auth.uid() = user_id);
 
 -- Políticas para Trades
+drop policy if exists "Usuarios ven y gestionan sus trades" on public.trades;
 create policy "Usuarios ven y gestionan sus trades" on public.trades
     for all using (auth.uid() = user_id);
 
 -- Políticas para Balance Snapshots
+drop policy if exists "Usuarios ven y gestionan sus instantáneas" on public.balance_snapshots;
 create policy "Usuarios ven y gestionan sus instantáneas" on public.balance_snapshots
     for all using (auth.uid() = user_id);
 
