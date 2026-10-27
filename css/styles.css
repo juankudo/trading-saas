@@ -330,6 +330,21 @@ body {
         }
 
 
+        /* ===================== SIMULADOR DE SETUPS (AMBOS TEMAS) ===================== */
+        .calc-chip-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+        .calc-chip-btn.inactive {
+            background-color: rgba(31, 41, 55, 0.8);
+            color: #d1d5db;
+        }
+        .calc-chip-btn.inactive:hover {
+            background-color: #374151;
+            color: #ffffff;
+        }
+
         /* ===================== TEMA CLARO PARA LANDING PAGE ===================== */
         html.light body {
             background-color: #f8fafc !important;
@@ -345,27 +360,174 @@ body {
         html.light nav a:hover {
             color: #059669 !important;
         }
+
+        /* Barra Superior de Anuncios */
+        html.light #top-announcement-bar,
+        html.light .bg-gradient-to-r.from-emerald-950\/80 {
+            background: #ecfdf5 !important;
+            background-image: none !important;
+            border-color: #a7f3d0 !important;
+            color: #065f46 !important;
+        }
+        html.light #top-announcement-bar span,
+        html.light #top-announcement-bar button,
+        html.light .bg-gradient-to-r.from-emerald-950\/80 span,
+        html.light .bg-gradient-to-r.from-emerald-950\/80 button {
+            color: #065f46 !important;
+        }
+        html.light #top-announcement-bar span.inline-flex,
+        html.light .bg-gradient-to-r.from-emerald-950\/80 span.inline-flex {
+            background: #d1fae5 !important;
+            border-color: #6ee7b7 !important;
+            color: #047857 !important;
+        }
+
+        /* Secciones con degradados oscuros de fondo */
+        html.light section#calculadora,
+        html.light section#proximamente-mt5,
+        html.light section#caracteristicas,
+        html.light section#fondeo,
+        html.light section#precios,
+        html.light section#faq {
+            background-color: #f8fafc !important;
+            background-image: none !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        /* Suavizar resplandores en modo claro */
+        html.light .blur-3xl {
+            opacity: 0.15 !important;
+        }
+
+        /* Fondos oscuros generales */
         html.light .bg-\[\#0d121f\],
         html.light .bg-\[\#0b0f19\],
         html.light .bg-\[\#101728\],
         html.light .bg-\[\#0f172a\] {
-            background-color: #f1f5f9 !important;
+            background-color: #f8fafc !important;
+            background-image: none !important;
         }
+
+        /* Tarjetas de contenido */
         html.light .bg-\[\#111726\],
         html.light .bg-\[\#111625\] {
             background-color: #ffffff !important;
             border-color: #e2e8f0 !important;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
         }
+
+        /* Badges flotantes en la curva de equidad (Showcase) */
+        html.light .anim-float-1,
+        html.light .anim-float-2 {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+            color: #0f172a !important;
+        }
+        html.light .anim-float-1 span,
+        html.light .anim-float-2 span {
+            color: #0f172a !important;
+        }
+        html.light .anim-float-1 strong.text-emerald-400 {
+            color: #059669 !important;
+        }
+        html.light .anim-float-2 strong.text-blue-400 {
+            color: #2563eb !important;
+        }
+
+        /* SECCIÓN CALCULADORA PRO (MODO CLARO) */
+        html.light #calculadora .bg-blue-950\/80,
+        html.light #calculadora .bg-blue-950 {
+            background: #eff6ff !important;
+            border-color: #bfdbfe !important;
+            color: #1d4ed8 !important;
+            box-shadow: none !important;
+        }
+        html.light #calculadora .border-blue-500\/40 {
+            border-color: #bfdbfe !important;
+        }
+        html.light .calc-chip-btn.active {
+            background-color: #2563eb !important;
+            color: #ffffff !important;
+            border: 1px solid #1d4ed8 !important;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25) !important;
+        }
+        html.light .calc-chip-btn.inactive {
+            background-color: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+        }
+        html.light .calc-chip-btn.inactive:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        /* Contenedor de resultado del simulador de lotaje */
+        html.light #calculadora .bg-gradient-to-tr.from-blue-950\/80 {
+            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%) !important;
+            background-image: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%) !important;
+            border-color: #93c5fd !important;
+        }
+        html.light #calculadora .bg-gradient-to-tr.from-blue-950\/80 span.text-blue-300 {
+            color: #1d4ed8 !important;
+        }
+        html.light #calculadora .bg-gradient-to-tr.from-blue-950\/80 #calc-demo-lots {
+            color: #0f172a !important;
+        }
+        html.light #calculadora .bg-gradient-to-tr.from-blue-950\/80 .border-blue-900\/60 {
+            border-color: #bfdbfe !important;
+            color: #475569 !important;
+        }
+        html.light #calculadora .bg-gradient-to-tr.from-blue-950\/80 strong.text-gray-200 {
+            color: #0f172a !important;
+        }
+
+        /* SECCIÓN PRÓXIMAMENTE MT5 (MODO CLARO) */
+        html.light #proximamente-mt5 .bg-blue-950\/90 {
+            background: #eff6ff !important;
+            border-color: #93c5fd !important;
+            color: #1d4ed8 !important;
+            box-shadow: none !important;
+        }
+        html.light #proximamente-mt5 .bg-gradient-to-r.from-blue-950\/60 {
+            background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%) !important;
+            background-image: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%) !important;
+            border-color: #bfdbfe !important;
+        }
+        html.light #proximamente-mt5 .bg-gradient-to-r.from-blue-950\/60 h4 {
+            color: #0f172a !important;
+        }
+        html.light #proximamente-mt5 .bg-gradient-to-r.from-blue-950\/60 p {
+            color: #475569 !important;
+        }
+        html.light #proximamente-mt5 .bg-gradient-to-r.from-blue-950\/60 button {
+            background: #0f172a !important;
+            color: #ffffff !important;
+        }
+        html.light #proximamente-mt5 .bg-gradient-to-r.from-blue-950\/60 button:hover {
+            background: #1e293b !important;
+        }
+
+        /* Elementos generales de formularios y cajas */
+        html.light .bg-gray-900\/90,
         html.light .bg-gray-900\/80,
         html.light .bg-gray-900\/60,
+        html.light .bg-gray-900\/50,
         html.light .bg-gray-900 {
             background-color: #f8fafc !important;
             border-color: #e2e8f0 !important;
         }
+        html.light .bg-gray-950\/40,
         html.light .bg-gray-950 {
             background-color: #f1f5f9 !important;
             border-color: #cbd5e1 !important;
+        }
+        html.light .bg-gray-800\/90,
+        html.light .bg-gray-800\/80,
+        html.light .bg-gray-800\/60,
+        html.light .bg-gray-800 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
         }
         html.light .text-white {
             color: #0f172a !important;
@@ -375,10 +537,12 @@ body {
             color: #475569 !important;
         }
         html.light .border-gray-800,
+        html.light .border-gray-800\/90,
         html.light .border-gray-800\/80,
         html.light .border-gray-800\/60,
         html.light .border-gray-700,
-        html.light .border-gray-700\/80 {
+        html.light .border-gray-700\/80,
+        html.light .border-gray-700\/60 {
             border-color: #e2e8f0 !important;
         }
         html.light footer {

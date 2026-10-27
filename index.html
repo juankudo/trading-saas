@@ -18,7 +18,7 @@
 <body class="min-h-screen flex flex-col bg-[#0b0f19] text-gray-200 antialiased selection:bg-emerald-500 selection:text-white overflow-x-hidden w-full max-w-full">
 
     <!-- Top Announcement Bar -->
-    <div class="bg-gradient-to-r from-emerald-950/80 via-emerald-900/60 to-slate-900 border-b border-emerald-800/40 py-2 px-4 text-center text-xs text-emerald-300 flex items-center justify-center gap-2">
+    <div id="top-announcement-bar" class="bg-gradient-to-r from-emerald-950/80 via-emerald-900/60 to-slate-900 border-b border-emerald-800/40 py-2 px-4 text-center text-xs text-emerald-300 flex items-center justify-center gap-2">
         <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">NUEVO</span>
         <span>Comienza tus 14 días de prueba gratis. Cancela en cualquier momento con 1 clic.</span>
         <button onclick="openAuthModal('register')" class="underline hover:text-white font-semibold transition ml-1">Crear cuenta gratis &rarr;</button>
@@ -623,13 +623,13 @@
                         <div class="mb-5">
                             <span class="text-[11px] font-semibold text-gray-400 block mb-2">Selecciona un Setup / Preset:</span>
                             <div class="grid grid-cols-3 gap-2">
-                                <button id="calc-chip-gold" onclick="setCalcDemoPreset('gold')" class="px-2.5 py-2 rounded-xl text-xs font-bold bg-blue-500 text-gray-950 shadow-md transition text-center truncate">
+                                <button id="calc-chip-gold" onclick="setCalcDemoPreset('gold')" class="calc-chip-btn active px-2.5 py-2 rounded-xl text-xs font-bold transition text-center truncate">
                                     Oro 0.25%
                                 </button>
-                                <button id="calc-chip-forex" onclick="setCalcDemoPreset('forex')" class="px-2.5 py-2 rounded-xl text-xs font-bold bg-gray-800/80 text-gray-300 hover:text-white transition text-center truncate">
+                                <button id="calc-chip-forex" onclick="setCalcDemoPreset('forex')" class="calc-chip-btn inactive px-2.5 py-2 rounded-xl text-xs font-bold transition text-center truncate">
                                     Forex 1.0%
                                 </button>
-                                <button id="calc-chip-indices" onclick="setCalcDemoPreset('indices')" class="px-2.5 py-2 rounded-xl text-xs font-bold bg-gray-800/80 text-gray-300 hover:text-white transition text-center truncate">
+                                <button id="calc-chip-indices" onclick="setCalcDemoPreset('indices')" class="calc-chip-btn inactive px-2.5 py-2 rounded-xl text-xs font-bold transition text-center truncate">
                                     US30 0.5%
                                 </button>
                             </div>
@@ -1119,9 +1119,9 @@
                 const chip = document.getElementById('calc-chip-' + k);
                 if (chip) {
                     if (k === presetKey) {
-                        chip.className = "px-2.5 py-2 rounded-xl text-xs font-bold bg-blue-500 text-gray-950 shadow-md transition text-center truncate";
+                        chip.className = "calc-chip-btn active px-2.5 py-2 rounded-xl text-xs font-bold transition text-center truncate";
                     } else {
-                        chip.className = "px-2.5 py-2 rounded-xl text-xs font-bold bg-gray-800/80 text-gray-300 hover:text-white transition text-center truncate";
+                        chip.className = "calc-chip-btn inactive px-2.5 py-2 rounded-xl text-xs font-bold transition text-center truncate";
                     }
                 }
             });
