@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
 </head>
-<body class="min-h-screen flex flex-col bg-[#0b0f19] text-gray-200 antialiased selection:bg-emerald-500 selection:text-white">
+<body class="min-h-screen flex flex-col bg-[#0b0f19] text-gray-200 antialiased selection:bg-emerald-500 selection:text-white overflow-x-hidden w-full max-w-full">
 
     <!-- Top Announcement Bar -->
     <div class="bg-gradient-to-r from-emerald-950/80 via-emerald-900/60 to-slate-900 border-b border-emerald-800/40 py-2 px-4 text-center text-xs text-emerald-300 flex items-center justify-center gap-2">
@@ -25,40 +25,41 @@
     </div>
 
     <!-- Navigation Header -->
-    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0b0f19]/90 border-b border-gray-800/80 px-4 sm:px-8 py-4 transition-all">
-        <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0b0f19]/90 border-b border-gray-800/80 px-3 sm:px-8 py-3.5 transition-all">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
             
             <!-- Brand Logo -->
-            <a href="index.html" class="flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
-                    <i class="fa-solid fa-chart-line text-white text-lg"></i>
+            <a href="index.html" class="flex items-center gap-2 sm:gap-3 group shrink-0">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
+                    <i class="fa-solid fa-chart-line text-white text-base sm:text-lg"></i>
                 </div>
                 <div>
-                    <span class="text-base sm:text-lg font-black tracking-wider text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
+                    <span class="text-sm sm:text-base md:text-lg font-black tracking-wider text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
                 </div>
             </a>
 
             <!-- Center Navigation Links -->
-            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
+            <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium text-gray-400">
                 <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
+                <a href="#calculadora" class="hover:text-emerald-400 transition">Calculadora Pro</a>
+                <a href="#proximamente-mt5" class="hover:text-blue-400 transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> MT5 Sync</a>
                 <a href="#fondeo" class="hover:text-emerald-400 transition">Cuentas de Fondeo</a>
-                <a href="calculadora/index.html" class="hover:text-emerald-400 transition">Calculadora</a>
-                <a href="#precios" class="hover:text-emerald-400 transition">Precios & Pagos</a>
-                <a href="#faq" class="hover:text-emerald-400 transition">Preguntas Frecuentes</a>
+                <a href="#precios" class="hover:text-emerald-400 transition">Precios</a>
+                <a href="#faq" class="hover:text-emerald-400 transition">Preguntas</a>
             </nav>
 
             <!-- Actions Right -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
                 <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-400 hover:text-white text-xs transition" title="Cambiar tema">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
 
                 <!-- Guest State (No logged in) -->
-                <div id="nav-guest-actions" class="flex items-center gap-2 sm:gap-3">
-                    <button onclick="openAuthModal('login')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800/60 transition">
+                <div id="nav-guest-actions" class="flex items-center gap-1.5 sm:gap-3">
+                    <button onclick="openAuthModal('login')" class="px-2.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800/60 transition whitespace-nowrap">
                         Iniciar Sesión
                     </button>
-                    <button onclick="openAuthModal('register')" class="px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-gray-950 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition">
+                    <button onclick="openAuthModal('register')" class="px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-gray-950 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition whitespace-nowrap">
                         14 Días Gratis
                     </button>
                 </div>
@@ -210,12 +211,12 @@
                                     <circle cx="600" cy="18" r="12" fill="#10b981" opacity="0.3" class="animate-ping" />
                                 </svg>
 
-                                <div class="absolute top-2 left-3 anim-float-1 bg-[#161f30]/90 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white shadow-xl backdrop-blur-md flex items-center gap-2">
+                                <div class="hidden sm:flex absolute top-2 left-3 anim-float-1 bg-[#161f30]/90 border border-emerald-500/40 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white shadow-xl backdrop-blur-md items-center gap-2">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                                     <span>XAUUSD Compra: <strong class="text-emerald-400">+$1,450.00</strong> (1:3.2 R:R)</span>
                                 </div>
 
-                                <div class="absolute bottom-3 right-3 anim-float-2 bg-[#161f30]/90 border border-blue-500/40 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white shadow-xl backdrop-blur-md flex items-center gap-2">
+                                <div class="hidden sm:flex absolute bottom-3 right-3 anim-float-2 bg-[#161f30]/90 border border-blue-500/40 px-3 py-1.5 rounded-xl text-[11px] font-bold text-white shadow-xl backdrop-blur-md items-center gap-2">
                                     <i class="fa-solid fa-trophy text-amber-400"></i>
                                     <span>Meta Fase 1: <strong class="text-blue-400">48.5% alcanzado</strong></span>
                                 </div>
@@ -227,9 +228,103 @@
                     <div id="showcase-view-trades" class="hidden space-y-4">
                         <div class="flex items-center justify-between text-xs text-gray-400 mb-2">
                             <span class="font-bold text-white">Historial Quirúrgico de Operaciones</span>
-                            <span class="text-[11px]">Auditoría por trade, R:R y comisiones</span>
+                            <span class="text-[11px] hidden sm:inline">Auditoría por trade, R:R y comisiones</span>
+                            <span class="text-[10px] text-emerald-400 font-semibold sm:hidden"><i class="fa-solid fa-mobile-screen mr-1"></i>Vista Móvil Táctil</span>
                         </div>
-                        <div class="overflow-x-auto rounded-xl border border-gray-800">
+
+                        <!-- VISTA MÓVIL: Tarjetas compactas desplegables (Sin scroll lateral) -->
+                        <div class="block sm:hidden space-y-2.5">
+                            <!-- Trade 1 -->
+                            <div class="bg-gray-900/90 rounded-xl border border-gray-800 p-3 transition hover:border-gray-700">
+                                <div onclick="toggleMobileTrade(1)" class="flex items-center justify-between gap-2 cursor-pointer select-none">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-950 text-emerald-400 border border-emerald-700/60 shrink-0">BUY</span>
+                                        <span class="font-bold text-white text-xs shrink-0">XAUUSD</span>
+                                        <span class="text-[10px] text-gray-400 truncate">26 Oct 14:32</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <span class="font-black text-xs text-emerald-400">+$2,145.00</span>
+                                        <i id="trade-icon-1" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200"></i>
+                                    </div>
+                                </div>
+                                <div id="trade-detail-1" class="hidden mt-2.5 pt-2.5 border-t border-gray-800 text-[11px] text-gray-300 grid grid-cols-2 gap-2">
+                                    <div><span class="text-gray-500 block text-[10px]">Lote / Retorno:</span> <span class="font-mono font-bold text-white">1.50 (+2.1%)</span></div>
+                                    <div><span class="text-gray-500 block text-[10px]">Ratio R:R:</span> <span class="font-mono font-bold text-blue-400">1:3.5</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Entrada &rarr; Salida:</span> <span class="font-mono text-gray-300">2734.20 &rarr; 2748.50</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Estrategia:</span> <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px]">#OrderBlock</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Trade 2 -->
+                            <div class="bg-gray-900/90 rounded-xl border border-gray-800 p-3 transition hover:border-gray-700">
+                                <div onclick="toggleMobileTrade(2)" class="flex items-center justify-between gap-2 cursor-pointer select-none">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-black bg-rose-950 text-rose-400 border border-rose-700/60 shrink-0">SELL</span>
+                                        <span class="font-bold text-white text-xs shrink-0">EURUSD</span>
+                                        <span class="text-[10px] text-gray-400 truncate">25 Oct 09:15</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <span class="font-black text-xs text-rose-400">-$400.00</span>
+                                        <i id="trade-icon-2" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200"></i>
+                                    </div>
+                                </div>
+                                <div id="trade-detail-2" class="hidden mt-2.5 pt-2.5 border-t border-gray-800 text-[11px] text-gray-300 grid grid-cols-2 gap-2">
+                                    <div><span class="text-gray-500 block text-[10px]">Lote / Retorno:</span> <span class="font-mono font-bold text-white">2.00 (-0.4%)</span></div>
+                                    <div><span class="text-gray-500 block text-[10px]">Ratio R:R:</span> <span class="font-mono font-bold text-gray-400">1:1.0</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Entrada &rarr; Salida:</span> <span class="font-mono text-gray-300">1.08250 &rarr; 1.08450</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Estrategia:</span> <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px]">#LondonOpen</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Trade 3 -->
+                            <div class="bg-gray-900/90 rounded-xl border border-gray-800 p-3 transition hover:border-gray-700">
+                                <div onclick="toggleMobileTrade(3)" class="flex items-center justify-between gap-2 cursor-pointer select-none">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-950 text-emerald-400 border border-emerald-700/60 shrink-0">BUY</span>
+                                        <span class="font-bold text-white text-xs shrink-0">GBPJPY</span>
+                                        <span class="text-[10px] text-gray-400 truncate">24 Oct 16:40</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <span class="font-black text-xs text-emerald-400">+$1,280.00</span>
+                                        <i id="trade-icon-3" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200"></i>
+                                    </div>
+                                </div>
+                                <div id="trade-detail-3" class="hidden mt-2.5 pt-2.5 border-t border-gray-800 text-[11px] text-gray-300 grid grid-cols-2 gap-2">
+                                    <div><span class="text-gray-500 block text-[10px]">Lote / Retorno:</span> <span class="font-mono font-bold text-white">1.20 (+1.2%)</span></div>
+                                    <div><span class="text-gray-500 block text-[10px]">Ratio R:R:</span> <span class="font-mono font-bold text-blue-400">1:2.8</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Entrada &rarr; Salida:</span> <span class="font-mono text-gray-300">196.40 &rarr; 197.80</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Estrategia:</span> <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px]">#Liquidity</span></div>
+                                </div>
+                            </div>
+
+                            <!-- Trade 4 -->
+                            <div class="bg-gray-900/90 rounded-xl border border-gray-800 p-3 transition hover:border-gray-700">
+                                <div onclick="toggleMobileTrade(4)" class="flex items-center justify-between gap-2 cursor-pointer select-none">
+                                    <div class="flex items-center gap-2 min-w-0">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-black bg-emerald-950 text-emerald-400 border border-emerald-700/60 shrink-0">BUY</span>
+                                        <span class="font-bold text-white text-xs shrink-0">US30</span>
+                                        <span class="text-[10px] text-gray-400 truncate">23 Oct 10:20</span>
+                                    </div>
+                                    <div class="flex items-center gap-2 shrink-0">
+                                        <span class="font-black text-xs text-emerald-400">+$1,825.00</span>
+                                        <i id="trade-icon-4" class="fa-solid fa-chevron-down text-[10px] text-gray-400 transition-transform duration-200"></i>
+                                    </div>
+                                </div>
+                                <div id="trade-detail-4" class="hidden mt-2.5 pt-2.5 border-t border-gray-800 text-[11px] text-gray-300 grid grid-cols-2 gap-2">
+                                    <div><span class="text-gray-500 block text-[10px]">Lote / Retorno:</span> <span class="font-mono font-bold text-white">0.80 (+1.8%)</span></div>
+                                    <div><span class="text-gray-500 block text-[10px]">Ratio R:R:</span> <span class="font-mono font-bold text-blue-400">1:3.1</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Entrada &rarr; Salida:</span> <span class="font-mono text-gray-300">42100 &rarr; 42350</span></div>
+                                    <div class="col-span-2 flex items-center justify-between"><span class="text-gray-500 text-[10px]">Estrategia:</span> <span class="px-2 py-0.5 rounded bg-gray-800 text-gray-300 text-[10px]">#NYOpen</span></div>
+                                </div>
+                            </div>
+
+                            <p class="text-[10px] text-gray-400 text-center pt-1 flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-hand-pointer text-emerald-400"></i> Toca cada operación para ver detalles sin scroll lateral
+                            </p>
+                        </div>
+
+                        <!-- VISTA ESCRITORIO: Tabla Completa -->
+                        <div class="hidden sm:block overflow-x-auto rounded-xl border border-gray-800">
                             <table class="w-full text-left text-xs whitespace-nowrap">
                                 <thead class="bg-gray-900/90 text-gray-400 text-[11px] uppercase tracking-wider border-b border-gray-800">
                                     <tr>
@@ -414,8 +509,8 @@
                         <p class="text-sm text-gray-400 leading-relaxed mb-3">
                             Integrada con soporte para Forex, Oro (XAUUSD), Índices y Cripto. Calcula el lote exacto según tu riesgo porcentual en segundos.
                         </p>
-                        <a href="calculadora/index.html" class="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 font-bold transition">
-                            Abrir Calculadora de Lotaje &rarr;
+                        <a href="#calculadora" class="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 font-bold transition">
+                            Conocer la Calculadora Pro &rarr;
                         </a>
                     </div>
 
@@ -430,6 +525,235 @@
                         </p>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Section: Calculadora de Lotaje Pro Showcased as Bundled Pro Feature -->
+        <section id="calculadora" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-gradient-to-b from-[#0d121f] via-[#101728] to-[#0d121f] relative overflow-hidden">
+            <div class="max-w-6xl mx-auto">
+                
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-16">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-950/80 border border-blue-500/40 text-blue-400 text-xs font-bold mb-4 shadow-sm">
+                        <i class="fa-solid fa-lock text-blue-400"></i>
+                        <span>INCLUIDA EN TU MEMBRESÍA PRO · NO SE VENDE POR SEPARADO</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-4">
+                        Calculadora de Lotaje Pro
+                    </h2>
+                    <p class="text-gray-400 text-sm sm:text-base leading-relaxed">
+                        El cálculo institucional de lotaje más preciso del mercado. Diseñada para proteger tu drawdown diario en cuentas reales y evaluaciones de Prop Firms antes de apretar el gatillo.
+                    </p>
+                </div>
+
+                <!-- 2-Column Showcase: Left Features Grid, Right Interactive Mockup -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center mb-12">
+                    
+                    <!-- Left: Core Superpowers (7 Cols) -->
+                    <div class="lg:col-span-7 space-y-5">
+                        
+                        <!-- Feature 1: Presets & Setups -->
+                        <div class="bg-[#111726] border border-gray-800/90 hover:border-blue-500/40 p-5 rounded-2xl transition flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-sliders"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-1">Crea y Guarda tus Propios Setups & Presets</h3>
+                                <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                                    Guarda configuraciones rápidas por estilo de trading: <strong>Scalping Oro (0.25%)</strong>, <strong>Day Trading (1.0%)</strong>, <strong>Swing Trading (1.5%)</strong>. Cambia de operativa en 1 clic sin tener que reconfigurar balance ni pips de stop loss cada vez.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 2: Agrupación de Activos -->
+                        <div class="bg-[#111726] border border-gray-800/90 hover:border-blue-500/40 p-5 rounded-2xl transition flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-1">Agrupación Inteligente por Categorías de Mercado</h3>
+                                <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                                    Filtra y clasifica tus activos favoritos en grupos: <strong>Forex Majors</strong>, <strong>Metales (XAUUSD, XAGUSD)</strong>, <strong>Índices (US30, NAS100, GER40)</strong> y <strong>Criptomonedas</strong>. Cada grupo ajusta automáticamente el valor de pip, tamaño de contrato y margen.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 3: Conversión de Divisas en Tiempo Real -->
+                        <div class="bg-[#111726] border border-gray-800/90 hover:border-blue-500/40 p-5 rounded-2xl transition flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-calculator-combined"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-1">Tipos de Cambio en Vivo y Conversión Exacta</h3>
+                                <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                                    Conectada a feeds de divisas en tiempo real. Si operas pares cruzados (como GBPJPY o EURAUD) con cuenta en USD, convierte la cotización al céntimo para que el lote respete exactamente tu riesgo porcentual.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Feature 4: Blindaje para Prop Firms -->
+                        <div class="bg-[#111726] border border-gray-800/90 hover:border-blue-500/40 p-5 rounded-2xl transition flex gap-4 items-start">
+                            <div class="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white mb-1">Tolerancia Cero a Errores de Sobrelotaje</h3>
+                                <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                                    Evita que un cálculo manual apresurado queme tu cuenta de evaluación. La calculadora te muestra el valor exacto de cada punto y el margen requerido antes de entrar a mercado.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Right: Interactive Calculator Mockup (5 Cols) -->
+                    <div class="lg:col-span-5 bg-[#111625] border-2 border-blue-500/40 rounded-3xl p-5 sm:p-7 shadow-2xl relative">
+                        
+                        <div class="flex items-center justify-between border-b border-gray-800 pb-3 mb-5">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-calculator text-blue-400"></i>
+                                <span class="font-bold text-sm text-white">SIMULADOR DE SETUPS</span>
+                            </div>
+                            <span class="text-[10px] bg-blue-950 text-blue-300 border border-blue-700/60 px-2 py-0.5 rounded font-mono font-bold">
+                                TIEMPO REAL
+                            </span>
+                        </div>
+
+                        <!-- Presets Selector Chips -->
+                        <div class="mb-5">
+                            <span class="text-[11px] font-semibold text-gray-400 block mb-2">Selecciona un Setup / Preset:</span>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button id="calc-chip-gold" onclick="setCalcDemoPreset('gold')" class="px-2.5 py-2 rounded-xl text-xs font-bold bg-blue-500 text-gray-950 shadow-md transition text-center truncate">
+                                    Oro 0.25%
+                                </button>
+                                <button id="calc-chip-forex" onclick="setCalcDemoPreset('forex')" class="px-2.5 py-2 rounded-xl text-xs font-bold bg-gray-800/80 text-gray-300 hover:text-white transition text-center truncate">
+                                    Forex 1.0%
+                                </button>
+                                <button id="calc-chip-indices" onclick="setCalcDemoPreset('indices')" class="px-2.5 py-2 rounded-xl text-xs font-bold bg-gray-800/80 text-gray-300 hover:text-white transition text-center truncate">
+                                    US30 0.5%
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mockup Inputs Simulated -->
+                        <div class="space-y-3 mb-5 text-xs">
+                            <div class="flex justify-between items-center bg-gray-900/80 p-3 rounded-xl border border-gray-800">
+                                <span class="text-gray-400">Balance de la Cuenta:</span>
+                                <span class="font-mono font-bold text-white text-sm" id="calc-demo-balance">$100,000.00</span>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="bg-gray-900/80 p-2.5 rounded-xl border border-gray-800">
+                                    <span class="text-[10px] text-gray-400 block">Instrumento / Par:</span>
+                                    <span class="font-mono font-bold text-emerald-400 text-xs" id="calc-demo-pair">XAUUSD</span>
+                                </div>
+                                <div class="bg-gray-900/80 p-2.5 rounded-xl border border-gray-800">
+                                    <span class="text-[10px] text-gray-400 block">Riesgo Permitido:</span>
+                                    <span class="font-mono font-bold text-amber-400 text-xs" id="calc-demo-risk">0.25% ($250.00)</span>
+                                </div>
+                            </div>
+                            <div class="bg-gray-900/80 p-3 rounded-xl border border-gray-800 flex justify-between items-center">
+                                <span class="text-gray-400">Stop Loss Programado:</span>
+                                <span class="font-mono font-bold text-white text-xs" id="calc-demo-sl">15.0 Pips</span>
+                            </div>
+                        </div>
+
+                        <!-- Result Display -->
+                        <div class="bg-gradient-to-tr from-blue-950/80 to-slate-900 border border-blue-500/50 rounded-2xl p-4 text-center mb-5 shadow-lg">
+                            <span class="text-[10px] uppercase font-bold tracking-wider text-blue-300 block mb-1">Lotaje Exacto Recomendado</span>
+                            <div class="text-3xl sm:text-4xl font-black text-white font-mono" id="calc-demo-lots">
+                                1.66 <span class="text-sm font-sans font-bold text-blue-400">LOTES</span>
+                            </div>
+                            <div class="flex items-center justify-center gap-4 mt-2 text-[11px] text-gray-300 border-t border-blue-900/60 pt-2 font-mono">
+                                <span>Valor Pip: <strong class="text-emerald-400" id="calc-demo-pipval">$16.60</strong></span>
+                                <span>·</span>
+                                <span>Margen: <strong class="text-gray-200" id="calc-demo-margin">$830.00</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Lock Badge & CTA -->
+                        <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3 text-center mb-4 text-[11px] text-gray-400">
+                            <i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Desbloqueada de inmediato al iniciar tu prueba de 14 días.
+                        </div>
+
+                        <button onclick="openAuthModal('register')" class="w-full py-3.5 rounded-xl text-sm font-bold bg-gradient-to-r from-blue-500 via-teal-400 to-emerald-400 hover:brightness-110 text-gray-950 shadow-lg shadow-blue-500/20 transition flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-lock-open"></i> Desbloquear Calculadora en la Prueba
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Section: PRÓXIMAMENTE - MT5 Cloud Sync -->
+        <section id="proximamente-mt5" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-gradient-to-b from-[#0b0f19] via-[#0f172a] to-[#0b0f19] relative overflow-hidden">
+            <!-- Glow background circle -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[650px] h-[300px] bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-5xl mx-auto relative z-10 text-center">
+                
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/90 border border-blue-500/50 text-blue-300 text-xs font-black tracking-wider uppercase mb-6 shadow-inner">
+                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
+                    <span>PRÓXIMO LANZAMIENTO · EN DESARROLLO ACTIVO</span>
+                </div>
+
+                <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-4">
+                    MT5 Cloud Sync: Conexión Automática con MetaTrader 5
+                </h2>
+
+                <p class="text-sm sm:text-base text-gray-400 max-w-2xl mx-auto mb-12 leading-relaxed">
+                    Operas en tu terminal MetaTrader 5 como siempre. Nosotros nos encargamos de que cada entrada, salida, stop loss y comisión viaje a tu Bitácora Pro en la nube de forma automática e invisible.
+                </p>
+
+                <!-- 3 Pillars Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-left mb-12">
+                    
+                    <div class="bg-[#111625] border border-gray-800 p-6 rounded-2xl hover:border-blue-500/40 transition">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-cloud-bolt"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Zero Esfuerzo de Registro</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                            Sin importar si operas scalping rápido o swing, el sincronizador captura tickets, precios de entrada, salidas parciales y fechas exactas sin intervención humana.
+                        </p>
+                    </div>
+
+                    <div class="bg-[#111625] border border-gray-800 p-6 rounded-2xl hover:border-emerald-500/40 transition">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-receipt"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Auditoría Real de Broker</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                            Captura los costos ocultos que alteran tu rentabilidad: comisiones de apertura, rollover / swap nocturno y slippage adverso directo desde el servidor de tu broker.
+                        </p>
+                    </div>
+
+                    <div class="bg-[#111625] border border-gray-800 p-6 rounded-2xl hover:border-purple-500/40 transition">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-crown"></i>
+                        </div>
+                        <h3 class="text-base font-bold text-white mb-2">Acceso VIP para Miembros Pro</h3>
+                        <p class="text-xs sm:text-sm text-gray-400 leading-relaxed">
+                            Los usuarios con suscripción activa tendrán pase preferente a la beta cerrada antes del despliegue público, sin cargos sorpresa ni licencias adicionales.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Callout Banner -->
+                <div class="bg-gradient-to-r from-blue-950/60 via-[#131d31] to-emerald-950/60 border border-blue-500/40 rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left">
+                    <div>
+                        <h4 class="text-lg font-black text-white mb-1 flex items-center justify-center sm:justify-start gap-2">
+                            <i class="fa-solid fa-sparkles text-amber-400"></i> ¿Operas en MetaTrader 5 a diario?
+                        </h4>
+                        <p class="text-xs sm:text-sm text-gray-400">Inicia tu prueba de 14 días hoy y reserva tu lugar preferente para la beta de MT5 Cloud Sync.</p>
+                    </div>
+                    <button onclick="openAuthModal('register')" class="px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold bg-white hover:bg-gray-100 text-gray-950 shadow-xl transition whitespace-nowrap">
+                        Reservar Mi Acceso Pro &rarr;
+                    </button>
+                </div>
+
             </div>
         </section>
 
@@ -509,7 +833,7 @@
                 </p>
 
                 <!-- Billing Period Toggle -->
-                <div class="inline-flex items-center bg-gray-900 border border-gray-700/80 rounded-xl p-1.5 mb-12">
+                <div class="inline-flex items-center max-w-full flex-wrap sm:flex-nowrap justify-center gap-1 bg-gray-900 border border-gray-700/80 rounded-xl p-1.5 mb-12">
                     <button id="plan-btn-1" onclick="selectPlanPeriod(1)" class="px-5 py-2 rounded-lg text-xs font-bold bg-emerald-500 text-gray-950 shadow-sm transition">
                         1 Mes
                     </button>
@@ -624,10 +948,12 @@
                 <span class="font-bold text-gray-300">TRADING JOURNAL PRO</span>
                 <span>— Todos los derechos reservados.</span>
             </div>
-            <div class="flex items-center gap-6">
+            <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
                 <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
+                <a href="#calculadora" class="hover:text-emerald-400 transition">Calculadora Pro</a>
+                <a href="#proximamente-mt5" class="hover:text-blue-400 transition">MT5 Sync</a>
+                <a href="#fondeo" class="hover:text-emerald-400 transition">Cuentas Fondeo</a>
                 <a href="#precios" class="hover:text-emerald-400 transition">Precios</a>
-                <a href="calculadora/index.html" class="hover:text-emerald-400 transition">Calculadora</a>
             </div>
         </div>
     </footer>
@@ -746,6 +1072,72 @@
 
     <!-- Interactive Scripts for Landing Page -->
     <script>
+        // Mobile Trade Accordion Toggle (Elimina el scroll lateral en móviles)
+        function toggleMobileTrade(id) {
+            const detail = document.getElementById('trade-detail-' + id);
+            const icon = document.getElementById('trade-icon-' + id);
+            if (detail && icon) {
+                const isHidden = detail.classList.contains('hidden');
+                detail.classList.toggle('hidden', !isHidden);
+                icon.classList.toggle('accordion-open', isHidden);
+            }
+        }
+
+        // Calculator Demo Presets Logic
+        const calcPresetsData = {
+            gold: {
+                balance: '$100,000.00',
+                pair: 'XAUUSD',
+                risk: '0.25% ($250.00)',
+                sl: '15.0 Pips',
+                lots: '1.66',
+                pipval: '$16.60',
+                margin: '$830.00'
+            },
+            forex: {
+                balance: '$100,000.00',
+                pair: 'EURUSD',
+                risk: '1.00% ($1,000.00)',
+                sl: '25.0 Pips',
+                lots: '4.00',
+                pipval: '$40.00',
+                margin: '$1,200.00'
+            },
+            indices: {
+                balance: '$100,000.00',
+                pair: 'US30 (Dow Jones)',
+                risk: '0.50% ($500.00)',
+                sl: '60.0 Puntos',
+                lots: '0.83',
+                pipval: '$8.33 / pt',
+                margin: '$415.00'
+            }
+        };
+
+        function setCalcDemoPreset(presetKey) {
+            ['gold', 'forex', 'indices'].forEach(k => {
+                const chip = document.getElementById('calc-chip-' + k);
+                if (chip) {
+                    if (k === presetKey) {
+                        chip.className = "px-2.5 py-2 rounded-xl text-xs font-bold bg-blue-500 text-gray-950 shadow-md transition text-center truncate";
+                    } else {
+                        chip.className = "px-2.5 py-2 rounded-xl text-xs font-bold bg-gray-800/80 text-gray-300 hover:text-white transition text-center truncate";
+                    }
+                }
+            });
+
+            const data = calcPresetsData[presetKey];
+            if (data) {
+                document.getElementById('calc-demo-balance').textContent = data.balance;
+                document.getElementById('calc-demo-pair').textContent = data.pair;
+                document.getElementById('calc-demo-risk').textContent = data.risk;
+                document.getElementById('calc-demo-sl').textContent = data.sl;
+                document.getElementById('calc-demo-lots').innerHTML = data.lots + ' <span class="text-sm font-sans font-bold text-blue-400">LOTES</span>';
+                document.getElementById('calc-demo-pipval').textContent = data.pipval;
+                document.getElementById('calc-demo-margin').textContent = data.margin;
+            }
+        }
+
         // Showcase Tab Switcher
         function switchShowcaseTab(tabKey) {
             const tabs = ['metrics', 'trades', 'calendar', 'propfirm'];

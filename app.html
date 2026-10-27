@@ -24,7 +24,7 @@
         }
     </script>
 </head>
-<body class="min-h-screen flex flex-col pb-10 relative">
+<body class="min-h-screen flex flex-col pb-10 relative overflow-x-hidden w-full max-w-full">
 
     <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white border border-green-500 px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-3 opacity-0 pointer-events-none transform translate-y-4">
         <i id="toastIcon" class="fa-solid fa-circle-check text-green-400 text-lg"></i>
@@ -47,7 +47,7 @@
             <button id="btn-mode-backtesting" onclick="setMode('backtesting')" class="px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all">
                 <i class="fa-solid fa-flask mr-1"></i> Backtesting
             </button>
-            <button id="btn-mt5-sync" onclick="openMt5Modal()" class="hidden flex items-center gap-1.5 text-xs font-bold rounded-md px-3 py-1.5 bg-blue-950/40 text-blue-300 border border-blue-800 shadow-sm transition-all hover:bg-blue-900/50">
+            <button id="btn-mt5-sync" onclick="openMt5Modal()" style="display: none !important;" class="hidden" aria-hidden="true">
                 <i class="fa-solid fa-robot"></i>
                 <span id="mt5StatusText">MT5</span>
             </button>
