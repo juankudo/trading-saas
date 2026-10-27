@@ -276,6 +276,7 @@ const initialTrades = [];
                 updateFolderButtonLabel();
                 showToast("Carpeta configurada con éxito");
                 await autoSaveJSONToFolder();
+            if (typeof triggerCloudSave === 'function') triggerCloudSave();
             } catch (err) {}
         }
 
@@ -806,6 +807,7 @@ const initialTrades = [];
             
             populatePairDropdowns();
             await autoSaveJSONToFolder();
+            if (typeof triggerCloudSave === 'function') triggerCloudSave();
             
             if ((currentMode === 'real' && !activeRealAccountId) || (currentMode === 'backtesting' && !activeSessionId)) {
                 renderGroups();
@@ -3985,6 +3987,7 @@ const initialTrades = [];
                 actualInput.value = actual === null ? "" : actual;
             }
             await autoSaveJSONToFolder();
+            if (typeof triggerCloudSave === 'function') triggerCloudSave();
             showToast("Retiro registrado");
         }
 
@@ -4000,6 +4003,7 @@ const initialTrades = [];
             renderGroups();
             if (activeRealAccountId) renderAll();
             await autoSaveJSONToFolder();
+            if (typeof triggerCloudSave === 'function') triggerCloudSave();
             showToast("Retiro eliminado del histórico");
         }
 

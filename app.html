@@ -16,6 +16,8 @@
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
+    <script src="js/payments.js"></script>
+    <script src="js/cloud-storage.js"></script>
     <script>
         if (!getCurrentUser()) {
             window.location.href = 'index.html';
@@ -79,6 +81,13 @@
             <button onclick="openResetModal()" title="Reiniciar Entorno" class="bg-gray-800 hover:bg-red-900/40 border border-main text-gray-400 hover:text-red-400 text-sm p-2 rounded-lg transition">
                 <i class="fa-solid fa-rotate-left"></i>
             </button>
+            <!-- Cloud Sync Indicator -->
+            <div id="cloud-sync-status" class="flex items-center gap-1.5 text-xs text-gray-400 px-2" title="Sincronización en la nube">
+                <i class="fa-solid fa-cloud text-gray-500"></i>
+            </div>
+            <button onclick="openCheckoutModal()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 shadow transition" title="Ver planes y suscripción">
+                <i class="fa-solid fa-gem"></i> Suscripción
+            </button>
             <!-- SaaS User Menu -->
             <div class="flex items-center gap-2 bg-gray-900/90 border border-gray-700/80 px-3 py-1.5 rounded-lg text-xs">
                 <span id="app-user-badge" class="px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Prueba 14 días</span>
@@ -90,6 +99,15 @@
 
         </div>
     </header>
+
+    <!-- Banner de Modo Solo Lectura (Oculto por defecto) -->
+    <div id="readonly-warning-banner" class="hidden bg-amber-950/90 border-b border-amber-600/70 px-4 py-2.5 text-center text-xs text-amber-200 font-semibold flex items-center justify-center gap-3 sticky top-[73px] z-30 backdrop-blur-md">
+        <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
+        <span id="readonly-banner-msg">Tu prueba de 14 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
+        <button onclick="openCheckoutModal()" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-black shadow-md transition ml-1">
+            <i class="fa-solid fa-credit-card mr-1"></i> Renovar Acceso Pro
+        </button>
+    </div>
 
     <div class="px-6 mt-6">
         <div class="border-b border-main flex flex-wrap justify-between items-end text-sm font-semibold relative">
@@ -1021,9 +1039,107 @@
     <input type="file" id="mt5ImportInput" class="hidden" accept=".json,.ndjson" onchange="importMt5Events(event)">
 
 
+    <!-- MODAL DE CHECKOUT / RENOVACIÓN DE SUSCRIPCIÓN -->
+    <div id="checkoutModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[70] hidden items-center justify-center p-4">
+        <div class="bg-[#111625] border border-gray-700/80 rounded-2xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+            
+            <!-- Close Button -->
+            <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg p-2 transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-3 text-xl font-black shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-gem"></i>
+                </div>
+                <h3 class="text-xl font-black text-white">Membresía Pro Ilimitada</h3>
+                <p class="text-xs text-gray-400 mt-1">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
+            </div>
+
+            <!-- Selector de Períodos -->
+            <div class="grid grid-cols-3 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-6 text-center">
+                <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-3 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
+                    1 Mes
+                </button>
+                <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-3 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                    3 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-15%</span>
+                </button>
+                <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-3 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                    12 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-30%</span>
+                </button>
+            </div>
+
+            <!-- Precio Seleccionado -->
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-6">
+                <span id="checkout-price-amount" class="text-3xl font-black text-white block">$19 USD</span>
+                <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5">por 1 Mes</span>
+                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1">14 días de prueba ($0 cobrados hoy si es primera vez)</span>
+            </div>
+
+            <!-- Opciones de Pago (Pasarela Dual) -->
+            <div class="space-y-3 mb-6">
+                <!-- Opción 1: Tarjetas (Stripe) -->
+                <button onclick="handleStripeCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
+                    <span class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-credit-card text-base"></i> Pagar con Tarjeta de Crédito / Débito
+                    </span>
+                    <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono">Stripe &rarr;</span>
+                </button>
+
+                <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
+                <button onclick="showCryptoCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white flex items-center justify-between transition">
+                    <span class="flex items-center gap-2.5">
+                        <i class="fa-solid fa-coins text-emerald-400 text-base"></i> Pagar con Criptomonedas (USDT / Crypto)
+                    </span>
+                    <span class="text-xs text-gray-400 font-mono">NOWPayments &rarr;</span>
+                </button>
+            </div>
+
+            <!-- Crypto Drawer / Factura USDT -->
+            <div id="checkout-crypto-invoice" class="hidden bg-gray-900 border border-emerald-600/40 rounded-xl p-4 mb-4 text-xs">
+                <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2">
+                    <span class="font-bold text-emerald-400 flex items-center gap-1.5">
+                        <i class="fa-brands fa-ethereum"></i> Transferencia USDT / USDC
+                    </span>
+                    <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">19.00 USDT</span>
+                </div>
+                
+                <p class="text-gray-400 mb-2">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
+                
+                <div class="space-y-2 mb-3">
+                    <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
+                        <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                            <span class="text-emerald-300 font-bold">Red TRON (TRC-20)</span>
+                            <button id="copy-btn-trc" onclick="copyToClipboard('TYDzsYUb93ExampleTRC20AddressPlaceholder77', 'copy-btn-trc')" class="text-emerald-400 hover:underline">Copiar</button>
+                        </div>
+                        <span class="font-mono text-gray-300 text-[10px] break-all block select-all">TYDzsYUb93ExampleTRC20AddressPlaceholder77</span>
+                    </div>
+
+                    <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
+                        <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                            <span class="text-blue-300 font-bold">Red BSC (BEP-20 / Binance)</span>
+                            <button id="copy-btn-bsc" onclick="copyToClipboard('0x71C69446B92ExampleBEP20AddressPlaceholder', 'copy-btn-bsc')" class="text-blue-400 hover:underline">Copiar</button>
+                        </div>
+                        <span class="font-mono text-gray-300 text-[10px] break-all block select-all">0x71C69446B92ExampleBEP20AddressPlaceholder</span>
+                    </div>
+                </div>
+
+                <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2">
+                    <i class="fa-solid fa-circle-info mt-0.5"></i>
+                    <span>Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
+                </div>
+            </div>
+
+            <div class="text-center text-[11px] text-gray-500">
+                <span>🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
+            </div>
+
+        </div>
+    </div>
+
     <script src="js/app.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             const user = getCurrentUser();
             if (user) {
                 const emailSpan = document.getElementById('app-user-email');
@@ -1040,6 +1156,11 @@
                         badgeSpan.textContent = "Pro Activo";
                         badgeSpan.className = "px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-600";
                     }
+                }
+
+                // Iniciar sincronización con Supabase y verificar acceso
+                if (typeof initCloudSync === 'function') {
+                    await initCloudSync();
                 }
             }
         });
