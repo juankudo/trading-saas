@@ -314,3 +314,59 @@ body { background-color: #0d1117; color: #c9d1d9; font-family: 'Segoe UI', syste
             from { opacity: 0; transform: scale(0.9) translateY(14px); }
             to { opacity: 1; transform: none; }
         }
+
+
+        /* ===================== TEMA CLARO PARA LANDING PAGE ===================== */
+        html.light body {
+            background-color: #f8fafc !important;
+            color: #1e293b !important;
+        }
+        html.light header.backdrop-blur-md {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light nav a {
+            color: #475569 !important;
+        }
+        html.light nav a:hover {
+            color: #059669 !important;
+        }
+        html.light .bg-\[\#0d121f\],
+        html.light .bg-\[\#0b0f19\] {
+            background-color: #f1f5f9 !important;
+        }
+        html.light .bg-\[\#111726\],
+        html.light .bg-\[\#111625\] {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light .bg-gray-900\/80,
+        html.light .bg-gray-900\/60,
+        html.light .bg-gray-900 {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light .bg-gray-950 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .text-white {
+            color: #0f172a !important;
+        }
+        html.light .text-gray-400,
+        html.light .text-gray-300 {
+            color: #475569 !important;
+        }
+        html.light .border-gray-800,
+        html.light .border-gray-800\/80,
+        html.light .border-gray-800\/60,
+        html.light .border-gray-700,
+        html.light .border-gray-700\/80 {
+            border-color: #e2e8f0 !important;
+        }
+        html.light footer {
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e1 !important;
+            color: #475569 !important;
+        }
