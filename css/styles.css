@@ -575,3 +575,38 @@ body {
                 overflow-x: hidden !important;
             }
         }
+
+        /* Showcase Movil: Segmented Tabs y Fichas de Ejecucion (Modo Claro) */
+        html.light .showcase-m-tab.active {
+            background-color: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+            color: #047857 !important;
+        }
+        html.light .showcase-m-tab.inactive {
+            color: #64748b !important;
+            background-color: transparent !important;
+        }
+        html.light .showcase-m-tab.inactive:hover {
+            color: #0f172a !important;
+            background-color: #f1f5f9 !important;
+        }
+        html.light .mobile-trade-card {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light .mobile-trade-card:hover {
+            border-color: #cbd5e1 !important;
+        }
+        html.light .mobile-trade-card-detail {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light .mobile-cal-card-win {
+            background-color: #f0fdf4 !important;
+            border-color: #bbf7d0 !important;
+        }
+        html.light .mobile-cal-card-loss {
+            background-color: #fef2f2 !important;
+            border-color: #fecaca !important;
+        }
