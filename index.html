@@ -25,7 +25,7 @@
     </div>
 
     <!-- Navigation Header -->
-    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0b0f19]/90 border-b border-gray-800/80 px-3 sm:px-8 py-3.5 transition-all">
+    <header class="sticky top-0 z-40 backdrop-blur-md bg-[#0b0f19]/90 border-b border-gray-800/80 px-3 sm:px-8 py-3.5 transition-[background-color,border-color,box-shadow] duration-200">
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
             
             <!-- Brand Logo -->
@@ -42,7 +42,7 @@
             <nav class="hidden md:flex items-center gap-5 lg:gap-7 text-sm font-medium text-gray-400">
                 <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
                 <a href="#calculadora" class="hover:text-emerald-400 transition">Calculadora Pro</a>
-                <a href="#proximamente-mt5" class="hover:text-blue-400 transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> MT5 Sync</a>
+                <a href="#proximamente-mt5" class="hover:text-blue-400 transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> MT5 Sync</a>
                 <a href="#fondeo" class="hover:text-emerald-400 transition">Cuentas de Fondeo</a>
                 <a href="#precios" class="hover:text-emerald-400 transition">Precios</a>
                 <a href="#faq" class="hover:text-emerald-400 transition">Preguntas</a>
@@ -50,7 +50,7 @@
 
             <!-- Actions Right -->
             <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-                <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-400 hover:text-white text-xs transition" title="Cambiar tema">
+                <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-400 hover:text-white text-xs transition" title="Cambiar tema" aria-label="Alternar tema claro y oscuro">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
 
@@ -123,7 +123,7 @@
                 </div>
 
                 <!-- Showcase Interactivo de 4 Vistas -->
-                <div class="mt-14 max-w-5xl mx-auto rounded-3xl bg-[#111625] border border-gray-700/80 shadow-2xl p-3 sm:p-7 text-left relative overflow-hidden group">
+                <div data-ui="showcase-preview" class="mt-14 max-w-5xl mx-auto rounded-3xl bg-[#111625] border border-gray-700/80 shadow-2xl p-3 sm:p-7 text-left relative overflow-hidden group">
                     
                     <!-- MOBILE APP HEADER (< sm: Marco Móvil Nativo) -->
                     <div class="block sm:hidden border-b border-gray-800/80 pb-3 mb-3.5">
@@ -131,12 +131,12 @@
                         <div class="flex items-center justify-between text-[11px] font-semibold text-gray-400 px-1 mb-2.5">
                             <span class="font-mono text-gray-300 font-bold">9:41</span>
                             <div class="w-16 h-3.5 bg-black/80 rounded-full border border-gray-700/50 flex items-center justify-center">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                             </div>
                             <div class="flex items-center gap-1.5 text-[10px] text-gray-300">
-                                <i class="fa-solid fa-signal"></i>
+                                <i class="fa-solid fa-signal" aria-hidden="true"></i>
                                 <span class="text-[9px] font-bold">5G</span>
-                                <i class="fa-solid fa-battery-full text-xs text-emerald-400"></i>
+                                <i class="fa-solid fa-battery-full text-xs text-emerald-400" aria-hidden="true"></i>
                             </div>
                         </div>
                         
@@ -144,7 +144,7 @@
                         <div class="flex items-center justify-between px-0.5">
                             <div class="flex items-center gap-2">
                                 <div class="w-7 h-7 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xs">
-                                    <i class="fa-solid fa-chart-line"></i>
+                                    <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white flex items-center gap-1.5 leading-none">
@@ -155,7 +155,7 @@
                                 </div>
                             </div>
                             <span class="text-[10px] bg-emerald-950/90 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> DEMO
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> DEMO
                             </span>
                         </div>
                     </div>
@@ -170,27 +170,27 @@
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="text-[10px] bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2.5 py-0.5 rounded-full font-bold flex items-center gap-1.5">
-                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> DEMO INTERACTIVA
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span> DEMO INTERACTIVA
                             </span>
                         </div>
                     </div>
 
                     <!-- MOBILE SEGMENTED TABS (< sm: 4 Columnas fijas sin scroll lateral) -->
                     <div class="grid grid-cols-4 gap-1 p-1 bg-gray-900/90 rounded-xl border border-gray-800/80 mb-3.5 sm:hidden">
-                        <button id="showcase-tab-m-metrics" onclick="switchShowcaseTab('metrics')" class="showcase-m-tab active py-2 px-1 rounded-lg text-[11px] font-bold text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 flex flex-col items-center justify-center gap-1 shadow-sm transition">
-                            <i class="fa-solid fa-chart-line text-xs"></i>
+                        <button id="showcase-tab-m-metrics" onclick="switchShowcaseTab('metrics')" aria-label="Ver métricas y curva de equidad" class="showcase-m-tab active py-2 px-1 rounded-lg text-[11px] font-bold text-emerald-400 bg-emerald-500/20 border border-emerald-500/40 flex flex-col items-center justify-center gap-1 shadow-sm transition">
+                            <i class="fa-solid fa-chart-line text-xs" aria-hidden="true"></i>
                             <span class="truncate">Métricas</span>
                         </button>
-                        <button id="showcase-tab-m-trades" onclick="switchShowcaseTab('trades')" class="showcase-m-tab inactive py-2 px-1 rounded-lg text-[11px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-1 transition">
-                            <i class="fa-solid fa-table-list text-xs"></i>
+                        <button id="showcase-tab-m-trades" onclick="switchShowcaseTab('trades')" aria-label="Ver registro detallado de trades" class="showcase-m-tab inactive py-2 px-1 rounded-lg text-[11px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-1 transition">
+                            <i class="fa-solid fa-table-list text-xs" aria-hidden="true"></i>
                             <span class="truncate">Trades</span>
                         </button>
-                        <button id="showcase-tab-m-calendar" onclick="switchShowcaseTab('calendar')" class="showcase-m-tab inactive py-2 px-1 rounded-lg text-[11px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-1 transition">
-                            <i class="fa-solid fa-calendar-days text-xs"></i>
+                        <button id="showcase-tab-m-calendar" onclick="switchShowcaseTab('calendar')" aria-label="Ver calendario mensual de rendimiento" class="showcase-m-tab inactive py-2 px-1 rounded-lg text-[11px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-1 transition">
+                            <i class="fa-solid fa-calendar-days text-xs" aria-hidden="true"></i>
                             <span class="truncate">Mes</span>
                         </button>
-                        <button id="showcase-tab-m-propfirm" onclick="switchShowcaseTab('propfirm')" class="showcase-m-tab inactive py-2 px-1 rounded-lg text-[11px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-1 transition">
-                            <i class="fa-solid fa-shield-halved text-xs"></i>
+                        <button id="showcase-tab-m-propfirm" onclick="switchShowcaseTab('propfirm')" aria-label="Ver reglas y auditoría de fondeo" class="showcase-m-tab inactive py-2 px-1 rounded-lg text-[11px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-1 transition">
+                            <i class="fa-solid fa-shield-halved text-xs" aria-hidden="true"></i>
                             <span class="truncate">Fondeo</span>
                         </button>
                     </div>
@@ -399,8 +399,8 @@
                             <div class="mobile-trade-card bg-gray-900/90 rounded-xl border border-gray-800 p-2.5 transition">
                                 <div onclick="toggleMobileTrade(3)" class="flex items-center justify-between gap-2 cursor-pointer select-none">
                                     <div class="flex items-center gap-2.5 min-w-0">
-                                        <div class="w-7 h-7 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center shrink-0">
-                                            <i class="fa-solid fa-bolt text-purple-400 text-xs"></i>
+                                        <div class="w-7 h-7 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center shrink-0">
+                                            <i class="fa-solid fa-bolt text-cyan-400 text-xs" aria-hidden="true"></i>
                                         </div>
                                         <div class="min-w-0">
                                             <div class="flex items-center gap-1.5">
@@ -650,7 +650,7 @@
         <section id="caracteristicas" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-[#0d121f]">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center max-w-3xl mx-auto mb-16">
-                    <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 block mb-2">Potencia Analítica</span>
+                    <span class="text-sm font-semibold text-emerald-400 block mb-2">Potencia Analítica</span>
                     <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Todo lo que un trader disciplinado necesita</h2>
                     <p class="text-gray-400 text-sm sm:text-base">Construida con un único objetivo: evitar que quemes cuentas y darte la claridad matemática que exigen los fondos institucionales.</p>
                 </div>
@@ -683,7 +683,7 @@
 
                     <!-- Feature 3 -->
                     <div class="bg-[#111726] border border-gray-800 p-6 rounded-2xl hover:border-emerald-500/50 transition">
-                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-400 text-xl mb-5">
+                        <div class="w-12 h-12 rounded-xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400 text-xl mb-5">
                             <i class="fa-solid fa-calendar-check"></i>
                         </div>
                         <h3 class="text-lg font-bold text-white mb-2">Calendario Mensual de Rendimiento</h3>
@@ -696,7 +696,7 @@
         </section>
 
         <!-- Section: Calculadora de Lotaje Pro Showcased as Bundled Pro Feature -->
-        <section id="calculadora" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-gradient-to-b from-[#0d121f] via-[#101728] to-[#0d121f] relative overflow-hidden">
+        <section id="calculadora" data-ui="calculator-preview" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-gradient-to-b from-[#0d121f] via-[#101728] to-[#0d121f] relative overflow-hidden">
             <div class="max-w-6xl mx-auto">
                 
                 <!-- Section Header -->
@@ -734,7 +734,7 @@
 
                         <!-- Feature 2: Agrupación de Activos -->
                         <div class="bg-[#111726] border border-gray-800/90 hover:border-blue-500/40 p-5 rounded-2xl transition flex gap-4 items-start">
-                            <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl shrink-0">
+                            <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl shrink-0">
                                 <i class="fa-solid fa-layer-group"></i>
                             </div>
                             <div>
@@ -860,9 +860,9 @@
 
             <div class="max-w-5xl mx-auto relative z-10 text-center">
                 
-                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-950/90 border border-blue-500/50 text-blue-300 text-xs font-black tracking-wider uppercase mb-6 shadow-inner">
-                    <span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span>
-                    <span>PRÓXIMO LANZAMIENTO · EN DESARROLLO ACTIVO</span>
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-950/80 border border-blue-500/40 text-blue-300 text-xs font-semibold mb-6">
+                    <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                    <span>Próximo lanzamiento · En desarrollo activo</span>
                 </div>
 
                 <h2 class="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tight leading-tight mb-4">
@@ -896,8 +896,8 @@
                         </p>
                     </div>
 
-                    <div class="bg-[#111625] border border-gray-800 p-6 rounded-2xl hover:border-purple-500/40 transition">
-                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center text-xl mb-4">
+                    <div class="bg-[#111625] border border-gray-800 p-6 rounded-2xl hover:border-sky-500/40 transition">
+                        <div class="w-12 h-12 rounded-xl bg-sky-500/10 border border-sky-500/20 text-sky-400 flex items-center justify-center text-xl mb-4">
                             <i class="fa-solid fa-crown"></i>
                         </div>
                         <h3 class="text-base font-bold text-white mb-2">Acceso VIP para Miembros Pro</h3>
@@ -928,7 +928,7 @@
         <section id="fondeo" class="py-20 px-4 sm:px-8 border-t border-gray-800/60">
             <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-12">
                 <div class="w-full md:w-1/2">
-                    <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 block mb-2">Protección de Cuenta</span>
+                    <span class="text-sm font-semibold text-emerald-400 block mb-2">Protección de Cuenta</span>
                     <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-6 leading-tight">
                         Especializada en Reglas de Empresas de Fondeo (Prop Firms)
                     </h2>
@@ -993,7 +993,7 @@
         <!-- Pricing Section -->
         <section id="precios" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-[#0d121f]">
             <div class="max-w-5xl mx-auto text-center">
-                <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 block mb-2">Precios Simples y Transparentes</span>
+                <span class="text-sm font-semibold text-emerald-400 block mb-2">Precios Simples y Transparentes</span>
                 <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Un Solo Plan con Todo Desbloqueado</h2>
                 <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto mb-10">
                     Sin límites artificiales ni características bloqueadas. Elige el período que mejor se adapte a ti y ahorra hasta un 30% en pagos anuales.
@@ -1084,7 +1084,7 @@
         <section id="faq" class="py-20 px-4 sm:px-8 border-t border-gray-800/60">
             <div class="max-w-4xl mx-auto">
                 <div class="text-center mb-14">
-                    <span class="text-xs font-bold tracking-widest uppercase text-emerald-400 block mb-2">Resolviendo Dudas</span>
+                    <span class="text-sm font-semibold text-emerald-400 block mb-2">Resolviendo Dudas</span>
                     <h2 class="text-3xl font-extrabold text-white">Preguntas Frecuentes</h2>
                 </div>
 
@@ -1126,20 +1126,20 @@
     </footer>
 
     <!-- AUTH MODALS CONTAINER (BACKDROP) -->
-    <div id="auth-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4">
+    <div id="auth-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overscroll-contain">
         
         <!-- Modal Card -->
         <div class="bg-[#111625] border border-gray-700/80 rounded-2xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
             <!-- Close Button -->
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg p-2 transition">
-                <i class="fa-solid fa-xmark"></i>
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg p-2 transition" aria-label="Cerrar ventana modal">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
 
             <!-- VIEW: LOGIN -->
             <div id="auth-view-login">
                 <div class="text-center mb-6">
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
-                        <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        <i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Iniciar Sesión</h3>
                     <p class="text-xs text-gray-400 mt-1">Ingresa a tu Bitácora Pro en la nube</p>
@@ -1149,15 +1149,15 @@
 
                 <form onsubmit="handleLoginForm(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
-                        <input type="email" id="login-email" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="login-email" class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
+                        <input type="email" id="login-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
                         <div class="flex justify-between items-center mb-1.5">
-                            <label class="block text-xs font-semibold text-gray-300">Contraseña</label>
+                            <label for="login-password" class="block text-xs font-semibold text-gray-300">Contraseña</label>
                             <button type="button" onclick="openAuthModal('forgot')" class="text-xs text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
                         </div>
-                        <input type="password" id="login-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2">
                         Ingresar a la Bitácora
@@ -1174,7 +1174,7 @@
             <div id="auth-view-register" class="hidden">
                 <div class="text-center mb-6">
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
-                        <i class="fa-solid fa-rocket"></i>
+                        <i class="fa-solid fa-rocket" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Prueba Gratis de 14 Días</h3>
                     <p class="text-xs text-gray-400 mt-1">Activa tus 14 días gratis ($0 cobrados hoy). Cancela cuando quieras.</p>
@@ -1184,21 +1184,24 @@
 
                 <form onsubmit="handleRegisterForm(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Nombre Completo o Alias</label>
-                        <input type="text" id="reg-name" required placeholder="Juan Trader" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="reg-name" class="block text-xs font-semibold text-gray-300 mb-1.5">Nombre Completo o Alias</label>
+                        <input type="text" id="reg-name" name="name" autocomplete="name" required placeholder="Juan Trader" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
-                        <input type="email" id="reg-email" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="reg-email" class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
+                        <input type="email" id="reg-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Contraseña (mínimo 6 caracteres)</label>
-                        <input type="password" id="reg-password" minlength="6" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="reg-password" class="block text-xs font-semibold text-gray-300 mb-1.5">Contraseña (mínimo 6 caracteres)</label>
+                        <input type="password" id="reg-password" name="new-password" autocomplete="new-password" minlength="6" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2 flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-credit-card"></i> Activar 14 Días Gratis ($0 hoy)
+                        <i class="fa-solid fa-credit-card" aria-hidden="true"></i> Activar 14 Días Gratis ($0 hoy)
                     </button>
-                    <span class="block text-[11px] text-gray-500 text-center mt-2">🔒 Procesado de forma 100% segura por Stripe. Cancela cuando quieras.</span>
+                    <span class="block text-[11px] text-gray-500 text-center mt-2 flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-lock text-emerald-400" aria-hidden="true"></i>
+                        <span>Procesado de forma 100% segura por Stripe. Cancela cuando quieras.</span>
+                    </span>
                 </form>
 
                 <div class="mt-6 pt-5 border-t border-gray-800 text-center text-xs text-gray-400">
@@ -1211,7 +1214,7 @@
             <div id="auth-view-forgot" class="hidden">
                 <div class="text-center mb-6">
                     <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
-                        <i class="fa-solid fa-key"></i>
+                        <i class="fa-solid fa-key" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Recuperar Contraseña</h3>
                     <p class="text-xs text-gray-400 mt-1">Te enviaremos un enlace seguro para restablecerla</p>
@@ -1221,8 +1224,8 @@
 
                 <form onsubmit="handleForgotForm(event)" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico Registrado</label>
-                        <input type="email" id="forgot-email" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="forgot-email" class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico Registrado</label>
+                        <input type="email" id="forgot-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg transition">
                         Enviar Enlace de Recuperación
