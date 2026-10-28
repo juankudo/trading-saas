@@ -197,16 +197,16 @@
 
                     <!-- DESKTOP SHOWCASE TABS (>= sm) -->
                     <div class="hidden sm:flex items-center gap-2 border-b border-gray-800 pb-3 mb-6 overflow-x-auto text-xs font-bold scrollbar-none">
-                        <button id="showcase-tab-metrics" onclick="switchShowcaseTab('metrics')" class="px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-2 transition whitespace-nowrap shadow-sm font-bold">
+                        <button id="showcase-tab-metrics" onclick="switchShowcaseTab('metrics')" class="showcase-dt-tab-active px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-2 transition whitespace-nowrap shadow-sm font-bold">
                             <i class="fa-solid fa-chart-line"></i> 1. Dashboard & Equidad
                         </button>
-                        <button id="showcase-tab-trades" onclick="switchShowcaseTab('trades')" class="px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium">
+                        <button id="showcase-tab-trades" onclick="switchShowcaseTab('trades')" class="showcase-dt-tab-inactive px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium">
                             <i class="fa-solid fa-table-list"></i> 2. Registro de Trades
                         </button>
-                        <button id="showcase-tab-calendar" onclick="switchShowcaseTab('calendar')" class="px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium">
+                        <button id="showcase-tab-calendar" onclick="switchShowcaseTab('calendar')" class="showcase-dt-tab-inactive px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium">
                             <i class="fa-solid fa-calendar-days"></i> 3. Calendario Mensual
                         </button>
-                        <button id="showcase-tab-propfirm" onclick="switchShowcaseTab('propfirm')" class="px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium">
+                        <button id="showcase-tab-propfirm" onclick="switchShowcaseTab('propfirm')" class="showcase-dt-tab-inactive px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium">
                             <i class="fa-solid fa-shield-halved"></i> 4. Auditoría de Fondeo
                         </button>
                     </div>
@@ -1320,9 +1320,9 @@
 
                 if (btnDesktop) {
                     if (isActive) {
-                        btnDesktop.className = "px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-2 transition whitespace-nowrap shadow-sm font-bold";
+                        btnDesktop.className = "showcase-dt-tab-active px-3.5 py-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-2 transition whitespace-nowrap shadow-sm font-bold";
                     } else {
-                        btnDesktop.className = "px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium";
+                        btnDesktop.className = "showcase-dt-tab-inactive px-3.5 py-2 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-2 transition whitespace-nowrap font-medium";
                     }
                 }
 

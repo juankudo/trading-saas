@@ -610,3 +610,37 @@ body {
             background-color: #fef2f2 !important;
             border-color: #fecaca !important;
         }
+
+        /* Tabs de escritorio del Showcase en modo claro */
+        html.light #showcase-tab-trades,
+        html.light #showcase-tab-calendar,
+        html.light #showcase-tab-propfirm {
+            color: #64748b !important;
+            background-color: transparent !important;
+        }
+        html.light #showcase-tab-trades:hover,
+        html.light #showcase-tab-calendar:hover,
+        html.light #showcase-tab-propfirm:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html.light #showcase-tab-metrics {
+            background-color: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+            color: #047857 !important;
+        }
+
+        /* Tabs del showcase desktop en modo claro: hover visible y activo */
+        html.light .showcase-dt-tab-inactive {
+            color: #475569 !important;
+            background-color: transparent !important;
+        }
+        html.light .showcase-dt-tab-inactive:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html.light .showcase-dt-tab-active {
+            background-color: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+            color: #047857 !important;
+        }
