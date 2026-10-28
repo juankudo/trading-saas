@@ -644,3 +644,18 @@ body {
             border-color: #a7f3d0 !important;
             color: #047857 !important;
         }
+
+        /* Banner Meta de Fondeo en modo claro */
+        html.light #showcase-meta-banner {
+            background: linear-gradient(to right, #fefce8, #fffbeb) !important;
+            background-image: linear-gradient(to right, #fefce8, #fffbeb) !important;
+            border-color: #fbbf24 !important;
+        }
+        html.light #showcase-meta-banner .text-amber-300,
+        html.light #showcase-meta-banner span {
+            color: #92400e !important;
+        }
+        html.light #showcase-meta-banner .text-amber-400,
+        html.light #showcase-meta-banner i.fa-trophy {
+            color: #b45309 !important;
+        }
