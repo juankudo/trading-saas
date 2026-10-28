@@ -4779,6 +4779,7 @@ const initialTrades = [];
 
             grid.style.removeProperty("width");
             grid.style.removeProperty("height");
+            grid.style.removeProperty("min-height");
             grid.style.removeProperty("aspect-ratio");
             if (!window.matchMedia("(min-width: 1024px)").matches) {
                 return;
@@ -4789,11 +4790,20 @@ const initialTrades = [];
             const bottomReserve = 48;
             const availableHeight = Math.max(0, document.documentElement.clientHeight - gridTop - bottomReserve);
             const calendarRatio = 2.05;
-            const width = Math.min(availableWidth, availableHeight * calendarRatio);
+
+            // Altura mínima segura para 3 filas sin comprimir tarjetas ni desbordar texto
+            const minGridHeight = 490;
+            const effectiveHeight = Math.max(availableHeight, minGridHeight);
+            const width = Math.min(availableWidth, effectiveHeight * calendarRatio);
 
             grid.style.width = `${width}px`;
-            grid.style.height = `${width / calendarRatio}px`;
-            grid.style.aspectRatio = "auto";
+            if (availableHeight >= minGridHeight) {
+                grid.style.height = `${width / calendarRatio}px`;
+                grid.style.aspectRatio = "auto";
+            } else {
+                grid.style.minHeight = `${minGridHeight}px`;
+                grid.style.height = "auto";
+            }
         }
 
         function renderMonthlyPerformance() {
@@ -4884,25 +4894,25 @@ const initialTrades = [];
                 const bestDayLabel = bestDay ? new Date(bestDay.date + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "—";
                 const bestSessionName = bestSession ? escapeGalleryHtml(bestSession.name) : "—";
                 const bestSessionRate = bestSession && bestSession.stats.total ? (bestSession.stats.wins / bestSession.stats.total) * 100 : 0;
-                                return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col ${cardTone} border rounded-xl p-4 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+                                return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col justify-between ${cardTone} border rounded-xl p-3 sm:p-3.5 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
 
-                    <div class="flex min-h-6 items-start justify-between gap-2">
-                        <h3 class="whitespace-nowrap text-lg font-bold text-white">${month.name}</h3>
+                    <div class="flex min-h-6 items-start justify-between gap-1.5 mb-1">
+                        <h3 class="whitespace-nowrap text-base sm:text-lg font-bold text-white">${month.name}</h3>
                         <div class="flex max-w-[55%] flex-wrap justify-end gap-1">${badges}</div>
                     </div>
-                    <div class="monthly-primary-metrics mt-auto grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-gray-800 pt-2">
+                    <div class="monthly-primary-metrics grid grid-cols-2 gap-x-3 gap-y-1 border-t border-gray-800/80 pt-1.5">
                         <div class="min-w-0">
-                            <p class="text-xs uppercase tracking-wide text-gray-400">Retorno</p>
-                            <p class="monthly-primary-value truncate text-2xl font-bold ${netColor}">${netValue}</p>
+                            <p class="text-[10px] sm:text-xs uppercase tracking-wide text-gray-400 font-medium">Retorno</p>
+                            <p class="monthly-primary-value truncate text-xl sm:text-2xl font-bold ${netColor}">${netValue}</p>
                         </div>
                         <div class="min-w-0 text-right">
-                            <p class="text-xs uppercase tracking-wide text-gray-400">Efectividad</p>
-                            <p class="text-lg font-bold text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
+                            <p class="text-[10px] sm:text-xs uppercase tracking-wide text-gray-400 font-medium">Efectividad</p>
+                            <p class="text-base sm:text-lg font-bold text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
                         </div>
-                        <div class="flex items-center justify-between gap-1 text-sm text-gray-300">
+                        <div class="flex items-center justify-between gap-1 text-xs text-gray-400 pt-0.5">
                             <span>Operaciones</span><strong class="text-gray-200">${month.total}</strong>
                         </div>
-                        <div class="flex items-center justify-end gap-2 text-sm text-gray-300">
+                        <div class="flex items-center justify-end gap-1.5 text-xs text-gray-400 pt-0.5">
                             <span>PF</span><strong class="${profitFactor === null ? "text-gray-400" : "text-gray-200"}">${profitFactorLabel}</strong>
                         </div>
                     </div>
