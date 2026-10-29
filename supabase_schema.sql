@@ -1,8 +1,11 @@
 -- ==============================================================================
--- SCRIPT DE BASE DE DATOS SUPABASE — TRADING JOURNAL PRO SaaS
+-- SCRIPT DE BASE DE DATOS SUPABASE — TRADING JOURNAL PRO SaaS (v2.0)
 -- ==============================================================================
--- Este script crea todas las tablas, relaciones, disparadores automáticos
--- y políticas de seguridad RLS (Row Level Security) para el SaaS.
+-- Este script crea todas las tablas, relaciones, disparadores automáticos,
+-- políticas de seguridad RLS (Row Level Security) y bucket de almacenamiento.
+-- 
+-- Compatible con identificadores numéricos, timestamps y multi-entradas
+-- de la Bitácora de Trading Pro (IDs tipo TEXT).
 --
 -- INSTRUCCIONES:
 -- 1. Ve a tu panel en https://supabase.com y abre tu proyecto.
@@ -40,63 +43,107 @@ create table if not exists public.subscriptions (
     updated_at timestamptz default now()
 );
 
--- 4. TABLA DE CUENTAS DE TRADING (REALES, EVALUACIONES, FONDEADAS)
-create table if not exists public.accounts (
-    id uuid primary key default gen_random_uuid(),
+-- ==============================================================================
+-- 4. TABLAS DE LA BITÁCORA CON COMPATIBILIDAD TEXT (IDs nativos de la Bitácora)
+-- ==============================================================================
+
+-- Si las tablas previas tenían tipo UUID, las recreamos limpiamente
+drop table if exists public.balance_snapshots cascade;
+drop table if exists public.trades cascade;
+drop table if exists public.backtest_sessions cascade;
+drop table if exists public.account_groups cascade;
+drop table if exists public.accounts cascade;
+
+-- 4.1. CUENTAS DE TRADING (REALES, EVALUACIONES, FONDEADAS)
+create table public.accounts (
+    id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
     name text not null,
     stage text default 'real', -- 'real', 'prueba', 'fondeada', 'instant'
     initial_balance numeric not null default 0,
     balance_actual numeric not null default 0,
     balance_actual_at timestamptz default now(),
-    config jsonb default '{}'::jsonb, -- Reglas de fondeo, drawdowns, consistencia, etc.
+    config jsonb default '{}'::jsonb, -- Reglas de fondeo, drawdowns, fases, etc.
     created_at timestamptz default now(),
     updated_at timestamptz default now()
 );
 
--- 5. TABLA DE GRUPOS DE CUENTAS
-create table if not exists public.account_groups (
-    id uuid primary key default gen_random_uuid(),
+-- 4.2. GRUPOS DE CUENTAS REALES
+create table public.account_groups (
+    id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
     name text not null,
     created_at timestamptz default now()
 );
 
--- 6. TABLA DE OPERACIONES (TRADES)
-create table if not exists public.trades (
-    id uuid primary key default gen_random_uuid(),
+-- 4.3. SESIONES DE BACKTESTING
+create table public.backtest_sessions (
+    id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
-    account_id uuid not null references public.accounts(id) on delete cascade,
-    symbol text not null,
-    direction text not null check (direction in ('buy', 'sell')),
-    entry_price numeric,
-    exit_price numeric,
-    stop_loss numeric,
-    take_profit numeric,
-    lot_size numeric,
-    pnl numeric not null default 0,
-    result_pct numeric default 0,
-    open_time timestamptz not null default now(),
-    close_time timestamptz,
-    status text default 'closed',
+    name text not null,
+    balance numeric not null default 100000,
+    start_date text,
     notes text,
-    tags text[] default '{}',
-    details jsonb default '{}'::jsonb, -- Almacena capturas, comisiones, swap, etc.
+    data jsonb default '{}'::jsonb,
     created_at timestamptz default now()
 );
 
--- 7. TABLA DE INSTANTÁNEAS DE BALANCE (BALANCE HISTORY)
-create table if not exists public.balance_snapshots (
-    id uuid primary key default gen_random_uuid(),
+-- 4.4. OPERACIONES (TRADES) — SOPORTA REAL Y BACKTESTING
+create table public.trades (
+    id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
-    account_id uuid references public.accounts(id) on delete cascade,
-    balance numeric not null default 0,
-    snapshot_data jsonb default '{}'::jsonb,
+    account_id text references public.accounts(id) on delete set null,
+    session_id text references public.backtest_sessions(id) on delete set null,
+    mode text not null default 'real', -- 'real' o 'backtesting'
+    par text not null default 'EURUSD',
+    orden text not null default 'Buy',
+    fecha text not null,
+    hora text default '00:00',
+    estado text not null default 'Ganada',
+    pips_sl numeric default 0,
+    pips_tp numeric default 0,
+    rr numeric default 0,
+    riesgo numeric default 0,
+    lotaje numeric default 0,
+    resultado_parcial numeric default 0,
+    sesion text,
+    tendencia text,
+    nota_antes text,
+    nota_despues text,
+    link_antes text,
+    link_despues text,
+    multi_entry_id text,
+    imagenes_antes text[] default '{}',
+    imagenes_despues text[] default '{}',
+    data jsonb default '{}'::jsonb, -- Objeto completo del trade para fidelidad total
+    created_at timestamptz default now(),
+    updated_at timestamptz default now()
+);
+
+-- 4.5. HISTORIAL DE INSTANTÁNEAS DE BALANCE
+create table public.balance_snapshots (
+    id text primary key default gen_random_uuid()::text,
+    user_id uuid not null references public.profiles(id) on delete cascade,
+    date text not null,
+    snapshot_data jsonb not null default '{}'::jsonb,
     snapshot_at timestamptz default now()
 );
 
 -- ==============================================================================
--- DISPARADORES AUTOMÁTICOS (TRIGGERS)
+-- 5. BUCKET DE ALMACENAMIENTO PARA CAPTURAS DE PANTALLA
+-- ==============================================================================
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+    'trade-screenshots',
+    'trade-screenshots',
+    true,
+    5242880, -- Límite de 5 MB por imagen
+    array['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+)
+on conflict (id) do update set public = true;
+
+-- ==============================================================================
+-- 6. DISPARADORES AUTOMÁTICOS (TRIGGERS)
 -- ==============================================================================
 
 -- Cuando un usuario se registra en Supabase Auth, se crea automáticamente su
@@ -109,7 +156,8 @@ begin
         new.id, 
         new.email, 
         coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1))
-    );
+    )
+    on conflict (id) do update set email = excluded.email;
 
     insert into public.subscriptions (user_id, provider, status, trial_ends_at, current_period_end)
     values (
@@ -118,7 +166,8 @@ begin
         'trialing',
         now() + interval '14 days',
         now() + interval '14 days'
-    );
+    )
+    on conflict do nothing;
 
     return new;
 end;
@@ -131,7 +180,7 @@ create trigger on_auth_user_created
     for each row execute procedure public.handle_new_user();
 
 -- ==============================================================================
--- SEGURIDAD ROW LEVEL SECURITY (RLS)
+-- 7. SEGURIDAD ROW LEVEL SECURITY (RLS)
 -- Cada trader solo tiene acceso a sus propios datos.
 -- ==============================================================================
 
@@ -139,6 +188,7 @@ alter table public.profiles enable row level security;
 alter table public.subscriptions enable row level security;
 alter table public.accounts enable row level security;
 alter table public.account_groups enable row level security;
+alter table public.backtest_sessions enable row level security;
 alter table public.trades enable row level security;
 alter table public.balance_snapshots enable row level security;
 
@@ -170,6 +220,11 @@ drop policy if exists "Usuarios gestionan sus grupos de cuentas" on public.accou
 create policy "Usuarios gestionan sus grupos de cuentas" on public.account_groups
     for all using (auth.uid() = user_id);
 
+-- Políticas para Backtest Sessions
+drop policy if exists "Usuarios gestionan sus sesiones de backtest" on public.backtest_sessions;
+create policy "Usuarios gestionan sus sesiones de backtest" on public.backtest_sessions
+    for all using (auth.uid() = user_id);
+
 -- Políticas para Trades
 drop policy if exists "Usuarios ven y gestionan sus trades" on public.trades;
 create policy "Usuarios ven y gestionan sus trades" on public.trades
@@ -180,12 +235,34 @@ drop policy if exists "Usuarios ven y gestionan sus instantáneas" on public.bal
 create policy "Usuarios ven y gestionan sus instantáneas" on public.balance_snapshots
     for all using (auth.uid() = user_id);
 
+-- Políticas para Storage (Capturas de trades)
+drop policy if exists "Capturas visibles para todos o autenticados" on storage.objects;
+create policy "Capturas visibles para todos o autenticados" on storage.objects
+    for select using (bucket_id = 'trade-screenshots');
+
+drop policy if exists "Usuarios autenticados suben capturas" on storage.objects;
+create policy "Usuarios autenticados suben capturas" on storage.objects
+    for insert with check (
+        bucket_id = 'trade-screenshots' 
+        and auth.role() = 'authenticated'
+    );
+
+drop policy if exists "Usuarios eliminan sus capturas" on storage.objects;
+create policy "Usuarios eliminan sus capturas" on storage.objects
+    for delete using (
+        bucket_id = 'trade-screenshots' 
+        and auth.uid() = owner
+    );
+
 -- ==============================================================================
--- ÍNDICES DE RENDIMIENTO
+-- 8. ÍNDICES DE RENDIMIENTO
 -- ==============================================================================
 create index if not exists idx_accounts_user on public.accounts(user_id);
 create index if not exists idx_trades_account on public.trades(account_id);
+create index if not exists idx_trades_session on public.trades(session_id);
 create index if not exists idx_trades_user on public.trades(user_id);
-create index if not exists idx_trades_open_time on public.trades(open_time);
+create index if not exists idx_trades_fecha on public.trades(fecha);
+create index if not exists idx_trades_mode on public.trades(mode);
 create index if not exists idx_snapshots_user on public.balance_snapshots(user_id);
 create index if not exists idx_subscriptions_user on public.subscriptions(user_id);
+create index if not exists idx_backtest_sessions_user on public.backtest_sessions(user_id);

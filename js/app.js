@@ -1202,6 +1202,7 @@ const initialTrades = [];
             if (!confirm(`¿Eliminar el grupo "${group.name}"? Las cuentas y sus operaciones se conservarán.`)) return;
             accountGroups = accountGroups.filter(item => String(item.id) !== String(groupId));
             if (String(activeAccountGroupId) === String(groupId)) activeAccountGroupId = null;
+            if (typeof deleteFromCloud === "function") deleteFromCloud("group", groupId);
             await saveToStorage();
             renderGroups();
             showToast("Grupo eliminado; las cuentas se conservaron");
@@ -1376,9 +1377,11 @@ const initialTrades = [];
                         ...group,
                         accountIds: (Array.isArray(group.accountIds) ? group.accountIds : []).filter(accountId => String(accountId) !== String(id))
                     }));
+                    if (typeof deleteFromCloud === "function") deleteFromCloud("account", id);
                 } else {
                     backtestSessions = backtestSessions.filter(s => s.id !== id);
                     trades = trades.filter(t => t.sessionId !== id);
+                    if (typeof deleteFromCloud === "function") deleteFromCloud("session", id);
                 }
                 await saveToStorage();
                 renderGroups();
@@ -2002,7 +2005,8 @@ const initialTrades = [];
                         if (Array.isArray(data.backtestPairs)) await dbSet(STORAGE_KEY_BACKTEST_PAIRS, backtestPairsList);
                     }
                     
-                    await saveToStorage(); 
+                    await saveToStorage();
+                    if (typeof triggerCloudSave === "function") await triggerCloudSave(true);
                     showToast("Datos Importados y Migrados Correctamente");
                     await setMode(currentMode);
                 } catch (err) { 
@@ -4533,6 +4537,7 @@ const initialTrades = [];
                 trades = trades.filter(t => t.id !== id);
                 addMt5TombstoneFromTrade(removedTrade);
                 await saveMt5Runtime();
+                if (typeof deleteFromCloud === "function") deleteFromCloud("trade", id);
                 await saveToStorage();
                 showToast("Operación Eliminada");
             }
