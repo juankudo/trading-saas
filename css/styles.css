@@ -235,11 +235,11 @@ button, a, input, select, textarea {
         html.light ::placeholder { color: #9ca3af; }
 
         /* Fondos neutros */
-        html.light .bg-\[\#161b22\], html.light .bg-\[\#11151c\] { background-color: #ffffff; }
+        html.light .bg-\[\#161b22\], html.light .bg-\[\#11151c\], html.light .bg-\[\#111625\] { background-color: #ffffff !important; }
         html.light .bg-\[\#112130\] { background-color: #e9f6ee; }
-        html.light .bg-gray-950, html.light .bg-gray-950\/60 { background-color: #eef1f5; }
-        html.light .bg-gray-900, html.light .bg-gray-900\/50, html.light .bg-gray-900\/60, html.light .bg-gray-900\/90 { background-color: #f3f5f8; }
-        html.light .bg-gray-800 { background-color: #e9edf2; }
+        html.light .bg-gray-950, html.light .bg-gray-950\/50, html.light .bg-gray-950\/60, html.light .bg-gray-950\/70, html.light .bg-gray-950\/80, html.light .bg-gray-950\/90 { background-color: #f8fafc !important; }
+        html.light .bg-gray-900, html.light .bg-gray-900\/50, html.light .bg-gray-900\/60, html.light .bg-gray-900\/70, html.light .bg-gray-900\/80, html.light .bg-gray-900\/90 { background-color: #f8fafc !important; }
+        html.light .bg-gray-800, html.light .bg-gray-800\/60, html.light .bg-gray-800\/80, html.light .bg-gray-800\/90 { background-color: #f1f5f9 !important; }
         html.light .bg-black\/85 { background-color: rgba(15, 23, 42, 0.45); }
         html.light .hover\:bg-\[\#1a2129\]:hover { background-color: #f0f3f7; }
         html.light .hover\:bg-gray-800:hover { background-color: #e5e9ef; }
@@ -349,7 +349,7 @@ button, a, input, select, textarea {
         .balance-group-glow { animation: balance-group-glow 0.9s ease-out; }
 
         /* Celebración de fase superada: confeti y modal */
-        #confettiCanvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 80; }
+        #confettiCanvas { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 100 !important; }
         #phaseCelebrationModal .phase-celebration-pop { animation: phase-celebration-pop 0.5s cubic-bezier(0.22, 1.4, 0.36, 1) both; }
         @keyframes phase-celebration-pop {
             from { opacity: 0; transform: scale(0.9) translateY(14px); }
@@ -685,4 +685,960 @@ button, a, input, select, textarea {
         html.light #showcase-meta-banner .text-amber-400,
         html.light #showcase-meta-banner i.fa-trophy {
             color: #b45309 !important;
+        }
+
+
+        /* ==========================================================================
+           SIMULADOR INTERACTIVO DE MÉTRICAS & EVOLUCIÓN DEL TRADER
+           ========================================================================== */
+        @keyframes toast-slide-down {
+            0% { opacity: 0; transform: translateY(-10px) scale(0.97); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .anim-toast-in {
+            animation: toast-slide-down 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        #evo-curve-polyline,
+        #evo-curve-polygon {
+            transition: all 0.55s cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
+        #evo-curve-dot,
+        #evo-curve-pulse {
+            transition: cx 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), cy 0.55s cubic-bezier(0.2, 0.8, 0.2, 1), fill 0.4s ease;
+        }
+
+        /* Botones de etapa en el simulador de métricas */
+        .evo-stage-btn.active {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+        }
+        .evo-stage-btn.inactive {
+            background-color: rgba(17, 24, 39, 0.6);
+            border-color: rgba(55, 65, 81, 0.6);
+        }
+        .evo-stage-btn.inactive:hover {
+            border-color: rgba(156, 163, 175, 0.5);
+            background-color: rgba(31, 41, 55, 0.8);
+        }
+
+        /* Modo Claro: Botones de etapa */
+        html.light .evo-stage-btn.active {
+            background-color: #ecfdf5 !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2) !important;
+        }
+        html.light .evo-stage-btn.inactive {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .evo-stage-btn.inactive:hover {
+            background-color: #f1f5f9 !important;
+            border-color: #94a3b8 !important;
+        }
+        html.light .evo-stage-btn.inactive span.text-gray-200 {
+            color: #0f172a !important;
+        }
+
+        /* ==========================================================================
+           LABORATORIO DE BACKTESTING & SIMULADOR DE FONDEO Y RETIROS
+           ========================================================================== */
+        /* Chips selectores de empresa de fondeo */
+        .bt-chip-btn.active {
+            background-color: #d97706;
+            color: #0f172a;
+            border: 1px solid #f59e0b;
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+            font-weight: 800;
+        }
+        .bt-chip-btn.inactive {
+            background-color: rgba(17, 24, 39, 0.7);
+            border: 1px solid rgba(75, 85, 99, 0.5);
+            color: #9ca3af;
+        }
+        .bt-chip-btn.inactive:hover {
+            background-color: rgba(31, 41, 55, 0.9);
+            color: #ffffff;
+            border-color: rgba(156, 163, 175, 0.6);
+        }
+
+        /* Tabs de fases de fondeo en el backtesting */
+        .bt-phase-tab.active {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.5);
+            font-weight: 800;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+        }
+        .bt-phase-tab.inactive {
+            color: #9ca3af;
+            background-color: transparent;
+            border: 1px solid transparent;
+        }
+        .bt-phase-tab.inactive:hover {
+            color: #ffffff;
+            background-color: rgba(31, 41, 55, 0.6);
+        }
+
+        /* ==========================================================================
+           MODO CLARO (LIGHT THEME): SIMULADOR DE MÉTRICAS & DIAGNÓSTICO
+           ========================================================================== */
+        html.light #evo-controller-bar {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light #evo-controller-bar .text-white {
+            color: #0f172a !important;
+        }
+        html.light #evo-controller-bar p {
+            color: #475569 !important;
+        }
+        html.light #evo-controller-bar span.text-emerald-300 {
+            color: #047857 !important;
+            background-color: #d1fae5 !important;
+            border-color: #6ee7b7 !important;
+        }
+        html.light #evo-btn-autoplay {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #1e293b !important;
+        }
+        html.light #evo-btn-autoplay:hover {
+            background-color: #e2e8f0 !important;
+        }
+
+        /* Toast en modo claro */
+        html.light #evo-trade-toast {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #1e293b !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light #evo-toast-text {
+            color: #1e293b !important;
+            font-weight: 600;
+        }
+        html.light #evo-toast-badge {
+            background-color: #d1fae5 !important;
+            border-color: #6ee7b7 !important;
+            color: #047857 !important;
+        }
+        html.light #evo-toast-badge.bg-rose-950 {
+            background-color: #ffe4e6 !important;
+            border-color: #fda4af !important;
+            color: #be123c !important;
+        }
+        html.light #evo-toast-badge.bg-sky-950 {
+            background-color: #e0f2fe !important;
+            border-color: #7dd3fc !important;
+            color: #0369a1 !important;
+        }
+        html.light #evo-toast-badge.bg-emerald-950 {
+            background-color: #d1fae5 !important;
+            border-color: #6ee7b7 !important;
+            color: #047857 !important;
+        }
+
+        /* Diagnóstico bajo la curva en modo claro (Soluciona Image 2) */
+        html.light #evo-diagnosis-box {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light #evo-diagnosis-content {
+            color: #0f172a !important;
+        }
+        html.light #evo-diagnosis-content strong {
+            color: #0f172a !important;
+        }
+        html.light #evo-diagnosis-content span {
+            color: #047857 !important;
+            font-weight: 700 !important;
+        }
+        html.light #evo-diagnosis-content span.text-rose-400 {
+            color: #e11d48 !important;
+        }
+        html.light #evo-diagnosis-content span.text-sky-400 {
+            color: #0284c7 !important;
+        }
+        html.light #evo-diagnosis-content span.text-emerald-400 {
+            color: #047857 !important;
+        }
+
+        /* Curva SVG y contenedor en modo claro */
+        html.light #showcase-view-metrics .bg-gray-900\/60,
+        html.light #showcase-view-metrics .bg-gray-900\/80 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        }
+        html.light #evo-curve-title {
+            color: #0f172a !important;
+        }
+        html.light #evo-svg-container line {
+            stroke: #e2e8f0 !important;
+        }
+        html.light #evo-pf {
+            color: #047857 !important;
+        }
+        html.light #evo-diff.text-emerald-400,
+        html.light #evo-diff-m.text-emerald-400 {
+            color: #047857 !important;
+        }
+        html.light #evo-diff.text-rose-400,
+        html.light #evo-diff-m.text-rose-400 {
+            color: #e11d48 !important;
+        }
+        html.light #evo-curve-netgain {
+            background-color: #ecfdf5 !important;
+            border-color: #86efac !important;
+            color: #047857 !important;
+        }
+        html.light #evo-curve-netgain.bg-rose-950\/60 {
+            background-color: #fff1f2 !important;
+            border-color: #fda4af !important;
+            color: #e11d48 !important;
+        }
+
+        /* Floating Badges en modo claro */
+        html.light #evo-badge-left,
+        html.light #evo-badge-right,
+        html.light #evo-badge-mobile {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+        }
+        html.light #evo-badge-left-text,
+        html.light #evo-badge-right-text {
+            color: #1e293b !important;
+        }
+        html.light #evo-badge-left-text strong {
+            color: #047857 !important;
+        }
+        html.light #evo-badge-right-text strong {
+            color: #0284c7 !important;
+        }
+
+        /* ==========================================================================
+           MODO CLARO (LIGHT THEME): LABORATORIO DE BACKTESTING (Soluciona Image 3)
+           ========================================================================== */
+        html.light section#backtesting {
+            background-color: #f8fafc !important;
+            background-image: none !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light section#backtesting .bg-\[\#111625\] {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light section#backtesting .bg-\[\#111726\] {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light section#backtesting .bg-\[\#111726\]:hover {
+            border-color: #cbd5e1 !important;
+        }
+
+        /* Chips y tabs */
+        html.light .bt-chip-btn.active {
+            background-color: #d97706 !important;
+            color: #ffffff !important;
+            border: 1px solid #b45309 !important;
+            box-shadow: 0 2px 6px rgba(217, 119, 6, 0.3) !important;
+        }
+        html.light .bt-chip-btn.inactive {
+            background-color: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #334155 !important;
+        }
+        html.light .bt-chip-btn.inactive:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html.light .bt-phase-tab.active {
+            background-color: #fef3c7 !important;
+            color: #92400e !important;
+            border: 1px solid #fcd34d !important;
+        }
+        html.light .bt-phase-tab.inactive {
+            color: #64748b !important;
+        }
+        html.light .bt-phase-tab.inactive:hover {
+            color: #0f172a !important;
+            background-color: #f1f5f9 !important;
+        }
+
+        /* Tabla de especificaciones de reglas (Left Col) */
+        html.light #bt-spec-rules-card,
+        html.light section#backtesting .bg-gray-900\/70 {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #bt-spec-rules-card span.text-gray-400,
+        html.light section#backtesting .bg-gray-900\/70 span.text-gray-400 {
+            color: #475569 !important;
+        }
+        html.light #bt-spec-balance {
+            color: #0f172a !important;
+        }
+        html.light #bt-spec-target {
+            color: #b45309 !important;
+        }
+        html.light #bt-spec-daily {
+            color: #dc2626 !important;
+        }
+        html.light #bt-spec-maxdd {
+            color: #b91c1c !important;
+        }
+        html.light #bt-spec-split {
+            color: #047857 !important;
+        }
+
+        /* Contenedor de Fases (Stepper) */
+        html.light section#backtesting .bg-gray-900\/90 {
+            background-color: #f1f5f9 !important;
+            border-color: #e2e8f0 !important;
+        }
+
+        /* Header de Auditoría en Tiempo Real (Right Col) */
+        html.light #bt-audit-card,
+        html.light section#backtesting .bg-gradient-to-br.from-gray-900\/90 {
+            background: #ffffff !important;
+            background-image: none !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04) !important;
+        }
+        html.light #bt-audit-status-badge {
+            background-color: #d1fae5 !important;
+            border-color: #6ee7b7 !important;
+            color: #047857 !important;
+        }
+        html.light #bt-audit-status-badge.bg-amber-950 {
+            background-color: #fef3c7 !important;
+            border-color: #fcd34d !important;
+            color: #92400e !important;
+        }
+        html.light #bt-current-balance {
+            color: #0f172a !important;
+        }
+        html.light #bt-current-gain {
+            color: #047857 !important;
+        }
+        html.light #bt-target-distance {
+            color: #b45309 !important;
+        }
+        html.light #bt-progress-label,
+        html.light section#backtesting .text-gray-300 {
+            color: #334155 !important;
+        }
+        html.light #bt-daily-consumed {
+            color: #047857 !important;
+        }
+        html.light #bt-max-consumed {
+            color: #047857 !important;
+        }
+        html.light section#backtesting .bg-gray-950 {
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        /* 3 Mini Pills de Checklist (Días, Consistencia, R:R) */
+        html.light section#backtesting .bg-gray-950\/60 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #bt-pill-days {
+            color: #0f172a !important;
+        }
+        html.light #bt-pill-cons {
+            color: #047857 !important;
+        }
+        html.light #bt-pill-rr {
+            color: #0284c7 !important;
+        }
+
+        /* Terminal de Retiros y Liquidación */
+        html.light #bt-payout-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+            background-image: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%) !important;
+            border-color: #86efac !important;
+        }
+        html.light #bt-payout-box h4 {
+            color: #064e3b !important;
+        }
+        html.light #bt-payout-box .bg-emerald-950 {
+            background-color: #d1fae5 !important;
+            border-color: #6ee7b7 !important;
+            color: #065f46 !important;
+        }
+        html.light #bt-payout-box .bg-gray-950\/70 {
+            background-color: #ffffff !important;
+            border-color: #bbf7d0 !important;
+        }
+        html.light #bt-payout-box .bg-gray-950\/70 span.text-gray-400 {
+            color: #475569 !important;
+        }
+        html.light #bt-payout-total {
+            color: #0f172a !important;
+        }
+        html.light #bt-payout-box .bg-emerald-950\/40 {
+            background-color: #ffffff !important;
+            border-color: #86efac !important;
+        }
+        html.light #bt-payout-box .bg-emerald-950\/40 span.text-emerald-300 {
+            color: #047857 !important;
+        }
+        html.light #bt-payout-net {
+            color: #047857 !important;
+        }
+        html.light #bt-btn-reset-payout {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
+        }
+        html.light #bt-btn-reset-payout:hover {
+            background-color: #f1f5f9 !important;
+            color: #0f172a !important;
+        }
+
+        /* Recibo de Retiro Simulado */
+        html.light #bt-payout-receipt-card {
+            background-color: #ecfdf5 !important;
+            border-color: #34d399 !important;
+            color: #064e3b !important;
+        }
+        html.light #bt-payout-receipt-card strong.text-white {
+            color: #0f172a !important;
+        }
+        html.light #bt-payout-receipt-card strong.text-emerald-400 {
+            color: #047857 !important;
+        }
+        html.light #bt-payout-receipt-card .border-emerald-800\/60 {
+            border-color: #a7f3d0 !important;
+            color: #065f46 !important;
+        }
+        html.light #bt-payout-receipt-card span.text-emerald-300 {
+            color: #047857 !important;
+        }
+
+        /* Banner de Próximamente / Roadmap */
+        html.light #bt-roadmap-banner {
+            background: linear-gradient(to right, #fefce8, #eff6ff) !important;
+            background-image: linear-gradient(to right, #fefce8, #eff6ff) !important;
+            border-color: #fcd34d !important;
+        }
+        html.light #bt-roadmap-banner h4 {
+            color: #78350f !important;
+        }
+        html.light #bt-roadmap-banner p {
+            color: #475569 !important;
+        }
+        html.light #bt-roadmap-banner strong {
+            color: #0f172a !important;
+        }
+
+        /* ==========================================================================
+           VISOR DE GALERÍA Y ANÁLISIS DE TRADES (ANTES / DESPUÉS)
+           ========================================================================== */
+        .trade-inspect-chip.active {
+            background-color: #10b981;
+            color: #0f172a;
+            font-weight: 800;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+        }
+        .trade-inspect-chip.inactive {
+            background-color: transparent;
+            color: #94a3b8;
+        }
+        .trade-inspect-chip.inactive:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .trade-dt-row.active {
+            background-color: rgba(16, 185, 129, 0.12) !important;
+            border-left: 3px solid #10b981;
+        }
+
+        /* Modo Claro: Visor de Galería & Análisis */
+        html.light .trade-inspect-chip.active {
+            background-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+        html.light .trade-inspect-chip.inactive {
+            color: #64748b !important;
+        }
+        html.light .trade-inspect-chip.inactive:hover {
+            color: #0f172a !important;
+            background-color: #e2e8f0 !important;
+        }
+        html.light .trade-dt-row.active {
+            background-color: #ecfdf5 !important;
+            border-left: 3px solid #10b981 !important;
+        }
+        html.light .trade-dt-row:hover {
+            background-color: #f8fafc !important;
+        }
+        html.light .trade-dt-row td {
+            color: #334155;
+        }
+        html.light .trade-dt-row td .text-white {
+            color: #0f172a !important;
+        }
+        html.light .trade-dt-row td .text-gray-300 {
+            color: #475569 !important;
+        }
+        html.light .trade-dt-row td .text-gray-500 {
+            color: #64748b !important;
+        }
+        html.light .trade-dt-row td .bg-gray-800 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        html.light .trade-dt-row td .bg-gray-900 {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            color: #334155 !important;
+        }
+        html.light #showcase-view-trades thead {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #475569 !important;
+        }
+        html.light #showcase-view-trades .bg-gray-950\/40 {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #trade-inspection-card {
+            background: #ffffff !important;
+            background-image: none !important;
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light #trade-inspection-card .bg-gray-950\/70 {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #inspect-card-title {
+            color: #0f172a !important;
+        }
+        html.light #inspect-card-sub {
+            color: #475569 !important;
+        }
+        html.light #inspect-nota-antes,
+        html.light #inspect-nota-despues {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+            color: #1e293b !important;
+        }
+        html.light #trade-lightbox-modal .bg-\[\#111625\] {
+            background-color: #ffffff !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #lightbox-title {
+            color: #0f172a !important;
+        }
+        html.light #lightbox-subtitle {
+            color: #475569 !important;
+        }
+        html.light #lightbox-note {
+            color: #1e293b !important;
+        }
+
+        /* ==========================================================================
+           SHOWCASE CALENDARIO MENSUAL & AUDITORÍA ANUAL
+           ========================================================================== */
+        .showcase-month-card {
+            position: relative;
+            cursor: pointer;
+            border-radius: 0.75rem;
+            border-width: 1.5px;
+            background-color: #161b22;
+            transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 200ms ease, border-color 200ms ease;
+        }
+        .showcase-month-card:hover,
+        .showcase-month-card.active-month-card {
+            transform: translateY(-2px) scale(1.02);
+            z-index: 10;
+        }
+        .showcase-month-card.monthly-month-best {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #11251c 0%, #161b22 100%);
+        }
+        .showcase-month-card.monthly-month-best:hover,
+        .showcase-month-card.monthly-month-best.active-month-card {
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28);
+            border-color: #34d399;
+        }
+        .showcase-month-card.monthly-month-worst {
+            border-color: #ef4444;
+            background: linear-gradient(135deg, #291819 0%, #161b22 100%);
+        }
+        .showcase-month-card.monthly-month-worst:hover,
+        .showcase-month-card.monthly-month-worst.active-month-card {
+            box-shadow: 0 8px 24px rgba(239, 68, 68, 0.22);
+            border-color: #f87171;
+        }
+        .showcase-month-card.monthly-month-be {
+            border-color: #f59e0b;
+            background: linear-gradient(135deg, #282313 0%, #161b22 100%);
+        }
+        .showcase-month-card.monthly-month-be:hover,
+        .showcase-month-card.monthly-month-be.active-month-card {
+            box-shadow: 0 8px 24px rgba(245, 158, 11, 0.22);
+            border-color: #fbbf24;
+        }
+        .showcase-month-card.monthly-month-current {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #132238 0%, #161b22 100%);
+        }
+        .showcase-month-card.monthly-month-current:hover,
+        .showcase-month-card.monthly-month-current.active-month-card {
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.28);
+            border-color: #60a5fa;
+        }
+        .showcase-month-card.monthly-month-win {
+            border-color: rgba(16, 185, 129, 0.35);
+        }
+        .showcase-month-card.monthly-month-win:hover,
+        .showcase-month-card.monthly-month-win.active-month-card {
+            border-color: #10b981;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.18);
+        }
+
+        /* Modo Claro: Showcase Calendario */
+        html.light .showcase-month-card {
+            background-color: #ffffff !important;
+        }
+        html.light .showcase-month-card.monthly-month-best {
+            background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 100%) !important;
+            border-color: #10b981 !important;
+        }
+        html.light .showcase-month-card.monthly-month-worst {
+            background: linear-gradient(135deg, #fef2f2 0%, #ffffff 100%) !important;
+            border-color: #ef4444 !important;
+        }
+        html.light .showcase-month-card.monthly-month-be {
+            background: linear-gradient(135deg, #fffbeb 0%, #ffffff 100%) !important;
+            border-color: #f59e0b !important;
+        }
+        html.light .showcase-month-card.monthly-month-current {
+            background: linear-gradient(135deg, #eff6ff 0%, #ffffff 100%) !important;
+            border-color: #3b82f6 !important;
+        }
+        html.light .showcase-month-card.monthly-month-win {
+            border-color: #cbd5e1 !important;
+        }
+        html.light .showcase-month-card.monthly-month-win:hover,
+        html.light .showcase-month-card.monthly-month-win.active-month-card {
+            border-color: #10b981 !important;
+        }
+        html.light #showcase-month-inspector {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #showcase-month-inspector .bg-gray-900\/60 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #smi-month-title {
+            color: #0f172a !important;
+        }
+        html.light .showcase-month-card h4 {
+            color: #0f172a !important;
+        }
+        html.light .showcase-month-card .text-gray-400 {
+            color: #64748b !important;
+        }
+        html.light .showcase-month-card .border-gray-800\/80,
+        html.light .showcase-month-card .border-emerald-800\/80 {
+            border-color: #e2e8f0 !important;
+        }
+        html.light #showcase-view-calendar .bg-gray-900\/80 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #showcase-view-calendar .text-white {
+            color: #0f172a !important;
+        }
+        html.light #showcase-view-calendar .bg-gray-950\/80 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+        }
+
+        /* ==========================================================================
+           SHOWCASE AUDITORÍA DE FONDEO & SIMULADOR DE METAS (VIEW 4)
+           ========================================================================== */
+        .propfirm-preset-btn.active {
+            background-color: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+        .propfirm-preset-btn.inactive {
+            background-color: rgba(17, 24, 39, 0.8);
+            color: #9ca3af;
+            border-color: rgba(75, 85, 99, 0.4);
+        }
+        .propfirm-preset-btn.inactive:hover {
+            color: #ffffff;
+            border-color: rgba(156, 163, 175, 0.6);
+        }
+
+        /* Modo Claro: Botones Preset y Controles Superiores */
+        html.light .propfirm-preset-btn.active {
+            background-color: #ecfdf5 !important;
+            color: #059669 !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 2px 6px rgba(16, 185, 129, 0.15) !important;
+        }
+        html.light .propfirm-preset-btn.inactive {
+            background-color: #f1f5f9 !important;
+            color: #475569 !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .propfirm-preset-btn.inactive:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html.light .propfirm-step-btn {
+            background-color: #f1f5f9 !important;
+            color: #1e293b !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .propfirm-step-btn:hover {
+            background-color: #e2e8f0 !important;
+        }
+        html.light .propfirm-reset-btn {
+            background-color: #f8fafc !important;
+            color: #64748b !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .propfirm-reset-btn:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+
+        /* Modo Claro: Tarjeta de Objetivo Principal (Legibilidad Perfecta) */
+        html.light #pf-target-box {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+            border-color: #86efac !important;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.08) !important;
+        }
+        html.light #pf-target-box #pf-target-title {
+            color: #065f46 !important;
+        }
+        html.light #pf-target-box #pf-current-balance {
+            color: #047857 !important;
+        }
+        html.light #pf-target-box #pf-current-gain {
+            color: #059669 !important;
+        }
+        html.light #pf-target-box .bg-gray-900 {
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #pf-target-box .text-gray-400 {
+            color: #475569 !important;
+        }
+        html.light #pf-target-box #pf-target-distance {
+            color: #b45309 !important;
+        }
+        html.light #pf-target-box #pf-target-distance.goal-reached {
+            color: #059669 !important;
+        }
+
+        /* Modo Claro: Gauges y Pistas de Barras */
+        html.light #showcase-view-propfirm .bg-gray-950\/80,
+        html.light #showcase-view-propfirm .bg-gray-900\/80 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #showcase-view-propfirm .bg-gray-900\/90 {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #showcase-view-propfirm .bg-gray-900\/90 .text-gray-400 {
+            color: #64748b !important;
+        }
+        html.light #showcase-view-propfirm .bg-gray-950 {
+            background-color: #e2e8f0 !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #showcase-view-propfirm .text-white {
+            color: #0f172a !important;
+        }
+        html.light #showcase-view-propfirm .text-gray-300 {
+            color: #334155 !important;
+        }
+        html.light #showcase-view-propfirm .text-gray-400 {
+            color: #64748b !important;
+        }
+
+        /* Modo Claro: Toast inferior y Píldoras */
+        html.light #showcase-view-propfirm #pf-step-toast {
+            background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%) !important;
+            border-color: #bbf7d0 !important;
+        }
+        html.light #showcase-view-propfirm #pf-toast-desc {
+            color: #1e293b !important;
+        }
+        html.light #showcase-view-propfirm #pf-days-pill,
+        html.light #showcase-view-propfirm #pf-rr-pill {
+            background-color: #ffffff !important;
+            border-color: #bbf7d0 !important;
+            color: #065f46 !important;
+        }
+
+        /* Modo Claro: Modal de Celebración */
+        html.light #phaseCelebrationModal .phase-celebration-pop {
+            background-color: #ffffff !important;
+            border-color: #f59e0b !important;
+        }
+        html.light #phaseCelebrationModal h3 {
+            color: #0f172a !important;
+        }
+        html.light #phaseCelebrationModal #phaseCelebrationSummary {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            color: #334155 !important;
+        }
+        html.light #phaseCelebrationModal #phaseCelebrationSummary .text-gray-300 {
+            color: #334155 !important;
+        }
+        html.light #phaseCelebrationModal #phaseCelebrationSummary .text-white {
+            color: #0f172a !important;
+        }
+        html.light #phaseCelebrationModal #phaseCelebrationSummary .border-gray-800\/60 {
+            border-color: #e2e8f0 !important;
+        }
+
+        /* ==========================================================================
+           BENTO GRID CARACTERÍSTICAS (AMBOS TEMAS)
+           ========================================================================== */
+        .bento-calc-btn.active {
+            background-color: rgba(59, 130, 246, 0.25);
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.2);
+        }
+        .bento-calc-btn.inactive {
+            background-color: rgba(17, 24, 39, 0.8);
+            color: #9ca3af;
+            border-color: rgba(75, 85, 99, 0.4);
+        }
+        .bento-calc-btn.inactive:hover {
+            color: #ffffff;
+            border-color: rgba(156, 163, 175, 0.6);
+        }
+
+        /* Modo Claro: Bento Grid */
+        html.light #caracteristicas {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #caracteristicas .bento-card {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04) !important;
+        }
+        html.light #caracteristicas .bento-card:hover {
+            border-color: #10b981 !important;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.1) !important;
+        }
+        html.light #caracteristicas .text-white {
+            color: #0f172a !important;
+        }
+        html.light #caracteristicas .text-gray-300 {
+            color: #334155 !important;
+        }
+        html.light #caracteristicas .text-gray-400 {
+            color: #64748b !important;
+        }
+        html.light #caracteristicas .bg-gray-950\/90,
+        html.light #caracteristicas .bg-gray-950 {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #caracteristicas .bg-gray-900\/80,
+        html.light #caracteristicas .bg-gray-900\/90,
+        html.light #caracteristicas .bg-gray-900 {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #caracteristicas .bento-calc-btn.active {
+            background-color: #eff6ff !important;
+            color: #2563eb !important;
+            border-color: #3b82f6 !important;
+        }
+        html.light #caracteristicas .bento-calc-btn.inactive {
+            background-color: #f1f5f9 !important;
+            color: #475569 !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light #caracteristicas .bento-calc-btn.inactive:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html.light #caracteristicas #bento-btn-loss {
+            color: #64748b !important;
+        }
+        html.light #caracteristicas #bento-btn-loss:hover {
+            color: #0f172a !important;
+        }
+        html.light #caracteristicas .text-emerald-400 {
+            color: #059669 !important;
+        }
+        html.light #caracteristicas .text-emerald-300 {
+            color: #047857 !important;
+        }
+        html.light #caracteristicas .text-rose-400 {
+            color: #e11d48 !important;
+        }
+        html.light #caracteristicas .text-blue-400,
+        html.light #caracteristicas .text-sky-400,
+        html.light #caracteristicas .text-cyan-400 {
+            color: #2563eb !important;
+        }
+        html.light #caracteristicas .text-cyan-300,
+        html.light #caracteristicas .text-blue-300 {
+            color: #1d4ed8 !important;
+        }
+        html.light #caracteristicas .text-yellow-400,
+        html.light #caracteristicas .text-amber-400,
+        html.light #caracteristicas .text-amber-300 {
+            color: #d97706 !important;
+        }
+        html.light #caracteristicas .text-teal-400 {
+            color: #0d9488 !important;
+        }
+        html.light #caracteristicas .text-indigo-400,
+        html.light #caracteristicas .text-indigo-300 {
+            color: #4f46e5 !important;
+        }
+        html.light #caracteristicas .border-gray-800\/60,
+        html.light #caracteristicas .border-gray-800\/80,
+        html.light #caracteristicas .border-gray-800\/90,
+        html.light #caracteristicas .border-gray-800 {
+            border-color: #e2e8f0 !important;
+        }
+        html.light #caracteristicas .bg-gray-900 {
+            background-color: #e2e8f0 !important;
+        }
+        html.light #caracteristicas .bg-emerald-950\/60 {
+            background-color: #ecfdf5 !important;
+            border-color: #a7f3d0 !important;
+        }
+        html.light #caracteristicas .bg-rose-950\/60 {
+            background-color: #fff1f2 !important;
+            border-color: #fecdd3 !important;
+        }
+        html.light #caracteristicas .bg-emerald-950\/80 {
+            background-color: #d1fae5 !important;
+            border-color: #10b981 !important;
         }
