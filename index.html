@@ -47,6 +47,7 @@
                 <a href="#proximamente-mt5" class="hover:text-blue-400 transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> MT5 Sync</a>
                 <a href="#precios" class="hover:text-emerald-400 transition">Precios</a>
                 <a href="#faq" class="hover:text-emerald-400 transition">Preguntas</a>
+                
             </nav>
 
             <!-- Actions Right -->
@@ -85,46 +86,46 @@
     <main class="flex-grow">
 
         <!-- Hero Section -->
-        <section class="relative pt-4 sm:pt-6 pb-6 sm:pb-10 px-3 sm:px-6 overflow-hidden">
+        <section class="relative pt-3 sm:pt-5 pb-4 sm:pb-6 px-3 sm:px-6 overflow-hidden">
             <!-- Glow background circle -->
             <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
             <div class="max-w-5xl mx-auto text-center relative z-10">
                 <!-- Badge -->
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-600/40 text-emerald-400 text-[11px] font-semibold mb-2 sm:mb-2.5 shadow-inner">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-600/40 text-emerald-400 text-[11px] font-semibold mb-2 shadow-inner">
                     <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i>
-                    <span>Bitácora Pro en la Nube · Backtesting & Simulador de Fondeo</span>
+                    <span>Bitácora Pro en la Nube · Backtesting Pro & Simulador de Fondeo</span>
                 </div>
 
                 <!-- Headline -->
-                <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-black text-white tracking-tight leading-tight mb-2 sm:mb-2.5 max-w-4xl mx-auto">
+                <h1 class="text-xl sm:text-2xl md:text-3xl lg:text-[38px] font-black text-white tracking-tight leading-tight mb-2 max-w-4xl mx-auto">
                     Domina tu operativa con una bitácora profesional en la nube
                 </h1>
 
                 <!-- Subtitle -->
-                <p class="text-xs sm:text-sm md:text-base text-gray-400 max-w-2xl mx-auto mb-3 sm:mb-3.5 leading-normal">
-                    Métricas de precisión quirúrgica, <strong class="text-gray-200">laboratorio de backtesting con simulación de retiros</strong>, control estricto de drawdown diario para prop firms y calculadora de lotaje avanzada.
+                <p class="text-xs sm:text-sm md:text-base text-gray-400 max-w-2xl mx-auto mb-2.5 leading-normal">
+                    Métricas de precisión quirúrgica, <strong class="text-gray-200">laboratorio de Backtesting Pro avanzado</strong>, control estricto de drawdown diario para prop firms y calculadora de lotaje avanzada.
                 </p>
 
                 <!-- Call to actions -->
-                <div class="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-3 mb-2.5 sm:mb-3">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-2.5 mb-2">
                     <button onclick="openAuthModal('register')" class="w-full sm:w-auto px-6 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 text-gray-950 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-[1.02] transition">
                         <i class="fa-solid fa-rocket mr-1.5"></i> Comenzar 14 Días Gratis
                     </button>
                     <a href="#backtesting" class="w-full sm:w-auto px-5 py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold bg-amber-950/40 hover:bg-amber-900/50 border border-amber-600/60 text-amber-300 hover:text-amber-200 transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-flask text-amber-400 text-xs"></i> Explorar Backtesting & Retiros
+                        <i class="fa-solid fa-flask text-amber-400 text-xs"></i> Explorar Backtesting Pro
                     </a>
                 </div>
 
                 <!-- Trust Micro-items -->
                 <div class="flex flex-wrap items-center justify-center gap-3 sm:gap-5 text-[10px] sm:text-xs text-gray-400 font-medium mb-1">
                     <span class="flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i> 14 días gratis ($0 hoy)</span>
-                    <span class="flex items-center gap-1"><i class="fa-solid fa-flask-vial text-amber-400 text-xs"></i> Backtesting con retiros</span>
+                    <span class="flex items-center gap-1"><i class="fa-solid fa-flask-vial text-amber-400 text-xs"></i> Laboratorio Backtesting Pro</span>
                     <span class="flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-400 text-xs"></i> Stripe y USDT (NOWPayments)</span>
                 </div>
 
                 <!-- Showcase Interactivo de 4 Vistas -->
-                <div data-ui="showcase-preview" class="mt-3 sm:mt-4 max-w-5xl mx-auto rounded-2xl sm:rounded-3xl bg-[#111625] border border-gray-700/80 shadow-2xl p-2.5 sm:p-4 text-left relative overflow-hidden group">
+                <div data-ui="showcase-preview" id="showcase-interactive-container" class="mt-2.5 sm:mt-3.5 max-w-5xl mx-auto rounded-xl sm:rounded-2xl lg:rounded-3xl bg-[#111625] border border-gray-700/80 shadow-2xl p-2 sm:p-3 md:p-3.5 lg:p-4 text-left relative overflow-hidden group">
                     
                     <!-- MOBILE APP HEADER (< sm: Marco Móvil Nativo) -->
                     <div class="block sm:hidden border-b border-gray-800/80 pb-2 mb-2.5">
@@ -155,9 +156,14 @@
                                     <span class="text-[9px] text-gray-400">Fondo $100K • En Vivo</span>
                                 </div>
                             </div>
-                            <span class="text-[9px] bg-emerald-950/90 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> DEMO
-                            </span>
+                            <div class="flex items-center gap-1.5">
+                                <button id="showcase-resume-pill-m" type="button" onclick="resumeShowcaseGlobalTour()" class="hidden text-[8px] bg-emerald-500 hover:bg-emerald-400 text-gray-950 px-2 py-0.5 rounded-full font-black flex items-center gap-1 transition shadow-sm animate-pulse" title="Reanudar rotación automática">
+                                    <i class="fa-solid fa-play text-[7px]"></i> Auto
+                                </button>
+                                <span class="text-[9px] bg-emerald-950/90 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> DEMO
+                                </span>
+                            </div>
                         </div>
                     </div>
 
@@ -170,9 +176,39 @@
                             <span class="text-[11px] text-gray-400 font-mono ml-1">app.tradingjournalpro.com — Vista de Cuenta Fondeada</span>
                         </div>
                         <div class="flex items-center gap-2">
+                            <!-- Floating Resume Auto-Tour Pill -->
+                            <button id="showcase-resume-pill" type="button" onclick="resumeShowcaseGlobalTour()" class="hidden text-[9px] bg-emerald-500 hover:bg-emerald-400 text-gray-950 px-2.5 py-0.5 rounded-full font-black flex items-center gap-1 transition shadow-md hover:scale-105 active:scale-95 animate-pulse" title="Reanudar el recorrido automático de la demo">
+                                <i class="fa-solid fa-play text-[8px]"></i> Reanudar Auto-Demo
+                            </button>
+                            <!-- Auto Tour Indicator / Toggle -->
+                            <button id="showcase-tour-status-btn" type="button" onclick="toggleShowcaseGlobalTour()" class="text-[9px] bg-gray-900/90 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700/80 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1.5 transition shadow-sm" title="Clic para pausar o reactivar la rotación automática">
+                                <span id="showcase-tour-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                                <span id="showcase-tour-status-text">AUTO 11s</span>
+                            </button>
+                            
                             <span class="text-[9px] bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> DEMO INTERACTIVA
                             </span>
+                        </div>
+                    </div>
+
+                    <!-- STORIES SEGMENTED PROGRESS BARS (4 BARRITAS SUPERIORES TIPO INSTAGRAM STORIES) -->
+                    <div id="showcase-stories-bars" class="grid grid-cols-4 gap-1.5 sm:gap-2 mb-2 sm:mb-2.5 px-0.5" role="progressbar" aria-label="Progreso del auto-tour de la demo">
+                        <!-- 1. Métricas -->
+                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('metrics')" title="Pestaña 1: Dashboard & Equidad">
+                            <div id="story-progress-metrics" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
+                        </div>
+                        <!-- 2. Trades -->
+                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('trades')" title="Pestaña 2: Registro de Trades">
+                            <div id="story-progress-trades" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
+                        </div>
+                        <!-- 3. Calendario -->
+                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('calendar')" title="Pestaña 3: Calendario Mensual">
+                            <div id="story-progress-calendar" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
+                        </div>
+                        <!-- 4. Fondeo -->
+                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('propfirm')" title="Pestaña 4: Auditoría de Fondeo">
+                            <div id="story-progress-propfirm" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
                         </div>
                     </div>
 
@@ -213,10 +249,10 @@
                     </div>
 
                     <!-- VIEW 1: DASHBOARD & EQUIDAD (SIMULADOR INTERACTIVO DE TRANSFORMACIÓN) -->
-                    <div id="showcase-view-metrics" class="space-y-2 sm:space-y-2.5">
+                    <div id="showcase-view-metrics" class="space-y-1.5 sm:space-y-2">
                         
                         <!-- Interactive Evolution Controller Bar (Single Compact Strip) -->
-                        <div id="evo-controller-bar" class="bg-gray-950/80 border border-gray-800/90 rounded-xl p-2 sm:p-2.5 relative overflow-hidden transition shadow-sm">
+                        <div id="evo-controller-bar" class="bg-gray-950/80 border border-gray-800/90 rounded-xl p-1.5 sm:p-2 relative overflow-hidden transition shadow-sm">
                             <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2">
                                 <!-- Left: Stage Stepper Pills -->
                                 <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none w-full sm:w-auto">
@@ -248,11 +284,11 @@
                             </div>
                         </div>
 
-                        <!-- 2-COLUMNS RESPONSIVE GRID (Side-by-side on desktop, no vertical scroll) -->
-                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-2.5 items-stretch">
+                        <!-- 2-COLUMNS RESPONSIVE GRID (Side-by-side on tablet and desktop, no vertical scroll) -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-2 sm:gap-2.5 items-stretch">
                             
-                            <!-- Left Column: 4 Metrics + Diagnosis Box + Toast (5 Cols on LG) -->
-                            <div class="lg:col-span-5 flex flex-col justify-between gap-2">
+                            <!-- Left Column: 4 Metrics + Diagnosis Box + Toast (5 Cols on MD/LG) -->
+                            <div class="md:col-span-5 flex flex-col justify-between gap-1.5 sm:gap-2">
                                 
                                 <!-- MOBILE HERO BALANCE CARD (< sm) -->
                                 <div class="block sm:hidden bg-gradient-to-br from-gray-900/90 via-gray-900/95 to-[#131b2e] border border-gray-800 p-2.5 rounded-xl relative overflow-hidden shadow-sm">
@@ -329,8 +365,8 @@
 
                             </div>
 
-                            <!-- Right Column: SVG Equity Curve Chart (7 Cols on LG) -->
-                            <div class="lg:col-span-7 bg-gray-900/60 border border-gray-800 rounded-xl p-2.5 sm:p-3 relative overflow-hidden flex flex-col justify-between">
+                            <!-- Right Column: SVG Equity Curve Chart (7 Cols on MD/LG) -->
+                            <div class="md:col-span-7 bg-gray-900/60 border border-gray-800 rounded-xl p-2.5 sm:p-3 relative overflow-hidden flex flex-col justify-between">
                                 
                                 <!-- Curve Header -->
                                 <div class="flex items-center justify-between mb-1.5 text-xs">
@@ -344,7 +380,7 @@
                                 </div>
 
                                 <!-- SVG Curve Graphic -->
-                                <div class="w-full h-36 sm:h-44 md:h-48 relative">
+                                <div class="w-full h-32 sm:h-36 md:h-40 lg:h-44 relative">
                                     <svg id="evo-svg-container" class="w-full h-full overflow-visible" viewBox="0 0 600 160" preserveAspectRatio="none">
                                         <defs>
                                             <linearGradient id="equityGradEmerald" x1="0" y1="0" x2="0" y2="1">
@@ -394,7 +430,7 @@
                     </div>
 
                     <!-- VIEW 2: REGISTRO DE TRADES CON ENCABEZADOS REALES & GALERÍA ANTES/DESPUÉS -->
-                    <div id="showcase-view-trades" class="hidden space-y-2 sm:space-y-2.5">
+                    <div id="showcase-view-trades" class="hidden space-y-1.5 sm:space-y-2">
                         
                         <!-- Top Header & Live Auto-Inspection Controller (Compact Single Bar) -->
                         <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-gray-800 text-xs">
@@ -537,24 +573,24 @@
                             </div>
                         </div>
 
-                        <!-- VISTA ESCRITORIO: TABLA COMPACTA CON ENCABEZADOS REALES (>= sm) - ZERO SCROLL HORIZONTAL -->
-                        <div class="hidden sm:block rounded-xl border border-gray-800 shadow-sm overflow-hidden bg-gray-950/40">
+                        <!-- VISTA ESCRITORIO & TABLET: TABLA RESPONSIVE CON ENCABEZADOS REALES (>= sm) - SCROLL SEGURO Y COLUMNAS OPTIMIZADAS -->
+                        <div class="hidden sm:block rounded-xl border border-gray-800 shadow-sm overflow-x-auto scrollbar-thin bg-gray-950/40">
                             <table class="w-full text-left text-[11px] whitespace-nowrap">
                                 <thead class="bg-gray-900/90 text-gray-400 text-[10px] uppercase tracking-wider border-b border-gray-800 font-semibold">
                                     <tr>
                                         <th class="px-2 py-1.5 font-bold">Fecha / Día</th>
                                         <th class="px-2 py-1.5 font-bold">Activo</th>
-                                        <th class="px-2 py-1.5 font-bold">Sesión</th>
-                                        <th class="px-2 py-1.5 font-bold">Tendencia</th>
+                                        <th class="hidden lg:table-cell px-2 py-1.5 font-bold">Sesión</th>
+                                        <th class="hidden xl:table-cell px-2 py-1.5 font-bold">Tendencia</th>
                                         <th class="px-2 py-1.5 font-bold">Tipo Orden</th>
-                                        <th class="px-2 py-1.5 font-bold">Pips SL / TP</th>
+                                        <th class="hidden lg:table-cell px-2 py-1.5 font-bold">Pips SL / TP</th>
                                         <th class="px-2 py-1.5 font-bold text-center">Ratio RR</th>
-                                        <th class="px-2 py-1.5 font-bold text-center">Riesgo</th>
+                                        <th class="hidden xl:table-cell px-2 py-1.5 font-bold text-center">Riesgo</th>
                                         <th class="px-2 py-1.5 font-bold text-center">Estado</th>
                                         <th class="px-2 py-1.5 font-bold text-right">Resultado (%)</th>
                                         <th class="px-2 py-1.5 font-bold text-right">Balance (P/L)</th>
                                         <th class="px-2 py-1.5 font-bold text-center" title="Ver Galería de Capturas Antes / Después">Galería</th>
-                                        <th class="px-2 py-1.5 font-bold text-center">Acciones</th>
+                                        <th class="hidden xl:table-cell px-2 py-1.5 font-bold text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-800/80 font-mono text-[11px]">
@@ -567,18 +603,18 @@
                                         <td class="px-2 py-1.5 font-bold text-white">
                                             <span class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-amber-300 font-bold">XAUUSD</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-sans">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-sans">
                                             <span class="bg-gray-900 text-gray-300 px-1.5 py-0.5 rounded border border-gray-800 text-[10px]">New York</span>
                                         </td>
-                                        <td class="px-2 py-1.5 text-gray-300 font-sans text-[10px]">Favor</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-gray-300 font-sans text-[10px]">Favor</td>
                                         <td class="px-2 py-1.5 font-sans">
                                             <span class="text-emerald-400 font-semibold text-[10px] whitespace-nowrap"><i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Buy Limit</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-mono whitespace-nowrap">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-mono whitespace-nowrap">
                                             <span class="text-red-400">18.0</span> / <span class="text-emerald-400">63.0</span>
                                         </td>
                                         <td class="px-2 py-1.5 text-center text-yellow-400 font-bold">1:3.5</td>
-                                        <td class="px-2 py-1.5 text-center text-gray-300">1.0%</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center text-gray-300">1.0%</td>
                                         <td class="px-2 py-1.5 text-center">
                                             <span class="px-1.5 py-0.5 rounded font-semibold text-[10px] border bg-emerald-900/60 text-emerald-400 border-emerald-700">Full TP</span>
                                         </td>
@@ -592,7 +628,7 @@
                                                 <i class="fa-solid fa-images text-xs"></i>
                                             </button>
                                         </td>
-                                        <td class="px-2 py-1.5 text-center">
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center">
                                             <button onclick="event.stopPropagation(); inspectTradeAnalysis(1)" class="text-gray-400 hover:text-white p-0.5 transition" title="Ver detalle">
                                                 <i class="fa-solid fa-pen text-xs"></i>
                                             </button>
@@ -608,18 +644,18 @@
                                         <td class="px-2 py-1.5 font-bold text-white">
                                             <span class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-blue-300 font-bold">EURUSD</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-sans">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-sans">
                                             <span class="bg-gray-900 text-gray-300 px-1.5 py-0.5 rounded border border-gray-800 text-[10px]">Londres</span>
                                         </td>
-                                        <td class="px-2 py-1.5 text-gray-300 font-sans text-[10px]">Contra</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-gray-300 font-sans text-[10px]">Contra</td>
                                         <td class="px-2 py-1.5 font-sans">
                                             <span class="text-red-400 font-semibold text-[10px] whitespace-nowrap"><i class="fa-solid fa-arrow-trend-down text-[9px]"></i> Market Sell</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-mono whitespace-nowrap">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-mono whitespace-nowrap">
                                             <span class="text-red-400">10.0</span> / <span class="text-emerald-400">20.0</span>
                                         </td>
                                         <td class="px-2 py-1.5 text-center text-gray-400 font-bold">1:1.0</td>
-                                        <td class="px-2 py-1.5 text-center text-gray-300">0.5%</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center text-gray-300">0.5%</td>
                                         <td class="px-2 py-1.5 text-center">
                                             <span class="px-1.5 py-0.5 rounded font-semibold text-[10px] border bg-red-900/60 text-red-400 border-red-700">SL</span>
                                         </td>
@@ -633,7 +669,7 @@
                                                 <i class="fa-solid fa-images text-xs"></i>
                                             </button>
                                         </td>
-                                        <td class="px-2 py-1.5 text-center">
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center">
                                             <button onclick="event.stopPropagation(); inspectTradeAnalysis(2)" class="text-gray-400 hover:text-white p-0.5 transition" title="Ver detalle">
                                                 <i class="fa-solid fa-pen text-xs"></i>
                                             </button>
@@ -649,18 +685,18 @@
                                         <td class="px-2 py-1.5 font-bold text-white">
                                             <span class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-cyan-300 font-bold">GBPJPY</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-sans">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-sans">
                                             <span class="bg-gray-900 text-gray-300 px-1.5 py-0.5 rounded border border-gray-800 text-[10px]">Pre New York</span>
                                         </td>
-                                        <td class="px-2 py-1.5 text-gray-300 font-sans text-[10px]">Favor</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-gray-300 font-sans text-[10px]">Favor</td>
                                         <td class="px-2 py-1.5 font-sans">
                                             <span class="text-emerald-400 font-semibold text-[10px] whitespace-nowrap"><i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Buy Stop</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-mono whitespace-nowrap">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-mono whitespace-nowrap">
                                             <span class="text-red-400">25.0</span> / <span class="text-emerald-400">70.0</span>
                                         </td>
                                         <td class="px-2 py-1.5 text-center text-yellow-400 font-bold">1:2.8</td>
-                                        <td class="px-2 py-1.5 text-center text-gray-300">0.5%</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center text-gray-300">0.5%</td>
                                         <td class="px-2 py-1.5 text-center">
                                             <span class="px-1.5 py-0.5 rounded font-semibold text-[10px] border bg-emerald-900/60 text-emerald-400 border-emerald-700">Full TP</span>
                                         </td>
@@ -674,7 +710,7 @@
                                                 <i class="fa-solid fa-images text-xs"></i>
                                             </button>
                                         </td>
-                                        <td class="px-2 py-1.5 text-center">
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center">
                                             <button onclick="event.stopPropagation(); inspectTradeAnalysis(3)" class="text-gray-400 hover:text-white p-0.5 transition" title="Ver detalle">
                                                 <i class="fa-solid fa-pen text-xs"></i>
                                             </button>
@@ -690,18 +726,18 @@
                                         <td class="px-2 py-1.5 font-bold text-white">
                                             <span class="bg-gray-800 px-1.5 py-0.5 rounded border border-gray-700 text-emerald-300 font-bold">US30</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-sans">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-sans">
                                             <span class="bg-gray-900 text-gray-300 px-1.5 py-0.5 rounded border border-gray-800 text-[10px]">New York</span>
                                         </td>
-                                        <td class="px-2 py-1.5 text-gray-300 font-sans text-[10px]">Favor</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-gray-300 font-sans text-[10px]">Favor</td>
                                         <td class="px-2 py-1.5 font-sans">
                                             <span class="text-emerald-400 font-semibold text-[10px] whitespace-nowrap"><i class="fa-solid fa-arrow-trend-up text-[9px]"></i> Market Buy</span>
                                         </td>
-                                        <td class="px-2 py-1.5 font-mono whitespace-nowrap">
+                                        <td class="hidden lg:table-cell px-2 py-1.5 font-mono whitespace-nowrap">
                                             <span class="text-red-400">35.0</span> / <span class="text-emerald-400">110.0</span>
                                         </td>
                                         <td class="px-2 py-1.5 text-center text-yellow-400 font-bold">1:3.1</td>
-                                        <td class="px-2 py-1.5 text-center text-gray-300">1.0%</td>
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center text-gray-300">1.0%</td>
                                         <td class="px-2 py-1.5 text-center">
                                             <span class="px-1.5 py-0.5 rounded font-semibold text-[10px] border bg-emerald-900/60 text-emerald-400 border-emerald-700">Full TP</span>
                                         </td>
@@ -715,7 +751,7 @@
                                                 <i class="fa-solid fa-images text-xs"></i>
                                             </button>
                                         </td>
-                                        <td class="px-2 py-1.5 text-center">
+                                        <td class="hidden xl:table-cell px-2 py-1.5 text-center">
                                             <button onclick="event.stopPropagation(); inspectTradeAnalysis(4)" class="text-gray-400 hover:text-white p-0.5 transition" title="Ver detalle">
                                                 <i class="fa-solid fa-pen text-xs"></i>
                                             </button>
@@ -764,9 +800,9 @@
                                             <i class="fa-solid fa-camera text-[10px]"></i>
                                             <span>Captura y Setup (ANTES)</span>
                                         </span>
-                                        <a id="inspect-link-antes" href="https://www.tradingview.com" target="_blank" rel="noopener" class="text-[9px] text-sky-400 hover:text-sky-300 font-mono font-semibold flex items-center gap-1 bg-sky-950/60 px-1.5 py-0.2 rounded border border-sky-800/60">
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                                            <span>TradingView Link</span>
+                                        <a id="inspect-link-antes" href="#" onclick="openTradeLightbox('antes'); return false;" class="text-[9px] text-sky-400 hover:text-sky-300 font-mono font-semibold flex items-center gap-1 bg-sky-950/60 px-1.5 py-0.2 rounded border border-sky-800/60">
+                                            <i class="fa-solid fa-chart-line text-[8px]"></i>
+                                            <span>Ver Gráfico Técnico</span>
                                         </a>
                                     </div>
 
@@ -832,9 +868,9 @@
                                             <i class="fa-solid fa-camera-retro text-[10px]"></i>
                                             <span>Gestión y Cierre (DESPUÉS)</span>
                                         </span>
-                                        <a id="inspect-link-despues" href="https://www.tradingview.com" target="_blank" rel="noopener" class="text-[9px] text-emerald-400 hover:text-emerald-300 font-mono font-semibold flex items-center gap-1 bg-emerald-950/60 px-1.5 py-0.2 rounded border border-emerald-800/60">
-                                            <i class="fa-solid fa-arrow-up-right-from-square text-[8px]"></i>
-                                            <span>TradingView Result</span>
+                                        <a id="inspect-link-despues" href="#" onclick="openTradeLightbox('despues'); return false;" class="text-[9px] text-emerald-400 hover:text-emerald-300 font-mono font-semibold flex items-center gap-1 bg-emerald-950/60 px-1.5 py-0.2 rounded border border-emerald-800/60">
+                                            <i class="fa-solid fa-camera text-[8px]"></i>
+                                            <span>Captura de Análisis</span>
                                         </a>
                                     </div>
 
@@ -893,7 +929,7 @@
                     </div>
 
                     <!-- VIEW 3: CALENDARIO MENSUAL & RESUMEN ANUAL INSTITUCIONAL -->
-                    <div id="showcase-view-calendar" class="hidden space-y-2 sm:space-y-2.5">
+                    <div id="showcase-view-calendar" class="hidden space-y-1.5 sm:space-y-2">
                         
                         <!-- Top Header & Annual Performance Controller -->
                         <div class="flex items-center justify-between gap-2 pb-1.5 border-b border-gray-800 text-xs">
@@ -939,10 +975,10 @@
                         </div>
 
                         <!-- MATRIZ DE LOS 12 MESES: VISTA COMPLETA DEL AÑO (Animaciones y tonos nativos de la bitácora) -->
-                        <div id="monthly-showcase-grid" class="grid grid-cols-2 min-[500px]:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-2">
+                        <div id="monthly-showcase-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-1 sm:gap-1.5">
                             
                             <!-- Mes 1: Enero -->
-                            <article id="month-card-1" onmouseenter="inspectShowcaseMonth(1)" onclick="inspectShowcaseMonth(1)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-1" onmouseenter="inspectShowcaseMonth(1)" onclick="inspectShowcaseMonth(1)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Enero</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+6.8%</span>
@@ -962,7 +998,7 @@
                             </article>
 
                             <!-- Mes 2: Febrero -->
-                            <article id="month-card-2" onmouseenter="inspectShowcaseMonth(2)" onclick="inspectShowcaseMonth(2)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-2" onmouseenter="inspectShowcaseMonth(2)" onclick="inspectShowcaseMonth(2)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Febrero</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+5.4%</span>
@@ -982,7 +1018,7 @@
                             </article>
 
                             <!-- Mes 3: Marzo -->
-                            <article id="month-card-3" onmouseenter="inspectShowcaseMonth(3)" onclick="inspectShowcaseMonth(3)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-3" onmouseenter="inspectShowcaseMonth(3)" onclick="inspectShowcaseMonth(3)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Marzo</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+9.2%</span>
@@ -1002,7 +1038,7 @@
                             </article>
 
                             <!-- Mes 4: Abril -->
-                            <article id="month-card-4" onmouseenter="inspectShowcaseMonth(4)" onclick="inspectShowcaseMonth(4)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-4" onmouseenter="inspectShowcaseMonth(4)" onclick="inspectShowcaseMonth(4)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Abril</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+4.9%</span>
@@ -1022,7 +1058,7 @@
                             </article>
 
                             <!-- Mes 5: Mayo -->
-                            <article id="month-card-5" onmouseenter="inspectShowcaseMonth(5)" onclick="inspectShowcaseMonth(5)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-5" onmouseenter="inspectShowcaseMonth(5)" onclick="inspectShowcaseMonth(5)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Mayo</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+7.6%</span>
@@ -1062,7 +1098,7 @@
                             </article>
 
                             <!-- Mes 7: Julio -->
-                            <article id="month-card-7" onmouseenter="inspectShowcaseMonth(7)" onclick="inspectShowcaseMonth(7)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-7" onmouseenter="inspectShowcaseMonth(7)" onclick="inspectShowcaseMonth(7)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Julio</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+5.8%</span>
@@ -1102,7 +1138,7 @@
                             </article>
 
                             <!-- Mes 9: Septiembre -->
-                            <article id="month-card-9" onmouseenter="inspectShowcaseMonth(9)" onclick="inspectShowcaseMonth(9)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-9" onmouseenter="inspectShowcaseMonth(9)" onclick="inspectShowcaseMonth(9)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Septiembre</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+8.5%</span>
@@ -1162,7 +1198,7 @@
                             </article>
 
                             <!-- Mes 12: Diciembre -->
-                            <article id="month-card-12" onmouseenter="inspectShowcaseMonth(12)" onclick="inspectShowcaseMonth(12)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-2 rounded-xl border transition cursor-pointer select-none">
+                            <article id="month-card-12" onmouseenter="inspectShowcaseMonth(12)" onclick="inspectShowcaseMonth(12)" tabindex="0" class="showcase-month-card monthly-month-win flex flex-col justify-between p-1.5 sm:p-2 rounded-lg sm:rounded-xl border transition cursor-pointer select-none">
                                 <div class="flex items-center justify-between gap-1 mb-0.5">
                                     <h4 class="text-xs font-bold text-white">Diciembre</h4>
                                     <span class="px-1 py-0.2 rounded text-[8px] font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800/60">+4.1%</span>
@@ -1184,7 +1220,7 @@
                         </div>
 
                         <!-- PANEL DE AUDITORÍA PROFUNDA DEL MES ACTIVO (Refleja 1:1 los datos de app.html) -->
-                        <div id="showcase-month-inspector" class="bg-gradient-to-r from-gray-950 via-[#111827] to-gray-950 border border-gray-800 rounded-xl p-2 sm:p-2.5 shadow-sm transition-all">
+                        <div id="showcase-month-inspector" class="bg-gradient-to-r from-gray-950 via-[#111827] to-gray-950 border border-gray-800 rounded-xl p-1.5 sm:p-2 shadow-sm transition-all">
                             <div class="flex items-center justify-between pb-1 border-b border-gray-800/80 mb-1.5 text-xs">
                                 <div class="flex items-center gap-1.5 min-w-0">
                                     <i class="fa-solid fa-magnifying-glass-chart text-emerald-400 text-xs"></i>
@@ -1195,7 +1231,7 @@
                                     <span id="smi-month-meta">23 ops cerradas • Win Rate: <strong class="text-white">78.3%</strong> • PF: <strong class="text-yellow-400">3.15x</strong></span>
                                 </div>
                             </div>
-                            <div class="grid grid-cols-2 md:grid-cols-4 gap-1.5 text-xs">
+                            <div class="grid grid-cols-2 md:grid-cols-4 gap-1 sm:gap-1.5 text-xs">
                                 <div class="rounded-lg border border-gray-800/80 bg-gray-900/60 p-1.5">
                                     <span class="block text-[8px] uppercase tracking-wide text-gray-400 font-medium">🏆 Mejor trade</span>
                                     <strong class="block truncate text-xs text-emerald-400 font-mono" id="smi-best-trade">+4.20% (+$4,200)</strong>
@@ -1225,7 +1261,7 @@
 
 
                     <!-- VIEW 4: AUDITORÍA DE FONDEO INTERACTIVA & SIMULADOR DE METAS -->
-                    <div id="showcase-view-propfirm" class="hidden space-y-2 sm:space-y-2.5">
+                    <div id="showcase-view-propfirm" class="hidden space-y-1.5 sm:space-y-2">
                         
                         <!-- Top Header & Action Controls Bar -->
                         <div class="flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 pb-1.5 border-b border-gray-800 text-xs">
@@ -1233,7 +1269,7 @@
                                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
                                 <h4 class="text-xs font-bold text-white flex items-center gap-1.5 truncate">
                                     <i class="fa-solid fa-shield-halved text-emerald-400"></i>
-                                    <span>Auditoría de Reglas FTMO & Prop Firms</span>
+                                    <span>Auditoría de Reglas de Empresas de Fondeo</span>
                                 </h4>
                                 <span id="propfirm-status-badge" class="px-2 py-0.5 rounded font-mono font-bold text-[9px] bg-emerald-950 text-emerald-300 border border-emerald-700/60 shrink-0">
                                     ⚙️ CONFIGURACIÓN LISTA
@@ -1257,16 +1293,16 @@
                         </div>
 
                         <!-- Param Selection Chips (Firm Preset & Rule Configuration) -->
-                        <div class="bg-gray-950/80 border border-gray-800/90 rounded-xl p-2 sm:p-2.5">
+                        <div class="bg-gray-950/80 border border-gray-800/90 rounded-xl p-1.5 sm:p-2">
                             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 mb-2 pb-1.5 border-b border-gray-800/60">
                                 <div class="flex items-center gap-1 text-[11px] text-gray-300 font-semibold">
                                     <i class="fa-solid fa-sliders text-emerald-400 text-[10px]"></i>
                                     <span>Parámetros de Cuenta Auditados:</span>
                                 </div>
                                 <div class="flex items-center gap-1 shrink-0">
-                                    <button id="pf-preset-ftmo" onclick="selectPropfirmPreset('ftmo')" class="propfirm-preset-btn active px-2 py-0.5 rounded text-[10px] font-bold border transition">FTMO 100K</button>
-                                    <button id="pf-preset-fundednext" onclick="selectPropfirmPreset('fundednext')" class="propfirm-preset-btn inactive px-2 py-0.5 rounded text-[10px] font-bold border transition">FundedNext 50K</button>
-                                    <button id="pf-preset-instant" onclick="selectPropfirmPreset('instant')" class="propfirm-preset-btn inactive px-2 py-0.5 rounded text-[10px] font-bold border transition">Instant 25K</button>
+                                    <button id="pf-preset-ftmo" onclick="selectPropfirmPreset('ftmo')" class="propfirm-preset-btn active px-2 py-0.5 rounded text-[10px] font-bold border transition">Cuenta 100K (2 Fases)</button>
+                                    <button id="pf-preset-fundednext" onclick="selectPropfirmPreset('fundednext')" class="propfirm-preset-btn inactive px-2 py-0.5 rounded text-[10px] font-bold border transition">Cuenta 50K (1 Fase)</button>
+                                    <button id="pf-preset-instant" onclick="selectPropfirmPreset('instant')" class="propfirm-preset-btn inactive px-2 py-0.5 rounded text-[10px] font-bold border transition">Fondeo Directo 25K</button>
                                 </div>
                             </div>
 
@@ -1292,7 +1328,7 @@
                         </div>
 
                         <!-- Progress to Goal Main Meter (Target Bar) -->
-                        <div id="pf-target-box" class="bg-gradient-to-r from-gray-950 via-[#0d1624] to-gray-950 border border-gray-800 rounded-xl p-2 sm:p-2.5 transition shadow-sm">
+                        <div id="pf-target-box" class="bg-gradient-to-r from-gray-950 via-[#0d1624] to-gray-950 border border-gray-800 rounded-xl p-1.5 sm:p-2 transition shadow-sm">
                             <div class="flex items-center justify-between mb-1 text-xs">
                                 <div class="flex items-center gap-1.5">
                                     <i class="fa-solid fa-bullseye text-emerald-400 text-xs"></i>
@@ -1313,7 +1349,7 @@
                         </div>
 
                         <!-- 3 Live Rule Monitoring Gauges (Daily DD, Max DD, Consistency) -->
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1.5 sm:gap-2 text-xs">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-1 sm:gap-1.5 text-xs">
                             
                             <!-- Gauge 1: Daily Loss -->
                             <div class="bg-gray-900/80 border border-gray-800/80 rounded-xl p-2">
@@ -1354,7 +1390,7 @@
                         </div>
 
                         <!-- Bottom Step Alert & Days Counter Strip -->
-                        <div id="pf-step-toast" class="bg-gradient-to-r from-emerald-950/60 via-gray-900 to-gray-950 border border-emerald-700/50 p-2 sm:p-2.5 rounded-xl flex items-center justify-between gap-2 text-xs transition">
+                        <div id="pf-step-toast" class="bg-gradient-to-r from-emerald-950/60 via-gray-900 to-gray-950 border border-emerald-700/50 p-1.5 sm:p-2 rounded-xl flex items-center justify-between gap-2 text-xs transition">
                             <div class="flex items-center gap-2 min-w-0">
                                 <i id="pf-toast-icon" class="fa-solid fa-flag-checkered text-emerald-400 text-xs shrink-0"></i>
                                 <span id="pf-toast-desc" class="text-gray-300 text-[10px] sm:text-[11px] truncate">
@@ -1391,7 +1427,7 @@
                         Todo lo que un trader disciplinado necesita para no quemar cuentas
                     </h2>
                     <p class="text-gray-400 text-xs sm:text-sm md:text-base leading-relaxed">
-                        Construida con un único objetivo: reemplazar el caos y las hojas de cálculo por un sistema profesional con gráficos en tiempo real, auditoría de reglas FTMO y psicología de gestión de riesgo.
+                        Construida con un único objetivo: reemplazar el caos y las hojas de cálculo por un sistema profesional con gráficos en tiempo real, auditoría de reglas de empresas de fondeo y psicología de gestión de riesgo.
                     </p>
                 </div>
 
@@ -1547,7 +1583,7 @@
                         </div>
                     </div>
 
-                    <!-- BENTO CARD 4: Auditoría de Fondeo & Reglas FTMO -->
+                    <!-- BENTO CARD 4: Auditoría de Fondeo & Reglas de Prop Firms -->
                     <div class="bento-card bg-[#111726]/90 border border-gray-800 hover:border-amber-500/40 p-5 rounded-2xl transition-all duration-300 flex flex-col justify-between group shadow-sm hover:shadow-amber-500/5 hover:-translate-y-1">
                         <div>
                             <!-- Header & Badge -->
@@ -1612,7 +1648,7 @@
                                 </span>
                             </div>
                             <h3 class="text-base sm:text-lg font-bold text-white mb-1.5 flex items-center gap-2">
-                                <span>Galería Antes / Después (TradingView)</span>
+                                <span>Galería Antes / Después (Gráficos Técnicos)</span>
                             </h3>
                             <p class="text-xs text-gray-400 leading-relaxed mb-4">
                                 Sube el setup antes de disparar y la gestión final. Audita tus emociones y elimina operaciones impulsivas.
@@ -1637,9 +1673,9 @@
                                     <span class="text-emerald-400/80 text-[9px] block">Ratio 1:3.5 ✓</span>
                                 </div>
                             </div>
-                            <div class="text-[10px] text-gray-400 font-mono text-center pt-1 border-t border-gray-800/60 flex items-center justify-center gap-1.5">
-                                <i class="fa-solid fa-clipboard-check text-emerald-400 text-[9px]"></i>
-                                <span>Checklist de 5 reglas institucionales cumplido</span>
+                            <div class="text-[10px] text-gray-400 font-mono text-center pt-1 border-t border-gray-800/60 flex items-center justify-between">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-clipboard-check text-emerald-400 text-[9px]"></i> Checklist 5 reglas</span>
+                                <span>5/5 Reglas ✓</span>
                             </div>
                         </div>
                     </div>
@@ -1694,7 +1730,7 @@
             </div>
         </section>
 
-        <!-- Section: Laboratorio de Backtesting & Simulación de Fondeo y Retiros -->
+        <!-- Section: Laboratorio de Backtesting Pro & Simulación de Reglas de Fondeo -->
         <section id="backtesting" data-ui="backtesting-preview" class="py-10 sm:py-14 px-3 sm:px-6 border-t border-gray-800/60 bg-gradient-to-b from-[#0b0f19] via-[#0f172a] to-[#0b0f19] relative overflow-hidden">
             <!-- Glow background circles -->
             <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -1712,14 +1748,14 @@
                     <!-- Prominent Clarification Notice Pill -->
                     <div class="inline-flex items-start sm:items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-medium mb-3.5 text-left max-w-2xl mx-auto shadow-sm">
                         <i class="fa-solid fa-circle-info text-amber-400 text-sm shrink-0 mt-0.5 sm:mt-0"></i>
-                        <span><strong class="font-bold text-amber-300">Aclaración Importante:</strong> Esta herramienta está diseñada para <u>registrar, medir y auditar</u> tus sesiones de backtesting manual (ej. realizadas en TradingView o Bar Replay). <em>El motor automatizado con datos de mercado históricos está en desarrollo activo y llegará próximamente.</em></span>
+                        <span><strong class="font-bold text-amber-300">Aclaración Importante:</strong> Esta herramienta está diseñada para <u>registrar, medir y auditar</u> tus sesiones de Backtesting Pro manual (ej. realizadas en tu plataforma de gráficos técnicos o simulador). <em>El motor automatizado con datos de mercado históricos está en desarrollo activo y llegará próximamente.</em></span>
                     </div>
 
                     <h2 class="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-3">
-                        Registra tus Sesiones de Backtesting y Simula el Paso de Fondeo y Retiros
+                        Registra tus Sesiones en Backtesting Pro y Evalúa tus Reglas de Fondeo
                     </h2>
                     <p class="text-gray-400 text-xs sm:text-sm leading-relaxed max-w-2xl mx-auto">
-                        Documenta tus pruebas de estrategia manuales con rigor institucional. Registra cada trade testeado en tu plataforma gráfica favorita, audita en tiempo real las reglas de FTMO, Topstep o FundedNext y calcula tus cobros reales con el simulador de Profit Split antes de comprar una prueba real.
+                        Documenta tus pruebas de estrategia manuales con rigor institucional. Registra cada trade testeado en tu plataforma de gráficos técnicos, audita en tiempo real las reglas de empresas de fondeo (prop firms) y calcula el Profit Split con el simulador de cobros antes de pagar una evaluación real.
                     </p>
                 </div>
 
@@ -1738,7 +1774,7 @@
                             </p>
                         </div>
                         <div class="mt-3 pt-2.5 border-t border-gray-800/80 text-[11px] font-semibold text-amber-400 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-check text-xs"></i> Auditoría según reglas FTMO
+                            <i class="fa-solid fa-circle-check text-xs"></i> Auditoría según reglas de empresas de fondeo
                         </div>
                     </div>
 
@@ -1782,7 +1818,7 @@
                             </div>
                             <h3 class="text-sm font-bold text-white mb-1.5">Sesiones Aisladas por Estrategia</h3>
                             <p class="text-xs text-gray-400 leading-relaxed">
-                                Crea sesiones separadas para registrar tus testeos de TradingView: 'ICT Oro NY', 'Scalping EURUSD', etc. Guarda fotos antes/después y notas de cada setup probado.
+                                Crea sesiones separadas para registrar tus testeos de gráficos técnicos: 'ICT Oro NY', 'Scalping EURUSD', etc. Guarda fotos antes/después y notas de cada setup probado.
                             </p>
                         </div>
                         <div class="mt-3 pt-2.5 border-t border-gray-800/80 text-[11px] font-semibold text-blue-400 flex items-center gap-1.5">
@@ -1803,7 +1839,7 @@
                                 <span>¿Cómo funciona hoy vs. Próximamente?</span>
                                 <span class="text-[9px] bg-amber-950/90 text-amber-300 border border-amber-600/60 px-2 py-0.5 rounded font-mono font-bold">EN DESARROLLO</span>
                             </h4>
-                            <p class="text-gray-400 mt-0.5 text-xs"><strong>Hoy:</strong> Bitácora avanzada para registrar, auditar y documentar trades testeados manualmente en Bar Replay / TradingView. <br class="hidden sm:inline"><strong>Próximamente:</strong> Motor de simulación automática integrado con velas históricas y datos tick a tick.</p>
+                            <p class="text-gray-400 mt-0.5 text-xs"><strong>Hoy:</strong> Bitácora avanzada para registrar, auditar y documentar trades testeados manualmente en tu plataforma de gráficos o simulador. <br class="hidden sm:inline"><strong>Próximamente:</strong> Motor de simulación automática integrado con velas históricas y datos tick a tick.</p>
                         </div>
                     </div>
                     <span class="px-2.5 py-1 rounded-lg bg-amber-500/15 text-amber-300 font-bold border border-amber-500/30 whitespace-nowrap self-center sm:self-auto text-[11px]">
@@ -1822,7 +1858,7 @@
                             </div>
                             <div>
                                 <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-1.5">
-                                    Simulador de Registro de Backtesting & Retiro
+                                    Simulador de Registro de Backtesting Pro
                                     <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                                 </h3>
                                 <p class="text-[11px] text-gray-400">Prueba cómo la bitácora audita tus entradas manuales y liquida retiros según las reglas de cada firma:</p>
@@ -1846,13 +1882,13 @@
                                 <label class="text-[11px] font-semibold text-gray-400 block mb-1.5">1. Selecciona la Empresa de Fondeo a Simular:</label>
                                 <div class="grid grid-cols-3 gap-1.5">
                                     <button id="bt-firm-ftmo" onclick="setBacktestFirm('ftmo')" class="bt-chip-btn active px-2 py-2 rounded-xl text-[11px] transition text-center truncate">
-                                        FTMO 100K
+                                        Cuenta 100K (2 Fases)
                                     </button>
                                     <button id="bt-firm-fundednext" onclick="setBacktestFirm('fundednext')" class="bt-chip-btn inactive px-2 py-2 rounded-xl text-[11px] transition text-center truncate">
-                                        FundedNext 50K
+                                        Cuenta 50K (1 Fase)
                                     </button>
                                     <button id="bt-firm-instant" onclick="setBacktestFirm('instant')" class="bt-chip-btn inactive px-2 py-2 rounded-xl text-[11px] transition text-center truncate">
-                                        Instant 25K
+                                        Fondeo Directo 25K
                                     </button>
                                 </div>
                             </div>
@@ -2300,7 +2336,7 @@
                 <div class="w-full md:w-1/2 bg-[#111726] border border-gray-800 p-8 rounded-2xl shadow-xl">
                     <div class="flex items-center justify-between border-b border-gray-800 pb-4 mb-6">
                         <h4 class="font-bold text-white text-base flex items-center gap-2">
-                            <i class="fa-solid fa-shield-virus text-emerald-400"></i> Auditoría de Reglas FTMO / MFF / FundedNext
+                            <i class="fa-solid fa-shield-virus text-emerald-400"></i> Auditoría de Reglas de Empresas de Fondeo (Prop Firms)
                         </h4>
                         <span class="text-xs text-emerald-400 font-bold bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800">100% CUMPLIDO</span>
                     </div>
@@ -2382,7 +2418,7 @@
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fa-solid fa-flask-vial text-amber-400"></i>
-                            <span><strong>Laboratorio de Backtesting</strong> con simulación de fondeo y retiros</span>
+                            <span><strong>Laboratorio de Backtesting Pro</strong> con auditoría de fondeo</span>
                         </li>
                         <li class="flex items-center gap-3">
                             <i class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -2450,7 +2486,7 @@
                     </div>
                     <div class="bg-[#111726] border border-gray-800 rounded-xl p-5">
                         <h4 class="text-base font-bold text-white mb-2">¿El Laboratorio de Backtesting ejecuta simulación automática con datos de mercado o es para registrar mis pruebas?</h4>
-                        <p class="text-sm text-gray-400 leading-relaxed"><strong>Es una bitácora especializada para registrar, auditar y documentar tus sesiones de backtesting manual</strong> (por ejemplo, las que ejecutas en el Bar Replay de TradingView o tu software de gráficos). Al registrar tus entradas, la plataforma audita en tiempo real si estás cumpliendo las reglas de las empresas de fondeo (límites de pérdida diaria, drawdown máximo y consistencia) y proyecta tus cobros con el simulador de retiros. <em>El motor automatizado con datos históricos de mercado integrados en la nube está actualmente en desarrollo y llegará próximamente como actualización para usuarios Pro.</em></p>
+                        <p class="text-sm text-gray-400 leading-relaxed"><strong>Es una bitácora especializada para registrar, auditar y documentar tus sesiones de backtesting manual</strong> (por ejemplo, las que ejecutas en tu simulador o software de gráficos técnicos). Al registrar tus entradas, la plataforma audita en tiempo real si estás cumpliendo las reglas de las empresas de fondeo (límites de pérdida diaria, drawdown máximo y consistencia) y proyecta el Profit Split de tu cuenta con el simulador de liquidaciones. <em>El motor automatizado con datos históricos de mercado integrados en la nube está actualmente en desarrollo y llegará próximamente como actualización para usuarios Pro.</em></p>
                     </div>
                     <div class="bg-[#111726] border border-gray-800 rounded-xl p-5">
                         <h4 class="text-base font-bold text-white mb-2">¿Qué sucede si expira mi período y no renuevo inmediatamente?</h4>
@@ -2493,7 +2529,7 @@
                 </div>
                 <div>
                     <h3 id="lightbox-title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                        Captura de Análisis Técnico — TradingView (XAUUSD)
+                        Captura de Análisis Técnico — Gráfico de Entrada (XAUUSD)
                     </h3>
                     <p id="lightbox-subtitle" class="text-xs text-gray-400">Inspección de alta resolución con velas, niveles institucionales y notas de operativa.</p>
                 </div>
@@ -2532,7 +2568,7 @@
                 ¡Felicidades! Superaste la Fase 1 del Desafío
             </h3>
             <p class="text-xs text-gray-400 mb-4 font-mono">
-                Cuenta: <span id="phaseCelebrationAccount" class="font-bold text-emerald-400">FTMO 100K Challenge (Auditoría Verificada)</span>
+                Cuenta: <span id="phaseCelebrationAccount" class="font-bold text-emerald-400">Cuenta 100K (2 Fases) · Auditoría Verificada</span>
             </p>
 
             <!-- Detailed Summary of Rules Passed -->
@@ -2693,6 +2729,7 @@
 
     <!-- Interactive Scripts for Landing Page -->
     <script>
+        
         // Mobile Trade Accordion Toggle (Elimina el scroll lateral en móviles)
         function toggleMobileTrade(id) {
             const detail = document.getElementById('trade-detail-' + id);
@@ -2850,7 +2887,16 @@
         }
 
         // Showcase Tab Switcher (Dual Desktop & Mobile Segmented Control)
-        function switchShowcaseTab(tabKey) {
+        function switchShowcaseTab(tabKey, isFromAuto = false) {
+            if (!isFromAuto && typeof isShowcaseTourActive !== 'undefined') {
+                pauseShowcaseGlobalTour(true);
+                const idx = SHOWCASE_TABS.indexOf(tabKey);
+                if (idx !== -1) {
+                    currentStoryTabIndex = idx;
+                    storyElapsedMs = 0;
+                    updateStoryProgressBars();
+                }
+            }
             const tabs = ['metrics', 'trades', 'calendar', 'propfirm'];
             tabs.forEach(t => {
                 const btnDesktop = document.getElementById('showcase-tab-' + t);
@@ -3232,8 +3278,8 @@
                 badgeClass: "bg-emerald-900/60 text-emerald-400 border border-emerald-700",
                 sub: "Sesión: New York · Tendencia: Favor · Riesgo: 1.0% · SL: 18.0p / TP: 63.0p",
                 stepIndicator: "1 / 4",
-                linkAntes: "https://www.tradingview.com",
-                linkDespues: "https://www.tradingview.com",
+                linkAntes: "#", chartSource: "Plataforma de Gráficos",
+                linkDespues: "#", chartSource: "Plataforma de Gráficos",
                 chartSymbolAntes: "XAUUSD • 15m • Pre-Trade",
                 chartSymbolDespues: "XAUUSD • 15m • Post-Trade",
                 chartBadgeDespues: "Full TP ✓",
@@ -3250,8 +3296,8 @@
                 badgeClass: "bg-red-900/60 text-red-400 border border-red-700",
                 sub: "Sesión: Londres · Tendencia: Contra · Riesgo: 0.5% · SL: 10.0p / TP: 20.0p",
                 stepIndicator: "2 / 4",
-                linkAntes: "https://www.tradingview.com",
-                linkDespues: "https://www.tradingview.com",
+                linkAntes: "#", chartSource: "Plataforma de Gráficos",
+                linkDespues: "#", chartSource: "Plataforma de Gráficos",
                 chartSymbolAntes: "EURUSD • 5m • Pre-Trade",
                 chartSymbolDespues: "EURUSD • 5m • Post-Trade",
                 chartBadgeDespues: "SL Respetado (0.5%)",
@@ -3268,8 +3314,8 @@
                 badgeClass: "bg-emerald-900/60 text-emerald-400 border border-emerald-700",
                 sub: "Sesión: Pre New York · Tendencia: Favor · Riesgo: 0.5% · SL: 25.0p / TP: 70.0p",
                 stepIndicator: "3 / 4",
-                linkAntes: "https://www.tradingview.com",
-                linkDespues: "https://www.tradingview.com",
+                linkAntes: "#", chartSource: "Plataforma de Gráficos",
+                linkDespues: "#", chartSource: "Plataforma de Gráficos",
                 chartSymbolAntes: "GBPJPY • 1h • Pre-Trade",
                 chartSymbolDespues: "GBPJPY • 1h • Post-Trade",
                 chartBadgeDespues: "Full TP ✓",
@@ -3286,8 +3332,8 @@
                 badgeClass: "bg-emerald-900/60 text-emerald-400 border border-emerald-700",
                 sub: "Sesión: New York · Tendencia: Favor · Riesgo: 1.0% · SL: 35.0p / TP: 110.0p",
                 stepIndicator: "4 / 4",
-                linkAntes: "https://www.tradingview.com",
-                linkDespues: "https://www.tradingview.com",
+                linkAntes: "#", chartSource: "Plataforma de Gráficos",
+                linkDespues: "#", chartSource: "Plataforma de Gráficos",
                 chartSymbolAntes: "US30 • 5m • Pre-Trade",
                 chartSymbolDespues: "US30 • 5m • Post-Trade",
                 chartBadgeDespues: "Full TP ✓",
@@ -3798,7 +3844,7 @@
         }
 
         // ==========================================================================
-        // AUDITORÍA DE REGLAS FTMO & SIMULADOR DE METAS (VIEW 4)
+        // AUDITORÍA DE REGLAS DE EMPRESAS DE FONDEO & SIMULADOR DE METAS (VIEW 4)
         // ==========================================================================
         let currentPropfirmPresetKey = 'ftmo';
         let currentPropfirmStep = 0;
@@ -3807,7 +3853,7 @@
         const propfirmSimPresets = {
             ftmo: {
                 id: 'ftmo',
-                accountName: 'FTMO 100K Challenge (Auditoría Verificada)',
+                accountName: 'Cuenta 100K (2 Fases) · Auditoría Verificada',
                 targetTitle: 'Objetivo de Ganancia Fase 1 (+$10,000.00 / +10.0%):',
                 targetAmount: 10000,
                 initialBalance: 100000,
@@ -3835,7 +3881,7 @@
                         rr: 'R:R 1:2.8',
                         statusBadge: '⚙️ CONFIGURACIÓN LISTA',
                         statusBadgeClass: 'bg-emerald-950 text-emerald-300 border border-emerald-700/60',
-                        toastDesc: 'Paso 0: Parámetros FTMO 100K cargados (Target $10k · DD Diario -5% · Max DD -10% · Consistencia 30%). Inicia el progreso.',
+                        toastDesc: 'Paso 0: Parámetros Cuenta 100K (2 Fases) cargados (Target $10k · DD Diario -5% · Max DD -10% · Consistencia 30%). Inicia el progreso.',
                         toastIcon: 'fa-solid fa-sliders text-emerald-400'
                     },
                     {
@@ -3953,7 +3999,7 @@
             },
             fundednext: {
                 id: 'fundednext',
-                accountName: 'FundedNext 50K Challenge (Auditoría Verificada)',
+                accountName: 'Cuenta 50K (1 Fase) · Auditoría Verificada',
                 targetTitle: 'Objetivo de Ganancia Fase 1 (+$4,000.00 / +8.0%):',
                 targetAmount: 4000,
                 initialBalance: 50000,
@@ -3981,7 +4027,7 @@
                         rr: 'R:R 1:3.0',
                         statusBadge: '⚙️ CONFIGURACIÓN LISTA',
                         statusBadgeClass: 'bg-emerald-950 text-emerald-300 border border-emerald-700/60',
-                        toastDesc: 'Paso 0: Parámetros FundedNext 50K cargados (Target $4k · DD Diario -5% · Max DD -10% · Consistencia 30%).',
+                        toastDesc: 'Paso 0: Parámetros Cuenta 50K (1 Fase) cargados (Target $4k · DD Diario -5% · Max DD -10% · Consistencia 30%).',
                         toastIcon: 'fa-solid fa-sliders text-emerald-400'
                     },
                     {
@@ -4402,11 +4448,11 @@
         }
 
         // ==========================================================================
-        // LABORATORIO DE BACKTESTING & SIMULADOR DE FONDEO Y RETIROS
+        // LABORATORIO DE BACKTESTING PRO & SIMULADOR DE REGLAS DE FONDEO
         // ==========================================================================
         const backtestFirmsData = {
             ftmo: {
-                name: "FTMO 100K",
+                name: "Cuenta 100K (2 Fases)",
                 initialBalance: "$100,000.00 USD",
                 initialNum: 100000,
                 phases: 2,
@@ -4469,7 +4515,7 @@
                 }
             },
             fundednext: {
-                name: "FundedNext 50K",
+                name: "Cuenta 50K (1 Fase)",
                 initialBalance: "$50,000.00 USD",
                 initialNum: 50000,
                 phases: 2,
@@ -4532,7 +4578,7 @@
                 }
             },
             instant: {
-                name: "Instant 25K (Sin Fases)",
+                name: "Fondeo Directo 25K (Sin Fases)",
                 initialBalance: "$25,000.00 USD",
                 initialNum: 25000,
                 phases: 1,
@@ -4775,6 +4821,295 @@
             clearAuthAlerts();
             showAuthAlert('forgot-alert', "Si el correo está registrado, recibirás un enlace de recuperación.", false);
         }
+
+        // ==========================================================================
+        // SHOWCASE STORIES AUTO-TOUR ENGINE
+        // ==========================================================================
+        const SHOWCASE_TABS = ['metrics', 'trades', 'calendar', 'propfirm'];
+        const STORY_DURATION_MS = 11000; // 11s per tab (ritmo relajado para lectura completa)
+        const STORY_TICK_MS = 50; // High-frequency tick for smooth progress animation
+
+        let isShowcaseTourActive = true;
+        let isShowcaseTourPaused = false; // true during hover/touch
+        let currentStoryTabIndex = 0;
+        let storyElapsedMs = 0;
+        let storyProgressInterval = null;
+        let storyMicroActionTimeout = null;
+        let isShowcaseInViewport = false;
+        let showcaseIntersectionObserver = null;
+
+        function updateStoryProgressBars() {
+            SHOWCASE_TABS.forEach((tabKey, idx) => {
+                const fillEl = document.getElementById('story-progress-' + tabKey);
+                if (!fillEl) return;
+
+                if (idx < currentStoryTabIndex) {
+                    fillEl.style.width = '100%';
+                    fillEl.style.opacity = '0.9';
+                } else if (idx === currentStoryTabIndex) {
+                    const pct = Math.min(100, Math.max(0, (storyElapsedMs / STORY_DURATION_MS) * 100));
+                    fillEl.style.width = pct.toFixed(1) + '%';
+                    fillEl.style.opacity = '1';
+                } else {
+                    fillEl.style.width = '0%';
+                    fillEl.style.opacity = '0.4';
+                }
+            });
+        }
+
+        function triggerTabMicroAction(tabKey) {
+            clearTimeout(storyMicroActionTimeout);
+            storyMicroActionTimeout = setTimeout(() => {
+                if (!isShowcaseTourActive || isShowcaseTourPaused) return;
+
+                if (tabKey === 'metrics') {
+                    // Micro-acción: eleva la curva a etapa 3 (Bitácora Pro)
+                    if (typeof setEvolutionStage === 'function') {
+                        setEvolutionStage(3);
+                    }
+                } else if (tabKey === 'trades') {
+                    // Micro-acción: inspecciona trade ganador #4 (Wall St NY Scalp)
+                    if (typeof inspectTradeAnalysis === 'function') {
+                        inspectTradeAnalysis(4);
+                    }
+                } else if (tabKey === 'calendar') {
+                    // Micro-acción: inspecciona mes destacado en el calendario
+                    if (typeof inspectShowcaseMonth === 'function') {
+                        inspectShowcaseMonth(10);
+                    }
+                } else if (tabKey === 'propfirm') {
+                    // Micro-acción: avanza paso en el auditor de fondeo
+                    if (typeof renderPropfirmStep === 'function') {
+                        renderPropfirmStep(1);
+                    }
+                }
+            }, 4200);
+        }
+
+        function goToStoryTab(tabIndex, isAuto = true) {
+            if (tabIndex < 0) tabIndex = 0;
+            if (tabIndex >= SHOWCASE_TABS.length) tabIndex = 0;
+
+            currentStoryTabIndex = tabIndex;
+            storyElapsedMs = 0;
+            const tabKey = SHOWCASE_TABS[tabIndex];
+
+            // Switch the tab
+            switchShowcaseTab(tabKey, isAuto);
+            updateStoryProgressBars();
+
+            if (isAuto) {
+                // Preparar estado inicial para que la micro-acción tenga impacto visual
+                if (tabKey === 'metrics' && typeof setEvolutionStage === 'function') {
+                    setEvolutionStage(1);
+                } else if (tabKey === 'trades' && typeof inspectTradeAnalysis === 'function') {
+                    inspectTradeAnalysis(1);
+                } else if (tabKey === 'calendar' && typeof inspectShowcaseMonth === 'function') {
+                    inspectShowcaseMonth(10);
+                } else if (tabKey === 'propfirm' && typeof renderPropfirmStep === 'function') {
+                    renderPropfirmStep(0);
+                }
+                triggerTabMicroAction(tabKey);
+            }
+        }
+
+        function startShowcaseGlobalTour() {
+            if (storyProgressInterval) clearInterval(storyProgressInterval);
+            isShowcaseTourActive = true;
+            isShowcaseTourPaused = false;
+            updateTourUIStatus(true);
+
+            storyProgressInterval = setInterval(() => {
+                if (!isShowcaseTourActive) {
+                    clearInterval(storyProgressInterval);
+                    storyProgressInterval = null;
+                    return;
+                }
+                if (isShowcaseTourPaused || !isShowcaseInViewport) {
+                    return; // Congelado por hover o fuera de viewport
+                }
+
+                storyElapsedMs += STORY_TICK_MS;
+                updateStoryProgressBars();
+
+                if (storyElapsedMs >= STORY_DURATION_MS) {
+                    const nextIndex = (currentStoryTabIndex + 1) % SHOWCASE_TABS.length;
+                    goToStoryTab(nextIndex, true);
+                }
+            }, STORY_TICK_MS);
+        }
+
+        function pauseShowcaseGlobalTour(isUserManualOverride = false) {
+            if (isUserManualOverride) {
+                isShowcaseTourActive = false;
+                clearTimeout(storyMicroActionTimeout);
+                if (storyProgressInterval) {
+                    clearInterval(storyProgressInterval);
+                    storyProgressInterval = null;
+                }
+                updateTourUIStatus(false, true);
+            } else {
+                isShowcaseTourPaused = true;
+                updateTourUIStatus(true, false, true);
+            }
+        }
+
+        function resumeShowcaseGlobalTour() {
+            clearTimeout(storyMicroActionTimeout);
+            isShowcaseTourActive = true;
+            isShowcaseTourPaused = false;
+            updateTourUIStatus(true);
+            goToStoryTab(currentStoryTabIndex, true);
+            startShowcaseGlobalTour();
+        }
+
+        function toggleShowcaseGlobalTour() {
+            if (isShowcaseTourActive) {
+                pauseShowcaseGlobalTour(true);
+            } else {
+                resumeShowcaseGlobalTour();
+            }
+        }
+
+        function updateTourUIStatus(isActive, isManualPaused = false, isHoverPaused = false) {
+            const dot = document.getElementById('showcase-tour-dot');
+            const label = document.getElementById('showcase-tour-status-text');
+            const resumeBtn = document.getElementById('showcase-resume-pill');
+            const resumeBtnM = document.getElementById('showcase-resume-pill-m');
+
+            if (isManualPaused) {
+                if (dot) {
+                    dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
+                }
+                if (label) label.textContent = "PAUSADO";
+                if (resumeBtn) resumeBtn.classList.remove('hidden');
+                if (resumeBtnM) resumeBtnM.classList.remove('hidden');
+            } else if (isHoverPaused) {
+                if (dot) {
+                    dot.className = "w-1.5 h-1.5 rounded-full bg-amber-400";
+                }
+                if (label) label.textContent = "EN PAUSA (HOVER)";
+            } else {
+                if (dot) {
+                    dot.className = "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
+                }
+                if (label) label.textContent = "AUTO 11s";
+                if (resumeBtn) resumeBtn.classList.add('hidden');
+                if (resumeBtnM) resumeBtnM.classList.add('hidden');
+            }
+        }
+
+        function handleStoryBarClick(tabKey) {
+            const idx = SHOWCASE_TABS.indexOf(tabKey);
+            if (idx !== -1) {
+                goToStoryTab(idx, false);
+                pauseShowcaseGlobalTour(true);
+            }
+        }
+
+        function isShowcaseFullyVisible() {
+            const container = document.getElementById('showcase-interactive-container');
+            if (!container) return false;
+
+            // Esperar a que el usuario haya hecho scroll hacia abajo (no en el tope de la página)
+            if (window.scrollY < 60) return false;
+
+            const rect = container.getBoundingClientRect();
+            const vh = window.innerHeight || document.documentElement.clientHeight;
+
+            // Debe estar en el campo de visión sustancialmente (>= 45%) para funcionar impecable en tablets y laptops
+            const visibleHeight = Math.min(rect.bottom, vh) - Math.max(rect.top, 40);
+            const ratio = Math.max(0, visibleHeight) / (rect.height || 480);
+
+            // La parte superior debe estar visible en el tercio superior/medio de la pantalla
+            const topIsInView = rect.top >= 20 && rect.top < vh * 0.75;
+
+            return topIsInView && ratio >= 0.45;
+        }
+
+        function checkAndTriggerShowcaseTour() {
+            const isVisible = isShowcaseFullyVisible();
+            if (isVisible) {
+                if (!isShowcaseInViewport) {
+                    isShowcaseInViewport = true;
+                    if (isShowcaseTourActive && !storyProgressInterval) {
+                        startShowcaseGlobalTour();
+                    }
+                }
+            } else {
+                if (isShowcaseInViewport) {
+                    isShowcaseInViewport = false;
+                    if (storyProgressInterval) {
+                        clearInterval(storyProgressInterval);
+                        storyProgressInterval = null;
+                    }
+                }
+            }
+        }
+
+        function initShowcaseTourListeners() {
+            const container = document.getElementById('showcase-interactive-container');
+            if (!container) return;
+
+            // Pausa inteligente por hover
+            container.addEventListener('mouseenter', () => {
+                if (isShowcaseTourActive) {
+                    pauseShowcaseGlobalTour(false);
+                }
+            });
+
+            container.addEventListener('mouseleave', () => {
+                if (isShowcaseTourActive) {
+                    isShowcaseTourPaused = false;
+                    updateTourUIStatus(true);
+                }
+            });
+
+            // En móviles: pausa al tocar
+            container.addEventListener('touchstart', () => {
+                if (isShowcaseTourActive) {
+                    pauseShowcaseGlobalTour(false);
+                }
+            }, { passive: true });
+
+            // Si el usuario hace clic en cualquier botón interactivo interno
+            container.addEventListener('click', (e) => {
+                const target = e.target.closest('button, input, a, article');
+                if (!target) return;
+                // Si pulsa el botón de reanudar o el toggle, no pausar
+                if (target.id === 'showcase-resume-pill' || target.id === 'showcase-resume-pill-m' || target.id === 'showcase-tour-status-btn') {
+                    return;
+                }
+                // Si pulsa una barra de stories, ya se maneja en handleStoryBarClick
+                if (target.classList.contains('story-track') || target.classList.contains('story-fill')) {
+                    return;
+                }
+                // Si pulsa cualquier otro botón o pestaña, ceder control total
+                if (isShowcaseTourActive) {
+                    pauseShowcaseGlobalTour(true);
+                }
+            });
+
+            // NO arrancar de inmediato: escuchar scroll para esperar que el usuario scrolee hacia abajo y lo tenga a la vista
+            window.addEventListener('scroll', checkAndTriggerShowcaseTour, { passive: true });
+            window.addEventListener('resize', checkAndTriggerShowcaseTour, { passive: true });
+
+            if ('IntersectionObserver' in window) {
+                showcaseIntersectionObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(() => {
+                        checkAndTriggerShowcaseTour();
+                    });
+                }, { threshold: [0, 0.4, 0.6, 0.75, 0.9] });
+                showcaseIntersectionObserver.observe(container);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initShowcaseTourListeners);
+        } else {
+            initShowcaseTourListeners();
+        }
+
     </script>
 </body>
 </html>

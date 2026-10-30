@@ -78,6 +78,27 @@
             <button onclick="importDataTrigger()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition">
                 <i class="fa-solid fa-upload"></i> Importar
             </button>
+            <div class="relative inline-block text-left" id="guideDropdownContainer">
+                <button id="btn-tour-guide" onclick="toggleGuideMenu()" class="bg-gray-800 hover:bg-emerald-900/40 hover:border-emerald-700/60 border border-main text-gray-300 hover:text-emerald-300 text-sm px-3 py-2 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Guías y ayuda interactiva">
+                    <i class="fa-solid fa-compass text-emerald-400"></i> <span class="hidden md:inline">Guía</span> <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-70"></i>
+                </button>
+                <div id="guideMenu" class="hidden absolute right-0 mt-2 w-64 bg-card border border-main rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-md">
+                    <button onclick="toggleGuideMenu(); startAppTour();" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-gray-800 flex items-center gap-2.5 border-b border-main/50 transition">
+                        <i class="fa-solid fa-compass text-emerald-400 text-sm"></i>
+                        <div>
+                            <div class="font-bold text-white">Tour General</div>
+                            <div class="text-[10px] text-gray-400">Recorrido por las pestañas del dashboard</div>
+                        </div>
+                    </button>
+                    <button onclick="toggleGuideMenu(); openTradeLifecycleGuide();" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-gray-800 flex items-center gap-2.5 transition">
+                        <i class="fa-solid fa-graduation-cap text-blue-400 text-sm"></i>
+                        <div>
+                            <div class="font-bold text-white">Entrada y Post-Análisis</div>
+                            <div class="text-[10px] text-gray-400">Cómo registrar la entrada y editar al salir</div>
+                        </div>
+                    </button>
+                </div>
+            </div>
             <a href="calculadora/index.html" target="_blank" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Abrir Calculadora de Lotaje en nueva pestaña">
                 <i class="fa-solid fa-calculator text-blue-400"></i> <span class="hidden md:inline">Calculadora</span>
             </a>
@@ -785,9 +806,14 @@
     <div id="tradeModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex items-start sm:items-center justify-center p-0 sm:p-4 overflow-y-auto overscroll-contain">
         <div class="bg-card border border-main rounded-none sm:rounded-2xl w-full max-w-5xl h-[100dvh] sm:h-auto max-h-screen max-h-[100dvh] sm:max-h-[calc(100dvh-2rem)] shadow-2xl relative flex flex-col overflow-hidden my-0 sm:my-auto">
             <button onclick="closeTradeModal()" class="absolute top-3 right-3 z-20 text-gray-400 hover:text-white text-lg p-2"><i class="fa-solid fa-xmark"></i></button>
-            <h3 id="modalTitle" class="shrink-0 text-lg font-bold text-white px-4 pt-4 pr-14 pb-3 sm:px-6 sm:pt-5 flex items-center gap-2">
-                <i class="fa-solid fa-pen-to-square text-green-500"></i> Nueva Entrada de Trading
-            </h3>
+            <div class="shrink-0 flex items-center justify-between px-4 pt-4 pr-14 pb-3 sm:px-6 sm:pt-5 border-b border-main/30">
+                <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-green-500"></i> Nueva Entrada de Trading
+                </h3>
+                <button type="button" onclick="openTradeLifecycleGuide()" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Ver cómo registrar la entrada y el análisis posterior">
+                    <i class="fa-solid fa-graduation-cap text-emerald-400"></i> <span class="hidden sm:inline">Guía Antes / Después</span>
+                </button>
+            </div>
             <div id="mt5TradeHint" class="hidden shrink-0 mx-4 sm:mx-6 mb-2 rounded border border-blue-800/60 bg-blue-950/40 px-3 py-2 text-[11px] text-blue-200"></div>
             <div id="quickTradeAlert" class="hidden shrink-0 mx-4 sm:mx-6 mb-3 px-3 py-2 rounded text-xs font-bold items-center justify-between gap-3">
                 <div class="min-w-0 flex items-center gap-2">
@@ -1139,6 +1165,216 @@
 
         </div>
     </div>
+
+    <!-- Modal Guía de Registro de Entrada y Post-Análisis -->
+    <div id="tradeLifecycleModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-[90] flex items-center justify-center p-3 sm:p-5 overflow-y-auto overscroll-contain">
+        <div class="bg-card border border-main rounded-2xl w-full max-w-3xl shadow-2xl relative flex flex-col overflow-hidden max-h-[92vh]">
+            <!-- Encabezado -->
+            <div class="flex items-center justify-between px-5 pt-5 pb-4 border-b border-main/50 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center text-lg border border-blue-500/30">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                            Ciclo de una Operación: Entrada y Post-Análisis
+                        </h3>
+                        <p class="text-xs text-gray-400">Guía práctica paso a paso para documentar tus operaciones como un profesional</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeTradeLifecycleGuide()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Selector de Etapas / Tabs -->
+            <div class="grid grid-cols-3 border-b border-main/50 bg-gray-900/60 p-2 gap-2 shrink-0 text-center">
+                <button type="button" onclick="setTradeLifecycleStep(1)" id="tl-tab-1" class="py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-blue-600 text-white shadow-sm">
+                    <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                    <span>Entrada (Antes)</span>
+                </button>
+                <button type="button" onclick="setTradeLifecycleStep(2)" id="tl-tab-2" class="py-2 px-3 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition flex items-center justify-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-[10px]">2</span>
+                    <span>Durante el Trade</span>
+                </button>
+                <button type="button" onclick="setTradeLifecycleStep(3)" id="tl-tab-3" class="py-2 px-3 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition flex items-center justify-center gap-2">
+                    <span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-[10px]">3</span>
+                    <span>Cierre & Edición (Después)</span>
+                </button>
+            </div>
+
+            <!-- Contenido dinámico con scroll -->
+            <div class="p-5 overflow-y-auto space-y-4 text-xs text-gray-300 leading-relaxed">
+                <!-- Paso 1 -->
+                <div id="tl-content-1" class="space-y-4">
+                    <div class="bg-blue-950/30 border border-blue-800/50 rounded-xl p-4 flex items-start gap-3">
+                        <i class="fa-solid fa-circle-info text-blue-400 text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold text-blue-300">Momento: Al momento de colocar o planificar la orden</span>
+                            <p class="text-gray-300 mt-1">Registra la operación justo antes de entrar al mercado para tener documentada tu hipótesis técnica sin sesgos emocionales.</p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-sliders text-emerald-400"></i> 1. Datos de Gestión y Riesgo</span>
+                            <p class="text-gray-400">Ingresa el <strong>Par</strong>, los pips de <strong>Stop Loss</strong> y <strong>Take Profit</strong>, y tu <strong>Riesgo (%)</strong>. La Bitácora calcula al instante tu ratio <strong>R/R</strong> y el <strong>Lotaje exacto</strong> recomendado para no sobreapalancarte.</p>
+                        </div>
+                        <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-400"></i> 2. Estado Inicial</span>
+                            <p class="text-gray-400">Selecciona <span class="px-2 py-0.5 rounded bg-blue-900/40 text-blue-300 border border-blue-700/50 font-semibold">Pendiente</span> si es orden Limit/Stop pendiente de ejecución, o <span class="px-2 py-0.5 rounded bg-amber-900/40 text-amber-300 border border-amber-700/50 font-semibold">Activa</span> si entraste por mercado.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2.5">
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-camera text-blue-400"></i> 3. Captura y Análisis (ANTES)</span>
+                        <p class="text-gray-300">En la caja izquierda <strong>"Captura y Análisis (ANTES)"</strong>:</p>
+                        <ul class="list-disc list-inside space-y-1 text-gray-400 pl-1">
+                            <li><strong class="text-gray-200">Notas Antes:</strong> Escribe tu tesis (tendencia mayor, soporte/resistencia, liquidez, confirmación de entrada).</li>
+                            <li><strong class="text-gray-200">Captura:</strong> En TradingView pulsa <kbd class="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[11px] text-gray-200">Alt+S</kbd> (o copia imagen) y en la Bitácora presiona <kbd class="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[11px] text-gray-200">Ctrl+V</kbd> para pegarla al instante.</li>
+                            <li>Guarda la operación con el botón <span class="font-bold text-emerald-400">Guardar Operación</span>.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Paso 2 -->
+                <div id="tl-content-2" class="space-y-4 hidden">
+                    <div class="bg-amber-950/30 border border-amber-800/50 rounded-xl p-4 flex items-start gap-3">
+                        <i class="fa-solid fa-hourglass-half text-amber-400 text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold text-amber-300">Momento: Mientras el trade está abierto en el mercado</span>
+                            <p class="text-gray-300 mt-1">El trade queda almacenado y visible en tu pestaña de Operaciones sin afectar tus estadísticas finales hasta su cierre.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-table-list text-purple-400"></i> Vista en la tabla de operaciones</span>
+                        <p class="text-gray-400">En la pestaña <strong>Operaciones</strong>, tu trade se mostrará con un chip que indica su estado actual (<span class="text-amber-400 font-semibold">Activa</span> o <span class="text-blue-400 font-semibold">Pendiente</span>). La columna resultado se mantiene neutra hasta que el trade se concluya.</p>
+                    </div>
+
+                    <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Disciplina Psicológica</span>
+                        <p class="text-gray-400">Tener la entrada registrada con su captura previa te permite alejarte de la pantalla y dejar correr tu plan sin micro-gestionar el gráfico por impulso o miedo.</p>
+                    </div>
+                </div>
+
+                <!-- Paso 3 -->
+                <div id="tl-content-3" class="space-y-4 hidden">
+                    <div class="bg-emerald-950/30 border border-emerald-800/50 rounded-xl p-4 flex items-start gap-3">
+                        <i class="fa-solid fa-flag-checkered text-emerald-400 text-base mt-0.5"></i>
+                        <div>
+                            <span class="font-bold text-emerald-300">Momento: Al cerrarse la operación (TP, SL o Salida Manual)</span>
+                            <p class="text-gray-300 mt-1">Esta es la fase más valiosa para tu crecimiento: editar el trade para calificar el resultado y guardar el feedback final.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2.5">
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-pen-to-square text-blue-400"></i> 1. Ir a Operaciones y pulsar Editar</span>
+                        <p class="text-gray-400">Ve a la pestaña <strong>Operaciones</strong>, busca la fila del trade terminado y haz clic en el botón de edición <span class="px-2 py-0.5 bg-blue-950 border border-blue-800 text-blue-300 rounded font-semibold"><i class="fa-solid fa-pen-to-square mr-1"></i>Editar</span>. Se abrirá el formulario con todos los datos que ingresaste previamente.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
+                        <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-list-check text-emerald-400"></i> 2. Actualizar el Estado Final</span>
+                            <p class="text-gray-400">Cambia el desplegable <strong>Estado</strong> a:</p>
+                            <ul class="space-y-1 text-gray-300 text-[11px]">
+                                <li><strong class="text-emerald-400">Full TP:</strong> Ganada (suma el beneficio completo por R/R).</li>
+                                <li><strong class="text-red-400">SL:</strong> Pérdida controlada (resta el riesgo asumido).</li>
+                                <li><strong class="text-gray-400">BE:</strong> Break-even (0% de impacto).</li>
+                                <li><strong class="text-teal-400">Parcial:</strong> Cobro parcial (indicas el % real obtenido).</li>
+                                <li><strong class="text-amber-400">Cierre manual:</strong> Salida anticipada.</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-camera-rotate text-emerald-400"></i> 3. Captura y Análisis (DESPUÉS)</span>
+                            <p class="text-gray-400">En la caja derecha <strong>"Captura y Análisis (DESPUÉS)"</strong>:</p>
+                            <ul class="list-disc list-inside space-y-1 text-gray-300 text-[11px] pl-1">
+                                <li><strong>Notas Después:</strong> ¿Qué aprendiste? ¿Respetaste tu plan? ¿Sentiste ansiedad?</li>
+                                <li><strong>Captura final:</strong> Pega con <kbd class="px-1 py-0.5 bg-gray-800 border border-gray-700 rounded text-[10px]">Ctrl+V</kbd> el gráfico mostrando cómo concluyó el precio.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-950/20 border border-emerald-800/40 rounded-xl p-3 text-center text-emerald-300 font-semibold">
+                        <i class="fa-solid fa-sparkles mr-1.5"></i> Al pulsar "Guardar", tu Winrate, Profit Factor, Curva de Capital y el Calendario Mensual se actualizan automáticamente.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pie del Modal -->
+            <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-t border-main/50 bg-gray-900/50 shrink-0">
+                <div class="flex flex-wrap items-center gap-3">
+                    <button type="button" onclick="startTradeFormSpotlightTour()" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/50 px-3 py-1.5 rounded-xl border border-emerald-800/60 transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-bullseye"></i> Ver en el Formulario (Spotlight)
+                    </button>
+                    <label class="flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-gray-300 cursor-pointer select-none">
+                        <input type="checkbox" id="lifecycleGuideDontShow" onchange="toggleLifecycleDontShow(this.checked)" class="rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-0">
+                        <span>No volver a mostrar automáticamente</span>
+                    </label>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" id="tl-btn-prev" onclick="prevTradeLifecycleStep()" class="text-xs font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition disabled:opacity-30 disabled:pointer-events-none">
+                        Anterior
+                    </button>
+                    <button type="button" id="tl-btn-next" onclick="nextTradeLifecycleStep()" class="text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-xl shadow transition">
+                        Siguiente
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenedor del Tour Interactivo con Spotlight -->
+    <div id="tourOverlay" class="fixed inset-0 pointer-events-none hidden z-[100] transition-opacity duration-300">
+        <!-- SVG Mask Spotlight para recorte perfecto de foco -->
+        <svg id="tourSvgMask" class="absolute inset-0 w-full h-full pointer-events-auto" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <mask id="tourHoleMask">
+                    <rect width="100%" height="100%" fill="white" />
+                    <rect id="tourHoleRect" x="0" y="0" width="0" height="0" rx="12" fill="black" />
+                </mask>
+            </defs>
+            <rect width="100%" height="100%" fill="rgba(0, 0, 0, 0.78)" mask="url(#tourHoleMask)" />
+        </svg>
+
+        <!-- Anillo de foco brillante (spotlight ring) -->
+        <div id="tourHighlightRing" class="absolute pointer-events-none rounded-xl border-2 border-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.5)] transition-all duration-300 animate-pulse"></div>
+
+        <!-- Tooltip flotante con contenido y navegacion -->
+        <div id="tourTooltip" class="absolute z-10 w-[92vw] sm:w-[380px] bg-gray-900/95 border border-emerald-500/50 rounded-2xl p-5 shadow-2xl backdrop-blur-xl pointer-events-auto transition-all duration-300">
+            <div class="flex items-center justify-between mb-2">
+                <span id="tourStepBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800/80">Paso 1 de 4</span>
+                <button type="button" onclick="closeAppTour()" class="text-gray-400 hover:text-white text-sm p-1 transition" title="Saltar tour">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <h4 id="tourStepTitle" class="text-base font-bold text-white mb-1.5 flex items-center gap-2">
+                <i id="tourStepIcon" class="fa-solid fa-wallet text-emerald-400"></i>
+                <span id="tourStepTitleText">Tus Cuentas de Trading</span>
+            </h4>
+            <p id="tourStepDesc" class="text-xs text-gray-300 leading-relaxed mb-4">
+                Aquí administras tus cuentas reales o evaluaciones de fondeo. Puedes configurar reglas de consistencia, límites de pérdida diaria y metas de fase 1 y 2.
+            </p>
+            <div class="flex items-center justify-between pt-3 border-t border-gray-800">
+                <button type="button" id="tourPrevBtn" onclick="prevTourStep()" class="text-xs font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition flex items-center gap-1.5 disabled:opacity-30 disabled:pointer-events-none">
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Anterior
+                </button>
+                <div class="flex items-center gap-1.5" id="tourStepDots"></div>
+                <button type="button" id="tourNextBtn" onclick="nextTourStep()" class="text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 px-4 py-1.5 rounded-lg shadow-md transition flex items-center gap-1.5">
+                    <span id="tourNextBtnText">Siguiente</span> <i id="tourNextBtnIcon" class="fa-solid fa-arrow-right text-[10px]"></i>
+                </button>
+            </div>
+            <!-- Opción para no volver a mostrar la guía -->
+            <div class="pt-2.5 mt-2.5 border-t border-gray-800/60 flex items-center justify-between text-[11px] text-gray-400">
+                <label class="flex items-center gap-1.5 cursor-pointer hover:text-gray-300 select-none">
+                    <input type="checkbox" id="tourDontShowAgainCheck" onchange="toggleTourDontShowAgain(this.checked)" class="rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-0">
+                    <span>No volver a mostrar esta guía</span>
+                </label>
+                <button type="button" onclick="closeAppTour(true)" class="text-gray-500 hover:text-gray-300 text-[11px] transition">Saltar</button>
+            </div>
+        </div>
+    </div>
+
 
     <script src="js/app.js"></script>
     <script>

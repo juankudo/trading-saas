@@ -1642,3 +1642,130 @@ button, a, input, select, textarea {
             background-color: #d1fae5 !important;
             border-color: #10b981 !important;
         }
+
+        /* ==========================================================================
+           Tour Interactivo de Primeros Pasos con Spotlight
+           ========================================================================== */
+        #tourOverlay {
+            transition: opacity 0.25s ease-in-out;
+        }
+        #tourOverlay.tour-active {
+            display: block !important;
+            opacity: 1;
+        }
+        #tourHighlightRing {
+            transition: top 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        width 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #tourTooltip {
+            transition: top 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        left 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                        opacity 0.2s ease,
+                        transform 0.2s ease;
+        }
+        html.light #tourTooltip {
+            background-color: #ffffff;
+            border-color: #10b981;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        html.light #tourTooltip h4 {
+            color: #0f172a;
+        }
+        html.light #tourTooltip p {
+            color: #475569;
+        }
+        html.light #tourTooltip .border-t {
+            border-color: #e2e8f0;
+        }
+        html.light #tourPrevBtn {
+            color: #64748b;
+        }
+        html.light #tourPrevBtn:hover {
+            color: #0f172a;
+            background-color: #f1f5f9;
+        }
+        .tour-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 9999px;
+            background-color: rgba(148, 163, 184, 0.4);
+            transition: all 0.25s ease;
+        }
+        .tour-dot.active {
+            width: 18px;
+            background-color: #10b981;
+        }
+
+        /* Guía de Entrada y Post-Análisis & Menú Guía */
+        #guideMenu {
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+        #tradeLifecycleModal {
+            transition: opacity 0.25s ease-in-out;
+        }
+        html.light #tradeLifecycleModal .bg-card {
+            background-color: #ffffff;
+            border-color: #cbd5e1;
+        }
+        html.light #tradeLifecycleModal h3 {
+            color: #0f172a;
+        }
+        html.light #tradeLifecycleModal .bg-gray-900\/80,
+        html.light #tradeLifecycleModal .bg-gray-900\/60,
+        html.light #tradeLifecycleModal .bg-gray-900\/50 {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+        }
+        html.light #tradeLifecycleModal .text-gray-300 {
+            color: #334155;
+        }
+        html.light #tradeLifecycleModal .text-gray-400 {
+            color: #64748b;
+        }
+        html.light #tradeLifecycleModal .border-main\/50,
+        html.light #tradeLifecycleModal .border-main\/30 {
+            border-color: #e2e8f0;
+        }
+
+        /* ==========================================================================
+           SHOWCASE STORIES PROGRESS BARS & AUTO-TOUR
+           ========================================================================== */
+        .story-track {
+            background-color: rgba(31, 41, 55, 0.7);
+            transition: background-color 0.2s ease, transform 0.15s ease;
+        }
+        .story-track:hover {
+            background-color: rgba(55, 65, 81, 0.9);
+            transform: scaleY(1.3);
+        }
+        .story-fill {
+            transition: width 0.06s linear, opacity 0.2s ease;
+        }
+
+        /* Modo Claro: Showcase Stories Bars */
+        html.light .story-track {
+            background-color: #e2e8f0 !important;
+        }
+        html.light .story-track:hover {
+            background-color: #cbd5e1 !important;
+        }
+        html.light .story-fill {
+            background-color: #059669 !important;
+            box-shadow: 0 0 8px rgba(5, 150, 105, 0.4) !important;
+        }
+        html.light #showcase-tour-status-btn {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
+        }
+        html.light #showcase-tour-status-btn:hover {
+            background-color: #e2e8f0 !important;
+            color: #0f172a !important;
+        }
+        html.light #showcase-resume-pill,
+        html.light #showcase-resume-pill-m {
+            background-color: #059669 !important;
+            color: #ffffff !important;
+        }

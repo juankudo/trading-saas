@@ -204,6 +204,7 @@ const initialTrades = [];
             setupTradeTimeSessionListeners();
             await setMode('real'); 
             await initMt5Bridge();
+            initTourAutoTrigger();
         });
 
         // WebP en alta calidad conserva mejor textos y líneas finas de los gráficos que JPEG.
@@ -6554,5 +6555,542 @@ const initialTrades = [];
                 <p class="font-semibold"><i class="fa-solid fa-robot mr-1 text-blue-400"></i>Sincronizada con MT5 (${escapeGalleryHtml(estado)})</p>
                 <p class="text-blue-300/80">Entrada ${price || "—"}${sl ? ` · SL ${sl}` : ""}${tp ? ` · TP ${tp}` : ""}${Number(meta.volume) ? ` · ${(Number(meta.volume))} lot` : ""}${Number.isFinite(net) && meta.closeReason ? ` · P/L neto: ${net}` : ""}${meta.closeReason ? ` · ${escapeGalleryHtml(String(meta.closeReason))}` : ""}</p>
                 <p class="text-[10px] text-blue-200/70">Al guardar, la Bitácora conserva los datos reales de MT5 (lote, pips, riesgo, RR y fecha/hora). Tu análisis y tus capturas no se tocan.</p>`;
+        }
+
+// ==========================================================================
+        // Tour Interactivo de Primeros Pasos con Spotlight
+        // ==========================================================================
+        let currentTourStep = 0;
+        let isTourActive = false;
+        let tourSavedAccountId = null;
+        let tourResizeHandler = null;
+        let tourKeyHandler = null;
+
+        const APP_TOUR_STEPS = [
+            {
+                title: "Tus Cuentas y Metas de Fondeo",
+                icon: "fa-solid fa-wallet",
+                desc: "Aquí administras tus cuentas reales o evaluaciones de fondeo. Puedes configurar reglas de consistencia, límites de pérdida diaria y metas automáticas de fase 1 y 2 con avance en un solo clic.",
+                selector: "#tab-btn-sessions",
+                fallbackSelector: "#sessions-grid",
+                action: () => {
+                    switchTab('sessions');
+                }
+            },
+            {
+                title: "Registro Inteligente de Operaciones",
+                icon: "fa-solid fa-circle-plus",
+                desc: "Al hacer clic aquí puedes registrar tus trades. La Bitácora calcula automáticamente el lotaje exacto según tu porcentaje de riesgo y te permite adjuntar capturas de pantalla antes y después del trade.",
+                selector: "#btn-new-trade",
+                fallbackSelector: "#tab-btn-sessions",
+                action: () => {
+                    if (!activeRealAccountId && Array.isArray(realAccounts) && realAccounts.length > 0) {
+                        enterGroup(realAccounts[0].id);
+                    }
+                    const btn = document.getElementById('btn-new-trade');
+                    if (btn) btn.style.display = 'flex';
+                }
+            },
+            {
+                title: "Estadísticas y Curva de Capital",
+                icon: "fa-solid fa-gauge-high",
+                desc: "Analiza tu rendimiento con métricas clave en vivo: Winrate, Profit Factor, Ratio Riesgo/Beneficio real y el gráfico interactivo de curva de balance y equidad.",
+                selector: "#tab-btn-dashboard",
+                fallbackSelector: "#tab-btn-dashboard",
+                action: () => {
+                    if (!activeRealAccountId && Array.isArray(realAccounts) && realAccounts.length > 0) {
+                        enterGroup(realAccounts[0].id);
+                    }
+                    switchTab('dashboard');
+                }
+            },
+            {
+                title: "Calendario y Consistencia Operativa",
+                icon: "fa-solid fa-calendar-days",
+                desc: "Visualiza tus resultados día por día en un mapa de calor financiero. Identifica tus mejores jornadas y mantén el control de tu consistencia operativa mes a mes.",
+                selector: "#tab-btn-monthly",
+                fallbackSelector: "#tab-btn-monthly",
+                action: () => {
+                    if (!activeRealAccountId && Array.isArray(realAccounts) && realAccounts.length > 0) {
+                        enterGroup(realAccounts[0].id);
+                    }
+                    switchTab('monthly');
+                }
+            }
+        ];
+
+        function startAppTour() {
+            const overlay = document.getElementById('tourOverlay');
+            if (!overlay) return;
+
+            tourSavedAccountId = activeRealAccountId;
+            isTourActive = true;
+            currentTourStep = 0;
+
+            overlay.classList.remove('hidden');
+            overlay.classList.add('tour-active');
+
+            if (!tourResizeHandler) {
+                tourResizeHandler = () => {
+                    if (isTourActive) updateTourSpotlight();
+                };
+                window.addEventListener('resize', tourResizeHandler);
+                window.addEventListener('scroll', tourResizeHandler, true);
+            }
+
+            if (!tourKeyHandler) {
+                tourKeyHandler = (e) => {
+                    if (!isTourActive) return;
+                    if (e.key === 'ArrowRight' || e.key === 'Enter') {
+                        e.preventDefault();
+                        nextTourStep();
+                    } else if (e.key === 'ArrowLeft') {
+                        e.preventDefault();
+                        prevTourStep();
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        closeAppTour();
+                    }
+                };
+                window.addEventListener('keydown', tourKeyHandler);
+            }
+
+            const dontShowChk = document.getElementById('tourDontShowAgainCheck');
+            if (dontShowChk) {
+                dontShowChk.checked = localStorage.getItem('journal_tour_never_show') === 'true';
+            }
+            renderTourStep(0);
+        }
+
+        function renderTourStep(index) {
+            if (!isTourActive) return;
+            if (index < 0) index = 0;
+            if (index >= APP_TOUR_STEPS.length) {
+                closeAppTour();
+                return;
+            }
+
+            currentTourStep = index;
+            const step = APP_TOUR_STEPS[index];
+
+            if (typeof step.action === 'function') {
+                try { step.action(); } catch (e) { console.warn(e); }
+            }
+
+            // Actualizar textos
+            const badge = document.getElementById('tourStepBadge');
+            const icon = document.getElementById('tourStepIcon');
+            const title = document.getElementById('tourStepTitleText');
+            const desc = document.getElementById('tourStepDesc');
+            const prevBtn = document.getElementById('tourPrevBtn');
+            const nextBtnText = document.getElementById('tourNextBtnText');
+            const nextBtnIcon = document.getElementById('tourNextBtnIcon');
+            const dotsContainer = document.getElementById('tourStepDots');
+
+            if (badge) badge.textContent = `Paso ${index + 1} de ${APP_TOUR_STEPS.length}`;
+            if (icon) icon.className = `${step.icon} text-emerald-400`;
+            if (title) title.textContent = step.title;
+            if (desc) desc.textContent = step.desc;
+
+            if (prevBtn) {
+                prevBtn.disabled = index === 0;
+            }
+
+            if (nextBtnText && nextBtnIcon) {
+                if (index === APP_TOUR_STEPS.length - 1) {
+                    nextBtnText.textContent = "¡Comenzar!";
+                    nextBtnIcon.className = "fa-solid fa-rocket text-[10px]";
+                } else {
+                    nextBtnText.textContent = "Siguiente";
+                    nextBtnIcon.className = "fa-solid fa-arrow-right text-[10px]";
+                }
+            }
+
+            // Renderizar indicadores (dots)
+            if (dotsContainer) {
+                dotsContainer.innerHTML = APP_TOUR_STEPS.map((_, i) =>
+                    `<div class="tour-dot ${i === index ? 'active' : ''}"></div>`
+                ).join('');
+            }
+
+            setTimeout(() => {
+                updateTourSpotlight();
+            }, 60);
+        }
+
+        function updateTourSpotlight() {
+            if (!isTourActive) return;
+            const step = APP_TOUR_STEPS[currentTourStep];
+            if (!step) return;
+
+            let targetEl = document.querySelector(step.selector);
+            if (!targetEl && step.fallbackSelector) {
+                targetEl = document.querySelector(step.fallbackSelector);
+            }
+
+            const holeRect = document.getElementById('tourHoleRect');
+            const ring = document.getElementById('tourHighlightRing');
+            const tooltip = document.getElementById('tourTooltip');
+
+            if (!holeRect || !ring || !tooltip) return;
+
+            if (targetEl && targetEl.offsetParent !== null) {
+                try {
+                    targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+                } catch (e) { }
+
+                const rect = targetEl.getBoundingClientRect();
+                const pad = 6;
+                const x = Math.max(0, rect.left - pad);
+                const y = Math.max(0, rect.top - pad);
+                const w = Math.min(window.innerWidth, rect.width + pad * 2);
+                const h = Math.min(window.innerHeight, rect.height + pad * 2);
+
+                holeRect.setAttribute('x', String(x));
+                holeRect.setAttribute('y', String(y));
+                holeRect.setAttribute('width', String(w));
+                holeRect.setAttribute('height', String(h));
+                holeRect.setAttribute('rx', '12');
+
+                ring.style.display = 'block';
+                ring.style.left = `${x}px`;
+                ring.style.top = `${y}px`;
+                ring.style.width = `${w}px`;
+                ring.style.height = `${h}px`;
+
+                const tooltipWidth = tooltip.offsetWidth || 360;
+                const tooltipHeight = tooltip.offsetHeight || 190;
+                const spaceBelow = window.innerHeight - (y + h);
+
+                let tooltipTop;
+                if (spaceBelow >= tooltipHeight + 20 || y < tooltipHeight + 20) {
+                    tooltipTop = y + h + 14;
+                } else {
+                    tooltipTop = Math.max(14, y - tooltipHeight - 14);
+                }
+
+                let tooltipLeft = x + (w / 2) - (tooltipWidth / 2);
+                tooltipLeft = Math.max(12, Math.min(window.innerWidth - tooltipWidth - 12, tooltipLeft));
+
+                tooltip.style.top = `${tooltipTop}px`;
+                tooltip.style.left = `${tooltipLeft}px`;
+            } else {
+                const cx = window.innerWidth / 2;
+                const cy = window.innerHeight / 2;
+                holeRect.setAttribute('x', String(cx - 50));
+                holeRect.setAttribute('y', String(cy - 50));
+                holeRect.setAttribute('width', '100');
+                holeRect.setAttribute('height', '100');
+                holeRect.setAttribute('rx', '50');
+
+                ring.style.display = 'none';
+
+                tooltip.style.top = `${Math.max(20, cy - 100)}px`;
+                tooltip.style.left = `${Math.max(12, cx - (tooltip.offsetWidth || 360) / 2)}px`;
+            }
+        }
+
+        function nextTourStep() {
+            if (currentTourStep < APP_TOUR_STEPS.length - 1) {
+                renderTourStep(currentTourStep + 1);
+            } else {
+                closeAppTour();
+            }
+        }
+
+        function prevTourStep() {
+            if (currentTourStep > 0) {
+                renderTourStep(currentTourStep - 1);
+            }
+        }
+
+        function toggleTourDontShowAgain(isChecked) {
+            try {
+                if (isChecked) {
+                    localStorage.setItem('journal_tour_completed', 'true');
+                    localStorage.setItem('journal_tour_never_show', 'true');
+                } else {
+                    localStorage.removeItem('journal_tour_never_show');
+                }
+            } catch (e) { }
+        }
+
+        function toggleLifecycleDontShow(isChecked) {
+            try {
+                if (isChecked) {
+                    localStorage.setItem('journal_lifecycle_never_show', 'true');
+                } else {
+                    localStorage.removeItem('journal_lifecycle_never_show');
+                }
+            } catch (e) { }
+        }
+
+        function closeAppTour(isFromDismiss = false) {
+            isTourActive = false;
+            const overlay = document.getElementById('tourOverlay');
+            if (overlay) {
+                overlay.classList.remove('tour-active');
+                overlay.classList.add('hidden');
+            }
+
+            try {
+                localStorage.setItem('journal_tour_completed', 'true');
+                const chk = document.getElementById('tourDontShowAgainCheck');
+                if ((chk && chk.checked) || isFromDismiss) {
+                    localStorage.setItem('journal_tour_never_show', 'true');
+                }
+            } catch (e) { }
+
+            if (!tourSavedAccountId) {
+                activeRealAccountId = null;
+                renderGroups();
+                switchTab('sessions');
+            } else {
+                enterGroup(tourSavedAccountId);
+                switchTab('dashboard');
+            }
+
+            showToast("¡Listo! Puedes repetir la Guía cuando quieras desde la barra superior");
+        }
+
+        function initTourAutoTrigger() {
+            try {
+                if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning)) return;
+                if (localStorage.getItem('journal_tour_never_show') === 'true') return;
+                const tourDone = localStorage.getItem('journal_tour_completed');
+                if (!tourDone) {
+                    setTimeout(() => {
+                        startAppTour();
+                    }, 900);
+                }
+            } catch (e) { }
+        }
+
+
+        // ==========================================================================
+        // Guía de Entrada y Post-Análisis (Lifecycle Guide)
+        // ==========================================================================
+        let currentLifecycleStep = 1;
+
+        function toggleGuideMenu() {
+            const menu = document.getElementById('guideMenu');
+            if (!menu) return;
+            menu.classList.toggle('hidden');
+        }
+
+        window.addEventListener('click', (e) => {
+            const container = document.getElementById('guideDropdownContainer');
+            const menu = document.getElementById('guideMenu');
+            if (container && menu && !container.contains(e.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+
+        function openTradeLifecycleGuide(initialStep = 1) {
+            const modal = document.getElementById('tradeLifecycleModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            const chk = document.getElementById('lifecycleGuideDontShow');
+            if (chk) {
+                chk.checked = localStorage.getItem('journal_lifecycle_never_show') === 'true';
+            }
+            setTradeLifecycleStep(initialStep);
+        }
+
+        function closeTradeLifecycleGuide() {
+            const modal = document.getElementById('tradeLifecycleModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function setTradeLifecycleStep(stepNumber) {
+            const step = Math.max(1, Math.min(3, parseInt(stepNumber, 10) || 1));
+            currentLifecycleStep = step;
+
+            for (let i = 1; i <= 3; i++) {
+                const tab = document.getElementById(`tl-tab-${i}`);
+                const content = document.getElementById(`tl-content-${i}`);
+                if (tab) {
+                    if (i === step) {
+                        tab.className = "py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-blue-600 text-white shadow-sm";
+                        const dot = tab.querySelector('span:first-child');
+                        if (dot) dot.className = "w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]";
+                    } else {
+                        tab.className = "py-2 px-3 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition flex items-center justify-center gap-2";
+                        const dot = tab.querySelector('span:first-child');
+                        if (dot) dot.className = "w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-[10px]";
+                    }
+                }
+                if (content) {
+                    content.classList.toggle('hidden', i !== step);
+                }
+            }
+
+            const prevBtn = document.getElementById('tl-btn-prev');
+            const nextBtn = document.getElementById('tl-btn-next');
+            if (prevBtn) prevBtn.disabled = step === 1;
+            if (nextBtn) {
+                nextBtn.textContent = step === 3 ? "¡Entendido!" : "Siguiente";
+            }
+        }
+
+        function nextTradeLifecycleStep() {
+            if (currentLifecycleStep < 3) {
+                setTradeLifecycleStep(currentLifecycleStep + 1);
+            } else {
+                closeTradeLifecycleGuide();
+            }
+        }
+
+        function prevTradeLifecycleStep() {
+            if (currentLifecycleStep > 1) {
+                setTradeLifecycleStep(currentLifecycleStep - 1);
+            }
+        }
+
+        function startTradeFormSpotlightTour() {
+            closeTradeLifecycleGuide();
+            const tradeModal = document.getElementById('tradeModal');
+            if (!tradeModal || tradeModal.classList.contains('hidden')) {
+                openTradeModal();
+            }
+
+            const FORM_TOUR_STEPS = [
+                {
+                    title: "1. Par y Cálculo de Lotaje",
+                    icon: "fa-solid fa-sliders",
+                    desc: "Selecciona el par y define los pips de Stop Loss y Take Profit. La Bitácora calcula el ratio R/R y el lotaje exacto para tu riesgo asignado.",
+                    selector: "#inputPar",
+                    fallbackSelector: "#tradePairLabel"
+                },
+                {
+                    title: "2. Captura y Análisis (ANTES)",
+                    icon: "fa-solid fa-camera",
+                    desc: "En este bloque documentas tu hipótesis técnica al entrar. Presiona Ctrl+V en la pantalla para pegar la captura del gráfico al instante.",
+                    selector: "#inputNotaAntes",
+                    fallbackSelector: "#tradeModal"
+                },
+                {
+                    title: "3. Estado Inicial y Cierre",
+                    icon: "fa-solid fa-list-check",
+                    desc: "Al crear la orden déjalo en 'Pendiente' o 'Activa'. Cuando la operación termine, cámbialo aquí a 'Full TP', 'SL', 'BE' o 'Parcial'.",
+                    selector: "#inputEstado",
+                    fallbackSelector: "#inputEstado"
+                },
+                {
+                    title: "4. Captura y Análisis (DESPUÉS)",
+                    icon: "fa-solid fa-flag-checkered",
+                    desc: "Al cerrar el trade, pulsa 'Editar' en la tabla de operaciones y completa aquí tus aprendizajes y la captura final del desarrollo.",
+                    selector: "#inputNotaDespues",
+                    fallbackSelector: "#tradeModal"
+                }
+            ];
+
+            const overlay = document.getElementById('tourOverlay');
+            if (!overlay) return;
+
+            let stepIdx = 0;
+            overlay.classList.remove('hidden');
+            overlay.classList.add('tour-active');
+
+            function showFormStep(idx) {
+                stepIdx = idx;
+                const step = FORM_TOUR_STEPS[idx];
+                const badge = document.getElementById('tourStepBadge');
+                const icon = document.getElementById('tourStepIcon');
+                const title = document.getElementById('tourStepTitleText');
+                const desc = document.getElementById('tourStepDesc');
+                const prevBtn = document.getElementById('tourPrevBtn');
+                const nextBtnText = document.getElementById('tourNextBtnText');
+                const nextBtnIcon = document.getElementById('tourNextBtnIcon');
+                const dotsContainer = document.getElementById('tourStepDots');
+
+                if (badge) badge.textContent = `Formulario: ${idx + 1} de ${FORM_TOUR_STEPS.length}`;
+                if (icon) icon.className = `${step.icon} text-emerald-400`;
+                if (title) title.textContent = step.title;
+                if (desc) desc.textContent = step.desc;
+                if (prevBtn) prevBtn.disabled = idx === 0;
+
+                if (nextBtnText && nextBtnIcon) {
+                    if (idx === FORM_TOUR_STEPS.length - 1) {
+                        nextBtnText.textContent = "¡Listo!";
+                        nextBtnIcon.className = "fa-solid fa-check text-[10px]";
+                    } else {
+                        nextBtnText.textContent = "Siguiente";
+                        nextBtnIcon.className = "fa-solid fa-arrow-right text-[10px]";
+                    }
+                }
+
+                if (dotsContainer) {
+                    dotsContainer.innerHTML = FORM_TOUR_STEPS.map((_, i) =>
+                        `<div class="tour-dot ${i === idx ? 'active' : ''}"></div>`
+                    ).join('');
+                }
+
+                setTimeout(() => {
+                    const holeRect = document.getElementById('tourHoleRect');
+                    const ring = document.getElementById('tourHighlightRing');
+                    const tooltip = document.getElementById('tourTooltip');
+                    const targetEl = document.querySelector(step.selector) || document.querySelector(step.fallbackSelector);
+
+                    if (targetEl && targetEl.offsetParent !== null) {
+                        try { targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) { }
+                        const rect = targetEl.getBoundingClientRect();
+                        const pad = 6;
+                        const x = Math.max(0, rect.left - pad);
+                        const y = Math.max(0, rect.top - pad);
+                        const w = Math.min(window.innerWidth, rect.width + pad * 2);
+                        const h = Math.min(window.innerHeight, rect.height + pad * 2);
+
+                        holeRect.setAttribute('x', String(x));
+                        holeRect.setAttribute('y', String(y));
+                        holeRect.setAttribute('width', String(w));
+                        holeRect.setAttribute('height', String(h));
+                        holeRect.setAttribute('rx', '10');
+
+                        ring.style.display = 'block';
+                        ring.style.left = `${x}px`;
+                        ring.style.top = `${y}px`;
+                        ring.style.width = `${w}px`;
+                        ring.style.height = `${h}px`;
+
+                        const tooltipWidth = tooltip.offsetWidth || 360;
+                        const tooltipHeight = tooltip.offsetHeight || 190;
+                        const spaceBelow = window.innerHeight - (y + h);
+                        let tooltipTop = (spaceBelow >= tooltipHeight + 15 || y < tooltipHeight + 15) ? (y + h + 12) : Math.max(12, y - tooltipHeight - 12);
+                        let tooltipLeft = Math.max(12, Math.min(window.innerWidth - tooltipWidth - 12, x + (w / 2) - (tooltipWidth / 2)));
+                        tooltip.style.top = `${tooltipTop}px`;
+                        tooltip.style.left = `${tooltipLeft}px`;
+                    }
+                }, 60);
+            }
+
+            const nextBtn = document.getElementById('tourNextBtn');
+            const prevBtn = document.getElementById('tourPrevBtn');
+            const origNext = nextBtn ? nextBtn.onclick : null;
+            const origPrev = prevBtn ? prevBtn.onclick : null;
+
+            if (nextBtn) {
+                nextBtn.onclick = () => {
+                    if (stepIdx < FORM_TOUR_STEPS.length - 1) {
+                        showFormStep(stepIdx + 1);
+                    } else {
+                        overlay.classList.remove('tour-active');
+                        overlay.classList.add('hidden');
+                        if (nextBtn) nextBtn.onclick = origNext;
+                        if (prevBtn) prevBtn.onclick = origPrev;
+                        showToast("¡Excelente! Ahora ya sabes cómo documentar antes y después de cada trade");
+                    }
+                };
+            }
+
+            if (prevBtn) {
+                prevBtn.onclick = () => {
+                    if (stepIdx > 0) {
+                        showFormStep(stepIdx - 1);
+                    }
+                };
+            }
+
+            showFormStep(0);
         }
 
