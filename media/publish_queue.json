@@ -13,7 +13,10 @@
         "tradingjournal",
         "drawdown",
         "cuentasdefondeo"
-      ]
+      ],
+      "video_mp4": "media/renders/tutorials/tutorial_01.mp4",
+      "poster_png": "media/renders/posters/tutorial_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "tutorial_02_registro_trades",
@@ -26,7 +29,10 @@
         "forex",
         "xauusd",
         "gestionderiesgo"
-      ]
+      ],
+      "video_mp4": "media/renders/tutorials/tutorial_02.mp4",
+      "poster_png": "media/renders/posters/tutorial_02.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "tutorial_03_backtesting_pro",
@@ -39,7 +45,10 @@
         "propfirm",
         "payout",
         "trading"
-      ]
+      ],
+      "video_mp4": "media/renders/tutorials/tutorial_03.mp4",
+      "poster_png": "media/renders/posters/tutorial_03.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "tutorial_04_dashboard_metricas",
@@ -52,7 +61,10 @@
         "calendariotrading",
         "winrate",
         "tradingjournal"
-      ]
+      ],
+      "video_mp4": "media/renders/tutorials/tutorial_04.mp4",
+      "poster_png": "media/renders/posters/tutorial_04.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "tutorial_05_auditoria_drawdown",
@@ -65,7 +77,10 @@
         "propfirms",
         "controlantiquiebre",
         "tradingdisciplina"
-      ]
+      ],
+      "video_mp4": "media/renders/tutorials/tutorial_05.mp4",
+      "poster_png": "media/renders/posters/tutorial_05.png",
+      "mp4_status": "rendered_hd"
     }
   ],
   "shorts_queue": [
@@ -86,7 +101,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_02",
@@ -105,7 +123,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_03",
@@ -124,7 +145,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_04",
@@ -143,7 +167,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_05",
@@ -162,7 +189,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_06",
@@ -181,7 +211,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_07",
@@ -200,7 +233,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_08",
@@ -219,7 +255,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_09",
@@ -238,7 +277,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_10",
@@ -257,7 +299,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_11",
@@ -276,7 +321,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_12",
@@ -295,7 +343,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_13",
@@ -314,7 +365,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_14",
@@ -333,7 +387,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_15",
@@ -352,7 +409,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_16",
@@ -371,7 +431,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_17",
@@ -390,7 +453,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_18",
@@ -409,7 +475,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_19",
@@ -428,7 +497,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     },
     {
       "id": "short_20",
@@ -447,7 +519,10 @@
         "youtube_shorts": "ready_and_queued",
         "tiktok": "ready_and_queued",
         "instagram_reels": "ready_and_queued"
-      }
+      },
+      "video_mp4": "media/renders/shorts/short_01.mp4",
+      "poster_png": "media/renders/posters/short_01.png",
+      "mp4_status": "rendered_hd"
     }
   ],
   "last_dispatch": "2026-10-31 02:09:41"

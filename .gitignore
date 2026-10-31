@@ -32,3 +32,6 @@ media/social_session/
 client_secret*.json
 youtube_token.json
 *.token
+
+media/renders/**/*.mp4
+media/renders/posters/
