@@ -1,0 +1,454 @@
+{
+  "total_tutorials": 5,
+  "total_promotional_shorts": 20,
+  "tutorials": [
+    {
+      "id": "tutorial_01_inicio_rapido",
+      "num": 1,
+      "title": "Cómo Configurar tu Cuenta de Fondeo y Activar tu Bitácora en 3 Minutos | Trading Journal Pro",
+      "script": "¿Alguna vez perdiste una cuenta de fondeo por sobrelotaje o por superar el límite de pérdida diaria sin darte cuenta? En el trading institucional, la disciplina y el control milimétrico del drawdown lo son todo. Te damos la bienvenida a Trading Journal Pro, la bitácora profesional en la nube diseñada específicamente para traders que operan con empresas de fondeo y cuentas personales. En este video de inicio rápido, aprenderás a activar tu acceso gratuito de 14 días y a configurar tu primera cuenta en menos de tres minutos. Nos dirigimos a tradingjournalpro.pages.dev, hacemos clic en Comenzar 14 Días Gratis, ingresamos nombre y correo, y quedamos habilitados inmediatamente con respaldo en Supabase. Dentro de la bitácora, seleccionamos el tamaño de cuenta como cien mil dólares en dos fases, y el sistema audita en tiempo real tu pérdida diaria del cinco por ciento y drawdown máximo del diez por ciento. Comienza hoy tus catorce días de prueba gratis en el enlace de la descripción.",
+      "tags": [
+        "trading",
+        "propfirms",
+        "tradingjournal",
+        "drawdown",
+        "cuentasdefondeo"
+      ]
+    },
+    {
+      "id": "tutorial_02_registro_trades",
+      "num": 2,
+      "title": "Cómo Registrar y Auditar Trades con Precisión Quirúrgica | Trading Journal Pro",
+      "script": "Te damos la bienvenida al segundo tutorial oficial de Trading Journal Pro. Una bitácora de trading solo es efectiva si registrar una operación toma menos de treinta segundos y no interrumpe tu operativa. En este video, aprenderemos a registrar una operación completa, adjuntar tu análisis técnico y auditar el ratio riesgo-beneficio en tiempo real. Hacemos clic en el botón 'Nueva Entrada' en la esquina superior derecha. Seleccionamos el símbolo, por ejemplo XAUUSD o EURUSD, la dirección de compra o venta, y definimos el precio de entrada junto con nuestro stop loss y take profit. Observa cómo la plataforma calcula de forma instantánea la distancia en pips y proyecta tu ratio riesgo-beneficio exacto, como uno a dos coma cuatro. Además, puedes adjuntar la captura del gráfico para documentar el setup institucional y escribir notas psicológicas sobre tu ejecución. Al guardar, tu balance, tu porcentaje de ganancia y tu curva de equidad se actualizan automáticamente en Supabase y quedan respaldados en la nube. Comienza hoy a registrar tus trades con estándar institucional en tradingjournalpro.pages.dev con catorce días de prueba gratis.",
+      "tags": [
+        "tradingjournal",
+        "registrodetrades",
+        "forex",
+        "xauusd",
+        "gestionderiesgo"
+      ]
+    },
+    {
+      "id": "tutorial_03_backtesting_pro",
+      "num": 3,
+      "title": "Laboratorio de Backtesting Pro: Simula Desafíos y Retiros Reales | Trading Journal Pro",
+      "script": "Bienvenido al tercer tutorial de Trading Journal Pro. Muchos traders pagan evaluaciones costosas sin haber probado antes si su estrategia realmente cumple las reglas de la empresa de fondeo. Para solucionar esto creamos el Laboratorio de Backtesting Pro. Aquí puedes registrar tus sesiones de prueba manual seleccionando la cuenta objetivo, como Cuentas de Cien Mil Dólares en Dos Fases. A medida que anotas tus trades simulados, el motor audita en tiempo real si estás dentro del límite de pérdida diaria del cinco por ciento y drawdown máximo. Lo más potente es el Simulador de Retiros: al superar el objetivo de la fase dos, el sistema liquida tu ganancia aplicando el Profit Split del ochenta o noventa por ciento, mostrándote exactamente cuánto dinero en mano te llevarías al banco. Prueba tu estrategia en el laboratorio hoy mismo con catorce días gratis en tradingjournalpro.pages.dev.",
+      "tags": [
+        "backtesting",
+        "simuladorderetiros",
+        "propfirm",
+        "payout",
+        "trading"
+      ]
+    },
+    {
+      "id": "tutorial_04_dashboard_metricas",
+      "num": 4,
+      "title": "Dashboard, Métricas Clave y Calendario de Rentabilidad | Trading Journal Pro",
+      "script": "Bienvenido al cuarto tutorial de Trading Journal Pro. Un trader profesional no mide su éxito por una operación aislada, sino por la consistencia estadística a lo largo del tiempo. En este video analizaremos el Dashboard interactivo de la plataforma. La curva de equidad te muestra visualmente la evolución de tu capital trade a trade con cálculo de flotante. En las tarjetas superiores encuentras tu tasa de acierto, el ratio riesgo-beneficio promedio y tu factor de recuperación. Una de las herramientas favoritas de nuestros usuarios es el Calendario Mensual de Rendimiento: cada día de operativa se pinta de verde o rojo según tu resultado neto, permitiéndote detectar tus mejores días de la semana y las sesiones más rentables, ya sea Londres o Nueva York. Audita tu consistencia con estándar profesional en tradingjournalpro.pages.dev con catorce días de prueba gratis.",
+      "tags": [
+        "dashboard",
+        "curvadeequidad",
+        "calendariotrading",
+        "winrate",
+        "tradingjournal"
+      ]
+    },
+    {
+      "id": "tutorial_05_auditoria_drawdown",
+      "num": 5,
+      "title": "Auditoría de Fondeo Anti-Quiebre: Control Estricto de Drawdown Diario | Trading Journal Pro",
+      "script": "Bienvenido al quinto tutorial de Trading Journal Pro. El mayor motivo de descalificación en cuentas de fondeo es violar el límite de pérdida diaria, muchas veces por confusiones con el trailing drawdown o el flotante. En este video aprenderás cómo funciona el motor de auditoría preventiva de la plataforma. El sistema calcula de forma continua tu margen seguro disponible antes de alcanzar el menos cinco por ciento diario. Si una operación abierta o varias pérdidas consecutivas consumen más del setenta por ciento de tu margen permitido, el semáforo de riesgo pasa a color ámbar y bloquea nuevas entradas impulsivas mediante alertas visuales claras. Esto te protege del temido revenge trading y asegura que mantengas tu cuenta viva hasta la siguiente sesión. Protege tu capital y tus desafíos de fondeo hoy mismo en tradingjournalpro.pages.dev con catorce días gratis.",
+      "tags": [
+        "drawdown",
+        "gestionderiesgo",
+        "propfirms",
+        "controlantiquiebre",
+        "tradingdisciplina"
+      ]
+    }
+  ],
+  "shorts_queue": [
+    {
+      "id": "short_01",
+      "number": 1,
+      "title": "El error del 5% que te hace PERDER tu cuenta de fondeo 🛑📉",
+      "audio": "media/shorts\\short_01_voice.mp3",
+      "html": "media/shorts\\short_01_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_02",
+      "number": 2,
+      "title": "Calcula tu LOTAJE exacto en ORO (XAUUSD) en 3 segundos ⚡",
+      "audio": "media/shorts\\short_02_voice.mp3",
+      "html": "media/shorts\\short_02_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_03",
+      "number": 3,
+      "title": "Simula tu RETIRO de dinero real antes de pagar tu prueba 💰",
+      "audio": "media/shorts\\short_03_voice.mp3",
+      "html": "media/shorts\\short_03_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_04",
+      "number": 4,
+      "title": "Drawdown Estático vs Trailing: La trampa oculta de las prop firms ⚠️",
+      "audio": "media/shorts\\short_04_voice.mp3",
+      "html": "media/shorts\\short_04_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_05",
+      "number": 5,
+      "title": "El plan exacto para pasar tu Fase 1 de $100K 🎯",
+      "audio": "media/shorts\\short_05_voice.mp3",
+      "html": "media/shorts\\short_05_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_06",
+      "number": 6,
+      "title": "Por qué un Calendario Verde vale más que un trade millonario 📅",
+      "audio": "media/shorts\\short_06_voice.mp3",
+      "html": "media/shorts\\short_06_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_07",
+      "number": 7,
+      "title": "El semáforo de riesgo que frena tus pérdidas por venganza 🛑",
+      "audio": "media/shorts\\short_07_voice.mp3",
+      "html": "media/shorts\\short_07_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_08",
+      "number": 8,
+      "title": "La matemática secreta del Ratio 1:2.5 en el trading 📊",
+      "audio": "media/shorts\\short_08_voice.mp3",
+      "html": "media/shorts\\short_08_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_09",
+      "number": 9,
+      "title": "Por qué Excel es el peor enemigo de un trader moderno ❌",
+      "audio": "media/shorts\\short_09_voice.mp3",
+      "html": "media/shorts\\short_09_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_10",
+      "number": 10,
+      "title": "Cómo auditar tus pérdidas para no repetirlas jamás 🔍",
+      "audio": "media/shorts\\short_10_voice.mp3",
+      "html": "media/shorts\\short_10_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_11",
+      "number": 11,
+      "title": "Entrena tu ojo de trader sin arriesgar un solo centavo 🧪",
+      "audio": "media/shorts\\short_11_voice.mp3",
+      "html": "media/shorts\\short_11_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_12",
+      "number": 12,
+      "title": "Documenta tus setups institucionales con captura de gráfico 📸",
+      "audio": "media/shorts\\short_12_voice.mp3",
+      "html": "media/shorts\\short_12_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_13",
+      "number": 13,
+      "title": "Accede a tu trading desde cualquier dispositivo al instante ☁️",
+      "audio": "media/shorts\\short_13_voice.mp3",
+      "html": "media/shorts\\short_13_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_14",
+      "number": 14,
+      "title": "Las 3 métricas secretas que auditan los fondos de inversión 👁️",
+      "audio": "media/shorts\\short_14_voice.mp3",
+      "html": "media/shorts\\short_14_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_15",
+      "number": 15,
+      "title": "Genera informes profesionales de tu operativa en 1 segundo 📑",
+      "audio": "media/shorts\\short_15_voice.mp3",
+      "html": "media/shorts\\short_15_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_16",
+      "number": 16,
+      "title": "Prueba Trading Journal Pro 100% Gratis durante 14 días 🚀",
+      "audio": "media/shorts\\short_16_voice.mp3",
+      "html": "media/shorts\\short_16_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_17",
+      "number": 17,
+      "title": "La bitácora fintech más accesible del mercado 💎",
+      "audio": "media/shorts\\short_17_voice.mp3",
+      "html": "media/shorts\\short_17_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_18",
+      "number": 18,
+      "title": "El camino paso a paso para conseguir tu primera cuenta de $100K 🗺️",
+      "audio": "media/shorts\\short_18_voice.mp3",
+      "html": "media/shorts\\short_18_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_19",
+      "number": 19,
+      "title": "Cómo agrupar y auditar múltiples cuentas sin volverte loco 🗂️",
+      "audio": "media/shorts\\short_19_voice.mp3",
+      "html": "media/shorts\\short_19_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    },
+    {
+      "id": "short_20",
+      "number": 20,
+      "title": "Lleva tu trading al siguiente nivel institucional hoy 👑",
+      "audio": "media/shorts\\short_20_voice.mp3",
+      "html": "media/shorts\\short_20_vertical.html",
+      "status": "published",
+      "channels": [
+        "youtube_shorts",
+        "tiktok",
+        "instagram_reels"
+      ],
+      "published_at": "2026-10-31 02:09:41",
+      "networks_status": {
+        "youtube_shorts": "ready_and_queued",
+        "tiktok": "ready_and_queued",
+        "instagram_reels": "ready_and_queued"
+      }
+    }
+  ],
+  "last_dispatch": "2026-10-31 02:09:41"
+}

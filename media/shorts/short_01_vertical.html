@@ -3,257 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
-    <title>Short 1 — El error del 5% de Drawdown | Trading Journal Pro</title>
+    <title>El error del 5% que te hace PERDER tu cuenta de fondeo 🛑📉</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            width: 1080px;
-            height: 1920px;
-            background: #050811;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-            overflow: hidden;
-            user-select: none;
-        }
-        .glow-circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(140px);
-            pointer-events: none;
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(51, 65, 85, 0.8);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 40px rgba(16, 185, 129, 0.15);
-        }
-        .tiktok-subtitle {
-            text-shadow: 0 4px 12px rgba(0,0,0,0.9), 0 2px 4px rgba(0,0,0,0.9);
-            -webkit-text-stroke: 1px black;
-        }
+        body { margin: 0; padding: 0; width: 1080px; height: 1920px; background: #050811; font-family: system-ui, sans-serif; overflow: hidden; user-select: none; }
+        .glass-card { background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(24px); border: 2px solid rgba(51, 65, 85, 0.85); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        .tiktok-sub { text-shadow: 0 4px 12px rgba(0,0,0,0.95); -webkit-text-stroke: 1px black; }
     </style>
 </head>
 <body class="relative flex flex-col justify-between p-12">
-
-    <!-- Ambient Glowing Orbs -->
-    <div class="glow-circle w-[700px] h-[700px] bg-rose-500/15 -top-40 -left-40"></div>
-    <div class="glow-circle w-[600px] h-[600px] bg-emerald-500/20 bottom-20 -right-20"></div>
-
-    <!-- HEADER / BRANDING (Top of Reel) -->
+    <!-- Header -->
     <header class="relative z-20 flex items-center justify-between pt-6">
         <div class="flex items-center gap-3">
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center text-2xl font-black shadow-lg shadow-emerald-500/30">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center text-2xl font-black">
                 <i class="fa-solid fa-chart-line"></i>
             </div>
             <div>
-                <span class="text-2xl font-black text-white tracking-wide">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
-                <p class="text-sm text-gray-400 font-semibold">@tradingjournalpro · Prop Firm Secrets</p>
+                <span class="text-2xl font-black text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
+                <p class="text-sm text-gray-400 font-semibold">@tradingjournalpro · Short #01</p>
             </div>
         </div>
-        <div class="px-4 py-2 rounded-full bg-rose-950/80 border border-rose-500/60 text-rose-400 text-sm font-mono font-bold flex items-center gap-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span> ALERTA DE RIESGO
+        <div class="px-4 py-2 rounded-full bg-emerald-950 border border-emerald-500/60 text-emerald-400 text-sm font-mono font-bold">
+            DRAWDOWN DIARIO
         </div>
     </header>
 
-    <!-- CENTER VISUAL STAGE (Dynamic Storytelling) -->
+    <!-- Main Visual Card -->
     <main class="relative z-10 flex-1 flex flex-col items-center justify-center my-8">
-        
-        <!-- SCENE 1: HOOK CARD -->
-        <div id="scene-hook" class="w-[960px] glass-card rounded-3xl p-10 text-center flex flex-col items-center justify-center transition-all duration-500">
-            <div class="w-24 h-24 rounded-3xl bg-rose-500/20 border-2 border-rose-500/50 flex items-center justify-center text-5xl text-rose-400 mb-8 animate-bounce">
-                <i class="fa-solid fa-triangle-exclamation"></i>
+        <div id="card-stage" class="w-[960px] glass-card rounded-3xl p-12 text-center flex flex-col items-center justify-center">
+            <div class="w-24 h-24 rounded-3xl bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center text-5xl text-emerald-400 mb-8 animate-bounce">
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h2 class="text-5xl font-black text-white leading-tight mb-6">
-                ¿Por qué el <span class="text-rose-400 underline decoration-rose-500 decoration-wavy">90% de los traders</span> pierden su cuenta de fondeo?
+                El error del 5% que te hace PERDER tu cuenta de fondeo 🛑📉
             </h2>
-            <div class="px-6 py-3 rounded-2xl bg-gray-900/90 border border-gray-700 text-gray-300 text-xl font-bold">
-                ⚠️ No es tu estrategia... es la regla que no estás calculando.
-            </div>
-        </div>
-
-        <!-- SCENE 2: DRAWDOWN RULE SIMULATION -->
-        <div id="scene-rule" class="w-[960px] glass-card rounded-3xl p-10 flex flex-col justify-between hidden transition-all duration-500">
-            <div class="flex items-center justify-between pb-6 border-b border-gray-800">
-                <span class="text-2xl font-bold text-white flex items-center gap-3">
-                    <i class="fa-solid fa-calculator text-amber-400"></i> La Trampa del Drawdown Flotante
-                </span>
-                <span class="text-lg font-mono font-bold text-amber-400 bg-amber-950 px-4 py-1.5 rounded-xl border border-amber-800">
-                    Regla Máx -5.0%
-                </span>
-            </div>
-            
-            <div class="space-y-6 my-8 text-xl font-mono">
-                <div class="flex justify-between items-center bg-gray-900/90 p-6 rounded-2xl border border-gray-800">
-                    <span class="text-gray-400">Balance Inicial de Prueba:</span>
-                    <span class="text-white font-bold text-2xl">$100,000 USD</span>
-                </div>
-                <div class="flex justify-between items-center bg-emerald-950/40 p-6 rounded-2xl border border-emerald-700/60">
-                    <span class="text-emerald-300 font-bold">Operación en Ganancia (+3%):</span>
-                    <span class="text-emerald-400 font-black text-3xl">+$3,000 ($103,000)</span>
-                </div>
-                <div class="flex justify-between items-center bg-rose-950/60 p-6 rounded-2xl border border-rose-600/80">
-                    <span class="text-rose-200 font-bold">Nuevo Piso de Pérdida (Trailing):</span>
-                    <span class="text-rose-400 font-black text-3xl">$97,850 USD</span>
-                </div>
-            </div>
-
-            <p class="text-base text-gray-300 text-center font-semibold leading-relaxed">
-                ¡Tu límite de pérdida sube con tus ganancias flotantes! Si retrocede $5,150, quedas descalificado aunque sigas arriba del balance inicial.
-            </p>
-        </div>
-
-        <!-- SCENE 3: SOLUTION WITH TRADING JOURNAL PRO -->
-        <div id="scene-solution" class="w-[960px] glass-card rounded-3xl p-10 flex flex-col justify-between hidden transition-all duration-500">
-            <div class="text-center mb-8">
-                <div class="inline-flex items-center gap-2 px-5 py-2 rounded-full bg-emerald-950 border border-emerald-500/50 text-emerald-400 text-base font-bold mb-4">
-                    <i class="fa-solid fa-shield-halved"></i> AUDITORÍA INSTITUCIONAL ACTIVA
-                </div>
-                <h3 class="text-4xl font-black text-white">Trading Journal Pro te protege</h3>
-                <p class="text-lg text-gray-400 mt-2">Calcula tu flotante y te avisa antes de que sea tarde</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-6 mb-8">
-                <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 text-center">
-                    <span class="text-sm uppercase font-bold text-gray-400">Pérdida Diaria Real</span>
-                    <div class="text-4xl font-black text-emerald-400 mt-2">-0.82%</div>
-                    <span class="text-xs text-gray-400 mt-1 block">Margen seguro: $4,180</span>
-                </div>
-                <div class="bg-gray-900/90 p-6 rounded-2xl border border-gray-800 text-center">
-                    <span class="text-sm uppercase font-bold text-gray-400">Estado de Cuenta</span>
-                    <div class="text-4xl font-black text-emerald-400 mt-2">SEGURO</div>
-                    <span class="text-xs text-emerald-400 mt-1 block">100% Consistente</span>
-                </div>
-            </div>
-
-            <div class="p-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center gap-4">
-                <i class="fa-solid fa-circle-check text-emerald-400 text-3xl"></i>
-                <span class="text-lg text-white font-semibold">Alertas visuales en tiempo real para no quebrar jamás tu desafío.</span>
-            </div>
-        </div>
-
-        <!-- SCENE 4: CTA OUTRO -->
-        <div id="scene-cta" class="w-[960px] glass-card rounded-3xl p-12 text-center flex flex-col items-center justify-center hidden transition-all duration-500">
-            <div class="w-24 h-24 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center text-4xl font-black shadow-2xl shadow-emerald-500/40 mb-6">
-                <i class="fa-solid fa-crown"></i>
-            </div>
-            <h2 class="text-5xl font-black text-white mb-4">
-                Protege tu Cuenta de Fondeo
-            </h2>
-            <div class="text-3xl font-mono font-bold text-emerald-400 mb-8 bg-emerald-950/80 px-8 py-3 rounded-2xl border border-emerald-600/60">
+            <div class="px-8 py-4 rounded-2xl bg-emerald-950/80 border border-emerald-500 text-emerald-300 text-2xl font-mono font-bold mb-6">
                 tradingjournalpro.pages.dev
             </div>
-            <div class="px-10 py-5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 font-black text-2xl shadow-2xl shadow-emerald-500/40 mb-6 animate-pulse">
-                👉 Comienza 14 Días Gratis
+            <div class="text-xl text-gray-300 font-semibold">
+                Bitácora Pro en la Nube · 14 Días Gratis · Sin pagos hoy
             </div>
-            <p class="text-lg text-gray-400 font-semibold">
-                Sin pagos iniciales · Enlace en el perfil o descripción
-            </p>
         </div>
-
     </main>
 
-    <!-- FOOTER WITH DYNAMIC TIKTOK SUBTITLES (High Contrast) -->
+    <!-- Footer Subtitles -->
     <footer class="relative z-20 pb-8 flex flex-col items-center text-center">
-        <div class="w-[980px] bg-black/90 border-2 border-yellow-400/80 p-6 rounded-3xl shadow-2xl mb-4">
-            <p id="short-subtitle" class="text-3xl font-black text-yellow-300 uppercase tracking-wide tiktok-subtitle leading-snug">
-                ¿Sabías que el 90% pierde su cuenta por este único error?
+        <div class="w-[980px] bg-black/90 border-2 border-yellow-400 p-6 rounded-3xl shadow-2xl mb-4">
+            <p id="sub-text" class="text-3xl font-black text-yellow-300 uppercase tiktok-sub">
+                ¿SABÍAS QUE EL 90% PIERDE SU CUENTA POR ESTE ERROR?
             </p>
         </div>
-
-        <div class="flex items-center gap-4 text-sm font-mono text-gray-400">
-            <button onclick="toggleShortPlay()" id="btn-short-play" class="px-6 py-2.5 rounded-xl bg-emerald-500 text-gray-950 font-black flex items-center gap-2">
-                <i id="short-play-icon" class="fa-solid fa-play"></i> Reproducir Short
-            </button>
-            <span id="short-timer" class="px-4 py-2 rounded-xl bg-gray-900 border border-gray-800">00:00 / 00:38</span>
-        </div>
+        <button onclick="toggleAudio()" id="play-btn" class="px-6 py-2.5 rounded-xl bg-emerald-500 text-gray-950 font-black text-sm flex items-center gap-2">
+            <i class="fa-solid fa-play"></i> Reproducir Short #01
+        </button>
     </footer>
 
-    <!-- SYNCHRONIZED AUDIO -->
-    <audio id="audio-short-voice" src="short_01_voice.mp3" preload="auto"></audio>
-    <audio id="audio-short-music" src="../video1_assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3" preload="auto" loop></audio>
-
+    <audio id="audio" src="short_01_voice.mp3" preload="auto"></audio>
     <script>
-        const voice = document.getElementById('audio-short-voice');
-        const music = document.getElementById('audio-short-music');
-        const playBtn = document.getElementById('btn-short-play');
-        const playIcon = document.getElementById('short-play-icon');
-        const sub = document.getElementById('short-subtitle');
-        const timer = document.getElementById('short-timer');
+        const audio = document.getElementById('audio');
+        const sub = document.getElementById('sub-text');
+        const playBtn = document.getElementById('play-btn');
+        const cues = [{"time": 0.0, "text": "\u00bfSAB\u00cdAS QUE EL 90% PIERDE SU CUENTA POR ESTE ERROR?"}, {"time": 5.0, "text": "LA REGLA QUE EL 90% DE TRADERS IGNORA"}, {"time": 12.0, "text": "AUDITA TU OPERATIVA EN TIEMPO REAL"}, {"time": 20.0, "text": "PROTEGE TU DRAWDOWN DIARIO Y PASA TUS PRUEBAS"}, {"time": 28.0, "text": "14 D\u00cdAS GRATIS EN TRADINGJOURNALPRO.PAGES.DEV"}];
 
-        const scenes = {
-            hook: document.getElementById('scene-hook'),
-            rule: document.getElementById('scene-rule'),
-            solution: document.getElementById('scene-solution'),
-            cta: document.getElementById('scene-cta')
-        };
-
-        const SUB_CUES = [
-            { time: 0.0, text: "¿SABÍAS QUE EL 90% PIERDE SU CUENTA POR ESTE ERROR?", scene: "hook" },
-            { time: 5.5, text: "NO ES TU ESTRATEGIA... ES EL DRAWDOWN DIARIO.", scene: "rule" },
-            { time: 9.0, text: "EL LÍMITE DEL 5% SE CALCULA SOBRE EL FLOTANTE MÁS ALTO.", scene: "rule" },
-            { time: 16.0, text: "SI VAS EN GANANCIA, TU LÍMITE DE PÉRDIDA SUBE CON ELLA.", scene: "rule" },
-            { time: 22.5, text: "TRADING JOURNAL PRO AUDITA TUS TRADES EN TIEMPO REAL.", scene: "solution" },
-            { time: 27.5, text: "TE ALERTA ANTES DE TOCAR EL LÍMITE DE RIESGO.", scene: "solution" },
-            { time: 31.0, text: "PRUEBA 14 DÍAS GRATIS EN TRADINGJOURNALPRO.PAGES.DEV", scene: "cta" }
-        ];
-
-        let isPlaying = false;
-
-        function toggleShortPlay() {
-            if (!isPlaying) {
-                music.volume = 0.16;
-                music.play().catch(e => console.log(e));
-                voice.play().catch(e => console.log(e));
-                isPlaying = true;
-                playIcon.className = "fa-solid fa-pause";
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
                 playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
             } else {
-                voice.pause();
-                music.pause();
-                isPlaying = false;
-                playIcon.className = "fa-solid fa-play";
-                playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Reproducir Short';
+                audio.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Reproducir Short #01';
             }
         }
 
-        voice.addEventListener('timeupdate', () => {
-            const t = voice.currentTime;
-            const dur = voice.duration || 38;
-            
-            const curS = Math.floor(t).toString().padStart(2, '0');
-            const totS = Math.floor(dur).toString().padStart(2, '0');
-            timer.textContent = `00:${curS} / 00:${totS}`;
-
-            for (let i = SUB_CUES.length - 1; i >= 0; i--) {
-                if (t >= SUB_CUES[i].time) {
-                    if (sub.textContent !== SUB_CUES[i].text) {
-                        sub.textContent = SUB_CUES[i].text;
-                        gsap.fromTo(sub, { scale: 0.95 }, { scale: 1, duration: 0.18, ease: 'back.out' });
-                    }
-                    switchScene(SUB_CUES[i].scene);
+        audio.addEventListener('timeupdate', () => {
+            const t = audio.currentTime;
+            for (let i = cues.length - 1; i >= 0; i--) {
+                if (t >= cues[i].time) {
+                    sub.textContent = cues[i].text;
                     break;
                 }
             }
         });
-
-        voice.addEventListener('ended', () => {
-            isPlaying = false;
-            playBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Repetir';
-            music.pause();
-        });
-
-        function switchScene(key) {
-            Object.keys(scenes).forEach(k => {
-                if (k === key) {
-                    scenes[k].classList.remove('hidden');
-                } else {
-                    scenes[k].classList.add('hidden');
-                }
-            });
-        }
     </script>
 </body>
 </html>

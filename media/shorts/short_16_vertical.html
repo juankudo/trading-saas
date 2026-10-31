@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
+    <title>Prueba Trading Journal Pro 100% Gratis durante 14 días 🚀</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { margin: 0; padding: 0; width: 1080px; height: 1920px; background: #050811; font-family: system-ui, sans-serif; overflow: hidden; user-select: none; }
+        .glass-card { background: rgba(15, 23, 42, 0.88); backdrop-filter: blur(24px); border: 2px solid rgba(51, 65, 85, 0.85); box-shadow: 0 25px 50px rgba(0,0,0,0.8); }
+        .tiktok-sub { text-shadow: 0 4px 12px rgba(0,0,0,0.95); -webkit-text-stroke: 1px black; }
+    </style>
+</head>
+<body class="relative flex flex-col justify-between p-12">
+    <!-- Header -->
+    <header class="relative z-20 flex items-center justify-between pt-6">
+        <div class="flex items-center gap-3">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center text-2xl font-black">
+                <i class="fa-solid fa-chart-line"></i>
+            </div>
+            <div>
+                <span class="text-2xl font-black text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
+                <p class="text-sm text-gray-400 font-semibold">@tradingjournalpro · Short #16</p>
+            </div>
+        </div>
+        <div class="px-4 py-2 rounded-full bg-emerald-950 border border-emerald-500/60 text-emerald-400 text-sm font-mono font-bold">
+            14 DÍAS GRATIS
+        </div>
+    </header>
+
+    <!-- Main Visual Card -->
+    <main class="relative z-10 flex-1 flex flex-col items-center justify-center my-8">
+        <div id="card-stage" class="w-[960px] glass-card rounded-3xl p-12 text-center flex flex-col items-center justify-center">
+            <div class="w-24 h-24 rounded-3xl bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center text-5xl text-emerald-400 mb-8 animate-bounce">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <h2 class="text-5xl font-black text-white leading-tight mb-6">
+                Prueba Trading Journal Pro 100% Gratis durante 14 días 🚀
+            </h2>
+            <div class="px-8 py-4 rounded-2xl bg-emerald-950/80 border border-emerald-500 text-emerald-300 text-2xl font-mono font-bold mb-6">
+                tradingjournalpro.pages.dev
+            </div>
+            <div class="text-xl text-gray-300 font-semibold">
+                Bitácora Pro en la Nube · 14 Días Gratis · Sin pagos hoy
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Subtitles -->
+    <footer class="relative z-20 pb-8 flex flex-col items-center text-center">
+        <div class="w-[980px] bg-black/90 border-2 border-yellow-400 p-6 rounded-3xl shadow-2xl mb-4">
+            <p id="sub-text" class="text-3xl font-black text-yellow-300 uppercase tiktok-sub">
+                14 DÍAS GRATIS SIN COBROS INICIALES NI COMPROMISOS.
+            </p>
+        </div>
+        <button onclick="toggleAudio()" id="play-btn" class="px-6 py-2.5 rounded-xl bg-emerald-500 text-gray-950 font-black text-sm flex items-center gap-2">
+            <i class="fa-solid fa-play"></i> Reproducir Short #16
+        </button>
+    </footer>
+
+    <audio id="audio" src="short_16_voice.mp3" preload="auto"></audio>
+    <script>
+        const audio = document.getElementById('audio');
+        const sub = document.getElementById('sub-text');
+        const playBtn = document.getElementById('play-btn');
+        const cues = [{"time": 0.0, "text": "14 D\u00cdAS GRATIS SIN COBROS INICIALES NI COMPROMISOS."}, {"time": 5.0, "text": "LA REGLA QUE EL 90% DE TRADERS IGNORA"}, {"time": 12.0, "text": "AUDITA TU OPERATIVA EN TIEMPO REAL"}, {"time": 20.0, "text": "PROTEGE TU DRAWDOWN DIARIO Y PASA TUS PRUEBAS"}, {"time": 28.0, "text": "14 D\u00cdAS GRATIS EN TRADINGJOURNALPRO.PAGES.DEV"}];
+
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play();
+                playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+            } else {
+                audio.pause();
+                playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Reproducir Short #16';
+            }
+        }
+
+        audio.addEventListener('timeupdate', () => {
+            const t = audio.currentTime;
+            for (let i = cues.length - 1; i >= 0; i--) {
+                if (t >= cues[i].time) {
+                    sub.textContent = cues[i].text;
+                    break;
+                }
+            }
+        });
+    </script>
+</body>
+</html>

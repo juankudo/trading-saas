@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=1080, height=1920, initial-scale=1.0">
-    <title>Calcula tu LOTAJE exacto en ORO (XAUUSD) en 3 segundos ⚡ #Shorts</title>
+    <title>Calcula tu LOTAJE exacto en ORO (XAUUSD) en 3 segundos ⚡</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -22,11 +22,11 @@
             </div>
             <div>
                 <span class="text-2xl font-black text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
-                <p class="text-sm text-gray-400 font-semibold">@tradingjournalpro</p>
+                <p class="text-sm text-gray-400 font-semibold">@tradingjournalpro · Short #02</p>
             </div>
         </div>
         <div class="px-4 py-2 rounded-full bg-emerald-950 border border-emerald-500/60 text-emerald-400 text-sm font-mono font-bold">
-            PRO TIPS
+            CALCULADORA ORO
         </div>
     </header>
 
@@ -34,16 +34,16 @@
     <main class="relative z-10 flex-1 flex flex-col items-center justify-center my-8">
         <div id="card-stage" class="w-[960px] glass-card rounded-3xl p-12 text-center flex flex-col items-center justify-center">
             <div class="w-24 h-24 rounded-3xl bg-emerald-500/20 border-2 border-emerald-500/50 flex items-center justify-center text-5xl text-emerald-400 mb-8 animate-bounce">
-                <i class="fa-solid fa-bolt"></i>
+                <i class="fa-solid fa-shield-halved"></i>
             </div>
             <h2 class="text-5xl font-black text-white leading-tight mb-6">
-                No quemes tu cuenta calculando lotes a ojo ⚡ #trading #xauusd #gold
+                Calcula tu LOTAJE exacto en ORO (XAUUSD) en 3 segundos ⚡
             </h2>
             <div class="px-8 py-4 rounded-2xl bg-emerald-950/80 border border-emerald-500 text-emerald-300 text-2xl font-mono font-bold mb-6">
                 tradingjournalpro.pages.dev
             </div>
             <div class="text-xl text-gray-300 font-semibold">
-                14 Días Gratis · Sin pagos hoy · Respaldo en la nube
+                Bitácora Pro en la Nube · 14 Días Gratis · Sin pagos hoy
             </div>
         </div>
     </main>
@@ -52,20 +52,20 @@
     <footer class="relative z-20 pb-8 flex flex-col items-center text-center">
         <div class="w-[980px] bg-black/90 border-2 border-yellow-400 p-6 rounded-3xl shadow-2xl mb-4">
             <p id="sub-text" class="text-3xl font-black text-yellow-300 uppercase tiktok-sub">
-                ¿SIGUES CALCULANDO LOTES A OJO?
+                ¿SIGUES CALCULANDO LOTES A OJO O CON CALCULADORAS LENTAS?
             </p>
         </div>
         <button onclick="toggleAudio()" id="play-btn" class="px-6 py-2.5 rounded-xl bg-emerald-500 text-gray-950 font-black text-sm flex items-center gap-2">
-            <i class="fa-solid fa-play"></i> Reproducir Short
+            <i class="fa-solid fa-play"></i> Reproducir Short #02
         </button>
     </footer>
 
-    <audio id="audio" src="short_02_calculadora_lotaje_voice.mp3" preload="auto"></audio>
+    <audio id="audio" src="short_02_voice.mp3" preload="auto"></audio>
     <script>
         const audio = document.getElementById('audio');
         const sub = document.getElementById('sub-text');
         const playBtn = document.getElementById('play-btn');
-        const cues = [{"time": 0.0, "text": "\u00bfSIGUES CALCULANDO LOTES A OJO?", "scene": "danger"}, {"time": 4.5, "text": "EN EL ORO, UN ERROR DE 0.10 TE CUESTA LA CUENTA.", "scene": "gold_volatility"}, {"time": 10.0, "text": "CON TRADING JOURNAL PRO ELIGES TU RIESGO EXACTO (1%).", "scene": "calculator"}, {"time": 17.5, "text": "COLOCAS TU STOP LOSS Y OBTIENES TU LOTAJE AL TICK.", "scene": "exact_lots"}, {"time": 24.5, "text": "CERO SOBREAPALANCAMIENTO Y M\u00c1XIMA PRECISI\u00d3N.", "scene": "safe_badge"}, {"time": 29.5, "text": "PRUEBA 14 D\u00cdAS GRATIS EN TRADINGJOURNALPRO.PAGES.DEV", "scene": "cta"}];
+        const cues = [{"time": 0.0, "text": "\u00bfSIGUES CALCULANDO LOTES A OJO O CON CALCULADORAS LENTAS?"}, {"time": 5.0, "text": "LA REGLA QUE EL 90% DE TRADERS IGNORA"}, {"time": 12.0, "text": "AUDITA TU OPERATIVA EN TIEMPO REAL"}, {"time": 20.0, "text": "PROTEGE TU DRAWDOWN DIARIO Y PASA TUS PRUEBAS"}, {"time": 28.0, "text": "14 D\u00cdAS GRATIS EN TRADINGJOURNALPRO.PAGES.DEV"}];
 
         function toggleAudio() {
             if (audio.paused) {
@@ -73,7 +73,7 @@
                 playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
             } else {
                 audio.pause();
-                playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Reproducir Short';
+                playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Reproducir Short #02';
             }
         }
 
