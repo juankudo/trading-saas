@@ -205,6 +205,9 @@ const initialTrades = [];
             await setMode('real'); 
             await initMt5Bridge();
             initTourAutoTrigger();
+            if (typeof checkSubscriptionAccess === 'function') {
+                checkSubscriptionAccess();
+            }
         });
 
         // WebP en alta calidad conserva mejor textos y líneas finas de los gráficos que JPEG.

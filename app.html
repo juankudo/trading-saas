@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
@@ -1077,16 +1078,21 @@
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="text-center mb-6">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-3 text-xl font-black shadow-lg shadow-emerald-500/20">
+            <div class="text-center mb-5">
+                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-2 text-xl font-black shadow-lg shadow-emerald-500/20">
                     <i class="fa-solid fa-gem"></i>
                 </div>
                 <h3 class="text-xl font-black text-white">Membresía Pro Ilimitada</h3>
                 <p class="text-xs text-gray-400 mt-1">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
+                <div class="mt-2">
+                    <span id="checkout-mode-indicator" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
+                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Modo Sandbox Activo
+                    </span>
+                </div>
             </div>
 
             <!-- Selector de Períodos -->
-            <div class="grid grid-cols-3 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-6 text-center">
+            <div class="grid grid-cols-3 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-5 text-center">
                 <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-3 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
                     1 Mes
                 </button>
@@ -1099,20 +1105,20 @@
             </div>
 
             <!-- Precio Seleccionado -->
-            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-6">
+            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-5">
                 <span id="checkout-price-amount" class="text-3xl font-black text-white block">$19 USD</span>
                 <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5">por 1 Mes</span>
                 <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1">14 días de prueba ($0 cobrados hoy si es primera vez)</span>
             </div>
 
             <!-- Opciones de Pago (Pasarela Dual) -->
-            <div class="space-y-3 mb-6">
-                <!-- Opción 1: Tarjetas (Stripe) -->
-                <button onclick="handleStripeCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
+            <div class="space-y-3 mb-5">
+                <!-- Opción 1: Tarjetas Globales (Lemon Squeezy MoR) -->
+                <button onclick="handleLemonSqueezyCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
                     <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-credit-card text-base"></i> Pagar con Tarjeta de Crédito / Débito
+                        <i class="fa-solid fa-credit-card text-base"></i> Pagar con Tarjeta (Visa, Mastercard, Apple Pay)
                     </span>
-                    <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono">Stripe &rarr;</span>
+                    <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono font-bold">Lemon Squeezy &rarr;</span>
                 </button>
 
                 <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
@@ -1122,6 +1128,35 @@
                     </span>
                     <span class="text-xs text-gray-400 font-mono">NOWPayments &rarr;</span>
                 </button>
+            </div>
+
+            <!-- Lemon Squeezy Card Sandbox Simulation Drawer -->
+            <div id="checkout-stripe-sandbox" class="hidden bg-gray-900 border border-emerald-500/50 rounded-xl p-4 mb-4 text-xs animate-in fade-in">
+                <div class="flex items-center justify-between mb-2.5 border-b border-gray-800 pb-2">
+                    <span class="font-bold text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-flask text-emerald-400"></i> Simulación Lemon Squeezy Checkout (Sandbox)
+                    </span>
+                    <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60">TEST MODE</span>
+                </div>
+                <p class="text-gray-300 mb-2 leading-relaxed">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
+                <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 mb-3 space-y-1 font-mono text-[11px]">
+                    <div class="flex justify-between text-gray-400">
+                        <span>Tarjeta simulada:</span>
+                        <span class="text-white font-bold">4242 •••• •••• 4242 (Visa Test)</span>
+                    </div>
+                    <div class="flex justify-between text-gray-400">
+                        <span>Monto del plan:</span>
+                        <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$19.00 USD</span>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <button type="button" onclick="simulateCardPaymentSuccess()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-circle-check"></i> Simular Pago Exitoso
+                    </button>
+                    <button type="button" onclick="hideCardSandbox()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition">
+                        Cancelar
+                    </button>
+                </div>
             </div>
 
             <!-- Crypto Drawer / Factura USDT -->
@@ -1153,9 +1188,16 @@
                     </div>
                 </div>
 
-                <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2">
+                <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-3">
                     <i class="fa-solid fa-circle-info mt-0.5"></i>
                     <span>Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
+                </div>
+
+                <!-- Botón de Simulación Sandbox Cripto -->
+                <div id="crypto-test-action" class="pt-2 border-t border-gray-800">
+                    <button type="button" onclick="simulateCryptoPaymentSuccess()" class="w-full py-2.5 px-3 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> Simular Confirmación de Transferencia (TxHash OK)
+                    </button>
                 </div>
             </div>
 
@@ -1163,6 +1205,48 @@
                 <span>🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
             </div>
 
+            <!-- Sandbox Developer Testing Strip -->
+            <div class="mt-4 pt-3 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] text-gray-400 font-mono">
+                <span class="flex items-center gap-1 text-gray-300">
+                    <i class="fa-solid fa-vial text-emerald-400"></i> Herramientas de Prueba:
+                </span>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura">Simular Prueba Vencida</button>
+                    <span>·</span>
+                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 14 días">Restablecer 14 Días</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- MODAL DE CELEBRACIÓN DE SUSCRIPCIÓN PRO -->
+    <div id="subscriptionCelebrationModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-[85] items-center justify-center p-4">
+        <div class="bg-[#111625] border border-emerald-500/60 rounded-2xl w-full max-w-md p-6 sm:p-8 shadow-2xl text-center relative animate-in zoom-in-95 duration-200">
+            <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-emerald-500/30">
+                <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3 class="text-xl font-black text-white mb-1">¡Membresía Pro Activada!</h3>
+            <p class="text-xs text-gray-300 mb-4" id="sub-success-desc">
+                Tu cuenta ha sido actualizada con acceso total y sincronización continua en la nube.
+            </p>
+            <div class="bg-gray-950/80 border border-gray-800 rounded-xl p-3 text-xs font-mono text-gray-300 mb-5 space-y-1.5 text-left">
+                <div class="flex justify-between border-b border-gray-800 pb-1">
+                    <span class="text-gray-400 font-sans">Plan Adquirido:</span>
+                    <span id="sub-success-plan" class="text-white font-bold">1 Mes Pro</span>
+                </div>
+                <div class="flex justify-between border-b border-gray-800 py-1">
+                    <span class="text-gray-400 font-sans">Válido hasta:</span>
+                    <span id="sub-success-date" class="text-emerald-400 font-bold">--/--/----</span>
+                </div>
+                <div class="flex justify-between pt-1">
+                    <span class="text-gray-400 font-sans">Estado:</span>
+                    <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check text-xs"></i> Activo (Sin restricciones)</span>
+                </div>
+            </div>
+            <button type="button" onclick="closeSubscriptionCelebration()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-sm shadow-lg transition">
+                Entendido, Continuar a mi Bitácora
+            </button>
         </div>
     </div>
 
