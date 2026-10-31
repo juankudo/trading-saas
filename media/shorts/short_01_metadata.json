@@ -1,0 +1,59 @@
+{
+  "id": "short_01_drawdown_mortal",
+  "title_youtube": "El error del 5% que te hace PERDER tu cuenta de fondeo 🛑📉 #Shorts",
+  "title_tiktok": "Por esto pierdes tu prueba de fondeo y no te das cuenta 🛑 #trading #propfirm",
+  "title_instagram": "El error del Drawdown Diario que te descalifica en 1 día 📊 #tradingtips",
+  "duration_seconds": 38,
+  "voice": "es-MX-DaliaNeural",
+  "hook_3s": "¿Sabías que más del noventa por ciento de los traders pierden su cuenta de fondeo por este único error?",
+  "script_narration": "¿Sabías que más del noventa por ciento de los traders pierden su cuenta de fondeo por este único error? No es la estrategia, es el Drawdown Diario. Muchas empresas calculan tu límite del cinco por ciento sobre el balance más alto del día, no sobre tu capital inicial. Si abres una operación y vas ganando, tu límite de pérdida sube con tus ganancias. Con Trading Journal Pro, tu bitácora audita cada operación en tiempo real y te alerta antes de tocar el límite de riesgo. Prueba catorce días gratis en el enlace del perfil y protege tu cuenta hoy mismo.",
+  "cues": [
+    {
+      "start": 0.0,
+      "end": 5.5,
+      "text": "¿Sabías que el 90% pierde su cuenta por este único error?",
+      "scene": "hook_danger"
+    },
+    {
+      "start": 5.5,
+      "end": 8.5,
+      "text": "No es la estrategia... es el Drawdown Diario.",
+      "scene": "drawdown_reveal"
+    },
+    {
+      "start": 8.5,
+      "end": 15.0,
+      "text": "Tu límite del 5% se calcula sobre el balance flotante más alto.",
+      "scene": "rule_explanation"
+    },
+    {
+      "start": 15.0,
+      "end": 22.0,
+      "text": "Si vas en profit, tu límite de pérdida sube con tus ganancias.",
+      "scene": "trailing_dd_warning"
+    },
+    {
+      "start": 22.0,
+      "end": 30.0,
+      "text": "Trading Journal Pro audita tus trades y te alerta antes del límite.",
+      "scene": "app_solution"
+    },
+    {
+      "start": 30.0,
+      "end": 38.0,
+      "text": "Prueba 14 días gratis en tradingjournalpro.pages.dev",
+      "scene": "cta_profile"
+    }
+  ],
+  "hashtags": [
+    "#trading",
+    "#propfirms",
+    "#cuentasdefondeo",
+    "#drawdown",
+    "#tradingjournal",
+    "#forex",
+    "#gold",
+    "#tradinghacks"
+  ],
+  "cta_url": "https://tradingjournalpro.pages.dev"
+}

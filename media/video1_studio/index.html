@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1920, height=1080, initial-scale=1.0">
+    <title>Video 1 — Guía de Inicio Rápido | Trading Journal Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1920px;
+            height: 1080px;
+            background: #060913;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+        .fintech-grid {
+            background-image: 
+                linear-gradient(to right, rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+        }
+        .window-frame {
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 40px rgba(16, 185, 129, 0.15);
+        }
+        .cursor-pointer-sim {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            pointer-events: none;
+            z-index: 100;
+            transform: translate(-4px, -4px);
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+            transition: transform 0.15s ease;
+        }
+        .cursor-click-ripple {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(16, 185, 129, 0.5);
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0);
+            opacity: 1;
+            z-index: 99;
+        }
+        .subtitle-box {
+            background: rgba(8, 12, 22, 0.88);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(55, 65, 81, 0.8);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+<body class="relative flex items-center justify-center fintech-grid">
+
+    <!-- Ambient Glows -->
+    <div class="glow-sphere w-[800px] h-[500px] bg-emerald-500/15 -top-40 left-1/4"></div>
+    <div class="glow-sphere w-[600px] h-[400px] bg-teal-500/10 bottom-0 right-10"></div>
+
+    <!-- MAIN STAGE CONTAINER (1920x1080) -->
+    <div id="video-stage" class="relative w-[1920px] h-[1080px] overflow-hidden flex flex-col justify-between p-12">
+        
+        <!-- TOP BRANDING BAR -->
+        <header class="flex items-center justify-between z-20">
+            <div class="flex items-center gap-3">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-chart-line text-white text-xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></h1>
+                    <p class="text-xs text-gray-400 font-medium">Tutorial Oficial · Video 1: Guía de Inicio Rápido</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3">
+                <span class="px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 text-xs font-mono font-bold flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    https://tradingjournalpro.pages.dev
+                </span>
+                <span id="timer-badge" class="px-3 py-1.5 rounded-full bg-gray-900 border border-gray-800 text-gray-400 text-xs font-mono">
+                    00:00 / 02:20
+                </span>
+            </div>
+        </header>
+
+        <!-- CENTER WORKSPACE: MOCKUP WINDOW -->
+        <main class="relative flex-1 flex items-center justify-center my-4 z-10">
+            <div id="browser-window" class="relative w-[1560px] h-[820px] bg-[#0c101d] rounded-2xl border border-gray-700/80 overflow-hidden window-frame flex flex-col transform transition-transform duration-700">
+                
+                <!-- Window Chrome / Header -->
+                <div class="h-11 bg-[#080b14] border-b border-gray-800 flex items-center justify-between px-4 shrink-0">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full bg-rose-500/80"></span>
+                        <span class="w-3 h-3 rounded-full bg-amber-500/80"></span>
+                        <span class="w-3 h-3 rounded-full bg-emerald-500/80"></span>
+                    </div>
+                    <div class="flex items-center gap-2 px-6 py-1 rounded-lg bg-gray-900/90 border border-gray-800 text-xs text-gray-300 font-mono w-[640px] justify-center shadow-inner">
+                        <i class="fa-solid fa-lock text-emerald-400 text-[10px]"></i>
+                        <span id="browser-url-bar">https://tradingjournalpro.pages.dev</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-gray-500 text-xs">
+                        <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                        <span>Cloudflare Edge SSL</span>
+                    </div>
+                </div>
+
+                <!-- Window Viewport -->
+                <div id="viewport-content" class="relative flex-1 overflow-hidden bg-[#0c101d]">
+                    
+                    <!-- SCENE 1 VIEW: LANDING HERO -->
+                    <div id="view-scene-1" class="absolute inset-0 p-12 flex flex-col items-center justify-center text-center opacity-100">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-950/70 border border-emerald-600/40 text-emerald-400 text-xs font-semibold mb-6 shadow-inner">
+                            <i class="fa-solid fa-shield-halved text-emerald-400"></i>
+                            <span>Bitácora Pro en la Nube · Auditoría de Fondeo & Drawdown</span>
+                        </div>
+                        <h2 class="text-5xl font-black text-white tracking-tight leading-tight max-w-4xl mb-6">
+                            Domina tu operativa con una bitácora profesional en la nube
+                        </h2>
+                        <p class="text-lg text-gray-300 max-w-3xl mb-8 leading-relaxed">
+                            Métricas de precisión quirúrgica, control estricto de drawdown diario para prop firms y calculadora de lotaje avanzada.
+                        </p>
+                        <div class="flex items-center gap-4">
+                            <button id="cta-hero-register" class="px-8 py-4 rounded-xl text-base font-extrabold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 shadow-xl shadow-emerald-500/30 flex items-center gap-2 transform transition">
+                                <i class="fa-solid fa-rocket"></i> Comenzar 14 Días Gratis
+                            </button>
+                            <div class="px-6 py-4 rounded-xl text-base font-bold bg-gray-900/90 border border-gray-800 text-gray-300 flex items-center gap-2">
+                                <i class="fa-solid fa-flask text-amber-400"></i> Explorar Backtesting Pro
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-6 mt-8 text-xs text-gray-400 font-medium">
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> 14 días gratis ($0 hoy)</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Supabase Cloud Sync</span>
+                            <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle-check text-emerald-400"></i> Lemon Squeezy MoR & USDT</span>
+                        </div>
+                    </div>
+
+                    <!-- SCENE 2 VIEW: REGISTRATION MODAL -->
+                    <div id="view-scene-2" class="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 pointer-events-none">
+                        <div class="w-[500px] bg-[#111625] border border-gray-700 rounded-2xl p-8 shadow-2xl relative">
+                            <div class="text-center mb-6">
+                                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-3 text-xl font-bold shadow-lg shadow-emerald-500/20">
+                                    <i class="fa-solid fa-rocket"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-white">Comenzar 14 Días Gratis</h3>
+                                <p class="text-xs text-gray-400 mt-1">Acceso total e inmediato. Cancela cuando quieras.</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-1">Nombre Completo</label>
+                                    <div id="sim-input-name" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white font-mono flex items-center">
+                                        <span id="txt-name" class="text-gray-400">Juan Pérez</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico</label>
+                                    <div id="sim-input-email" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white font-mono flex items-center">
+                                        <span id="txt-email" class="text-gray-400">trader.pro@gmail.com</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 mb-1">Contraseña</label>
+                                    <div class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-3 text-sm text-white font-mono flex items-center">
+                                        <span>••••••••••••</span>
+                                    </div>
+                                </div>
+                                <button id="btn-submit-register" class="w-full py-3.5 rounded-xl text-sm font-bold bg-emerald-500 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 mt-2">
+                                    <i class="fa-solid fa-bolt"></i> Activar 14 Días Gratis ($0 Hoy)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SCENE 3 & 4 VIEW: APP.HTML DASHBOARD & FONDEO -->
+                    <div id="view-scene-app" class="absolute inset-0 p-8 flex flex-col opacity-0 pointer-events-none">
+                        
+                        <!-- App Top Navigation Bar -->
+                        <div class="flex items-center justify-between pb-4 border-b border-gray-800 mb-6">
+                            <div class="flex items-center gap-4">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-chart-line text-emerald-400 text-lg"></i>
+                                    <span class="font-bold text-white text-base">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
+                                </div>
+                                <div class="flex items-center gap-1 bg-gray-900/90 p-1 rounded-xl border border-gray-800 text-xs font-semibold">
+                                    <button id="chip-acc-100k" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-gray-950 font-bold transition">Cuenta 100K (2 Fases)</button>
+                                    <button id="chip-acc-50k" class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Cuenta 50K (1 Fase)</button>
+                                    <button id="chip-acc-instant" class="px-3 py-1.5 rounded-lg text-gray-400 hover:text-white transition">Fondeo Directo 25K</button>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <span class="px-3 py-1 rounded-lg text-xs font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-clock"></i> Prueba: 14 días
+                                </span>
+                                <button class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-extrabold text-xs shadow-md flex items-center gap-2">
+                                    <i class="fa-solid fa-plus"></i> Nueva Entrada
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 4 Stat Cards Grid -->
+                        <div class="grid grid-cols-4 gap-4 mb-6">
+                            <div class="bg-gray-900/90 border border-gray-800/90 p-4 rounded-xl">
+                                <span class="text-[11px] text-gray-400 uppercase font-semibold">Balance Actual</span>
+                                <div class="text-2xl font-black text-white mt-1">$104,250.00 USD</div>
+                                <span class="text-xs text-emerald-400 font-bold mt-1 inline-block"><i class="fa-solid fa-arrow-up"></i> +4.25% ($4,250)</span>
+                            </div>
+                            <div id="card-daily-dd" class="bg-gray-900/90 border border-emerald-500/40 p-4 rounded-xl shadow-lg shadow-emerald-500/5">
+                                <span class="text-[11px] text-gray-400 uppercase font-semibold flex items-center justify-between">
+                                    Pérdida Diaria <span class="text-[10px] text-emerald-400 font-mono">Máx -5.0%</span>
+                                </span>
+                                <div class="text-2xl font-black text-emerald-400 mt-1">-0.82%</div>
+                                <span class="text-xs text-gray-400 mt-1 inline-block">Margen Seguro: $4,180 restante</span>
+                            </div>
+                            <div id="card-max-dd" class="bg-gray-900/90 border border-emerald-500/40 p-4 rounded-xl shadow-lg shadow-emerald-500/5">
+                                <span class="text-[11px] text-gray-400 uppercase font-semibold flex items-center justify-between">
+                                    Drawdown Máximo <span class="text-[10px] text-emerald-400 font-mono">Máx -10.0%</span>
+                                </span>
+                                <div class="text-2xl font-black text-emerald-400 mt-1">-1.45%</div>
+                                <span class="text-xs text-gray-400 mt-1 inline-block">Límite Total: $10,000</span>
+                            </div>
+                            <div class="bg-gray-900/90 border border-gray-800/90 p-4 rounded-xl">
+                                <span class="text-[11px] text-gray-400 uppercase font-semibold">Tasa de Acierto (Win Rate)</span>
+                                <div class="text-2xl font-black text-white mt-1">71.4%</div>
+                                <span class="text-xs text-emerald-400 font-bold mt-1 inline-block">10 Ganadoras · 4 Perdedoras</span>
+                            </div>
+                        </div>
+
+                        <!-- Main Split: Equity Curve & Calendar -->
+                        <div class="grid grid-cols-3 gap-6 flex-1">
+                            <div class="col-span-2 bg-gray-900/80 border border-gray-800 p-5 rounded-2xl flex flex-col justify-between">
+                                <div class="flex items-center justify-between mb-3">
+                                    <h4 class="text-sm font-bold text-white flex items-center gap-2">
+                                        <i class="fa-solid fa-chart-area text-emerald-400"></i> Curva de Equidad en Tiempo Real
+                                    </h4>
+                                    <span class="text-xs font-mono font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-700/60 px-2.5 py-0.5 rounded">
+                                        R:R Promedio 1:2.4
+                                    </span>
+                                </div>
+                                <div class="relative w-full h-[280px]">
+                                    <svg class="w-full h-full" viewBox="0 0 600 220" fill="none">
+                                        <defs>
+                                            <linearGradient id="eqGlow" x1="0" y1="0" x2="0" y2="1">
+                                                <stop offset="0%" stop-color="#10b981" stop-opacity="0.35"/>
+                                                <stop offset="100%" stop-color="#10b981" stop-opacity="0.0"/>
+                                            </linearGradient>
+                                        </defs>
+                                        <path d="M 20 180 Q 120 160 180 130 T 320 90 T 450 60 T 580 30 L 580 200 L 20 200 Z" fill="url(#eqGlow)"/>
+                                        <path id="equity-line" d="M 20 180 Q 120 160 180 130 T 320 90 T 450 60 T 580 30" stroke="#10b981" stroke-width="4" stroke-linecap="round"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="col-span-1 bg-gray-900/80 border border-gray-800 p-5 rounded-2xl flex flex-col">
+                                <h4 class="text-sm font-bold text-white mb-3 flex items-center gap-2">
+                                    <i class="fa-solid fa-calendar-days text-emerald-400"></i> Rendimiento Semanal
+                                </h4>
+                                <div class="space-y-2 flex-1 flex flex-col justify-around text-xs">
+                                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-950/50 border border-emerald-700/50">
+                                        <span class="font-bold text-gray-200">Lunes · XAUUSD</span>
+                                        <span class="font-mono font-bold text-emerald-400">+$1,250.00 (+1.25%)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-950/50 border border-emerald-700/50">
+                                        <span class="font-bold text-gray-200">Martes · EURUSD</span>
+                                        <span class="font-mono font-bold text-emerald-400">+$1,800.00 (+1.80%)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-rose-950/40 border border-rose-800/40">
+                                        <span class="font-bold text-gray-200">Miércoles · US30</span>
+                                        <span class="font-mono font-bold text-rose-400">-$450.00 (-0.45%)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between p-2.5 rounded-lg bg-emerald-950/50 border border-emerald-700/50">
+                                        <span class="font-bold text-gray-200">Jueves · XAUUSD</span>
+                                        <span class="font-mono font-bold text-emerald-400">+$1,650.00 (+1.65%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SCENE 5 VIEW: OUTRO FINAL -->
+                    <div id="view-scene-5" class="absolute inset-0 p-12 flex flex-col items-center justify-center text-center opacity-0 pointer-events-none">
+                        <div class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-6 text-3xl font-black shadow-2xl shadow-emerald-500/40">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h2 class="text-4xl font-black text-white tracking-tight mb-3">
+                            Comienza tu Prueba Gratuita de 14 Días
+                        </h2>
+                        <p class="text-lg text-emerald-400 font-mono font-bold mb-8">
+                            https://tradingjournalpro.pages.dev
+                        </p>
+                        <div class="flex items-center gap-6 text-sm text-gray-300 font-semibold mb-8">
+                            <span class="px-4 py-2 rounded-xl bg-gray-900 border border-gray-800">✅ Sin pagos iniciales</span>
+                            <span class="px-4 py-2 rounded-xl bg-gray-900 border border-gray-800">✅ Cancela con 1 clic</span>
+                            <span class="px-4 py-2 rounded-xl bg-gray-900 border border-gray-800">✅ Datos cifrados en Supabase</span>
+                        </div>
+                        <div class="text-xs text-gray-400 max-w-xl leading-relaxed">
+                            Enlace directo en la descripción del video. Suscríbete para el Video 2: Registro de Trades y Calculadora de Lotaje.
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- SIMULATED MOUSE CURSOR -->
+                <div id="mouse-cursor" class="cursor-pointer-sim" style="top: 300px; left: 700px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <path d="M4 3L11 21L14 13L21 10L4 3Z" fill="#10b981" stroke="#ffffff" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+
+                <!-- CLICK RIPPLE ELEMENT -->
+                <div id="click-ripple" class="cursor-click-ripple"></div>
+
+            </div>
+        </main>
+
+        <!-- BOTTOM SUBTITLES & AUDIO CONTROLLER -->
+        <footer class="z-20 flex items-center justify-between gap-6">
+            <div id="subtitle-container" class="flex-1 subtitle-box px-8 py-3.5 rounded-2xl flex items-center gap-4">
+                <i class="fa-solid fa-quote-left text-emerald-400 text-sm"></i>
+                <p id="subtitle-text" class="text-sm font-semibold text-gray-100 leading-snug">
+                    ¿Alguna vez perdiste una cuenta de fondeo por sobrelotaje o por superar el límite de pérdida diaria sin darte cuenta?
+                </p>
+            </div>
+
+            <!-- Audio & Animation Controls -->
+            <div class="flex items-center gap-3 shrink-0 bg-gray-900/90 border border-gray-800 p-2 rounded-2xl">
+                <button id="btn-play-pause" onclick="togglePlay()" class="px-6 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-bold text-xs shadow-md flex items-center gap-2">
+                    <i id="play-icon" class="fa-solid fa-play"></i> Reproducir Tutorial
+                </button>
+                <button onclick="restartVideo()" class="p-2.5 rounded-xl bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs" title="Reiniciar">
+                    <i class="fa-solid fa-rotate-left"></i>
+                </button>
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- AUDIO ELEMENTS SYNCHRONIZED -->
+    <audio id="audio-voice" src="../../scratch/video1/video1_full_voiceover.mp3" preload="auto"></audio>
+    <audio id="audio-music" src="../video1_assets/music/happy-beats-business-moves-vol-1-by-ende-dot-app.mp3" preload="auto" loop></audio>
+
+    <script>
+        const voiceAudio = document.getElementById('audio-voice');
+        const musicAudio = document.getElementById('audio-music');
+        const playBtn = document.getElementById('btn-play-pause');
+        const playIcon = document.getElementById('play-icon');
+        const subtitleText = document.getElementById('subtitle-text');
+        const timerBadge = document.getElementById('timer-badge');
+        const cursor = document.getElementById('mouse-cursor');
+        const ripple = document.getElementById('click-ripple');
+        const browserWindow = document.getElementById('browser-window');
+
+        // Subtitle script cues (in seconds)
+        const CUES = [
+            { time: 0, text: "¿Alguna vez perdiste una cuenta de fondeo por sobrelotaje o por superar el límite de pérdida diaria sin darte cuenta?" },
+            { time: 7.5, text: "En el trading institucional, la disciplina y el control milimétrico del drawdown lo son todo." },
+            { time: 14.0, text: "Te damos la bienvenida a Trading Journal Pro, la bitácora profesional en la nube diseñada específicamente para traders." },
+            { time: 23.0, text: "En este video de inicio rápido, aprenderás a activar tu acceso gratuito de 14 días y a configurar tu primera cuenta en menos de tres minutos." },
+            { time: 31.6, text: "Para comenzar, nos dirigimos a tradingjournalpro.pages.dev y hacemos clic en 'Comenzar 14 Días Gratis'." },
+            { time: 39.0, text: "Aquí solo ingresamos nuestro nombre, correo electrónico y una contraseña segura. Sin cargos hoy." },
+            { time: 48.0, text: "Al hacer clic en registrarse, nuestra cuenta queda inmediatamente habilitada con sincronización en Supabase." },
+            { time: 58.6, text: "Una vez dentro de la bitácora, observamos un entorno diseñado para la máxima concentración profesional." },
+            { time: 66.0, text: "En la esquina superior encontramos la gestión de cuentas con preajustes populares: 100K, 50K o fondeo directo." },
+            { time: 76.0, text: "La plataforma audita en tiempo real los dos parámetros más críticos: pérdida diaria del 5% y drawdown total del 10%." },
+            { time: 91.0, text: "En el panel principal, la curva de equidad refleja cada operación con precisión matemática y ratio R:R." },
+            { time: 101.0, text: "Verás tu tasa de acierto y un calendario interactivo que resalta tus días con ganancias consistentes." },
+            { time: 110.0, text: "Si en algún momento tu operativa se acerca a un nivel de riesgo peligroso, el sistema emitirá alertas visuales preventivas." },
+            { time: 115.0, text: "Tu trading merece un estándar profesional. Comienza a auditar tu camino hacia la consistencia hoy mismo." },
+            { time: 124.0, text: "Crea tu cuenta con 14 días de prueba gratis en el enlace que te dejamos en la descripción." },
+            { time: 132.0, text: "Suscríbete al canal para el Video 2: Registro de Trades y Calculadora de Lotaje. ¡Nos vemos en el próximo video!" }
+        ];
+
+        let isPlaying = false;
+
+        function togglePlay() {
+            if (!isPlaying) {
+                musicAudio.volume = 0.14; // Background music leveled
+                musicAudio.play().catch(e => console.log('Music play blocked:', e));
+                voiceAudio.play().catch(e => console.log('Voice play blocked:', e));
+                isPlaying = true;
+                playIcon.className = "fa-solid fa-pause";
+                playBtn.innerHTML = '<i class="fa-solid fa-pause"></i> Pausar';
+            } else {
+                voiceAudio.pause();
+                musicAudio.pause();
+                isPlaying = false;
+                playIcon.className = "fa-solid fa-play";
+                playBtn.innerHTML = '<i class="fa-solid fa-play"></i> Reproducir Tutorial';
+            }
+        }
+
+        function restartVideo() {
+            voiceAudio.currentTime = 0;
+            musicAudio.currentTime = 0;
+            if (isPlaying) {
+                voiceAudio.play();
+                musicAudio.play();
+            }
+            updateSceneTransitions(0);
+        }
+
+        function triggerClickRipple(x, y) {
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            gsap.fromTo(ripple, 
+                { scale: 0, opacity: 1 }, 
+                { scale: 2.2, opacity: 0, duration: 0.5, ease: 'power2.out' }
+            );
+        }
+
+        // Master Timeline Sync with Voice currentTime
+        voiceAudio.addEventListener('timeupdate', () => {
+            const t = voiceAudio.currentTime;
+            const dur = voiceAudio.duration || 140;
+            
+            // Update Timer Badge
+            const curM = Math.floor(t / 60).toString().padStart(2, '0');
+            const curS = Math.floor(t % 60).toString().padStart(2, '0');
+            const totM = Math.floor(dur / 60).toString().padStart(2, '0');
+            const totS = Math.floor(dur % 60).toString().padStart(2, '0');
+            timerBadge.textContent = `${curM}:${curS} / ${totM}:${totS}`;
+
+            // Update Subtitle
+            for (let i = CUES.length - 1; i >= 0; i--) {
+                if (t >= CUES[i].time) {
+                    if (subtitleText.textContent !== CUES[i].text) {
+                        subtitleText.textContent = CUES[i].text;
+                        gsap.fromTo(subtitleText, { opacity: 0.4, y: 3 }, { opacity: 1, y: 0, duration: 0.25 });
+                    }
+                    break;
+                }
+            }
+
+            // Coordinate Scene Visuals
+            updateSceneTransitions(t);
+        });
+
+        voiceAudio.addEventListener('ended', () => {
+            isPlaying = false;
+            playBtn.innerHTML = '<i class="fa-solid fa-rotate-left"></i> Reproducir de Nuevo';
+            musicAudio.pause();
+        });
+
+        function updateSceneTransitions(t) {
+            const v1 = document.getElementById('view-scene-1');
+            const v2 = document.getElementById('view-scene-2');
+            const vApp = document.getElementById('view-scene-app');
+            const v5 = document.getElementById('view-scene-5');
+
+            // ESCENA 1: 0s - 31s (Hero & Problema)
+            if (t < 31.0) {
+                v1.style.opacity = '1';
+                v2.style.opacity = '0';
+                vApp.style.opacity = '0';
+                v5.style.opacity = '0';
+                document.getElementById('browser-url-bar').textContent = 'https://tradingjournalpro.pages.dev';
+
+                // Cursor moving towards Hero CTA around 26-30s
+                if (t > 24.0 && t <= 31.0) {
+                    cursor.style.left = '780px';
+                    cursor.style.top = '515px';
+                } else {
+                    cursor.style.left = '1100px';
+                    cursor.style.top = '380px';
+                }
+            }
+            // ESCENA 2: 31s - 58s (Click CTA y Registro en Modal)
+            else if (t >= 31.0 && t < 58.0) {
+                v1.style.opacity = '1';
+                v2.style.opacity = '1';
+                v2.style.pointerEvents = 'auto';
+                vApp.style.opacity = '0';
+                v5.style.opacity = '0';
+                
+                // Cursor clicks register button
+                if (t >= 48.0 && t < 54.0) {
+                    cursor.style.left = '780px';
+                    cursor.style.top = '620px';
+                } else {
+                    cursor.style.left = '780px';
+                    cursor.style.top = '430px';
+                }
+            }
+            // ESCENA 3 & 4: 58s - 114s (Bitácora App: Fondeo, Reglas y Dashboard)
+            else if (t >= 58.0 && t < 114.0) {
+                v1.style.opacity = '0';
+                v2.style.opacity = '0';
+                vApp.style.opacity = '1';
+                vApp.style.pointerEvents = 'auto';
+                v5.style.opacity = '0';
+                document.getElementById('browser-url-bar').textContent = 'https://tradingjournalpro.pages.dev/app.html';
+
+                // Focus on chips at 66s - 76s
+                if (t >= 66.0 && t < 76.0) {
+                    cursor.style.left = '340px';
+                    cursor.style.top = '45px';
+                    document.getElementById('chip-acc-100k').className = "px-3 py-1.5 rounded-lg bg-emerald-500 text-gray-950 font-bold shadow-lg shadow-emerald-500/20";
+                } 
+                // Focus on Drawdown cards at 76s - 90s
+                else if (t >= 76.0 && t < 90.0) {
+                    cursor.style.left = '590px';
+                    cursor.style.top = '170px';
+                    document.getElementById('card-daily-dd').classList.add('border-emerald-400');
+                }
+                // Focus on Equity chart at 91s - 110s
+                else {
+                    cursor.style.left = '650px';
+                    cursor.style.top = '480px';
+                }
+            }
+            // ESCENA 5: 114s - fin (Outro y CTA Final)
+            else {
+                v1.style.opacity = '0';
+                v2.style.opacity = '0';
+                vApp.style.opacity = '0';
+                v5.style.opacity = '1';
+                cursor.style.left = '780px';
+                cursor.style.top = '480px';
+            }
+        }
+    </script>
+</body>
+</html>
