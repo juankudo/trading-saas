@@ -2499,23 +2499,212 @@
     </main>
 
     <!-- Footer -->
-    <footer class="bg-[#080b12] border-t border-gray-800 py-10 px-4 sm:px-8 text-center text-xs text-gray-400">
-        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-chart-line text-emerald-400"></i>
-                <span class="font-bold text-gray-300">TRADING JOURNAL PRO</span>
-                <span>— Todos los derechos reservados.</span>
+    <!-- FOOTER INSTITUCIONAL COMPLETO & AVISOS LEGALES COMPLIANCE -->
+    <footer class="bg-[#080b12] border-t border-gray-800 py-10 px-4 sm:px-8 text-xs text-gray-400">
+        <div class="max-w-6xl mx-auto space-y-6">
+            
+            <!-- Fila Superior: Marca y Navegación Principal -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-gray-800/80">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-emerald-400 text-base"></i>
+                    <span class="font-bold text-gray-200 tracking-wide text-sm">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
+                    <span class="text-gray-500">· Suite de Analítica en la Nube</span>
+                </div>
+                <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center text-gray-400">
+                    <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
+                    <a href="#backtesting" class="hover:text-amber-400 transition">Backtesting Pro</a>
+                    <a href="#calculadora" class="hover:text-emerald-400 transition">Calculadora Pro</a>
+                    <a href="#fondeo" class="hover:text-emerald-400 transition">Cuentas Fondeo</a>
+                    <a href="#proximamente-mt5" class="hover:text-blue-400 transition">MT5 Sync</a>
+                    <a href="#precios" class="hover:text-emerald-400 transition">Precios</a>
+                </div>
             </div>
-            <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
-                <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
-                <a href="#backtesting" class="hover:text-amber-400 transition">Backtesting Pro</a>
-                <a href="#calculadora" class="hover:text-emerald-400 transition">Calculadora Pro</a>
-                <a href="#fondeo" class="hover:text-emerald-400 transition">Cuentas Fondeo</a>
-                <a href="#proximamente-mt5" class="hover:text-blue-400 transition">MT5 Sync</a>
-                <a href="#precios" class="hover:text-emerald-400 transition">Precios</a>
+
+            <!-- Fila Intermedia: Enlaces Legales & Soporte (Requeridos por Merchant of Record / Lemon Squeezy) -->
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-gray-400">
+                <div class="flex items-center gap-4 flex-wrap justify-center font-medium">
+                    <button type="button" onclick="openLegalModal('terms')" class="hover:text-emerald-400 transition hover:underline">Términos de Servicio</button>
+                    <span>·</span>
+                    <button type="button" onclick="openLegalModal('privacy')" class="hover:text-emerald-400 transition hover:underline">Política de Privacidad</button>
+                    <span>·</span>
+                    <button type="button" onclick="openLegalModal('refund')" class="hover:text-emerald-400 transition hover:underline">Política de Reembolso & Cancelación</button>
+                    <span>·</span>
+                    <button type="button" onclick="openLegalModal('disclaimer')" class="hover:text-amber-400 transition hover:underline">Aviso de Riesgo Financiero</button>
+                </div>
+                <div class="flex items-center gap-2 text-gray-400 font-mono">
+                    <i class="fa-solid fa-envelope text-emerald-400"></i>
+                    <span>Contacto: <a href="mailto:soporte@tradingjournalpro.com" class="text-gray-300 hover:text-white underline">soporte@tradingjournalpro.com</a></span>
+                </div>
             </div>
+
+            <!-- Fila Inferior: Descargo de Responsabilidad Regulatorio (Risk Disclaimer) -->
+            <div class="pt-4 border-t border-gray-800/60 text-[10px] leading-relaxed text-gray-400 text-center sm:text-left">
+                <p>
+                    <strong class="text-gray-300">Descargo de Responsabilidad Financiera:</strong> Trading Journal Pro es una plataforma tecnológica de software y registro de datos analíticos para la gestión personal de operativa. No provee asesoramiento financiero, gestión de fondos, señales de trading ni recomendaciones de inversión. El trading de activos financieros, Forex, futuros y cuentas de empresas de fondeo (prop firms) conlleva un riesgo sustancial de pérdida de capital y no es adecuado para todos los inversores. Todos los derechos reservados © 2026 Trading Journal Pro.
+                </p>
+            </div>
+
         </div>
     </footer>
+
+    <!-- MODAL LEGAL INTERACTIVO (Términos, Privacidad, Reembolsos, Disclaimer) -->
+    <div id="legalModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-[80] hidden items-center justify-center p-3 sm:p-6 overscroll-contain animate-in fade-in duration-150">
+        <div class="bg-[#101524] border border-gray-700 rounded-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl relative">
+            
+            <!-- Modal Header -->
+            <div class="p-4 sm:p-5 border-b border-gray-800 flex items-center justify-between bg-[#0c101d]">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-sm">
+                        <i id="legal-modal-icon" class="fa-solid fa-scale-balanced"></i>
+                    </div>
+                    <div>
+                        <h3 id="legal-modal-title" class="text-base font-bold text-white">Avisos Legales & Políticas</h3>
+                        <p class="text-[11px] text-gray-400">Información contractual y regulatoria oficial de Trading Journal Pro</p>
+                    </div>
+                </div>
+                <button onclick="closeLegalModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition" aria-label="Cerrar modal legal">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- Pestañas de Navegación del Modal -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 bg-gray-950/80 border-b border-gray-800 text-[11px] font-semibold text-center">
+                <button type="button" id="tab-btn-terms" onclick="switchLegalTab('terms')" class="py-2.5 px-2 border-b-2 border-emerald-400 text-emerald-400 font-bold transition">Términos</button>
+                <button type="button" id="tab-btn-privacy" onclick="switchLegalTab('privacy')" class="py-2.5 px-2 border-b-2 border-transparent text-gray-400 hover:text-white transition">Privacidad</button>
+                <button type="button" id="tab-btn-refund" onclick="switchLegalTab('refund')" class="py-2.5 px-2 border-b-2 border-transparent text-gray-400 hover:text-white transition">Reembolsos</button>
+                <button type="button" id="tab-btn-disclaimer" onclick="switchLegalTab('disclaimer')" class="py-2.5 px-2 border-b-2 border-transparent text-gray-400 hover:text-white transition">Aviso de Riesgo</button>
+            </div>
+
+            <!-- Modal Content Body con Scroll -->
+            <div id="legal-modal-body" class="p-5 sm:p-6 overflow-y-auto text-xs text-gray-300 leading-relaxed space-y-4">
+                <!-- Se inyecta dinámicamente según la pestaña -->
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="p-4 border-t border-gray-800 bg-[#0c101d] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
+                <span class="text-gray-400">¿Dudas legales? Escríbenos a <a href="mailto:soporte@tradingjournalpro.com" class="text-emerald-400 underline">soporte@tradingjournalpro.com</a></span>
+                <button type="button" onclick="closeLegalModal()" class="px-5 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-semibold transition">
+                    Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- SCRIPT DE CONTROL PARA MODALES LEGALES -->
+    <script>
+        const LEGAL_DOCS = {
+            terms: {
+                title: "Términos de Servicio y Condiciones de Uso",
+                icon: "fa-solid fa-file-contract",
+                content: `
+                    <h4 class="text-sm font-bold text-white mb-2">1. Objeto del Software</h4>
+                    <p class="mb-3">Trading Journal Pro otorga al usuario una licencia personal, no exclusiva e intransferible para el uso de nuestra suite de bitácora, analítica de métricas y laboratorio de backtesting en la nube.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">2. Cuentas y Responsabilidad</h4>
+                    <p class="mb-3">El usuario es responsable exclusivo de resguardar la confidencialidad de sus credenciales de acceso. Queda prohibida la redistribución, reventa, scraping o ingeniería inversa del software sin autorización expresa.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">3. Disponibilidad del Servicio</h4>
+                    <p class="mb-3">Nos esforzamos por ofrecer un 99.9% de disponibilidad continua mediante nuestra infraestructura distribuida en Cloudflare y Supabase. Sin embargo, no garantizamos la ausencia de interrupciones puntuales por mantenimiento o contingencias externas de red.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">4. Modificaciones</h4>
+                    <p>Trading Journal Pro se reserva el derecho de actualizar o mejorar las características funcionales de la plataforma para beneficio de los usuarios registrados.</p>
+                `
+            },
+            privacy: {
+                title: "Política de Privacidad y Protección de Datos",
+                icon: "fa-solid fa-user-shield",
+                content: `
+                    <h4 class="text-sm font-bold text-white mb-2">1. Información que Recopilamos</h4>
+                    <p class="mb-3">Recopilamos únicamente los datos necesarios para brindar el servicio: dirección de correo electrónico, nombre registrado y las entradas de trading que decidas documentar voluntariamente en tu bitácora.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">2. Cifrado y Seguridad de Grado Bancario</h4>
+                    <p class="mb-3">Todas las contraseñas se almacenan mediante algoritmos criptográficos unidireccionales (hash) en Supabase Auth. Las comunicaciones entre tu navegador y nuestros servidores están protegidas mediante cifrado SSL/TLS de 256 bits a través de la red global de Cloudflare.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">3. Privacidad Absoluta de tu Estrategia</h4>
+                    <p class="mb-3">Tus operaciones, notas analíticas y sesiones de backtesting son estrictamente privadas. Nunca vendemos, comercializamos ni compartimos tus datos operativos con terceros ni con empresas de fondeo.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">4. Derechos del Usuario</h4>
+                    <p>Puedes solicitar la exportación o eliminación definitiva de tu cuenta y todos sus registros en cualquier momento escribiendo a nuestro canal de soporte.</p>
+                `
+            },
+            refund: {
+                title: "Política de Reembolso, Cancelación y Prueba Gratuita",
+                icon: "fa-solid fa-arrow-rotate-left",
+                content: `
+                    <h4 class="text-sm font-bold text-white mb-2">1. Período de Prueba de 14 Días ($0 Hoy)</h4>
+                    <p class="mb-3">Todos los nuevos usuarios disfrutan de 14 días completos de acceso gratuito a todas las funciones Pro sin ningún costo inicial para probar la plataforma.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">2. Cancelación en 1 Solo Clic</h4>
+                    <p class="mb-3">Puedes cancelar tu suscripción en cualquier instante desde tu panel de usuario o desde el correo de confirmación de Lemon Squeezy sin penalizaciones ni preguntas. Si cancelas antes de que expiren los 14 días de prueba, se te cobrarán exactamente $0.00 USD.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">3. Política de Reembolso</h4>
+                    <p class="mb-3">Al operar mediante Lemon Squeezy (Merchant of Record), cualquier solicitud de reembolso por cargos involuntarios o inconformidad dentro de los primeros 7 días posteriores a un cobro recurrente será procesada de conformidad con las políticas de protección al consumidor digital.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">4. Pagos con Criptomonedas</h4>
+                    <p>Los pagos procesados vía NOWPayments (USDT) corresponden a transacciones irreversibles en blockchain; su vigencia se activa de forma instantánea por el período contratado (1, 3 o 12 meses).</p>
+                `
+            },
+            disclaimer: {
+                title: "Descargo de Responsabilidad Financiera (Risk Disclaimer)",
+                icon: "fa-solid fa-triangle-exclamation",
+                content: `
+                    <div class="bg-amber-950/40 border border-amber-600/50 p-3.5 rounded-xl text-amber-300 text-xs mb-3">
+                        <i class="fa-solid fa-triangle-exclamation mr-1.5"></i>
+                        <strong>Aviso Importante:</strong> El trading en mercados financieros implica un alto nivel de riesgo de capital.
+                    </div>
+                    <h4 class="text-sm font-bold text-white mb-2">1. Naturaleza del Software</h4>
+                    <p class="mb-3">Trading Journal Pro es exclusivamente una herramienta de registro contable, software de bitácora y calculadora de gestión de riesgo para el análisis retrospectivo del propio usuario. <strong>En ningún caso constituye asesoramiento financiero, legal ni recomendaciones de compra o venta de ningún instrumento financiero.</strong></p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">2. Independencia de Prop Firms</h4>
+                    <p class="mb-3">Las menciones a reglas de prop firms o evaluaciones de fondeo se realizan con fines exclusivamente informativos y educativos para simulación de métricas de drawdown. Trading Journal Pro es una entidad independiente y no está patrocinada, afiliada ni asociada contractualmente con ninguna firma de corretaje ni empresa de fondeo específica.</p>
+                    
+                    <h4 class="text-sm font-bold text-white mb-2">3. Rendimientos Pasados</h4>
+                    <p>Los resultados simulados en el Laboratorio de Backtesting o documentados en la bitácora no garantizan rendimientos futuros en los mercados reales. La gestión del capital y el riesgo es responsabilidad absoluta del operador.</p>
+                `
+            }
+        };
+
+        function openLegalModal(tabKey = 'terms') {
+            const modal = document.getElementById('legalModal');
+            if (!modal) return;
+            switchLegalTab(tabKey);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLegalModal() {
+            const modal = document.getElementById('legalModal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.body.style.overflow = '';
+        }
+
+        function switchLegalTab(tabKey) {
+            const doc = LEGAL_DOCS[tabKey] || LEGAL_DOCS.terms;
+            
+            const titleEl = document.getElementById('legal-modal-title');
+            const iconEl = document.getElementById('legal-modal-icon');
+            const bodyEl = document.getElementById('legal-modal-body');
+
+            if (titleEl) titleEl.textContent = doc.title;
+            if (iconEl) iconEl.className = doc.icon;
+            if (bodyEl) bodyEl.innerHTML = doc.content;
+
+            ['terms', 'privacy', 'refund', 'disclaimer'].forEach(k => {
+                const btn = document.getElementById('tab-btn-' + k);
+                if (btn) {
+                    if (k === tabKey) {
+                        btn.className = "py-2.5 px-2 border-b-2 border-emerald-400 text-emerald-400 font-bold transition";
+                    } else {
+                        btn.className = "py-2.5 px-2 border-b-2 border-transparent text-gray-400 hover:text-white transition";
+                    }
+                }
+            });
+        }
+    </script>
 
     <!-- TRADE INSPECTION FULLSCREEN LIGHTBOX MODAL -->
     <div id="trade-lightbox-modal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[70] hidden items-center justify-center p-3 sm:p-6 overscroll-contain animate-in fade-in duration-150">
