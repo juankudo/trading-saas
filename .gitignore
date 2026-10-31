@@ -28,3 +28,7 @@ desktop.ini
 
 scratch/
 media/social_session/
+
+client_secret*.json
+youtube_token.json
+*.token

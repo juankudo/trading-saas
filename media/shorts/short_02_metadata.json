@@ -1,0 +1,50 @@
+{
+  "id": "short_02_calculadora_lotaje",
+  "title_youtube": "Calcula tu LOTAJE exacto en ORO (XAUUSD) en 3 segundos ⚡ #Shorts",
+  "title_tiktok": "No quemes tu cuenta calculando lotes a ojo ⚡ #trading #xauusd #gold",
+  "title_instagram": "Cómo calcular tu lotaje exacto en Oro en 3 segundos ⚖️ #tradingtips",
+  "duration": 36,
+  "script": "¿Sigues calculando lotes a ojo o con calculadoras lentas de internet? En el oro, un error de cero coma diez lotes te puede costar la prueba de fondeo en un solo mechazo. Con Trading Journal Pro, seleccionas tu riesgo exacto, ya sea el uno por ciento o cincuenta dólares, marcas tu stop loss en pips y la bitácora te entrega el lotaje institucional exacto al tick. Sin fallas matemáticas ni cuentas quemadas por sobreapalancamiento. Empieza catorce días gratis hoy mismo en tradingjournalpro.pages.dev.",
+  "cues": [
+    {
+      "time": 0.0,
+      "text": "¿SIGUES CALCULANDO LOTES A OJO?",
+      "scene": "danger"
+    },
+    {
+      "time": 4.5,
+      "text": "EN EL ORO, UN ERROR DE 0.10 TE CUESTA LA CUENTA.",
+      "scene": "gold_volatility"
+    },
+    {
+      "time": 10.0,
+      "text": "CON TRADING JOURNAL PRO ELIGES TU RIESGO EXACTO (1%).",
+      "scene": "calculator"
+    },
+    {
+      "time": 17.5,
+      "text": "COLOCAS TU STOP LOSS Y OBTIENES TU LOTAJE AL TICK.",
+      "scene": "exact_lots"
+    },
+    {
+      "time": 24.5,
+      "text": "CERO SOBREAPALANCAMIENTO Y MÁXIMA PRECISIÓN.",
+      "scene": "safe_badge"
+    },
+    {
+      "time": 29.5,
+      "text": "PRUEBA 14 DÍAS GRATIS EN TRADINGJOURNALPRO.PAGES.DEV",
+      "scene": "cta"
+    }
+  ],
+  "hashtags": [
+    "#trading",
+    "#xauusd",
+    "#goldtrading",
+    "#lotcalculator",
+    "#cuentasdefondeo",
+    "#propfirms",
+    "#gestionderiesgo"
+  ],
+  "cta_url": "https://tradingjournalpro.pages.dev"
+}

@@ -1,0 +1,45 @@
+{
+  "id": "short_03_simulador_retiros",
+  "title_youtube": "Simula tu RETIRO de dinero real antes de pagar tu prueba 💰 #Shorts",
+  "title_tiktok": "¿Cuánto dinero te queda en mano tras pasar una cuenta de 100K? 💰 #trading",
+  "title_instagram": "Simulador de Retiros y Profit Split para Prop Firms 💵 #payout",
+  "duration": 35,
+  "script": "¿Sabías exactamente cuánto dinero real te llevas al bolsillo al pasar tu desafío de cien mil dólares? Muchos traders solo miran pips, pero lo importante es tu dinero en mano. En el Laboratorio de Backtesting Pro de Trading Journal Pro, simulas tu solicitud de retiro con el Profit Split real del ochenta o noventa por ciento. Comprueba si tu estrategia supera las metas de fondeo antes de pagar una sola evaluación. Audita tu consistencia y prueba catorce días gratis en el enlace del perfil.",
+  "cues": [
+    {
+      "time": 0.0,
+      "text": "¿CUÁNTO DINERO TE LLEVAS AL BOLSILLO EN UNA CUENTA 100K?",
+      "scene": "money_hook"
+    },
+    {
+      "time": 5.5,
+      "text": "NO SOLO MIRES PIPS: SIMULA TU DINERO EN MANO.",
+      "scene": "payout_concept"
+    },
+    {
+      "time": 11.5,
+      "text": "EL LABORATORIO DE BACKTESTING LIQUIDA TU PROFIT SPLIT (80/20).",
+      "scene": "split_simulation"
+    },
+    {
+      "time": 19.0,
+      "text": "COMPRUEBA SI CUMPLES LAS REGLAS ANTES DE PAGAR EL DESAFÍO.",
+      "scene": "rules_audit"
+    },
+    {
+      "time": 26.5,
+      "text": "AUDITA TU CONSISTENCIA 14 DÍAS GRATIS.",
+      "scene": "cta"
+    }
+  ],
+  "hashtags": [
+    "#payout",
+    "#tradingretiros",
+    "#propfirms",
+    "#backtesting",
+    "#tradingjournal",
+    "#cuentasdefondeo",
+    "#finanzas"
+  ],
+  "cta_url": "https://tradingjournalpro.pages.dev"
+}

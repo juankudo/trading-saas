@@ -52,6 +52,20 @@
 
             <!-- Actions Right -->
             <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
+                
+                <!-- Enlaces Oficiales de Redes Sociales (Header) -->
+                <div class="hidden md:flex items-center gap-1 border-r border-gray-800 pr-2 mr-0.5">
+                    <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-rose-400 hover:bg-rose-950/40 transition text-sm" title="Canal Oficial de YouTube (@tradingjournalpro)" aria-label="YouTube Oficial">
+                        <i class="fa-brands fa-youtube"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-300 hover:bg-cyan-950/40 transition text-sm" title="TikTok Oficial (@tradingjournalpro)" aria-label="TikTok Oficial">
+                        <i class="fa-brands fa-tiktok"></i>
+                    </a>
+                    <a href="https://www.instagram.com/tradingjournalpro" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-pink-400 hover:bg-pink-950/40 transition text-sm" title="Instagram Oficial (@tradingjournalpro)" aria-label="Instagram Oficial">
+                        <i class="fa-brands fa-instagram"></i>
+                    </a>
+                </div>
+
                 <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-400 hover:text-white text-xs transition" title="Cambiar tema" aria-label="Alternar tema claro y oscuro">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
@@ -2520,7 +2534,29 @@
                 </div>
             </div>
 
-            <!-- Fila Intermedia: Enlaces Legales & Soporte (Requeridos por Merchant of Record / Lemon Squeezy) -->
+            <!-- Fila Intermedia 1: Canales Oficiales y Redes Sociales -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-2xl bg-gray-900/40 border border-gray-800/80">
+                <div class="flex items-center gap-2 text-gray-300 text-xs font-semibold">
+                    <i class="fa-solid fa-bullhorn text-emerald-400"></i>
+                    <span>Canales y Comunidad Oficial:</span>
+                </div>
+                <div class="flex items-center gap-2.5 flex-wrap justify-center">
+                    <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900 hover:bg-rose-950/60 border border-gray-800 hover:border-rose-600/50 text-gray-300 hover:text-rose-300 text-xs font-semibold transition group">
+                        <i class="fa-brands fa-youtube text-rose-400 text-sm group-hover:scale-110 transition"></i>
+                        <span>YouTube</span>
+                    </a>
+                    <a href="https://www.tiktok.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900 hover:bg-cyan-950/60 border border-gray-800 hover:border-cyan-500/50 text-gray-300 hover:text-cyan-300 text-xs font-semibold transition group">
+                        <i class="fa-brands fa-tiktok text-cyan-400 text-sm group-hover:scale-110 transition"></i>
+                        <span>TikTok</span>
+                    </a>
+                    <a href="https://www.instagram.com/tradingjournalpro" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-900 hover:bg-pink-950/60 border border-gray-800 hover:border-pink-500/50 text-gray-300 hover:text-pink-300 text-xs font-semibold transition group">
+                        <i class="fa-brands fa-instagram text-pink-400 text-sm group-hover:scale-110 transition"></i>
+                        <span>Instagram</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Fila Intermedia 2: Enlaces Legales & Soporte (Requeridos por Merchant of Record / Lemon Squeezy) -->
             <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] text-gray-400">
                 <div class="flex items-center gap-4 flex-wrap justify-center font-medium">
                     <button type="button" onclick="openLegalModal('terms')" class="hover:text-emerald-400 transition hover:underline">Términos de Servicio</button>
