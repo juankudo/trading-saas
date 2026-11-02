@@ -5,6 +5,15 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.3] - 2026-11-02
+
+### 🎯 Visibilidad Contextual de Metas
+- **Ocultamiento Estricto en Selección de Cuentas y Vista Global:**
+  - La pestaña *"Metas"* ahora permanece completamente oculta mientras el usuario esté en *"Tus Cuentas"* (pantalla principal de selección de cuentas/sesiones) o en *"Métricas globales"*, evitando inconsistencias ya que las metas son exclusivas de cada cuenta individual.
+  - Al ingresar a una cuenta con metas configuradas, la pestaña se activa automáticamente en tiempo real.
+
+---
+
 ## [v3.4.2] - 2026-11-02
 
 ### 📊 Reorganización Ejecutiva del Dashboard

@@ -3576,6 +3576,11 @@ const initialTrades = [];
         function updateGoalsTabVisibility() {
             const btn = document.getElementById("tab-btn-goals");
             if (!btn) return;
+            // Si el usuario está en la sección de selección de cuentas/sesiones ("Tus Cuentas") o en métricas globales, no mostrar Metas
+            if (currentTabName === "sessions" || isGlobalMetricsView) {
+                btn.classList.add("hidden");
+                return;
+            }
             const isInsideAccount = currentMode === "backtesting" ? Boolean(activeSessionId) : Boolean(activeRealAccountId);
             const hasGoals = isInsideAccount && hasActiveAccountGoals();
             btn.classList.toggle("hidden", !hasGoals);
@@ -4090,9 +4095,9 @@ const initialTrades = [];
         }
 
         function switchTab(tab) {
-            if (tab === "goals" && !hasActiveAccountGoals()) {
+            if (tab === "goals" && (currentTabName === "sessions" || isGlobalMetricsView || !hasActiveAccountGoals())) {
                 showToast("Esta cuenta no tiene metas configuradas", true);
-                switchTab("dashboard");
+                switchTab(currentTabName === "sessions" ? "sessions" : "dashboard");
                 return;
             }
             if (tab === "balance-history" && !isBalanceHistoryTabVisible()) {
@@ -4144,6 +4149,7 @@ const initialTrades = [];
             }
             currentTabName = tab;
             updateBalanceHistoryTabVisibility();
+            updateGoalsTabVisibility();
         }
 
         function configureTradePairField(sessionId = null, fallbackPair = "") {
