@@ -54,7 +54,7 @@
             </button>
         </div>
 
-        <div class="flex items-center space-x-2 sm:space-x-3 flex-wrap">
+        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
             <button id="theme-toggle-btn" onclick="toggleTheme()" class="bg-gray-800 hover:bg-gray-700 border border-main text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">
                 <i class="fa-solid fa-sun theme-toggle-icon theme-icon-sun"></i>
                 <span class="text-gray-600">/</span>
@@ -121,9 +121,10 @@
                 <i class="fa-solid fa-gem"></i> Suscripción
             </button>
             <!-- SaaS User Menu -->
-            <div class="flex items-center gap-2 bg-gray-900/90 border border-gray-700/80 px-3 py-1.5 rounded-lg text-xs">
+            <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2.5 py-1.5 rounded-lg text-xs shrink-0" title="Usuario conectado">
+                <i class="fa-solid fa-user text-gray-400 text-[11px] ml-0.5"></i>
                 <span id="app-user-badge" class="px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Prueba 14 días</span>
-                <span id="app-user-email" class="text-gray-300 font-medium hidden sm:inline">trader@email.com</span>
+                <span id="app-user-email" class="hidden">trader@email.com</span>
                 <button onclick="logout()" class="ml-1 text-gray-400 hover:text-red-400 p-1 transition" title="Cerrar sesión">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                 </button>
@@ -1475,6 +1476,8 @@
                 const emailSpan = document.getElementById('app-user-email');
                 const badgeSpan = document.getElementById('app-user-badge');
                 if (emailSpan) emailSpan.textContent = user.name || user.email;
+                const userContainer = document.getElementById('app-user-menu-container');
+                if (userContainer && user) userContainer.title = `Usuario: ${user.email || user.name || ''}`;
                 if (badgeSpan) {
                     const info = getTrialInfo(user);
                     if (info.isTrial) {

@@ -136,6 +136,10 @@ function updateAppSubscriptionUI(subState) {
     if (userEmail && user && user.email) {
         userEmail.textContent = user.email;
     }
+    const userContainer = document.getElementById('app-user-menu-container');
+    if (userContainer && user && user.email) {
+        userContainer.title = `Usuario: ${user.email}`;
+    }
 
     if (userBadge) {
         if (subState.isPaid) {

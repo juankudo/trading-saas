@@ -455,13 +455,16 @@ function updateCloudSyncIndicator(status, text) {
     if (!indicator) return;
 
     if (status === 'syncing') {
-        indicator.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin text-blue-400"></i> <span class="hidden sm:inline">${text}</span>`;
+        indicator.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin text-blue-400"></i> <span class="hidden xl:inline">${text}</span>`;
         indicator.className = "flex items-center gap-1.5 text-xs text-blue-400 font-medium";
+        indicator.title = text || "Sincronizando con la nube...";
     } else if (status === 'synced') {
-        indicator.innerHTML = `<i class="fa-solid fa-cloud-check text-emerald-400"></i> <span class="hidden sm:inline">${text}</span>`;
+        indicator.innerHTML = `<i class="fa-solid fa-cloud-check text-emerald-400"></i> <span class="hidden xl:inline">${text}</span>`;
         indicator.className = "flex items-center gap-1.5 text-xs text-emerald-400 font-medium";
+        indicator.title = text || "Sincronizado con la nube";
     } else if (status === 'error') {
-        indicator.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> <span class="hidden sm:inline">${text}</span>`;
+        indicator.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> <span class="hidden xl:inline">${text}</span>`;
         indicator.className = "flex items-center gap-1.5 text-xs text-amber-400 font-medium";
+        indicator.title = text || "Error de sincronización";
     }
 }
