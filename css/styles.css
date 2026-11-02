@@ -1803,3 +1803,46 @@ button, a, input, select, textarea {
         html.light #target-count-be,
         html.light #target-count-loss { color: #0f172a; }
         html.light #target-dist-bar { background-color: #e2e8f0; }
+
+        /* =========================================================================
+           CALENDARIO DIARIO (Estilo TradeZella)
+           ========================================================================= */
+        .daily-calendar-section { max-width: 1540px; }
+        .daily-calendar-layout { display: flex; flex-direction: column; gap: 0.75rem; }
+        .daily-calendar-sidebar { width: 100%; }
+        .daily-calendar-wrapper { min-height: 480px; }
+
+        @media (min-width: 1024px) {
+            .daily-calendar-layout {
+                display: grid;
+                grid-template-columns: 120px minmax(0, 1fr);
+                align-items: stretch;
+                gap: 1rem;
+            }
+            .daily-calendar-sidebar {
+                width: 120px;
+                height: 100%;
+            }
+            .daily-calendar-wrapper {
+                height: 100%;
+                min-height: 0;
+            }
+        }
+
+        .daily-week-card {
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        .daily-day-cell {
+            min-height: 0;
+            box-sizing: border-box;
+        }
+
+        /* Modo Claro para Calendario */
+        html.light .daily-calendar-wrapper { background-color: #ffffff; border-color: #cbd5e1; }
+        html.light .daily-calendar-sidebar { background-color: #ffffff; border-color: #cbd5e1; }
+        html.light .daily-week-card { background-color: #f8fafc; border-color: #e2e8f0; }
+        html.light .daily-day-cell { background-color: #f8fafc; border-color: #e2e8f0; }
+        html.light #dailyTradeAnalysisModal > div { background-color: #ffffff; border-color: #cbd5e1; color: #0f172a; }
+        html.light #dailyAnalysisModalDate { color: #0f172a; }

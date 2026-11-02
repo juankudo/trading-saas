@@ -5,6 +5,29 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.0] - 2026-11-02
+
+### 📅 Nueva Sección: Calendario Diario (Estilo TradeZella)
+- **Pestaña de Navegación "Calendario Diario":**
+  - Situada inmediatamente a la derecha de *"Rendimiento por mes"* con acceso dinámico al ingresar a una cuenta real o sesión de backtesting.
+- **Filtro Lateral Limpio:**
+  - Panel izquierdo con selectores directos de *Mes* y *Año* más botones de avance/retroceso rápido (*Ant.* / *Sig.*), iniciando por defecto en el mes activo en curso.
+- **Columna de Resumen Semanal:**
+  - Muestra en el lateral izquierdo de la cuadrícula el desglose por semanas (*Semana 1*, *Semana 2*, etc.) con resultado monetario ($), porcentaje neto (%) y conteo de operaciones.
+- **Cuadrícula de 7 Días (Lunes a Domingo):**
+  - Estructura completa de la semana bursátil e integral con celdas adaptativas que destacan días ganadores (verde esmeralda), perdedores (rojo) y neutrales (índigo) con ganancia en $ y %, más operaciones cerradas.
+- **Modal Interactivo de Análisis de Operaciones:**
+  - Al hacer clic sobre cualquier día con operaciones, se abre una ventana modal con el análisis técnico y operativo del trade:
+    - Ficha de la orden, par, resultado en $ y %, y estado de salida.
+    - Secciones ANTES y DESPUÉS con notas, confluencias, capturas ampliables con lightbox y enlace directo a TradingView.
+    - Pestañas superiores para alternar rápidamente entre trades si en la jornada hubo más de una entrada.
+- **Ajuste Perfecto en Pantalla (Regla Sin Scroll):**
+  - Motor responsivo `fitDailyCalendarGrid()` que distribuye las semanas equitativamente dentro de la altura de la ventana gráfica, garantizando que todo el mes sea visible de un solo vistazo.
+- **Soporte de Tema Claro y Oscuro:**
+  - Adaptación cromática completa en `html.light`.
+
+---
+
 ## [v3.3.0] - 2026-11-02
 
 ### 🎯 Nueva Métrica: Objetivos Alcanzados & Distribución

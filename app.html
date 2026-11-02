@@ -163,6 +163,9 @@
                 <button onclick="switchTab('monthly')" id="tab-btn-monthly" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-calendar-check"></i> Rendimiento por mes
                 </button>
+                <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-calendar-days"></i> Calendario Diario
+                </button>
                 <button onclick="switchTab('gallery')" id="tab-btn-gallery" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-images"></i> Galería & Análisis
                 </button>
@@ -512,10 +515,62 @@
         <div id="section-monthly" class="hidden monthly-calendar-section mx-auto w-full">
             <div class="monthly-calendar-layout">
                 <aside class="monthly-year-panel bg-card border border-main rounded-xl p-3 shadow-sm">
-                    <label for="monthlyYear" class="text-sm font-semibold text-gray-300">A&ntilde;o</label>
+                    <label for="monthlyYear" class="text-sm font-semibold text-gray-300">Año</label>
                     <select id="monthlyYear" onchange="renderMonthlyPerformance()" class="bg-gray-900 border border-main rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gray-500"></select>
                 </aside>
                 <div id="monthly-grid" class="grid grid-cols-1 min-[520px]:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4"></div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: CALENDARIO DIARIO -->
+        <div id="section-calendar" class="hidden daily-calendar-section mx-auto w-full">
+            <div class="daily-calendar-layout">
+                <!-- Panel Lateral de Filtro Mes / Año -->
+                <aside class="daily-calendar-sidebar bg-card border border-main rounded-xl p-3.5 shadow-sm flex flex-col justify-between">
+                    <div class="space-y-3">
+                        <div class="border-b border-gray-800 pb-2">
+                            <span class="text-xs font-bold text-gray-300 uppercase tracking-wider flex items-center gap-1.5">
+                                <i class="fa-solid fa-calendar text-emerald-400"></i> Periodo
+                            </span>
+                        </div>
+                        <div>
+                            <label for="dailyCalendarMonth" class="text-xs font-semibold text-gray-400 block mb-1">Mes</label>
+                            <select id="dailyCalendarMonth" onchange="renderDailyCalendar()" class="w-full bg-gray-900 border border-main rounded-lg px-2.5 py-1.5 text-white text-xs font-medium focus:outline-none focus:border-gray-500"></select>
+                        </div>
+                        <div>
+                            <label for="dailyCalendarYear" class="text-xs font-semibold text-gray-400 block mb-1">Año</label>
+                            <select id="dailyCalendarYear" onchange="renderDailyCalendar()" class="w-full bg-gray-900 border border-main rounded-lg px-2.5 py-1.5 text-white text-xs font-medium focus:outline-none focus:border-gray-500"></select>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between gap-1.5 pt-3 border-t border-gray-800 mt-2">
+                        <button onclick="navDailyCalendar(-1)" class="flex-1 py-1.5 px-2 rounded-lg bg-gray-900 hover:bg-gray-800 border border-main text-gray-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1 transition" title="Mes anterior">
+                            <i class="fa-solid fa-chevron-left text-[10px]"></i> Ant.
+                        </button>
+                        <button onclick="navDailyCalendar(1)" class="flex-1 py-1.5 px-2 rounded-lg bg-gray-900 hover:bg-gray-800 border border-main text-gray-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1 transition" title="Mes siguiente">
+                            Sig. <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- Área Principal del Calendario -->
+                <div class="daily-calendar-main flex-grow min-w-0">
+                    <div id="daily-calendar-wrapper" class="daily-calendar-wrapper bg-card border border-main rounded-xl p-3 sm:p-4 shadow flex flex-col overflow-hidden">
+                        <!-- Cabecera de columnas: Semanas + 7 días (Lunes a Domingo) -->
+                        <div class="daily-calendar-header-row grid grid-cols-[100px_repeat(7,1fr)] sm:grid-cols-[115px_repeat(7,1fr)] gap-2 mb-2 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">
+                            <div class="text-left pl-2 text-gray-500">Semanas</div>
+                            <div>Lunes</div>
+                            <div>Martes</div>
+                            <div>Miércoles</div>
+                            <div>Jueves</div>
+                            <div>Viernes</div>
+                            <div class="text-gray-500">Sábado</div>
+                            <div class="text-gray-500">Domingo</div>
+                        </div>
+
+                        <!-- Filas del calendario -->
+                        <div id="daily-calendar-grid" class="daily-calendar-grid flex-grow grid gap-2"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -1151,6 +1206,28 @@
                 <button type="button" onclick="addPair()" class="bg-green-600 hover:bg-green-500 px-4 rounded text-white transition"><i class="fa-solid fa-plus"></i></button>
             </div>
             <div id="pairListContainer" class="max-h-48 overflow-y-auto space-y-2 pr-1"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DE ANÁLISIS DE LA OPERACIÓN (Desde Calendario) -->
+    <div id="dailyTradeAnalysisModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-[#11151c] border border-main rounded-2xl w-full max-w-4xl max-h-[92vh] overflow-y-auto p-5 sm:p-6 shadow-2xl relative flex flex-col">
+            <button onclick="closeDailyTradeAnalysis()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg transition"><i class="fa-solid fa-xmark"></i></button>
+            
+            <div class="border-b border-main pb-4 mb-4">
+                <div class="flex flex-wrap items-center justify-between gap-3 pr-8">
+                    <div>
+                        <h3 id="dailyAnalysisModalDate" class="text-lg font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-calendar-day text-emerald-400"></i> Análisis de Operaciones
+                        </h3>
+                        <p id="dailyAnalysisModalSummary" class="text-xs text-gray-400 mt-0.5">Operaciones registradas</p>
+                    </div>
+                    <div id="dailyAnalysisNavTabs" class="flex flex-wrap items-center gap-2"></div>
+                </div>
+            </div>
+
+            <!-- Contenido del análisis del trade seleccionado -->
+            <div id="dailyAnalysisModalBody" class="flex-grow space-y-4"></div>
         </div>
     </div>
 

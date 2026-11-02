@@ -434,6 +434,7 @@ const initialTrades = [];
             document.getElementById('tab-btn-journal').classList.add('hidden');
             document.getElementById('tab-btn-gallery').classList.add('hidden');
             document.getElementById('tab-btn-monthly').classList.add('hidden');
+            document.getElementById('tab-btn-calendar').classList.add('hidden');
             const goalsTabBtn = document.getElementById('tab-btn-goals');
             if (goalsTabBtn) goalsTabBtn.classList.add('hidden');
             document.getElementById('tab-btn-balance-history').classList.toggle('hidden', mode !== 'real');
@@ -1408,6 +1409,7 @@ const initialTrades = [];
             document.getElementById('tab-btn-journal').classList.remove('hidden');
             document.getElementById('tab-btn-gallery').classList.remove('hidden');
             document.getElementById('tab-btn-monthly').classList.remove('hidden');
+            document.getElementById('tab-btn-calendar').classList.remove('hidden');
             updateGoalsTabVisibility();
             document.getElementById('btn-new-trade').style.display = 'flex';
             
@@ -4099,7 +4101,7 @@ const initialTrades = [];
                 return;
             }
             if (tab === 'sessions' && isGlobalMetricsView) setGlobalMetricsView(false);
-            ['sessions', 'balance-history', 'dashboard', 'goals', 'journal', 'gallery', 'monthly'].forEach(t => {
+            ['sessions', 'balance-history', 'dashboard', 'goals', 'journal', 'monthly', 'calendar', 'gallery'].forEach(t => {
                 document.getElementById(`section-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (btn) {
@@ -4132,6 +4134,10 @@ const initialTrades = [];
                 window.scrollTo(0, 0);
                 root.style.scrollBehavior = previousScrollBehavior;
                 requestAnimationFrame(fitMonthlyCalendarGrid);
+            }
+            if (tab === 'calendar') {
+                renderDailyCalendar();
+                requestAnimationFrame(fitDailyCalendarGrid);
             }
             if (tab === 'sessions' && groupBalanceChartInstance) {
                 requestAnimationFrame(() => { if (groupBalanceChartInstance) groupBalanceChartInstance.resize(); });
@@ -5107,7 +5113,7 @@ function renderMonthlyPerformance() {
         function renderAll() {
 
             trades.sort((a, b) => new Date(a.fecha + "T" + a.hora) - new Date(b.fecha + "T" + b.hora));
-            renderTable(); renderGallery(); updateMetricsAndCharts(); renderMonthlyPerformance();
+            renderTable(); renderGallery(); updateMetricsAndCharts(); renderMonthlyPerformance(); renderDailyCalendar();
             renderFondeoPanel();
             renderAccountGoalPanel();
             updateGoalsTabVisibility();
@@ -7228,3 +7234,424 @@ function renderMonthlyPerformance() {
             showFormStep(0);
         }
 
+
+
+        /* =========================================================================
+           CALENDARIO DIARIO (Vista Semanal & Análisis de Operaciones)
+           ========================================================================= */
+        let dailyCalendarSelectedYear = null;
+        let dailyCalendarSelectedMonth = null;
+        let currentDailyAnalysisTrades = [];
+        let currentDailyAnalysisIndex = 0;
+
+        function renderDailyCalendar() {
+            const section = document.getElementById("section-calendar");
+            if (!section) return;
+
+            const monthSelect = document.getElementById("dailyCalendarMonth");
+            const yearSelect = document.getElementById("dailyCalendarYear");
+            const gridContainer = document.getElementById("daily-calendar-grid");
+            if (!monthSelect || !yearSelect || !gridContainer) return;
+
+            const now = new Date();
+            const availableYears = getAvailableYears();
+
+            // Sincronizar select de año
+            const currentYearOpts = Array.from(yearSelect.options).map(o => o.value).join(",");
+            const targetYearOpts = availableYears.map(y => String(y)).join(",");
+            if (currentYearOpts !== targetYearOpts) {
+                const prevYearVal = yearSelect.value || String(now.getFullYear());
+                yearSelect.innerHTML = availableYears.map(y => `<option value="${y}">${y}</option>`).join("");
+                yearSelect.value = availableYears.includes(parseInt(prevYearVal, 10)) ? prevYearVal : String(now.getFullYear());
+            }
+
+            // Sincronizar select de mes
+            if (monthSelect.children.length === 0) {
+                monthSelect.innerHTML = monthNames.map((m, idx) => `<option value="${idx}">${m}</option>`).join("");
+                monthSelect.value = String(now.getMonth());
+            }
+
+            const year = parseInt(yearSelect.value, 10);
+            const month = parseInt(monthSelect.value, 10);
+            dailyCalendarSelectedYear = year;
+            dailyCalendarSelectedMonth = month;
+
+            // Trades resueltos de la cuenta activa
+            const allTrades = getBaseTrades().filter(t => isResolvedTrade(t) && t.fecha);
+            const initialBalance = getActiveInitialBalance();
+
+            const tradesByDate = {};
+            allTrades.forEach(t => {
+                if (!tradesByDate[t.fecha]) tradesByDate[t.fecha] = [];
+                tradesByDate[t.fecha].push(t);
+            });
+
+            // Cálculos del calendario ISO (Lunes=0 ... Domingo=6)
+            const firstDay = new Date(year, month, 1);
+            const firstDayIso = (firstDay.getDay() + 6) % 7;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const daysInPrevMonth = new Date(year, month, 0).getDate();
+
+            const totalSlots = firstDayIso + daysInMonth;
+            const totalWeeks = Math.ceil(totalSlots / 7);
+
+            const pad2 = n => String(n).padStart(2, "0");
+
+            let gridHtml = "";
+
+            for (let w = 0; w < totalWeeks; w++) {
+                let weekTrades = [];
+                let weekDaysHtml = "";
+
+                for (let d = 0; d < 7; d++) {
+                    const slotIndex = w * 7 + d;
+                    let dayNum = 0;
+                    let isCurrentMonth = true;
+                    let dateKey = "";
+
+                    if (slotIndex < firstDayIso) {
+                        isCurrentMonth = false;
+                        dayNum = daysInPrevMonth - (firstDayIso - 1 - slotIndex);
+                        const prevM = month === 0 ? 11 : month - 1;
+                        const prevY = month === 0 ? year - 1 : year;
+                        dateKey = `${prevY}-${pad2(prevM + 1)}-${pad2(dayNum)}`;
+                    } else if (slotIndex >= firstDayIso + daysInMonth) {
+                        isCurrentMonth = false;
+                        dayNum = slotIndex - (firstDayIso + daysInMonth) + 1;
+                        const nextM = month === 11 ? 0 : month + 1;
+                        const nextY = month === 11 ? year + 1 : year;
+                        dateKey = `${nextY}-${pad2(nextM + 1)}-${pad2(dayNum)}`;
+                    } else {
+                        dayNum = slotIndex - firstDayIso + 1;
+                        dateKey = `${year}-${pad2(month + 1)}-${pad2(dayNum)}`;
+                    }
+
+                    const dayTrades = tradesByDate[dateKey] || [];
+                    if (isCurrentMonth) {
+                        weekTrades.push(...dayTrades);
+                    }
+
+                    const isToday = isCurrentMonth && now.getFullYear() === year && now.getMonth() === month && now.getDate() === dayNum;
+
+                    let dayContentHtml = "";
+                    let dayCellClasses = "daily-day-cell rounded-lg p-1.5 sm:p-2 flex flex-col justify-between transition-all relative overflow-hidden ";
+
+                    if (!isCurrentMonth) {
+                        dayCellClasses += "bg-[#0b0e14]/40 border border-gray-900/60 opacity-30 select-none";
+                        dayContentHtml = `
+                            <div class="flex justify-between items-start">
+                                <span class="text-[11px] font-semibold text-gray-600">${dayNum}</span>
+                            </div>
+                            <div></div>
+                        `;
+                    } else if (dayTrades.length > 0) {
+                        const netPct = dayTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
+                        const netDollar = initialBalance * (netPct / 100);
+                        const isWin = netPct > 0.001;
+                        const isLoss = netPct < -0.001;
+
+                        let cardBg = "bg-indigo-950/20 border-indigo-500/40 text-indigo-300";
+                        let textDollarColor = "text-indigo-300";
+                        let textPctColor = "text-indigo-400";
+                        if (isWin) {
+                            cardBg = "bg-emerald-950/30 border-emerald-500/40 text-emerald-400 hover:border-emerald-400 hover:bg-emerald-900/30";
+                            textDollarColor = "text-emerald-400";
+                            textPctColor = "text-emerald-300";
+                        } else if (isLoss) {
+                            cardBg = "bg-red-950/30 border-red-500/40 text-red-400 hover:border-red-400 hover:bg-red-900/30";
+                            textDollarColor = "text-red-400";
+                            textPctColor = "text-red-300";
+                        }
+
+                        dayCellClasses += "bg-[#111622] border border-gray-800 shadow-sm";
+                        dayContentHtml = `
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-[11px] font-bold ${isToday ? 'text-amber-400' : 'text-gray-300'}">${dayNum}</span>
+                                ${isToday ? '<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                            </div>
+                            <div onclick="openDailyTradeAnalysis('${dateKey}')" title="Ver análisis de ${dayTrades.length} operaciones del ${dayNum}" class="flex-grow flex flex-col justify-center items-center rounded-md p-1 border cursor-pointer transition-all hover:scale-[1.02] ${cardBg}">
+                                <div class="font-mono font-bold text-xs sm:text-sm tracking-tight ${textDollarColor}">
+                                    ${netDollar >= 0 ? '+' : ''}$${netDollar.toFixed(2)}
+                                </div>
+                                <div class="text-[10px] sm:text-[11px] font-semibold mt-0.5 ${textPctColor}">
+                                    ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}%
+                                </div>
+                                <div class="text-[9px] text-gray-400 mt-0.5">
+                                    ${dayTrades.length} ${dayTrades.length === 1 ? 'op' : 'ops'}
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        dayCellClasses += "bg-[#0d1117] border border-gray-800/80";
+                        dayContentHtml = `
+                            <div class="flex justify-between items-start">
+                                <span class="text-[11px] font-semibold ${isToday ? 'text-amber-400 font-bold' : 'text-gray-500'}">${dayNum}</span>
+                                ${isToday ? '<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                            </div>
+                            <div class="flex-grow flex items-center justify-center text-gray-800 text-xs select-none">·</div>
+                        `;
+                    }
+
+                    weekDaysHtml += `<div class="${dayCellClasses}">${dayContentHtml}</div>`;
+                }
+
+                const weekNum = w + 1;
+                let weekNetHtml = "";
+                let weekCardClasses = "daily-week-card rounded-lg p-2 flex flex-col justify-between border ";
+
+                if (weekTrades.length > 0) {
+                    const weekNetPct = weekTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
+                    const weekNetDollar = initialBalance * (weekNetPct / 100);
+                    const isWeekWin = weekNetPct > 0.001;
+                    const isWeekLoss = weekNetPct < -0.001;
+
+                    let weekDollarColor = "text-indigo-300";
+                    let weekPctColor = "text-indigo-400";
+                    let weekBorder = "border-gray-800 bg-[#0d1117]";
+
+                    if (isWeekWin) {
+                        weekDollarColor = "text-emerald-400";
+                        weekPctColor = "text-emerald-400/90";
+                        weekBorder = "border-emerald-900/40 bg-[#0a1516]";
+                    } else if (isWeekLoss) {
+                        weekDollarColor = "text-red-400";
+                        weekPctColor = "text-red-400/90";
+                        weekBorder = "border-red-900/40 bg-[#160d10]";
+                    }
+
+                    weekCardClasses += weekBorder;
+                    weekNetHtml = `
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-300">Semana ${weekNum}</span>
+                        </div>
+                        <div class="mt-1">
+                            <div class="font-mono font-bold text-xs sm:text-sm ${weekDollarColor}">
+                                ${weekNetDollar >= 0 ? '+' : ''}$${weekNetDollar.toFixed(2)}
+                            </div>
+                            <div class="text-[10px] font-medium ${weekPctColor}">
+                                ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}%
+                            </div>
+                            <div class="text-[9px] text-gray-500">
+                                ${weekTrades.length} ops
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    weekCardClasses += "border-gray-800 bg-[#0d1117]";
+                    weekNetHtml = `
+                        <div>
+                            <span class="text-[11px] font-bold text-gray-400">Semana ${weekNum}</span>
+                        </div>
+                        <div class="text-xs text-gray-600 font-bold">—</div>
+                    `;
+                }
+
+                gridHtml += `
+                    <div class="daily-calendar-row grid grid-cols-[100px_repeat(7,1fr)] sm:grid-cols-[115px_repeat(7,1fr)] gap-2">
+                        <div class="${weekCardClasses}">${weekNetHtml}</div>
+                        ${weekDaysHtml}
+                    </div>
+                `;
+            }
+
+            gridContainer.style.gridTemplateRows = `repeat(${totalWeeks}, minmax(0, 1fr))`;
+            gridContainer.innerHTML = gridHtml;
+
+            requestAnimationFrame(fitDailyCalendarGrid);
+        }
+
+        function navDailyCalendar(direction) {
+            const monthSelect = document.getElementById("dailyCalendarMonth");
+            const yearSelect = document.getElementById("dailyCalendarYear");
+            if (!monthSelect || !yearSelect) return;
+            let m = parseInt(monthSelect.value, 10) + direction;
+            let y = parseInt(yearSelect.value, 10);
+            if (m < 0) {
+                m = 11;
+                y -= 1;
+            } else if (m > 11) {
+                m = 0;
+                y += 1;
+            }
+            const years = getAvailableYears();
+            if (!years.includes(y)) {
+                yearSelect.innerHTML = `<option value="${y}">${y}</option>` + yearSelect.innerHTML;
+            }
+            yearSelect.value = String(y);
+            monthSelect.value = String(m);
+            renderDailyCalendar();
+        }
+
+        function fitDailyCalendarGrid() {
+            const section = document.getElementById("section-calendar");
+            const wrapper = document.getElementById("daily-calendar-wrapper");
+            if (!section || !wrapper || section.classList.contains("hidden")) return;
+
+            if (!window.matchMedia("(min-width: 1024px)").matches) {
+                wrapper.style.removeProperty("height");
+                return;
+            }
+
+            const wrapperTop = wrapper.getBoundingClientRect().top + window.scrollY;
+            const bottomReserve = 36;
+            const availableHeight = Math.max(380, document.documentElement.clientHeight - wrapperTop - bottomReserve);
+            wrapper.style.height = `${availableHeight}px`;
+        }
+
+        window.addEventListener("resize", fitDailyCalendarGrid, { passive: true });
+
+        function openDailyTradeAnalysis(dateKey) {
+            const allTrades = getBaseTrades().filter(t => isResolvedTrade(t) && t.fecha === dateKey);
+            if (!allTrades.length) return;
+
+            currentDailyAnalysisTrades = allTrades;
+            currentDailyAnalysisIndex = 0;
+
+            const modal = document.getElementById("dailyTradeAnalysisModal");
+            if (!modal) return;
+
+            const parts = dateKey.split("-");
+            const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+            const dayNamesFull = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+            const monthNamesFull = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+            const formattedDate = `${dayNamesFull[d.getDay()]}, ${d.getDate()} de ${monthNamesFull[d.getMonth()]} de ${d.getFullYear()}`;
+
+            const initialBalance = getActiveInitialBalance();
+            const dayTotalPct = allTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
+            const dayTotalDollar = initialBalance * (dayTotalPct / 100);
+
+            const titleEl = document.getElementById("dailyAnalysisModalDate");
+            const summaryEl = document.getElementById("dailyAnalysisModalSummary");
+            if (titleEl) {
+                titleEl.innerHTML = `<i class="fa-solid fa-calendar-day text-emerald-400"></i> ${formattedDate}`;
+            }
+            if (summaryEl) {
+                const netColor = dayTotalPct > 0 ? 'text-emerald-400' : (dayTotalPct < 0 ? 'text-red-400' : 'text-gray-300');
+                summaryEl.innerHTML = `Total del día: <strong class="${netColor} font-mono">${dayTotalDollar >= 0 ? '+' : ''}$${dayTotalDollar.toFixed(2)} (${dayTotalPct >= 0 ? '+' : ''}${dayTotalPct.toFixed(2)}%)</strong> · ${allTrades.length} ${allTrades.length === 1 ? 'operación' : 'operaciones'}`;
+            }
+
+            const tabsContainer = document.getElementById("dailyAnalysisNavTabs");
+            if (tabsContainer) {
+                if (allTrades.length > 1) {
+                    tabsContainer.innerHTML = allTrades.map((t, idx) => {
+                        const outPct = getTradeOutcome(t);
+                        const outDollar = initialBalance * (outPct / 100);
+                        const isWin = outPct > 0;
+                        const isLoss = outPct < 0;
+                        const badgeColor = isWin ? 'text-emerald-400' : (isLoss ? 'text-red-400' : 'text-gray-300');
+                        const activeClasses = idx === 0 ? 'bg-gray-800 border-gray-600 text-white font-bold' : 'bg-gray-900 border-main text-gray-400 hover:text-white';
+                        return `<button onclick="selectDailyAnalysisTrade(${idx})" id="daily-tab-btn-${idx}" class="daily-analysis-tab px-3 py-1 rounded-lg border text-xs flex items-center gap-1.5 transition ${activeClasses}">
+                            <span>${t.par || 'Trade'}</span>
+                            <span class="font-mono font-semibold ${badgeColor}">${outDollar >= 0 ? '+' : ''}$${outDollar.toFixed(1)}</span>
+                        </button>`;
+                    }).join("");
+                } else {
+                    tabsContainer.innerHTML = "";
+                }
+            }
+
+            renderDailyAnalysisTrade();
+            modal.classList.remove("hidden");
+            document.body.style.overflow = "hidden";
+        }
+
+        function selectDailyAnalysisTrade(idx) {
+            if (idx < 0 || idx >= currentDailyAnalysisTrades.length) return;
+            currentDailyAnalysisIndex = idx;
+            document.querySelectorAll(".daily-analysis-tab").forEach((btn, i) => {
+                if (i === idx) {
+                    btn.className = "daily-analysis-tab px-3 py-1 rounded-lg border text-xs flex items-center gap-1.5 transition bg-gray-800 border-gray-600 text-white font-bold";
+                } else {
+                    btn.className = "daily-analysis-tab px-3 py-1 rounded-lg border text-xs flex items-center gap-1.5 transition bg-gray-900 border-main text-gray-400 hover:text-white";
+                }
+            });
+            renderDailyAnalysisTrade();
+        }
+
+        function renderDailyAnalysisTrade() {
+            const body = document.getElementById("dailyAnalysisModalBody");
+            if (!body || !currentDailyAnalysisTrades.length) return;
+
+            const t = currentDailyAnalysisTrades[currentDailyAnalysisIndex];
+            if (!t) return;
+
+            const initialBalance = getActiveInitialBalance();
+            const outcomePct = getTradeOutcome(t);
+            const outcomeDollar = initialBalance * (outcomePct / 100);
+
+            const isWin = outcomePct > 0.001;
+            const isLoss = outcomePct < -0.001;
+            const badgeColor = isWin ? 'bg-emerald-950/40 border-emerald-800 text-emerald-400' : (isLoss ? 'bg-red-950/40 border-red-800 text-red-400' : 'bg-gray-800 border-gray-700 text-gray-300');
+
+            const isBuy = (t.orden || '').toLowerCase().includes("buy");
+            const orderIcon = isBuy ? '<i class="fa-solid fa-arrow-trend-up text-emerald-400"></i>' : '<i class="fa-solid fa-arrow-trend-down text-red-400"></i>';
+
+            let html = `
+                <!-- Resumen del trade -->
+                <div class="bg-card border border-main rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                        <span class="text-base font-bold text-white tracking-wide">${t.par || 'N/A'}</span>
+                        <span class="text-xs px-2 py-0.5 rounded font-semibold bg-gray-900 border border-gray-700 text-gray-300 flex items-center gap-1">
+                            ${orderIcon} ${t.orden || 'Orden'}
+                        </span>
+                        <span class="text-xs px-2 py-0.5 rounded font-semibold bg-gray-900 border border-gray-700 text-gray-300">
+                            ${t.estado || 'Cerrada'}
+                        </span>
+                        ${t.hora ? `<span class="text-xs text-gray-500"><i class="fa-regular fa-clock"></i> ${t.hora}</span>` : ''}
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span class="text-xs text-gray-400">R:R: <strong class="text-white">${t.rr || '1:1'}</strong></span>
+                        <div class="font-mono font-bold px-3 py-1 rounded-lg border ${badgeColor}">
+                            ${outcomeDollar >= 0 ? '+' : ''}$${outcomeDollar.toFixed(2)} (${outcomePct >= 0 ? '+' : ''}${outcomePct.toFixed(2)}%)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secciones ANTES y DESPUÉS -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- ANTES -->
+                    <div class="bg-card border border-main rounded-xl p-4 flex flex-col justify-between space-y-3">
+                        <div>
+                            <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 border-b border-gray-800 pb-2">
+                                <i class="fa-solid fa-camera"></i> Análisis ANTES de la entrada
+                            </h4>
+                            ${t.notaAntes ? `<p class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeGalleryHtml(t.notaAntes)}</p>` : `<p class="text-xs text-gray-500 italic">Sin notas registradas antes de entrar.</p>`}
+                        </div>
+                        <div class="space-y-2 pt-2 border-t border-gray-800/80">
+                            ${renderTradingViewButton(t.linkAntes, true)}
+                            ${(t.imagenesAntes && t.imagenesAntes.length > 0) ? `
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    ${t.imagenesAntes.map(src => `<img src="${src}" class="h-24 w-auto rounded cursor-pointer border border-gray-700 hover:border-gray-400 transition" onclick="openLightbox('${src}')">`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- DESPUÉS -->
+                    <div class="bg-card border border-main rounded-xl p-4 flex flex-col justify-between space-y-3">
+                        <div>
+                            <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 border-b border-gray-800 pb-2">
+                                <i class="fa-solid fa-flag-checkered"></i> Análisis DESPUÉS del cierre
+                            </h4>
+                            ${t.notaDespues ? `<p class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeGalleryHtml(t.notaDespues)}</p>` : `<p class="text-xs text-gray-500 italic">Sin notas registradas después del cierre.</p>`}
+                        </div>
+                        <div class="space-y-2 pt-2 border-t border-gray-800/80">
+                            ${renderTradingViewButton(t.linkDespues, false)}
+                            ${(t.imagenesDespues && t.imagenesDespues.length > 0) ? `
+                                <div class="flex flex-wrap gap-2 mt-2">
+                                    ${t.imagenesDespues.map(src => `<img src="${src}" class="h-24 w-auto rounded cursor-pointer border border-gray-700 hover:border-gray-400 transition" onclick="openLightbox('${src}')">`).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            body.innerHTML = html;
+        }
+
+        function closeDailyTradeAnalysis() {
+            const modal = document.getElementById("dailyTradeAnalysisModal");
+            if (modal) modal.classList.add("hidden");
+            document.body.style.overflow = "";
+        }
