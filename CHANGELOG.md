@@ -5,6 +5,21 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.5] - 2026-11-02
+
+### 📅 Rendimiento por Mes: Eliminación de Desplazamiento y Salto en Meses Superiores
+- **Eliminación del Crecimiento Hacia Abajo en Fila Superior (Ene - Abr):**
+  - Se eliminó el factor de aumento forzado (`transform: scale(1.25, 1.16)`) con anclaje superior que expandía las tarjetas de la primera fila hacia abajo y las superponía sobre la segunda fila.
+  - La interacción hover ahora aplica una elevación sutil y fluida (`transform: translateY(-2px)`) con iluminación de contorno y sombra profunda, manteniendo las tarjetas fijas en su celda de grilla.
+- **Despliegue Flotante Suave sin Desplazamiento de Layout:**
+  - El panel de inspección 2x2 (`Mejor trade`, `Mejor día`, `Mejor sesión`, `Distribución`) ya no se expande mediante animación de altura variable que empujaba hacia abajo; ahora aparece mediante desvanecimiento y microdesplazamiento suave (`opacity` y `translateY`).
+  - Para la fila 1 (Enero a Abril), el panel se posiciona limpiamente debajo de la tarjeta sin rebasar el límite inferior de la pantalla ni provocar saltos.
+  - Para las filas 2 y 3 (Mayo a Diciembre), el panel se eleva suavemente hacia arriba.
+- **Prevención de Scrollbar Shift Global:**
+  - Se incorporó `scrollbar-gutter: stable` a nivel `html` para blindar el viewport contra desplazamientos laterales si un contenedor abre o cierra contenido flotante.
+
+---
+
 ## [v3.4.4] - 2026-11-02
 
 ### 🌐 Sincronización Global desde Seguimiento de Balances
