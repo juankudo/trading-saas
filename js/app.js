@@ -4793,15 +4793,21 @@ const initialTrades = [];
                 return;
             }
 
-            const availableWidth = Math.min(grid.getBoundingClientRect().width, 1400);
-            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
-            const bottomReserve = 48;
-            const availableHeight = Math.max(0, document.documentElement.clientHeight - gridTop - bottomReserve);
-            const calendarRatio = 2.05;
-            const width = Math.min(availableWidth, availableHeight * calendarRatio);
+            // Ancho del contenedor para aprovechar el espacio horizontal de la pantalla
+            const parentWidth = grid.parentElement ? grid.parentElement.getBoundingClientRect().width : 1200;
+            const availableWidth = Math.min(parentWidth, 1400);
 
-            grid.style.width = `${width}px`;
-            grid.style.height = `${width / calendarRatio}px`;
+            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
+            const bottomReserve = 36; // Margen de resguardo inferior seguro para evitar scroll
+            const availableHeight = Math.max(0, document.documentElement.clientHeight - gridTop - bottomReserve);
+
+            // Relación de aspecto adaptable para que los cuadros crezcan tanto a lo ancho como a lo alto llenando la pantalla
+            const idealRatio = availableHeight > 0 ? Math.min(2.45, Math.max(1.95, availableWidth / availableHeight)) : 2.1;
+            const width = Math.min(availableWidth, availableHeight * idealRatio);
+            const height = Math.min(availableHeight, width / idealRatio);
+
+            grid.style.width = `${Math.round(width)}px`;
+            grid.style.height = `${Math.round(height)}px`;
             grid.style.aspectRatio = "auto";
         }
 
@@ -4893,26 +4899,28 @@ function renderMonthlyPerformance() {
                 const bestDayLabel = bestDay ? new Date(bestDay.date + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "—";
                 const bestSessionName = bestSession ? escapeGalleryHtml(bestSession.name) : "—";
                 const bestSessionRate = bestSession && bestSession.stats.total ? (bestSession.stats.wins / bestSession.stats.total) * 100 : 0;
-                return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col ${cardTone} border rounded-xl p-4 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+                return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col justify-between ${cardTone} border rounded-xl p-3 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
 
-                    <div class="flex min-h-6 items-start justify-between gap-2">
-                        <h3 class="whitespace-nowrap text-lg font-bold text-white">${month.name}</h3>
+                    <div class="flex min-h-5 items-start justify-between gap-1.5 mb-1">
+                        <h3 class="whitespace-nowrap text-base sm:text-lg font-bold text-white tracking-tight">${month.name}</h3>
                         <div class="flex max-w-[55%] flex-wrap justify-end gap-1">${badges}</div>
                     </div>
-                    <div class="monthly-primary-metrics mt-auto grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-gray-800 pt-2">
-                        <div class="min-w-0">
-                            <p class="text-xs uppercase tracking-wide text-gray-400">Retorno</p>
-                            <p class="monthly-primary-value truncate text-2xl font-bold ${netColor}">${netValue}</p>
-                        </div>
-                        <div class="min-w-0 text-right">
-                            <p class="text-xs uppercase tracking-wide text-gray-400">Efectividad</p>
-                            <p class="text-lg font-bold text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
-                        </div>
-                        <div class="flex items-center justify-between gap-1 text-sm text-gray-300">
-                            <span>Operaciones</span><strong class="text-gray-200">${month.total}</strong>
-                        </div>
-                        <div class="flex items-center justify-end gap-2 text-sm text-gray-300">
-                            <span>PF</span><strong class="${profitFactor === null ? "text-gray-400" : "text-gray-200"}">${profitFactorLabel}</strong>
+                    <div class="monthly-primary-metrics w-full mt-auto border-t border-gray-800/80 pt-1.5 pb-0.5">
+                        <div class="grid grid-cols-2 gap-x-2 gap-y-1">
+                            <div class="min-w-0">
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 font-semibold leading-none mb-1">Retorno</p>
+                                <p class="monthly-primary-value truncate text-lg sm:text-xl md:text-2xl font-bold leading-tight ${netColor}">${netValue}</p>
+                            </div>
+                            <div class="min-w-0 text-right">
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 font-semibold leading-none mb-1">Efectividad</p>
+                                <p class="monthly-secondary-value truncate text-sm sm:text-base md:text-lg font-bold leading-tight text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
+                            </div>
+                            <div class="flex items-center justify-between gap-1 text-[11px] sm:text-xs text-gray-400 pt-0.5">
+                                <span class="text-gray-400">Operaciones</span><strong class="text-gray-200 font-semibold">${month.total}</strong>
+                            </div>
+                            <div class="flex items-center justify-end gap-1.5 text-[11px] sm:text-xs text-gray-400 pt-0.5">
+                                <span class="text-gray-400">PF</span><strong class="${profitFactor === null ? "text-gray-400" : "text-gray-200"} font-semibold">${profitFactorLabel}</strong>
+                            </div>
                         </div>
                     </div>
                     <div class="monthly-month-details text-sm text-gray-300">
