@@ -11,3 +11,7 @@
    - Explicar al usuario con precisión qué se cambió y cómo probarlo localmente.
    - Preguntar explícitamente: *¿Deseas que suba y despliegue estos cambios a producción?*
    - Solo ejecutar `git push` tras recibir la confirmación afirmativa del usuario.
+
+3. **Registro Obligatorio de Versiones (Changelog):**
+   - Mantener siempre actualizado el archivo `CHANGELOG.md` con cada versión, ajuste o mejora relevante antes de desplegar a producción.
+   - Documentar claramente qué se añadió, corrigió o mejoró en formato estándar (Keep a Changelog).
