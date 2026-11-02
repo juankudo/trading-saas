@@ -39,7 +39,7 @@
             </a>
 
             <!-- Center Navigation Links -->
-            <nav class="hidden md:flex items-center gap-4 lg:gap-6 text-sm font-medium text-gray-400">
+            <nav class="hidden lg:flex items-center gap-3.5 xl:gap-6 text-xs xl:text-sm font-medium text-gray-400">
                 <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
                 <a href="#backtesting" class="hover:text-amber-400 transition flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Backtesting Pro</a>
                 <a href="#calculadora" class="hover:text-emerald-400 transition">Calculadora Pro</a>
@@ -53,25 +53,13 @@
             <!-- Actions Right -->
             <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
                 
-                <!-- Enlaces Oficiales de Redes Sociales (Header) -->
-                <div class="hidden md:flex items-center gap-1 border-r border-gray-800 pr-2 mr-0.5">
-                    <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-rose-400 hover:bg-rose-950/40 transition text-sm" title="Canal Oficial de YouTube (@tradingjournalpro)" aria-label="YouTube Oficial">
-                        <i class="fa-brands fa-youtube"></i>
-                    </a>
-                    <a href="https://www.tiktok.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-cyan-300 hover:bg-cyan-950/40 transition text-sm" title="TikTok Oficial (@tradingjournalpro)" aria-label="TikTok Oficial">
-                        <i class="fa-brands fa-tiktok"></i>
-                    </a>
-                    <a href="https://www.instagram.com/tradingjournalpro" target="_blank" rel="noopener noreferrer" class="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-pink-400 hover:bg-pink-950/40 transition text-sm" title="Instagram Oficial (@tradingjournalpro)" aria-label="Instagram Oficial">
-                        <i class="fa-brands fa-instagram"></i>
-                    </a>
-                </div>
 
                 <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-400 hover:text-white text-xs transition" title="Cambiar tema" aria-label="Alternar tema claro y oscuro">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
                 </button>
 
                 <!-- Guest State (No logged in) -->
-                <div id="nav-guest-actions" class="flex items-center gap-1.5 sm:gap-3">
+                <div id="nav-guest-actions" class="flex items-center gap-2 sm:gap-3 shrink-0">
                     <button onclick="openAuthModal('login')" class="px-2.5 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold text-gray-300 hover:text-white hover:bg-gray-800/60 transition whitespace-nowrap">
                         Iniciar Sesión
                     </button>
