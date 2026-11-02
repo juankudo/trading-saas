@@ -518,7 +518,13 @@ const initialTrades = [];
         }
 
         function getActiveInitialBalance() {
-            if (isGlobalMetricsView) return 0;
+            if (isGlobalMetricsView) {
+                if (currentMode === 'real') {
+                    const total = realAccounts.reduce((sum, a) => sum + getRealInitialBalance(a), 0);
+                    return total > 0 ? total : 0;
+                }
+                return 0;
+            }
             if (currentMode === 'real' && activeRealAccountId) {
                 return getRealInitialBalance(realAccounts.find(x => x.id === activeRealAccountId));
             }
@@ -731,8 +737,9 @@ const initialTrades = [];
             }
             await syncGlobalMetricsFromTrades();
             setGlobalMetricsView(true);
-            ["dashboard", "journal", "monthly", "gallery"].forEach(tab => {
-                document.getElementById(`tab-btn-${tab}`).classList.remove("hidden");
+            ["dashboard", "journal", "monthly", "calendar", "gallery"].forEach(tab => {
+                const b = document.getElementById(`tab-btn-${tab}`);
+                if (b) b.classList.remove("hidden");
             });
             document.getElementById("dashboardPeriodType").value = "ALL";
             document.getElementById("filterPeriodoType").value = "ALL";
@@ -3576,8 +3583,8 @@ const initialTrades = [];
         function updateGoalsTabVisibility() {
             const btn = document.getElementById("tab-btn-goals");
             if (!btn) return;
-            // Si el usuario está en la sección de selección de cuentas/sesiones ("Tus Cuentas") o en métricas globales, no mostrar Metas
-            if (currentTabName === "sessions" || isGlobalMetricsView) {
+            // Si el usuario está en selección de cuentas ("Tus Cuentas"), en seguimiento de balances o en métricas globales, nunca mostrar Metas
+            if (currentTabName === "sessions" || currentTabName === "balance-history" || isGlobalMetricsView) {
                 btn.classList.add("hidden");
                 return;
             }
@@ -4095,9 +4102,9 @@ const initialTrades = [];
         }
 
         function switchTab(tab) {
-            if (tab === "goals" && (currentTabName === "sessions" || isGlobalMetricsView || !hasActiveAccountGoals())) {
+            if (tab === "goals" && (currentTabName === "sessions" || currentTabName === "balance-history" || isGlobalMetricsView || !hasActiveAccountGoals())) {
                 showToast("Esta cuenta no tiene metas configuradas", true);
-                switchTab(currentTabName === "sessions" ? "sessions" : "dashboard");
+                switchTab(currentTabName === "sessions" || currentTabName === "balance-history" ? currentTabName : "dashboard");
                 return;
             }
             if (tab === "balance-history" && !isBalanceHistoryTabVisible()) {
@@ -4105,7 +4112,15 @@ const initialTrades = [];
                 switchTab("sessions");
                 return;
             }
-            if (tab === 'sessions' && isGlobalMetricsView) setGlobalMetricsView(false);
+            if (tab === 'sessions') {
+                if (isGlobalMetricsView) setGlobalMetricsView(false);
+                activeRealAccountId = null;
+                activeSessionId = null;
+                ['dashboard', 'goals', 'journal', 'monthly', 'calendar', 'gallery'].forEach(t => {
+                    const b = document.getElementById(`tab-btn-${t}`);
+                    if (b) b.classList.add('hidden');
+                });
+            }
             ['sessions', 'balance-history', 'dashboard', 'goals', 'journal', 'monthly', 'calendar', 'gallery'].forEach(t => {
                 document.getElementById(`section-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-btn-${t}`);
@@ -4131,7 +4146,19 @@ const initialTrades = [];
             }
             
             if(tab !== 'sessions' && tab !== 'balance-history' && !isGlobalMetricsView && (!activeRealAccountId && !activeSessionId)) { switchTab('sessions'); showToast("Entra a una cuenta primero", true); return; }
-            if (tab === "balance-history") renderRealBalanceHistory();
+            if (tab === "balance-history") {
+                if (currentMode === "real") {
+                    setGlobalMetricsView(true);
+                    ['dashboard', 'journal', 'monthly', 'calendar', 'gallery'].forEach(t => {
+                        const b = document.getElementById(`tab-btn-${t}`);
+                        if (b) b.classList.remove('hidden');
+                    });
+                    syncGlobalMetricsFromTrades().then(() => {
+                        renderAll();
+                    }).catch(console.error);
+                }
+                renderRealBalanceHistory();
+            }
             if (tab === 'monthly') {
                 const root = document.documentElement;
                 const previousScrollBehavior = root.style.scrollBehavior;

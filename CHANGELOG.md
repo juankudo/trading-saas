@@ -5,6 +5,18 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.4] - 2026-11-02
+
+### 🌐 Sincronización Global desde Seguimiento de Balances
+- **Ocultamiento de Metas en Seguimiento de Balances:**
+  - La pestaña *"Metas"* ahora se oculta de forma estricta tanto en *"Tus Cuentas"* como en *"Seguimiento de balances"*, asegurando que solo aparezca al estar dentro de una cuenta particular que tenga metas fijadas.
+- **Acceso a Métricas Globales en Todas las Secciones:**
+  - Al ingresar a *"Seguimiento de balances"*, se activa en segundo plano la vista de **Métricas Globales** con sincronización automática de todas las cuentas reales.
+  - El usuario puede navegar directamente a las demás pestañas (*Dashboard & Métricas*, *Rendimiento por mes*, *Calendario Diario*, *Registro de Trades* y *Galería & Análisis*) y visualizar de inmediato las estadísticas globales consolidadas.
+  - Al regresar a *"Tus Cuentas"*, se restablece el estado para mantener limpia la pantalla de selección inicial.
+
+---
+
 ## [v3.4.3] - 2026-11-02
 
 ### 🎯 Visibilidad Contextual de Metas
