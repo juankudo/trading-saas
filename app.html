@@ -308,22 +308,17 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-card p-5 rounded-xl border border-main shadow">
-                    <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                        <i id="dashboard-chart-icon" class="fa-solid fa-chart-area text-green-500"></i> Evolución de la Cuenta ($)
-                    </h2>
-                    <div class="h-72"><canvas id="equityChart"></canvas></div>
+                <!-- GRÁFICA DE EVOLUCIÓN -->
+                <div class="lg:col-span-2 bg-card p-5 rounded-xl border border-main shadow flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
+                            <i id="dashboard-chart-icon" class="fa-solid fa-chart-area text-green-500"></i> Evolución de la Cuenta ($)
+                        </h2>
+                        <div class="h-80"><canvas id="equityChart"></canvas></div>
+                    </div>
                 </div>
-                <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                        <i id="dashboard-pie-icon" class="fa-solid fa-pie-chart text-green-500"></i> Distribución de Resultados
-                    </h2>
-                    <div class="h-72 relative flex items-center justify-center"><canvas id="outcomesChart"></canvas></div>
-                </div>
-            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- RECUADRO: OBJETIVOS ALCANZADOS & DISTRIBUCIÓN -->
+                <!-- RECUADRO: OBJETIVOS ALCANZADOS & DISTRIBUCIÓN (Al lado de la gráfica) -->
                 <div class="lg:col-span-1 bg-card p-5 rounded-xl border border-main shadow flex flex-col justify-between">
                     <div>
                         <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center gap-2">
@@ -397,25 +392,25 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- MATRIZ 2x2 DE EFECTIVIDADES -->
-                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div id="metrics-pair-card" class="bg-card p-5 rounded-xl border border-main shadow">
-                        <h3 id="metrics-pair-title" class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-400"></i> Efectividad por Activo / Par</h3>
-                        <div id="metrics-pair-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
-                    </div>
-                    <div class="bg-card p-5 rounded-xl border border-main shadow">
-                        <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> Efectividad por Sesión</h3>
-                        <div id="metrics-session-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
-                    </div>
-                    <div class="bg-card p-5 rounded-xl border border-main shadow">
-                        <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-compass text-teal-400"></i> Efectividad por Tendencia</h3>
-                        <div id="metrics-trend-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
-                    </div>
-                    <div class="bg-card p-5 rounded-xl border border-main shadow">
-                        <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-day text-purple-400"></i> Efectividad por Día de Semana</h3>
-                        <div id="metrics-day-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
-                    </div>
+            <!-- FILA COMPLETA DE 4 EFECTIVIDADES -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div id="metrics-pair-card" class="bg-card p-5 rounded-xl border border-main shadow">
+                    <h3 id="metrics-pair-title" class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-400"></i> Efectividad por Activo / Par</h3>
+                    <div id="metrics-pair-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
+                </div>
+                <div class="bg-card p-5 rounded-xl border border-main shadow">
+                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> Efectividad por Sesión</h3>
+                    <div id="metrics-session-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
+                </div>
+                <div class="bg-card p-5 rounded-xl border border-main shadow">
+                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-compass text-teal-400"></i> Efectividad por Tendencia</h3>
+                    <div id="metrics-trend-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
+                </div>
+                <div class="bg-card p-5 rounded-xl border border-main shadow">
+                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-day text-purple-400"></i> Efectividad por Día de Semana</h3>
+                    <div id="metrics-day-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
                 </div>
             </div>
         </div>

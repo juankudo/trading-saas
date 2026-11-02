@@ -4911,12 +4911,15 @@ const initialTrades = [];
             });
 
             if(outcomesChartInstance) outcomesChartInstance.destroy();
-            const ctxOut = document.getElementById('outcomesChart').getContext('2d');
-            outcomesChartInstance = new Chart(ctxOut, {
-                type: 'doughnut',
-                data: { labels: ['Ganadas', 'Perdidas', 'BE'], datasets: [{ data: [wins, losses, breakeven], backgroundColor: ['#10b981', '#ef4444', '#6b7280'], borderWidth: 0 }] },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: chartColors.tick } } }, cutout: '75%' }
-            });
+            const canvasOut = document.getElementById('outcomesChart');
+            if (canvasOut) {
+                const ctxOut = canvasOut.getContext('2d');
+                outcomesChartInstance = new Chart(ctxOut, {
+                    type: 'doughnut',
+                    data: { labels: ['Ganadas', 'Perdidas', 'BE'], datasets: [{ data: [wins, losses, breakeven], backgroundColor: ['#10b981', '#ef4444', '#6b7280'], borderWidth: 0 }] },
+                    options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: chartColors.tick } } }, cutout: '75%' }
+                });
+            }
         }
 
         function fitMonthlyCalendarGrid() {

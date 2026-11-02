@@ -5,6 +5,16 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.2] - 2026-11-02
+
+### 📊 Reorganización Ejecutiva del Dashboard
+- **Objetivos & Distribución al lado de la Gráfica de Equidad:**
+  - Se trasladó la tarjeta de *Objetivos & Distribución* a la fila superior junto a la gráfica de *Evolución de la Cuenta ($)* (`lg:col-span-1`), sustituyendo el antiguo gráfico circular y reuniendo en un mismo plano la curva de rendimiento y los objetivos clave (Operaciones, Profit factor, R:R medio, Distribución y TP1/TP2/TP3/SL).
+- **Fila Panorámica de 4 Columnas para Efectividades:**
+  - Las 4 tarjetas de desglose (*Activo/Par*, *Sesión*, *Tendencia*, *Día de la semana*) ahora se distribuyen en una fila equilibrada de 4 columnas a todo lo ancho de la pantalla (`grid-cols-1 md:grid-cols-2 lg:grid-cols-4`).
+
+---
+
 ## [v3.4.1] - 2026-11-02
 
 ### 🛠️ Corrección y Optimización Visual: Calendario Diario
