@@ -154,6 +154,9 @@
                 <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-gauge-high"></i> Dashboard & Métricas
                 </button>
+                <button onclick="switchTab('goals')" id="tab-btn-goals" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
+                    <i class="fa-solid fa-bullseye"></i> Metas
+                </button>
                 <button onclick="switchTab('journal')" id="tab-btn-journal" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-table-list"></i> Registro de Trades
                 </button>
@@ -230,10 +233,7 @@
         </div>
 
         <div id="section-dashboard" class="hidden space-y-6">
-            <!-- Panel de simulación de fondeo (solo sesiones de backtesting en modo fondeo) -->
-            <div id="fondeo-panel" class="hidden"></div>
-            <!-- Panel de etapa y metas (solo cuentas reales) -->
-            <div id="account-goal-panel" class="hidden"></div>
+
             <div class="bg-card border border-main rounded-xl p-4 flex flex-wrap justify-between items-center gap-4 shadow">
                 <div class="flex items-center gap-4 flex-wrap">
                     <div id="dashboard-balance-controls" class="flex flex-wrap items-center gap-2 bg-gray-900/50 p-2 rounded-lg border border-main">
@@ -337,6 +337,14 @@
                     <div id="metrics-trend-list" class="space-y-2 text-sm max-h-64 overflow-y-auto pr-1"></div>
                 </div>
             </div>
+        </div>
+
+        <!-- SECCIÓN METAS -->
+        <div id="section-goals" class="hidden space-y-6">
+            <!-- Panel de simulación de fondeo (solo sesiones de backtesting en modo fondeo) -->
+            <div id="fondeo-panel" class="hidden"></div>
+            <!-- Panel de etapa y metas (solo cuentas reales) -->
+            <div id="account-goal-panel" class="hidden"></div>
         </div>
 
         <div id="section-journal" class="hidden space-y-4">

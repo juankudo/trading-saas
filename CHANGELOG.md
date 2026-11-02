@@ -5,6 +5,19 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.2.0] - 2026-11-02
+
+### 🎯 Nueva Sección Dedicada: Metas
+- **Pestaña "Metas":**
+  - Añadida en la barra de navegación situada inmediatamente después de *"Dashboard & Métricas"* (`<i class="fa-solid fa-bullseye"></i> Metas`).
+- **Desacoplamiento y Limpieza del Dashboard:**
+  - El panel de objetivos de cuenta (challenge prop firm, metas personales, drawdown máximo, regla de consistencia, días mínimos de trading, días rentables y retiros) se traslada a su propia sección dedicada (`#section-goals`), liberando al *Dashboard & Métricas* para enfocarse en la curva de equidad y estadísticas operativas.
+- **Visibilidad Dinámica Inteligente:**
+  - Si una cuenta no tiene metas fijadas (o se deshabilitan), la pestaña *"Metas"* se oculta automáticamente sin ocupar espacio en la navegación.
+  - Al configurar o activar una meta en la cuenta activa, la pestaña *"Metas"* se hace visible en tiempo real.
+
+---
+
 ## [v3.1.2] - 2026-11-02
 
 ### 🎨 Mejoras Visuales y Optimización de Tarjetas Mensuales

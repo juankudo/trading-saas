@@ -434,6 +434,8 @@ const initialTrades = [];
             document.getElementById('tab-btn-journal').classList.add('hidden');
             document.getElementById('tab-btn-gallery').classList.add('hidden');
             document.getElementById('tab-btn-monthly').classList.add('hidden');
+            const goalsTabBtn = document.getElementById('tab-btn-goals');
+            if (goalsTabBtn) goalsTabBtn.classList.add('hidden');
             document.getElementById('tab-btn-balance-history').classList.toggle('hidden', mode !== 'real');
             updateBalanceHistoryTabVisibility();
             btnNewTrade.style.display = 'none'; 
@@ -1367,6 +1369,9 @@ const initialTrades = [];
             
             await saveToStorage();
             renderGroups();
+            if ((currentMode === 'real' && activeRealAccountId) || (currentMode === 'backtesting' && activeSessionId)) {
+                renderAll();
+            }
             closeSessionModal(); 
             showToast(currentMode === 'real' ? (isEdit ? "Cuenta actualizada" : "Cuenta creada") : (isEdit ? "Sesión actualizada" : "Sesión creada"));
             if (mt5MappingChanged) await mt5ProcessInboxPersisted();
@@ -1403,6 +1408,7 @@ const initialTrades = [];
             document.getElementById('tab-btn-journal').classList.remove('hidden');
             document.getElementById('tab-btn-gallery').classList.remove('hidden');
             document.getElementById('tab-btn-monthly').classList.remove('hidden');
+            updateGoalsTabVisibility();
             document.getElementById('btn-new-trade').style.display = 'flex';
             
             const list = currentMode === 'real' ? realAccounts : backtestSessions;
@@ -3528,6 +3534,57 @@ const initialTrades = [];
             return realAccounts.find(item => String(item.id) === String(activeRealAccountId)) || null;
         }
 
+        function hasActiveAccountGoals() {
+            if (isGlobalMetricsView) return false;
+            if (currentMode === "backtesting") {
+                const session = getActiveFondeoSession();
+                return Boolean(session && session.fondeo && session.fondeo.enabled);
+            }
+            const account = getActiveGoalAccount();
+            if (!account) return false;
+            const stage = getAccountStage(account);
+            const goals = getAccountGoalConfig(account);
+            const rules = getAccountRulesStatus(account);
+            const rulesEnabled = Boolean(
+                (rules.consistency && rules.consistency.enabled) ||
+                (rules.tradingDays && rules.tradingDays.enabled) ||
+                (rules.profitableDays && rules.profitableDays.enabled) ||
+                (rules.dailyLoss && rules.dailyLoss.enabled)
+            );
+
+            if (stage === "prueba") {
+                const p = goals.prueba || {};
+                return Boolean((p.targetPct && p.targetPct > 0) || (p.maxDDPct && p.maxDDPct > 0) || rulesEnabled);
+            }
+            if (stage === "real") {
+                const r = goals.real || {};
+                return Boolean(r.value && r.value > 0);
+            }
+            if (stage === "fondeada") {
+                const f = goals.fondeada || {};
+                return Boolean((f.splitPct && f.splitPct > 0) || (f.minWithdrawal && f.minWithdrawal > 0) || rulesEnabled);
+            }
+            if (stage === "instant") {
+                const i = goals.instant || {};
+                return Boolean((i.splitPct && i.splitPct > 0) || (i.minWithdrawal && i.minWithdrawal > 0) || (i.maxDDPct && i.maxDDPct > 0) || rulesEnabled);
+            }
+            return false;
+        }
+
+        function updateGoalsTabVisibility() {
+            const btn = document.getElementById("tab-btn-goals");
+            if (!btn) return;
+            const isInsideAccount = currentMode === "backtesting" ? Boolean(activeSessionId) : Boolean(activeRealAccountId);
+            const hasGoals = isInsideAccount && hasActiveAccountGoals();
+            btn.classList.toggle("hidden", !hasGoals);
+
+            // Si el usuario está parado en Metas pero la cuenta no tiene metas fijadas, redirigir al dashboard
+            const sectionGoals = document.getElementById("section-goals");
+            if (!hasGoals && sectionGoals && !sectionGoals.classList.contains("hidden")) {
+                switchTab("dashboard");
+            }
+        }
+
         function renderAccountGoalPanel() {
             const panel = document.getElementById("account-goal-panel");
             if (!panel) return;
@@ -4031,13 +4088,18 @@ const initialTrades = [];
         }
 
         function switchTab(tab) {
+            if (tab === "goals" && !hasActiveAccountGoals()) {
+                showToast("Esta cuenta no tiene metas configuradas", true);
+                switchTab("dashboard");
+                return;
+            }
             if (tab === "balance-history" && !isBalanceHistoryTabVisible()) {
                 showToast(currentMode !== "real" ? "El seguimiento de balances solo está disponible en cuentas reales" : "El seguimiento de balances es global: volvé a Cuentas Reales para verlo", true);
                 switchTab("sessions");
                 return;
             }
             if (tab === 'sessions' && isGlobalMetricsView) setGlobalMetricsView(false);
-            ['sessions', 'balance-history', 'dashboard', 'journal', 'gallery', 'monthly'].forEach(t => {
+            ['sessions', 'balance-history', 'dashboard', 'goals', 'journal', 'gallery', 'monthly'].forEach(t => {
                 document.getElementById(`section-${t}`).classList.add('hidden');
                 const btn = document.getElementById(`tab-btn-${t}`);
                 if (btn) {
@@ -4978,6 +5040,7 @@ function renderMonthlyPerformance() {
             renderTable(); renderGallery(); updateMetricsAndCharts(); renderMonthlyPerformance();
             renderFondeoPanel();
             renderAccountGoalPanel();
+            updateGoalsTabVisibility();
             updateLatestMultiEntryButton();
         }
 
