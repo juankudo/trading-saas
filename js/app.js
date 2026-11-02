@@ -7244,6 +7244,11 @@ function renderMonthlyPerformance() {
         let currentDailyAnalysisTrades = [];
         let currentDailyAnalysisIndex = 0;
 
+        function formatSignedDollar(amount) {
+            const abs = Math.abs(amount).toFixed(2);
+            return amount > 0.001 ? `+$${abs}` : (amount < -0.001 ? `-$${abs}` : `$0.00`);
+        }
+
         function renderDailyCalendar() {
             const section = document.getElementById("section-calendar");
             if (!section) return;
@@ -7251,6 +7256,8 @@ function renderMonthlyPerformance() {
             const monthSelect = document.getElementById("dailyCalendarMonth");
             const yearSelect = document.getElementById("dailyCalendarYear");
             const gridContainer = document.getElementById("daily-calendar-grid");
+            const titleEl = document.getElementById("dailyCalendarTitle");
+            const summaryEl = document.getElementById("dailyCalendarMonthSummary");
             if (!monthSelect || !yearSelect || !gridContainer) return;
 
             const now = new Date();
@@ -7276,15 +7283,39 @@ function renderMonthlyPerformance() {
             dailyCalendarSelectedYear = year;
             dailyCalendarSelectedMonth = month;
 
+            // Actualizar título con el mes y año completos
+            if (titleEl && monthNames[month]) {
+                titleEl.textContent = `${monthNames[month]} ${year}`;
+            }
+
             // Trades resueltos de la cuenta activa
             const allTrades = getBaseTrades().filter(t => isResolvedTrade(t) && t.fecha);
             const initialBalance = getActiveInitialBalance();
 
             const tradesByDate = {};
+            let monthTotalTrades = 0;
+            let monthNetPct = 0;
+
             allTrades.forEach(t => {
+                const d = new Date(t.fecha + "T00:00:00");
+                if (!Number.isNaN(d.getTime()) && d.getFullYear() === year && d.getMonth() === month) {
+                    monthTotalTrades++;
+                    monthNetPct += getTradeOutcome(t);
+                }
                 if (!tradesByDate[t.fecha]) tradesByDate[t.fecha] = [];
                 tradesByDate[t.fecha].push(t);
             });
+
+            // Resumen superior del mes
+            if (summaryEl) {
+                if (monthTotalTrades > 0) {
+                    const monthNetDollar = initialBalance * (monthNetPct / 100);
+                    const netColor = monthNetPct > 0 ? "text-emerald-400" : (monthNetPct < 0 ? "text-red-400" : "text-gray-300");
+                    summaryEl.innerHTML = `Retorno: <strong class="${netColor} font-mono">${formatSignedDollar(monthNetDollar)} (${monthNetPct >= 0 ? '+' : ''}${monthNetPct.toFixed(2)}%)</strong> · <span class="text-gray-400 font-normal">${monthTotalTrades} ops</span>`;
+                } else {
+                    summaryEl.innerHTML = `<span class="text-gray-500 font-normal text-xs">Sin operaciones en este mes</span>`;
+                }
+            }
 
             // Cálculos del calendario ISO (Lunes=0 ... Domingo=6)
             const firstDay = new Date(year, month, 1);
@@ -7334,15 +7365,15 @@ function renderMonthlyPerformance() {
                     const isToday = isCurrentMonth && now.getFullYear() === year && now.getMonth() === month && now.getDate() === dayNum;
 
                     let dayContentHtml = "";
-                    let dayCellClasses = "daily-day-cell rounded-lg p-1.5 sm:p-2 flex flex-col justify-between transition-all relative overflow-hidden ";
+                    let dayCellClasses = "daily-day-cell rounded-lg flex flex-col justify-between transition-all relative overflow-hidden ";
 
                     if (!isCurrentMonth) {
                         dayCellClasses += "bg-[#0b0e14]/40 border border-gray-900/60 opacity-30 select-none";
                         dayContentHtml = `
-                            <div class="flex justify-between items-start">
-                                <span class="text-[11px] font-semibold text-gray-600">${dayNum}</span>
+                            <div class="flex justify-between items-start leading-none">
+                                <span class="text-[10px] sm:text-[11px] font-semibold text-gray-600">${dayNum}</span>
                             </div>
-                            <div></div>
+                            <div class="flex-grow"></div>
                         `;
                     } else if (dayTrades.length > 0) {
                         const netPct = dayTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
@@ -7365,30 +7396,27 @@ function renderMonthlyPerformance() {
 
                         dayCellClasses += "bg-[#111622] border border-gray-800 shadow-sm";
                         dayContentHtml = `
-                            <div class="flex justify-between items-center mb-1">
-                                <span class="text-[11px] font-bold ${isToday ? 'text-amber-400' : 'text-gray-300'}">${dayNum}</span>
-                                ${isToday ? '<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                            <div class="flex justify-between items-center leading-none mb-0.5">
+                                <span class="text-[10px] sm:text-[11px] font-bold ${isToday ? 'text-amber-400' : 'text-gray-300'}">${dayNum}</span>
+                                ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
                             </div>
-                            <div onclick="openDailyTradeAnalysis('${dateKey}')" title="Ver análisis de ${dayTrades.length} operaciones del ${dayNum}" class="flex-grow flex flex-col justify-center items-center rounded-md p-1 border cursor-pointer transition-all hover:scale-[1.02] ${cardBg}">
-                                <div class="font-mono font-bold text-xs sm:text-sm tracking-tight ${textDollarColor}">
-                                    ${netDollar >= 0 ? '+' : ''}$${netDollar.toFixed(2)}
+                            <div onclick="openDailyTradeAnalysis('${dateKey}')" title="Ver análisis de ${dayTrades.length} operaciones del ${dayNum}" class="flex-grow min-h-0 flex flex-col justify-center items-center rounded p-1 border cursor-pointer transition-all hover:scale-[1.02] ${cardBg}">
+                                <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${textDollarColor}">
+                                    ${formatSignedDollar(netDollar)}
                                 </div>
-                                <div class="text-[10px] sm:text-[11px] font-semibold mt-0.5 ${textPctColor}">
-                                    ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}%
-                                </div>
-                                <div class="text-[9px] text-gray-400 mt-0.5">
-                                    ${dayTrades.length} ${dayTrades.length === 1 ? 'op' : 'ops'}
+                                <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${textPctColor} mt-0.5">
+                                    ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}% · ${dayTrades.length} ops
                                 </div>
                             </div>
                         `;
                     } else {
                         dayCellClasses += "bg-[#0d1117] border border-gray-800/80";
                         dayContentHtml = `
-                            <div class="flex justify-between items-start">
-                                <span class="text-[11px] font-semibold ${isToday ? 'text-amber-400 font-bold' : 'text-gray-500'}">${dayNum}</span>
-                                ${isToday ? '<span class="text-[9px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                            <div class="flex justify-between items-start leading-none">
+                                <span class="text-[10px] sm:text-[11px] font-semibold ${isToday ? 'text-amber-400 font-bold' : 'text-gray-500'}">${dayNum}</span>
+                                ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
                             </div>
-                            <div class="flex-grow flex items-center justify-center text-gray-800 text-xs select-none">·</div>
+                            <div class="flex-grow flex items-center justify-center text-gray-800 text-[10px] select-none">·</div>
                         `;
                     }
 
@@ -7397,7 +7425,7 @@ function renderMonthlyPerformance() {
 
                 const weekNum = w + 1;
                 let weekNetHtml = "";
-                let weekCardClasses = "daily-week-card rounded-lg p-2 flex flex-col justify-between border ";
+                let weekCardClasses = "daily-week-card rounded-lg flex flex-col justify-between border ";
 
                 if (weekTrades.length > 0) {
                     const weekNetPct = weekTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
@@ -7421,28 +7449,25 @@ function renderMonthlyPerformance() {
 
                     weekCardClasses += weekBorder;
                     weekNetHtml = `
-                        <div>
-                            <span class="text-[11px] font-bold text-gray-300">Semana ${weekNum}</span>
+                        <div class="leading-none mb-0.5">
+                            <span class="text-[10px] sm:text-[11px] font-bold text-gray-300">Semana ${weekNum}</span>
                         </div>
-                        <div class="mt-1">
-                            <div class="font-mono font-bold text-xs sm:text-sm ${weekDollarColor}">
-                                ${weekNetDollar >= 0 ? '+' : ''}$${weekNetDollar.toFixed(2)}
+                        <div class="flex-grow min-h-0 flex flex-col justify-center">
+                            <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${weekDollarColor}">
+                                ${formatSignedDollar(weekNetDollar)}
                             </div>
-                            <div class="text-[10px] font-medium ${weekPctColor}">
-                                ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}%
-                            </div>
-                            <div class="text-[9px] text-gray-500">
-                                ${weekTrades.length} ops
+                            <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${weekPctColor} mt-0.5">
+                                ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}% · ${weekTrades.length} ops
                             </div>
                         </div>
                     `;
                 } else {
                     weekCardClasses += "border-gray-800 bg-[#0d1117]";
                     weekNetHtml = `
-                        <div>
-                            <span class="text-[11px] font-bold text-gray-400">Semana ${weekNum}</span>
+                        <div class="leading-none">
+                            <span class="text-[10px] sm:text-[11px] font-bold text-gray-400">Semana ${weekNum}</span>
                         </div>
-                        <div class="text-xs text-gray-600 font-bold">—</div>
+                        <div class="text-xs text-gray-600 font-bold leading-none">—</div>
                     `;
                 }
 
@@ -7485,7 +7510,8 @@ function renderMonthlyPerformance() {
         function fitDailyCalendarGrid() {
             const section = document.getElementById("section-calendar");
             const wrapper = document.getElementById("daily-calendar-wrapper");
-            if (!section || !wrapper || section.classList.contains("hidden")) return;
+            const gridContainer = document.getElementById("daily-calendar-grid");
+            if (!section || !wrapper || !gridContainer || section.classList.contains("hidden")) return;
 
             if (!window.matchMedia("(min-width: 1024px)").matches) {
                 wrapper.style.removeProperty("height");
@@ -7493,8 +7519,8 @@ function renderMonthlyPerformance() {
             }
 
             const wrapperTop = wrapper.getBoundingClientRect().top + window.scrollY;
-            const bottomReserve = 36;
-            const availableHeight = Math.max(380, document.documentElement.clientHeight - wrapperTop - bottomReserve);
+            const bottomReserve = 32;
+            const availableHeight = Math.max(420, document.documentElement.clientHeight - wrapperTop - bottomReserve);
             wrapper.style.height = `${availableHeight}px`;
         }
 
@@ -7527,7 +7553,7 @@ function renderMonthlyPerformance() {
             }
             if (summaryEl) {
                 const netColor = dayTotalPct > 0 ? 'text-emerald-400' : (dayTotalPct < 0 ? 'text-red-400' : 'text-gray-300');
-                summaryEl.innerHTML = `Total del día: <strong class="${netColor} font-mono">${dayTotalDollar >= 0 ? '+' : ''}$${dayTotalDollar.toFixed(2)} (${dayTotalPct >= 0 ? '+' : ''}${dayTotalPct.toFixed(2)}%)</strong> · ${allTrades.length} ${allTrades.length === 1 ? 'operación' : 'operaciones'}`;
+                summaryEl.innerHTML = `Total del día: <strong class="${netColor} font-mono">${formatSignedDollar(dayTotalDollar)} (${dayTotalPct >= 0 ? '+' : ''}${dayTotalPct.toFixed(2)}%)</strong> · ${allTrades.length} ${allTrades.length === 1 ? 'operación' : 'operaciones'}`;
             }
 
             const tabsContainer = document.getElementById("dailyAnalysisNavTabs");
@@ -7542,7 +7568,7 @@ function renderMonthlyPerformance() {
                         const activeClasses = idx === 0 ? 'bg-gray-800 border-gray-600 text-white font-bold' : 'bg-gray-900 border-main text-gray-400 hover:text-white';
                         return `<button onclick="selectDailyAnalysisTrade(${idx})" id="daily-tab-btn-${idx}" class="daily-analysis-tab px-3 py-1 rounded-lg border text-xs flex items-center gap-1.5 transition ${activeClasses}">
                             <span>${t.par || 'Trade'}</span>
-                            <span class="font-mono font-semibold ${badgeColor}">${outDollar >= 0 ? '+' : ''}$${outDollar.toFixed(1)}</span>
+                            <span class="font-mono font-semibold ${badgeColor}">${formatSignedDollar(outDollar)}</span>
                         </button>`;
                     }).join("");
                 } else {
@@ -7602,7 +7628,7 @@ function renderMonthlyPerformance() {
                     <div class="flex items-center gap-3">
                         <span class="text-xs text-gray-400">R:R: <strong class="text-white">${t.rr || '1:1'}</strong></span>
                         <div class="font-mono font-bold px-3 py-1 rounded-lg border ${badgeColor}">
-                            ${outcomeDollar >= 0 ? '+' : ''}$${outcomeDollar.toFixed(2)} (${outcomePct >= 0 ? '+' : ''}${outcomePct.toFixed(2)}%)
+                            ${formatSignedDollar(outcomeDollar)} (${outcomePct >= 0 ? '+' : ''}${outcomePct.toFixed(2)}%)
                         </div>
                     </div>
                 </div>

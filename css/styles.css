@@ -1810,17 +1810,21 @@ button, a, input, select, textarea {
         .daily-calendar-section { max-width: 1540px; }
         .daily-calendar-layout { display: flex; flex-direction: column; gap: 0.75rem; }
         .daily-calendar-sidebar { width: 100%; }
-        .daily-calendar-wrapper { min-height: 480px; }
+        .daily-calendar-wrapper {
+            min-height: 0;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
 
         @media (min-width: 1024px) {
             .daily-calendar-layout {
                 display: grid;
-                grid-template-columns: 120px minmax(0, 1fr);
+                grid-template-columns: 148px minmax(0, 1fr);
                 align-items: stretch;
                 gap: 1rem;
             }
             .daily-calendar-sidebar {
-                width: 120px;
+                width: 148px;
                 height: 100%;
             }
             .daily-calendar-wrapper {
@@ -1829,14 +1833,31 @@ button, a, input, select, textarea {
             }
         }
 
-        .daily-week-card {
+        .daily-calendar-grid {
             min-height: 0;
+            display: grid;
+            --daily-gap: clamp(0.25rem, 0.6vh, 0.5rem);
+            gap: var(--daily-gap);
+        }
+
+        .daily-calendar-row {
+            min-height: 48px;
+            height: 100%;
             box-sizing: border-box;
         }
 
-        .daily-day-cell {
-            min-height: 0;
+        .daily-week-card {
+            min-height: 48px;
+            height: 100%;
             box-sizing: border-box;
+            padding: clamp(0.2rem, 0.5vh, 0.4rem);
+        }
+
+        .daily-day-cell {
+            min-height: 48px;
+            height: 100%;
+            box-sizing: border-box;
+            padding: clamp(0.2rem, 0.5vh, 0.35rem);
         }
 
         /* Modo Claro para Calendario */

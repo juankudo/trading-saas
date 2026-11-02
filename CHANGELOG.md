@@ -5,6 +5,21 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.1] - 2026-11-02
+
+### 🛠️ Corrección y Optimización Visual: Calendario Diario
+- **Ajuste Completo de Días y Semanas (Sin Pérdida de Datos):**
+  - Se rediseñó la geometría de las celdas y filas semanales con alturas compactas (`min-height: 48px`, márgenes e interlineados optimizados), permitiendo que meses de 5 semanas (como Octubre) y meses de 6 semanas (como Noviembre) quepan íntegramente en la pantalla.
+  - Se eliminó el recorte forzado (`overflow: hidden`) y se agregó resguardo con desplazamiento seguro (`overflow-y: auto`) para que ninguna operación o día quede oculto bajo ninguna resolución.
+- **Corrección de Truncamiento en Nombres de Meses:**
+  - Se amplió el ancho del panel lateral a `148px` para que nombres largos como *"Noviembre"* y *"Septiembre"* se visualicen sin cortes en el selector.
+- **Barra Superior de Título y Métricas Mensuales:**
+  - Incorporado en la cabecera del calendario el nombre del mes y año en curso (*ej. Noviembre 2026*) junto a un resumen con retorno total monetario ($), porcentaje neto (%) y total de operaciones del mes.
+- **Corrección de Formato Monetario Negativo:**
+  - Implementado `formatSignedDollar()` para que las pérdidas muestren la convención estándar `-$25.00` en lugar de `$-25.00`.
+
+---
+
 ## [v3.4.0] - 2026-11-02
 
 ### 📅 Nueva Sección: Calendario Diario (Estilo TradeZella)
