@@ -4788,30 +4788,24 @@ const initialTrades = [];
 
             grid.style.removeProperty("width");
             grid.style.removeProperty("height");
-            grid.style.removeProperty("min-height");
             grid.style.removeProperty("aspect-ratio");
             if (!window.matchMedia("(min-width: 1024px)").matches) {
                 return;
             }
 
-            const gridRect = grid.getBoundingClientRect();
-            const gridTop = gridRect.top;
-            const bottomReserve = 20;
-            const availableHeight = Math.max(300, window.innerHeight - gridTop - bottomReserve);
-            const calendarRatio = 2.2;
-
-            const parentWidth = grid.parentElement ? grid.parentElement.getBoundingClientRect().width - 120 : 1350;
-            const availableWidth = Math.min(parentWidth, 1350);
+            const availableWidth = Math.min(grid.getBoundingClientRect().width, 1400);
+            const gridTop = grid.getBoundingClientRect().top + window.scrollY;
+            const bottomReserve = 48;
+            const availableHeight = Math.max(0, document.documentElement.clientHeight - gridTop - bottomReserve);
+            const calendarRatio = 2.05;
             const width = Math.min(availableWidth, availableHeight * calendarRatio);
-            const height = Math.min(availableHeight, width / calendarRatio);
 
             grid.style.width = `${width}px`;
-            grid.style.height = `${height}px`;
-            grid.style.minHeight = "0";
+            grid.style.height = `${width / calendarRatio}px`;
             grid.style.aspectRatio = "auto";
         }
 
-        function renderMonthlyPerformance() {
+function renderMonthlyPerformance() {
             const yearSelect = document.getElementById("monthlyYear");
             if (!yearSelect) return;
             const previousYear = yearSelect.value;
@@ -4899,49 +4893,49 @@ const initialTrades = [];
                 const bestDayLabel = bestDay ? new Date(bestDay.date + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "—";
                 const bestSessionName = bestSession ? escapeGalleryHtml(bestSession.name) : "—";
                 const bestSessionRate = bestSession && bestSession.stats.total ? (bestSession.stats.wins / bestSession.stats.total) * 100 : 0;
-                                return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col justify-between ${cardTone} border rounded-xl p-2 sm:p-2.5 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
+                return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col ${cardTone} border rounded-xl p-4 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
 
-                    <div class="flex min-h-5 items-center justify-between gap-1 mb-0.5">
-                        <h3 class="whitespace-nowrap text-sm sm:text-base font-bold text-white">${month.name}</h3>
+                    <div class="flex min-h-6 items-start justify-between gap-2">
+                        <h3 class="whitespace-nowrap text-lg font-bold text-white">${month.name}</h3>
                         <div class="flex max-w-[55%] flex-wrap justify-end gap-1">${badges}</div>
                     </div>
-                    <div class="monthly-primary-metrics grid grid-cols-2 gap-x-2 gap-y-0.5 border-t border-gray-800/80 pt-1">
+                    <div class="monthly-primary-metrics mt-auto grid grid-cols-2 gap-x-3 gap-y-1.5 border-t border-gray-800 pt-2">
                         <div class="min-w-0">
-                            <p class="text-[9px] sm:text-[10px] uppercase tracking-wide text-gray-400 font-medium">Retorno</p>
-                            <p class="monthly-primary-value truncate text-base sm:text-lg font-bold ${netColor}">${netValue}</p>
+                            <p class="text-xs uppercase tracking-wide text-gray-400">Retorno</p>
+                            <p class="monthly-primary-value truncate text-2xl font-bold ${netColor}">${netValue}</p>
                         </div>
                         <div class="min-w-0 text-right">
-                            <p class="text-[9px] sm:text-[10px] uppercase tracking-wide text-gray-400 font-medium">Efectividad</p>
-                            <p class="text-sm sm:text-base font-bold text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
+                            <p class="text-xs uppercase tracking-wide text-gray-400">Efectividad</p>
+                            <p class="text-lg font-bold text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
                         </div>
-                        <div class="flex items-center justify-between gap-1 text-[11px] text-gray-400 pt-0.5">
+                        <div class="flex items-center justify-between gap-1 text-sm text-gray-300">
                             <span>Operaciones</span><strong class="text-gray-200">${month.total}</strong>
                         </div>
-                        <div class="flex items-center justify-end gap-1.5 text-[11px] text-gray-400 pt-0.5">
+                        <div class="flex items-center justify-end gap-2 text-sm text-gray-300">
                             <span>PF</span><strong class="${profitFactor === null ? "text-gray-400" : "text-gray-200"}">${profitFactorLabel}</strong>
                         </div>
                     </div>
-                    <div class="monthly-month-details text-xs text-gray-300">
-                        <div class="grid grid-cols-2 gap-1.5">
-                            <div class="rounded-lg border border-gray-700/80 bg-gray-950/95 p-1.5 sm:p-2">
-                                <span class="block text-[9px] sm:text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Mejor trade</span>
-                                <strong class="block truncate text-xs sm:text-sm ${bestTradeColor}">${bestTradeValue}</strong>
-                                <span class="block truncate text-[9px] sm:text-[10px] text-gray-400">${bestTradeDate ? `${bestTradeAsset}${bestTradeDate} · ${escapeGalleryHtml(month.bestTrade.trade.estado || "")}` : "Sin operaciones"}</span>
+                    <div class="monthly-month-details text-sm text-gray-300">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Mejor trade</span>
+                                <strong class="block truncate text-base ${bestTradeColor}">${bestTradeValue}</strong>
+                                <span class="block truncate text-xs text-gray-400">${bestTradeDate ? `${bestTradeAsset}${bestTradeDate} · ${escapeGalleryHtml(month.bestTrade.trade.estado || "")}` : "Sin operaciones"}</span>
                             </div>
-                            <div class="rounded-lg border border-gray-700/80 bg-gray-950/95 p-1.5 sm:p-2">
-                                <span class="block text-[9px] sm:text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Mejor día</span>
-                                <strong class="block truncate text-xs sm:text-sm ${bestDay && bestDay.stats.netPct < 0 ? "text-red-300" : "text-emerald-300"}">${bestDay ? formatPct(bestDay.stats.netPct) : "—"}</strong>
-                                <span class="block truncate text-[9px] sm:text-[10px] text-gray-400">${bestDay ? `${bestDayLabel} · ${bestDay.stats.total} ops` : "Sin operaciones"}</span>
+                            <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Mejor día</span>
+                                <strong class="block truncate text-base ${bestDay && bestDay.stats.netPct < 0 ? "text-red-300" : "text-emerald-300"}">${bestDay ? formatPct(bestDay.stats.netPct) : "—"}</strong>
+                                <span class="block truncate text-xs text-gray-400">${bestDay ? `${bestDayLabel} · ${bestDay.stats.total} ops` : "Sin operaciones"}</span>
                             </div>
-                            <div class="rounded-lg border border-gray-700/80 bg-gray-950/95 p-1.5 sm:p-2">
-                                <span class="block text-[9px] sm:text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Mejor sesión</span>
-                                <strong class="block truncate text-xs sm:text-sm text-indigo-200">${bestSessionName}</strong>
-                                <span class="block truncate text-[9px] sm:text-[10px] text-gray-400">${bestSession ? `${formatPct(bestSession.stats.netPct)} · ${bestSessionRate.toFixed(0)}% efect.` : "Sin operaciones"}</span>
+                            <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Mejor sesión</span>
+                                <strong class="block truncate text-base text-indigo-200">${bestSessionName}</strong>
+                                <span class="block truncate text-xs text-gray-400">${bestSession ? `${formatPct(bestSession.stats.netPct)} · ${bestSessionRate.toFixed(0)}% efect.` : "Sin operaciones"}</span>
                             </div>
-                            <div class="rounded-lg border border-gray-700/80 bg-gray-950/95 p-1.5 sm:p-2">
-                                <span class="block text-[9px] sm:text-[10px] uppercase tracking-wide text-gray-400 font-semibold">Distribución</span>
-                                <strong class="block truncate text-xs sm:text-sm"><span class="text-emerald-400">${month.wins}G</span> / <span class="text-red-400">${month.losses}P</span> / <span class="text-amber-300">${month.breakeven}BE</span></strong>
-                                <span class="block truncate text-[9px] sm:text-[10px] text-gray-400">${month.total} operaciones cerradas</span>
+                            <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Distribución</span>
+                                <strong class="block truncate text-base"><span class="text-emerald-400">${month.wins}G</span> / <span class="text-red-400">${month.losses}P</span> / <span class="text-amber-300">${month.breakeven}BE</span></strong>
+                                <span class="block truncate text-xs text-gray-400">${month.total} operaciones cerradas</span>
                             </div>
                         </div>
                     </div>
