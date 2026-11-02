@@ -1795,3 +1795,11 @@ button, a, input, select, textarea {
             background-color: #059669 !important;
             color: #ffffff !important;
         }
+
+        /* Tarjeta de Objetivos y Distribución */
+        html.light .target-mini-card { background-color: #f1f5f9; border-color: #cbd5e1; }
+        html.light #target-stat-ops,
+        html.light #target-count-win,
+        html.light #target-count-be,
+        html.light #target-count-loss { color: #0f172a; }
+        html.light #target-dist-bar { background-color: #e2e8f0; }

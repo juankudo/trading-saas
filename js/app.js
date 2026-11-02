@@ -4782,6 +4782,76 @@ const initialTrades = [];
             document.getElementById("kpi-best-trade").textContent = bestPct !== -Infinity ? "+" + bestPct.toFixed(2) + "%" : "0.00%";
             document.getElementById("kpi-worst-trade").textContent = worstPct !== Infinity ? "Peor: " + worstPct.toFixed(2) + "%" : "Peor: 0.00%";
 
+            // --- ACTUALIZACIÓN DE TARJETA: OBJETIVOS ALCANZADOS & DISTRIBUCIÓN ---
+            let tp1Count = 0, tp2Count = 0, tp3Count = 0, slCount = 0;
+            activeTrades.forEach(t => {
+                const outcome = getTradeOutcome(t);
+                const isLoss = outcome < -0.001 || t.estado === "SL";
+                const isWin = outcome > 0.001 || t.estado === "Full TP" || (t.estado === "Parcial" && outcome > 0);
+                if (isLoss) {
+                    slCount++;
+                } else if (isWin) {
+                    tp1Count++;
+                    const r = parseFloat(t.riesgo) || 1.0;
+                    const effR = r > 0 ? (outcome / r) : (parseFloat(t.rr) || 1.0);
+                    const rawRR = parseFloat(t.rr) || 0;
+                    const effVal = Math.max(effR, rawRR);
+                    if (effVal >= 1.8) tp2Count++;
+                    if (effVal >= 2.8) tp3Count++;
+                }
+            });
+
+            const totalResolved = activeTrades.length;
+            const winPct = totalResolved > 0 ? (wins / totalResolved) * 100 : 0;
+            const bePct = totalResolved > 0 ? (breakeven / totalResolved) * 100 : 0;
+            const lossPct = totalResolved > 0 ? (losses / totalResolved) * 100 : 0;
+
+            const tp1Pct = totalResolved > 0 ? Math.round((tp1Count / totalResolved) * 100) : 0;
+            const tp2Pct = totalResolved > 0 ? Math.round((tp2Count / totalResolved) * 100) : 0;
+            const tp3Pct = totalResolved > 0 ? Math.round((tp3Count / totalResolved) * 100) : 0;
+            const slPct = totalResolved > 0 ? Math.round((slCount / totalResolved) * 100) : 0;
+
+            const elTargetOps = document.getElementById("target-stat-ops");
+            const elTargetPf = document.getElementById("target-stat-pf");
+            const elTargetRr = document.getElementById("target-stat-rr");
+            if (elTargetOps) elTargetOps.textContent = totalResolved;
+            if (elTargetPf) {
+                elTargetPf.textContent = profitFactor === null ? "—" : (Number.isFinite(profitFactor) ? profitFactor.toFixed(2) : "∞");
+            }
+            if (elTargetRr) elTargetRr.textContent = `1:${avgRR.toFixed(2)}`;
+
+            const barWin = document.getElementById("target-bar-win");
+            const barBe = document.getElementById("target-bar-be");
+            const barLoss = document.getElementById("target-bar-loss");
+            if (barWin) barWin.style.width = `${winPct}%`;
+            if (barBe) barBe.style.width = `${bePct}%`;
+            if (barLoss) barLoss.style.width = `${lossPct}%`;
+
+            const cntWin = document.getElementById("target-count-win");
+            const cntBe = document.getElementById("target-count-be");
+            const cntLoss = document.getElementById("target-count-loss");
+            if (cntWin) cntWin.textContent = wins;
+            if (cntBe) cntBe.textContent = breakeven;
+            if (cntLoss) cntLoss.textContent = losses;
+
+            const bTp1 = document.getElementById("target-bar-tp1");
+            const bTp2 = document.getElementById("target-bar-tp2");
+            const bTp3 = document.getElementById("target-bar-tp3");
+            const bSl = document.getElementById("target-bar-sl");
+            if (bTp1) bTp1.style.width = `${tp1Pct}%`;
+            if (bTp2) bTp2.style.width = `${tp2Pct}%`;
+            if (bTp3) bTp3.style.width = `${tp3Pct}%`;
+            if (bSl) bSl.style.width = `${slPct}%`;
+
+            const lTp1 = document.getElementById("target-label-tp1");
+            const lTp2 = document.getElementById("target-label-tp2");
+            const lTp3 = document.getElementById("target-label-tp3");
+            const lSl = document.getElementById("target-label-sl");
+            if (lTp1) lTp1.textContent = `${tp1Count} · ${tp1Pct}%`;
+            if (lTp2) lTp2.textContent = `${tp2Count} · ${tp2Pct}%`;
+            if (lTp3) lTp3.textContent = `${tp3Count} · ${tp3Pct}%`;
+            if (lSl) lSl.textContent = `${slCount} · ${slPct}%`;
+
             // Función para renderizar listas en %
             function renderList(dataObj, elementId) {
                 let html = "";

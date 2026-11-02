@@ -319,22 +319,100 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div id="metrics-pair-card" class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 id="metrics-pair-title" class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-400"></i> Efectividad por Activo / Par</h3>
-                    <div id="metrics-pair-list" class="space-y-2 text-sm max-h-64 overflow-y-auto pr-1"></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- RECUADRO: OBJETIVOS ALCANZADOS & DISTRIBUCIÓN -->
+                <div class="lg:col-span-1 bg-card p-5 rounded-xl border border-main shadow flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-teal-400"></i> Objetivos & Distribución
+                        </h3>
+                        
+                        <!-- 3 Mini KPIs -->
+                        <div class="grid grid-cols-3 gap-2.5 mb-5">
+                            <div class="target-mini-card rounded-xl bg-[#0d1117] border border-gray-800 p-2.5 text-center">
+                                <p class="text-[11px] text-gray-400 font-medium">Operaciones</p>
+                                <p id="target-stat-ops" class="text-lg font-bold text-white mt-1">0</p>
+                            </div>
+                            <div class="target-mini-card rounded-xl bg-[#0d1117] border border-gray-800 p-2.5 text-center">
+                                <p class="text-[11px] text-gray-400 font-medium">Profit factor</p>
+                                <p id="target-stat-pf" class="text-lg font-bold text-sky-400 mt-1">—</p>
+                            </div>
+                            <div class="target-mini-card rounded-xl bg-[#0d1117] border border-gray-800 p-2.5 text-center">
+                                <p class="text-[11px] text-gray-400 font-medium">R:R medio</p>
+                                <p id="target-stat-rr" class="text-lg font-bold text-yellow-400 mt-1">1:0.0</p>
+                            </div>
+                        </div>
+
+                        <!-- Distribución -->
+                        <div class="mb-5">
+                            <p class="text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2">Distribución</p>
+                            <div id="target-dist-bar" class="h-2.5 w-full rounded-full bg-gray-800 flex overflow-hidden mb-2.5">
+                                <div id="target-bar-win" style="width: 0%" class="bg-emerald-500 h-full transition-all"></div>
+                                <div id="target-bar-be" style="width: 0%" class="bg-indigo-500 h-full transition-all"></div>
+                                <div id="target-bar-loss" style="width: 0%" class="bg-red-500 h-full transition-all"></div>
+                            </div>
+                            <div class="flex items-center justify-between text-xs font-medium text-gray-300 px-0.5">
+                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block mr-1.5"></span>Ganadas <strong id="target-count-win" class="ml-1 text-white">0</strong></span>
+                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-indigo-400 inline-block mr-1.5"></span>BE <strong id="target-count-be" class="ml-1 text-white">0</strong></span>
+                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block mr-1.5"></span>Perdidas <strong id="target-count-loss" class="ml-1 text-white">0</strong></span>
+                            </div>
+                        </div>
+
+                        <!-- Objetivos alcanzados -->
+                        <div>
+                            <p class="text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2.5">Objetivos alcanzados</p>
+                            <div class="space-y-2.5">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 text-xs font-bold text-teal-400">TP1</span>
+                                    <div class="flex-grow h-2 rounded-full bg-gray-800 overflow-hidden">
+                                        <div id="target-bar-tp1" class="h-full rounded-full bg-teal-400 transition-all" style="width: 0%"></div>
+                                    </div>
+                                    <span id="target-label-tp1" class="w-16 text-right text-xs font-semibold text-gray-300">0 · 0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 text-xs font-bold text-teal-400">TP2</span>
+                                    <div class="flex-grow h-2 rounded-full bg-gray-800 overflow-hidden">
+                                        <div id="target-bar-tp2" class="h-full rounded-full bg-teal-400 transition-all" style="width: 0%"></div>
+                                    </div>
+                                    <span id="target-label-tp2" class="w-16 text-right text-xs font-semibold text-gray-300">0 · 0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 text-xs font-bold text-indigo-400">TP3</span>
+                                    <div class="flex-grow h-2 rounded-full bg-gray-800 overflow-hidden">
+                                        <div id="target-bar-tp3" class="h-full rounded-full bg-indigo-400 transition-all" style="width: 0%"></div>
+                                    </div>
+                                    <span id="target-label-tp3" class="w-16 text-right text-xs font-semibold text-gray-300">0 · 0%</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="w-10 text-xs font-bold text-red-400">SL</span>
+                                    <div class="flex-grow h-2 rounded-full bg-gray-800 overflow-hidden">
+                                        <div id="target-bar-sl" class="h-full rounded-full bg-red-400 transition-all" style="width: 0%"></div>
+                                    </div>
+                                    <span id="target-label-sl" class="w-16 text-right text-xs font-semibold text-gray-300">0 · 0%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-day text-purple-400"></i> Efectividad por Día de Semana</h3>
-                    <div id="metrics-day-list" class="space-y-2 text-sm max-h-64 overflow-y-auto pr-1"></div>
-                </div>
-                <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> Efectividad por Sesión</h3>
-                    <div id="metrics-session-list" class="space-y-2 text-sm max-h-64 overflow-y-auto pr-1"></div>
-                </div>
-                <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-compass text-teal-400"></i> Efectividad por Tendencia</h3>
-                    <div id="metrics-trend-list" class="space-y-2 text-sm max-h-64 overflow-y-auto pr-1"></div>
+
+                <!-- MATRIZ 2x2 DE EFECTIVIDADES -->
+                <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div id="metrics-pair-card" class="bg-card p-5 rounded-xl border border-main shadow">
+                        <h3 id="metrics-pair-title" class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-400"></i> Efectividad por Activo / Par</h3>
+                        <div id="metrics-pair-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
+                    </div>
+                    <div class="bg-card p-5 rounded-xl border border-main shadow">
+                        <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> Efectividad por Sesión</h3>
+                        <div id="metrics-session-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
+                    </div>
+                    <div class="bg-card p-5 rounded-xl border border-main shadow">
+                        <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-compass text-teal-400"></i> Efectividad por Tendencia</h3>
+                        <div id="metrics-trend-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
+                    </div>
+                    <div class="bg-card p-5 rounded-xl border border-main shadow">
+                        <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-day text-purple-400"></i> Efectividad por Día de Semana</h3>
+                        <div id="metrics-day-list" class="space-y-2 text-sm max-h-56 overflow-y-auto pr-1"></div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -5,6 +5,21 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.3.0] - 2026-11-02
+
+### 🎯 Nueva Métrica: Objetivos Alcanzados & Distribución
+- **Recuadro Ejecutivo en Dashboard & Métricas:**
+  - Nueva tarjeta con 3 mini KPIs superiores: *Operaciones*, *Profit factor* y *R:R medio*.
+  - *Distribución*: barra horizontal segmentada tricolor (Ganadas en verde esmeralda, Breakeven en índigo y Pérdidas en rojo) con contadores individuales.
+  - *Objetivos alcanzados*: desglose detallado con barras de progreso e indicadores de porcentaje y conteo para `TP1`, `TP2`, `TP3` y `SL`.
+- **Estructura Reorganizada y Balanceada (3 Columnas + Matriz 2x2):**
+  - La fila previa de 4 tarjetas comprimidas se organizó en una distribución óptima:
+    - 1 Columna para el nuevo recuadro de *Objetivos & Distribución*.
+    - 2 Columnas para una matriz 2×2 con las 4 tarjetas de desglose (*Activo/Par*, *Sesión*, *Tendencia*, *Día de la semana*), aumentando su anchura y confort de lectura sin perder ninguna información ni saturar la pantalla.
+  - Pleno soporte en Modo Oscuro y Modo Claro (`html.light`).
+
+---
+
 ## [v3.2.0] - 2026-11-02
 
 ### 🎯 Nueva Sección Dedicada: Metas
