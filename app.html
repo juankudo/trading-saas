@@ -60,9 +60,6 @@
                 <span class="text-gray-600">/</span>
                 <i class="fa-solid fa-moon theme-toggle-icon theme-icon-moon"></i>
             </button>
-            <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" class="bg-gray-800 hover:bg-rose-950/60 border border-main hover:border-rose-600/60 text-gray-300 hover:text-rose-400 text-sm px-3 py-2 rounded-lg flex items-center gap-1.5 transition" title="Tutoriales Oficiales en YouTube (@tradingjournalpro)">
-                <i class="fa-brands fa-youtube text-rose-500"></i> <span class="hidden md:inline">Tutoriales</span>
-            </a>
             <button onclick="changeBackupFolder()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Selecciona la carpeta donde se guardarán los JSON automáticos">
                 <i class="fa-solid fa-folder-gear text-amber-400"></i> <span id="folder-btn-label">Carpeta JSON</span>
             </button>
@@ -94,13 +91,20 @@
                             <div class="text-[10px] text-gray-400">Recorrido por las pestañas del dashboard</div>
                         </div>
                     </button>
-                    <button onclick="toggleGuideMenu(); openTradeLifecycleGuide();" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-gray-800 flex items-center gap-2.5 transition">
+                    <button onclick="toggleGuideMenu(); openTradeLifecycleGuide();" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-gray-800 flex items-center gap-2.5 border-b border-main/50 transition">
                         <i class="fa-solid fa-graduation-cap text-blue-400 text-sm"></i>
                         <div>
                             <div class="font-bold text-white">Entrada y Post-Análisis</div>
                             <div class="text-[10px] text-gray-400">Cómo registrar la entrada y editar al salir</div>
                         </div>
                     </button>
+                    <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" onclick="toggleGuideMenu()" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-rose-950/40 hover:text-rose-300 flex items-center gap-2.5 transition" title="Ver videos tutoriales en nuestro canal oficial">
+                        <i class="fa-brands fa-youtube text-rose-500 text-sm"></i>
+                        <div>
+                            <div class="font-bold text-white flex items-center gap-1.5">Tutoriales en Video <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-gray-400"></i></div>
+                            <div class="text-[10px] text-gray-400">Canal oficial de YouTube (@tradingjournalpro)</div>
+                        </div>
+                    </a>
                 </div>
             </div>
             <a href="calculadora/index.html" target="_blank" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Abrir Calculadora de Lotaje en nueva pestaña">
