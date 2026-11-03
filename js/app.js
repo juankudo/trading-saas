@@ -373,7 +373,6 @@ const initialTrades = [];
             activeRealAccountId = null; 
             activeAccountGroupId = null;
             activeSessionId = null; 
-            dailyCalendarSessionContextId = null;
             await loadDataForMode();
 
             const btnReal = document.getElementById('btn-mode-real');
@@ -1464,7 +1463,6 @@ const initialTrades = [];
                     backtestSessions.push(newItem);
                 }
                 monthlyCalendarSessionContextId = null;
-                dailyCalendarSessionContextId = null;
             }
             
             await saveToStorage();
@@ -1517,10 +1515,7 @@ const initialTrades = [];
             setGlobalMetricsView(false);
             if (currentMode === 'real') activeRealAccountId = id;
             else activeSessionId = id;
-            if (currentMode === 'backtesting') {
-                monthlyCalendarSessionContextId = null;
-                dailyCalendarSessionContextId = null;
-            }
+            if (currentMode === 'backtesting') monthlyCalendarSessionContextId = null;
             populatePairDropdowns();
 
             document.getElementById('tab-btn-dashboard').classList.remove('hidden');
@@ -2229,10 +2224,6 @@ const initialTrades = [];
             const years = new Set([new Date().getFullYear()]);
             const backtestStartYear = getBacktestStartYear();
             if (backtestStartYear) years.add(backtestStartYear);
-            if (currentMode === "backtesting" && activeSessionId) {
-                const ref = getBacktestSessionReferenceDate(activeSessionId);
-                if (ref?.year) years.add(ref.year);
-            }
             getBaseTrades().forEach(t => {
                 if (!t.fecha) return;
                 const date = new Date(t.fecha + "T00:00:00");
@@ -2269,55 +2260,6 @@ const initialTrades = [];
             }
 
             return isValidDate(session.startDate) ? session.startDate : null;
-        }
-
-        function getBacktestSessionReferenceDate(sessionId = activeSessionId) {
-            if (currentMode !== "backtesting" || !sessionId) return null;
-            const session = backtestSessions.find(item => String(item.id) === String(sessionId));
-            if (!session) return null;
-
-            const isValidDate = value => typeof value === "string" && /^\d{4}-\d{2}-\d{2}$/.test(value);
-
-            // 1. Si hay trades en la sesión, tomar la fecha del último trade hecho
-            const sessionTrades = trades.filter(t => String(t.sessionId) === String(sessionId) && isValidDate(t.fecha));
-            if (sessionTrades.length > 0) {
-                const sorted = [...sessionTrades].sort((a, b) => {
-                    const da = new Date((a.fecha || "") + "T" + (a.hora || "00:00"));
-                    const db = new Date((b.fecha || "") + "T" + (b.hora || "00:00"));
-                    const diff = da.getTime() - db.getTime();
-                    if (!Number.isNaN(diff) && diff !== 0) return diff;
-                    const orderA = Number(a.entryCreatedAt ?? a.createdAt ?? a.id) || 0;
-                    const orderB = Number(b.entryCreatedAt ?? b.createdAt ?? b.id) || 0;
-                    return orderA - orderB;
-                });
-                const lastTrade = sorted[sorted.length - 1];
-                if (lastTrade && isValidDate(lastTrade.fecha)) {
-                    const parts = lastTrade.fecha.split("-").map(Number);
-                    return { year: parts[0], month: parts[1] - 1, dateStr: lastTrade.fecha };
-                }
-            }
-
-            // 2. Si no hay trades, tomar la fecha de inicio o creación de la sesión
-            if (isValidDate(session.startDate)) {
-                const parts = session.startDate.split("-").map(Number);
-                return { year: parts[0], month: parts[1] - 1, dateStr: session.startDate };
-            }
-
-            if (typeof session.id === "number" && session.id > 1000000000000) {
-                const d = new Date(session.id);
-                if (!Number.isNaN(d.getTime())) {
-                    return { year: d.getFullYear(), month: d.getMonth(), dateStr: d.toISOString().split("T")[0] };
-                }
-            }
-
-            if (session.date) {
-                const d = new Date(session.date);
-                if (!Number.isNaN(d.getTime())) {
-                    return { year: d.getFullYear(), month: d.getMonth(), dateStr: d.toISOString().split("T")[0] };
-                }
-            }
-
-            return null;
         }
 
         function getBacktestStartYear() {
@@ -3823,7 +3765,10 @@ const initialTrades = [];
 
         function hasActiveAccountGoals() {
             if (isGlobalMetricsView) return false;
-            if (currentMode === "backtesting") return false;
+            if (currentMode === "backtesting") {
+                const session = getActiveFondeoSession();
+                return Boolean(session && session.fondeo && session.fondeo.enabled);
+            }
             const account = getActiveGoalAccount();
             if (!account) return false;
             const stage = getAccountStage(account);
@@ -4449,9 +4394,6 @@ const initialTrades = [];
             if (tab === 'sessions' && groupBalanceChartInstance) {
                 requestAnimationFrame(() => { if (groupBalanceChartInstance) groupBalanceChartInstance.resize(); });
             }
-            if (tab === 'dashboard' && currentMode === 'backtesting') {
-                renderFondeoPanel();
-            }
             currentTabName = tab;
             updateBalanceHistoryTabVisibility();
             updateGoalsTabVisibility();
@@ -4903,7 +4845,6 @@ const initialTrades = [];
                 if (allCopiesSelected) latestGroupMembers.forEach(trade => { trade.multiEntryEditCompleted = true; });
             }
 
-            if (currentMode === 'backtesting') dailyCalendarSessionContextId = null;
             await saveToStorage();
             closeTradeModal();
             showToast(wasGlobalTradeContext
@@ -4919,7 +4860,6 @@ const initialTrades = [];
             if (confirm("¿Estás seguro de eliminar esta operación?")) {
                 const removedTrade = trades.find(trade => String(trade.id) === String(id));
                 trades = trades.filter(t => t.id !== id);
-                if (currentMode === 'backtesting') dailyCalendarSessionContextId = null;
                 addMt5TombstoneFromTrade(removedTrade);
                 await saveMt5Runtime();
                 if (typeof deleteFromCloud === "function") deleteFromCloud("trade", id);
@@ -5274,13 +5214,13 @@ function renderMonthlyPerformance() {
             const yearSelect = document.getElementById("monthlyYear");
             if (!yearSelect) return;
             const previousYear = yearSelect.value;
-            const backtestRef = currentMode === "backtesting" ? getBacktestSessionReferenceDate(activeSessionId) : null;
-            const backtestSessionContextId = backtestRef ? String(activeSessionId) : null;
-            const shouldUseBacktestStartYear = Boolean(backtestRef) && monthlyCalendarSessionContextId !== backtestSessionContextId;
+            const backtestStartDate = currentMode === "backtesting" ? getBacktestStartDate() : null;
+            const backtestSessionContextId = backtestStartDate ? String(activeSessionId) : null;
+            const shouldUseBacktestStartYear = Boolean(backtestStartDate) && monthlyCalendarSessionContextId !== backtestSessionContextId;
             const years = getAvailableYears();
             yearSelect.innerHTML = years.map(year => `<option value="${year}">${year}</option>`).join("");
             yearSelect.value = shouldUseBacktestStartYear
-                ? String(backtestRef.year)
+                ? String(backtestStartDate.getFullYear())
                 : (years.includes(parseInt(previousYear, 10)) ? previousYear : String(new Date().getFullYear()));
             monthlyCalendarSessionContextId = backtestSessionContextId;
             const year = parseInt(yearSelect.value, 10);
@@ -7577,7 +7517,6 @@ function renderMonthlyPerformance() {
            ========================================================================= */
         let dailyCalendarSelectedYear = null;
         let dailyCalendarSelectedMonth = null;
-        let dailyCalendarSessionContextId = null;
         let currentDailyAnalysisTrades = [];
         let currentDailyAnalysisIndex = 0;
 
@@ -7600,11 +7539,6 @@ function renderMonthlyPerformance() {
             const now = new Date();
             const availableYears = getAvailableYears();
 
-            // Sincronizar select de mes si está vacío
-            if (monthSelect.children.length === 0) {
-                monthSelect.innerHTML = monthNames.map((m, idx) => `<option value="${idx}">${m}</option>`).join("");
-            }
-
             // Sincronizar select de año
             const currentYearOpts = Array.from(yearSelect.options).map(o => o.value).join(",");
             const targetYearOpts = availableYears.map(y => String(y)).join(",");
@@ -7614,29 +7548,10 @@ function renderMonthlyPerformance() {
                 yearSelect.value = availableYears.includes(parseInt(prevYearVal, 10)) ? prevYearVal : String(now.getFullYear());
             }
 
-            // En backtesting, la fecha de visualización inicial se toma en referencia a la fecha de creación o del último trade hecho
-            if (currentMode === "backtesting" && activeSessionId) {
-                const sessionContextId = String(activeSessionId);
-                const isNewContext = dailyCalendarSessionContextId !== sessionContextId;
-                if (isNewContext) {
-                    const ref = getBacktestSessionReferenceDate(activeSessionId);
-                    if (ref) {
-                        if (!availableYears.includes(ref.year)) {
-                            yearSelect.innerHTML = `<option value="${ref.year}">${ref.year}</option>` + yearSelect.innerHTML;
-                        }
-                        yearSelect.value = String(ref.year);
-                        monthSelect.value = String(ref.month);
-                    }
-                    dailyCalendarSessionContextId = sessionContextId;
-                }
-            } else {
-                dailyCalendarSessionContextId = null;
-                if (!yearSelect.value || !availableYears.includes(parseInt(yearSelect.value, 10))) {
-                    yearSelect.value = String(now.getFullYear());
-                }
-                if (monthSelect.value === "") {
-                    monthSelect.value = String(now.getMonth());
-                }
+            // Sincronizar select de mes
+            if (monthSelect.children.length === 0) {
+                monthSelect.innerHTML = monthNames.map((m, idx) => `<option value="${idx}">${m}</option>`).join("");
+                monthSelect.value = String(now.getMonth());
             }
 
             const year = parseInt(yearSelect.value, 10);
@@ -7723,7 +7638,7 @@ function renderMonthlyPerformance() {
                         weekTrades.push(...dayTrades);
                     }
 
-                    const isToday = currentMode !== "backtesting" && isCurrentMonth && now.getFullYear() === year && now.getMonth() === month && now.getDate() === dayNum;
+                    const isToday = isCurrentMonth && now.getFullYear() === year && now.getMonth() === month && now.getDate() === dayNum;
 
                     let dayContentHtml = "";
                     let dayCellClasses = "daily-day-cell rounded-lg flex flex-col justify-between transition-all relative overflow-hidden ";

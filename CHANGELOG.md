@@ -5,6 +5,21 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.9] - 2026-11-03
+
+### 🔄 Reversión y Restauración de Estabilidad en la Aplicación
+- **Restauración de la Navegación y Vistas de la App (`js/app.js` y `app.html`):**
+  - Se deshicieron las modificaciones introducidas en el cálculo de fechas de backtesting y la reubicación del panel de fondeo que provocaban interferencias entre Cuentas Reales y Backtesting.
+  - Se restauró el funcionamiento original y estable de:
+    1. **Navegación al Dashboard:** Al hacer clic en *"Métricas"* en una cuenta real o en *"Empezar"* en una sesión de backtesting, la vista transiciona de forma inmediata al Dashboard & Métricas sin quedar bloqueada en la lista de cuentas/sesiones.
+    2. **Rendimiento por Mes:** La sección vuelve a renderizar correctamente todos los meses y estadísticas históricas.
+    3. **Calendario Diario:** Se restablece la visualización sincronizada del mes actual con el indicador de fecha presente (*"Hoy"*).
+    4. **Separación de Modos:** Cuentas Reales y Backtesting conservan su comportamiento original aislado.
+- **Preservación Integral de la Landing Page (`index.html`):**
+  - Se mantuvieron al 100% las mejoras de la landing page: el nuevo auto-tour guiado con celebración de cuenta fondeada aprobada, la sección de precios compacta de ancho completo (3 tarjetas lado a lado con banner de funcionalidades sin scroll) y la duración de la prueba a 7 días.
+
+---
+
 ## [v3.5.8] - 2026-11-03
 
 ### 🏷️ Actualización de Nombres de Pestañas en Showcase Interactivo
