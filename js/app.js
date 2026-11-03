@@ -559,6 +559,29 @@ const initialTrades = [];
             return num > 0 ? num : 100000;
         }
 
+        // Formateo compacto para balances iniciales redondos (ej: 1000 -> 1k, 2500 -> 2.5k, 3000 -> 3k, 1000000 -> 1M)
+        function formatCompactBalance(val) {
+            const num = Number(val);
+            if (!Number.isFinite(num)) return val;
+            const abs = Math.abs(num);
+            const sign = num < 0 ? "-" : "";
+
+            if (abs >= 1_000_000) {
+                if (abs % 100_000 === 0) {
+                    const m = abs / 1_000_000;
+                    const strM = Number.isInteger(m) ? m.toString() : m.toFixed(2).replace(/\.?0+$/, "");
+                    return `${sign}${strM}M`;
+                }
+            } else if (abs >= 1_000) {
+                if (abs % 100 === 0) {
+                    const k = abs / 1_000;
+                    const strK = Number.isInteger(k) ? k.toString() : k.toFixed(2).replace(/\.?0+$/, "");
+                    return `${sign}${strK}k`;
+                }
+            }
+            return typeof val === "number" ? (Number.isInteger(val) ? val.toString() : val.toFixed(2)) : val;
+        }
+
         // Retorno de cuenta real: balance efectivo (último cierre + operaciones) contra el inicial.
         function calculateAccountReturnPct(initialBalance, effectiveBalance) {
             const initial = parseFloat(initialBalance);
@@ -910,6 +933,7 @@ const initialTrades = [];
                 function appendAccountCard(grid, item, isBT) {
             const itemTrades = trades.filter(trade => (isBT ? trade.sessionId === item.id : trade.accountId === item.id) && trade.estado !== "Sin Activar");
             const initialBal = isBT ? (item.balance || 10000) : getRealInitialBalance(item);
+            const displayedInitialBal = formatCompactBalance(initialBal);
             const effectiveBal = isBT ? null : getAccountEffectiveBalance(item);
             const tradesNetPct = itemTrades.reduce((sum, trade) => sum + getTradeOutcome(trade), 0);
             const ret = isBT ? tradesNetPct : calculateAccountReturnPct(effectiveBal.initial, effectiveBal.balance);
@@ -929,11 +953,15 @@ const initialTrades = [];
             const accountStage = getAccountStage(item);
             const accountGoalMini = isBT ? "" : buildAccountGoalMiniHtml(item);
 
-            // Tarjeta compacta: nombre en la cabecera junto a ajustes ⋮ y texto elevado
-            card.className = "bg-[#161b22] p-4 sm:p-5 rounded-xl border border-main shadow relative hover:bg-[#1a2129] transition group flex flex-col";
+            // Tarjeta compacta: 4 por fila, marquesina en hover y balance simplificado
+            card.className = "bg-[#161b22] p-3.5 sm:p-4 rounded-xl border border-main shadow relative hover:bg-[#1a2129] transition group flex flex-col";
             card.innerHTML = `
-                <div class="flex items-center justify-between gap-2.5 -mt-1 mb-2.5">
-                    <h3 class="font-bold text-white text-base truncate min-w-0" title="${escapeGalleryHtml(item.name)}">${escapeGalleryHtml(item.name)}</h3>
+                <div class="flex items-center justify-between gap-2 -mt-0.5 mb-2 min-w-0">
+                    <div class="account-name-container relative flex-1 min-w-0 overflow-hidden" title="${escapeGalleryHtml(item.name)}">
+                        <h3 class="account-name-text font-bold text-white text-base truncate block whitespace-nowrap">
+                            ${escapeGalleryHtml(item.name)}
+                        </h3>
+                    </div>
                     <div class="relative shrink-0 -mr-1">
                         <button type="button" data-account-action="menu-toggle" title="Ajustes de ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-white hover:bg-gray-800/90 rounded-lg transition px-2 py-1 focus:outline-none" aria-haspopup="true" aria-expanded="false">
                             <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
@@ -948,24 +976,24 @@ const initialTrades = [];
                         </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-y-1.5 gap-x-4 text-sm mb-11 pr-1">
+                <div class="grid grid-cols-2 gap-y-1.5 gap-x-2 text-xs sm:text-sm mb-11 pr-0.5">
                     ${isBT ? `<div class="text-gray-400 font-semibold text-left">Activo/Par:</div><div class="text-white text-right font-medium">${escapeGalleryHtml(item.pair || "-")}</div>` : ""}
                     ${isBT ? `<div class="text-gray-400 font-semibold text-left">Inicio:</div><div class="text-white text-right font-medium">${item.startDate ? new Date(item.startDate + "T00:00:00").toLocaleDateString("es-AR") : "-"}</div>` : ""}
                     ${isBT ? renderSessionModeRow(item) : ""}
-                    <div class="text-gray-400 font-semibold text-left">Bal. Inicial:</div><div class="text-white text-right font-medium">${initialBal}</div>
+                    <div class="text-gray-400 font-semibold text-left">Bal. Inicial:</div><div class="text-white text-right font-medium" title="$${Number(initialBal).toLocaleString('en-US')}">${displayedInitialBal}</div>
                     ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">Bal. efectivo:</div><div class="${actualBalanceClass} text-right font-medium" title="${balanceTitle}">${displayedActual}${balanceBaseLabel ? `<span class="text-[10px] font-normal text-gray-500">${balanceBaseLabel}</span>` : ""}</div>`}
                     <div class="text-gray-400 font-semibold text-left">Return:</div><div class="${retClass} text-right font-bold font-mono">${ret > 0 ? "+" : ""}${ret.toFixed(2)}%</div>
                     ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">Etapa:</div><div class="text-right"><span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${ACCOUNT_STAGE_BADGES[accountStage]}"><i class="${ACCOUNT_STAGE_ICONS[accountStage]}"></i>${ACCOUNT_STAGE_LABELS[accountStage]}</span></div>`}
                     ${accountGoalMini ? `<div class="col-span-2 mt-0.5">${accountGoalMini}</div>` : ""}
                 </div>
                 ${isBT ? `
-                    <div class="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 flex gap-2">
+                    <div class="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 flex gap-2">
                         <button type="button" data-account-action="start" class="flex-1 min-w-0 bg-blue-600 text-white border border-blue-500/50 rounded-lg px-1 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 transition shadow-lg text-[11px] font-bold whitespace-nowrap">
                             <i class="fa-solid fa-play"></i><span>Empezar</span>
                         </button>
                     </div>
                 ` : `
-                <div class="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 flex gap-2">
+                <div class="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 flex gap-2">
                     <button type="button" data-account-action="quick" class="flex-1 min-w-0 bg-gray-800 text-amber-300 border border-amber-900/50 rounded-lg px-1 py-2 flex items-center justify-center gap-1 hover:bg-amber-500 hover:text-black transition shadow-lg text-[11px] font-bold whitespace-nowrap">
                         <i class="fa-solid fa-plus"></i><span>Nueva entrada</span>
                     </button>
@@ -1011,6 +1039,25 @@ const initialTrades = [];
                     e.stopPropagation();
                     if (menuDropdown) menuDropdown.classList.add("hidden");
                     deleteGroup(item.id);
+                });
+            }
+
+            const nameContainer = card.querySelector(".account-name-container");
+            const nameText = card.querySelector(".account-name-text");
+            if (nameContainer && nameText) {
+                card.addEventListener("mouseenter", () => {
+                    const overflow = nameText.scrollWidth - nameContainer.clientWidth;
+                    if (overflow > 4) {
+                        nameText.classList.remove("truncate");
+                        nameText.style.setProperty("--marquee-dist", `-${overflow + 8}px`);
+                        const duration = Math.max(3, overflow / 26);
+                        nameText.style.animation = `accountNameMarquee ${duration}s ease-in-out infinite alternate`;
+                    }
+                });
+                card.addEventListener("mouseleave", () => {
+                    nameText.style.animation = "none";
+                    nameText.style.transform = "none";
+                    nameText.classList.add("truncate");
                 });
             }
             const quickButton = card.querySelector('[data-account-action="quick"]');

@@ -5,6 +5,20 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.9] - 2026-11-02
+
+### 📐 Cuadrícula de 4 Tarjetas por Fila, Marquesina en Nombres Largos y Balances Simplificados
+- **Cuadrícula Optimizada para 4 Tarjetas por Fila:**
+  - Se actualizó la cuadrícula principal de cuentas a `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4`.
+  - Se eliminó el espacio vacío excesivo en el interior de cada tarjeta reduciendo el ancho y compactando el espaciado interno (`gap-x-2`, `p-3.5 sm:p-4`), permitiendo acomodar 4 tarjetas por fila en pantallas de escritorio.
+- **Efecto Marquesina Suave en Nombres Extensos al Pasar el Cursor:**
+  - Los nombres largos se muestran recortados con puntos suspensivos (`...`) por defecto.
+  - Al posar el cursor sobre la tarjeta, si el texto excede el ancho disponible, se desplaza suavemente de derecha a izquierda revelando el nombre completo y pausando en los extremos sin desbordar ni romper la tarjeta (`overflow-hidden`).
+- **Simplificación Inteligente de Balances Iniciales Redondos:**
+  - Se implementó la función `formatCompactBalance`: los balances redondos en miles o millones se presentan de forma compacta (ej. `1000` -> `1k`, `2500` -> `2.5k`, `3000` -> `3k`, `1000000` -> `1M`), manteniendo el valor exacto accesible en el tooltip al pasar el cursor.
+
+---
+
 ## [v3.4.8] - 2026-11-02
 
 ### 🗂️ Tarjetas de Cuenta Compactas: Menú de Ajustes ⋮ y Micro-Chips de Reglas en un Renglón

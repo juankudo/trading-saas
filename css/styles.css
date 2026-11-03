@@ -1983,3 +1983,23 @@ html.light [data-account-menu] button[data-account-action="delete"]:hover {
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+
+/* Animación marquesina para nombres largos de tarjetas de cuentas */
+.account-name-container {
+    overflow: hidden !important;
+    min-width: 0 !important;
+}
+.account-name-text {
+    will-change: transform;
+    display: block;
+    white-space: nowrap;
+}
+@keyframes accountNameMarquee {
+    0%, 15% {
+        transform: translateX(0);
+    }
+    85%, 100% {
+        transform: translateX(var(--marquee-dist, -40px));
+    }
+}
