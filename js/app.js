@@ -3765,10 +3765,7 @@ const initialTrades = [];
 
         function hasActiveAccountGoals() {
             if (isGlobalMetricsView) return false;
-            if (currentMode === "backtesting") {
-                const session = getActiveFondeoSession();
-                return Boolean(session && session.fondeo && session.fondeo.enabled);
-            }
+            if (currentMode === "backtesting") return false;
             const account = getActiveGoalAccount();
             if (!account) return false;
             const stage = getAccountStage(account);
@@ -4393,6 +4390,9 @@ const initialTrades = [];
             }
             if (tab === 'sessions' && groupBalanceChartInstance) {
                 requestAnimationFrame(() => { if (groupBalanceChartInstance) groupBalanceChartInstance.resize(); });
+            }
+            if (tab === 'dashboard' && currentMode === 'backtesting') {
+                renderFondeoPanel();
             }
             currentTabName = tab;
             updateBalanceHistoryTabVisibility();

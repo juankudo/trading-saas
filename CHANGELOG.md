@@ -5,6 +5,20 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.4] - 2026-11-03
+
+### 🏆 Reglas de Simulación de Fondeo Integradas en Dashboard (Solo Backtesting)
+- **Restauración del Panel de Fondeo en Dashboard & Métricas:**
+  - El panel completo de desafíos de fondeo (`#fondeo-panel`), con sus tarjetas de métricas de fase, drawdown diario/máximo, días mínimos, consistencia, historial de fases y retiros simulados, vuelve a mostrarse directamente en la parte superior de la sección **Dashboard & Métricas** en backtesting.
+- **Filtro Exclusivo por Tipo de Sesión:**
+  - Solo se visualiza en sesiones configuradas bajo **Simulación de fondeo**.
+  - Si la sesión es de **Trading libre**, el panel de reglas permanece 100% oculto, preservando una visualización limpia enfocada en estadísticas y curva de balance.
+  - La navegación de backtesting prescinde de la pestaña externa de "Metas", centralizando todo en el dashboard.
+- **Integridad de Cuentas Reales Preservada:**
+  - Las cuentas reales continúan operando exactamente como lo hacían: sus metas y reglas de prueba/fondeada/instantánea permanecen agrupadas en la pestaña dedicada *"Metas"*, sin alterar el dashboard de cuentas reales.
+
+---
+
 ## [v3.5.3] - 2026-11-03
 
 ### 🕒 Unificación y Normalización Canónica de Nombres de Sesiones
