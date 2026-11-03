@@ -3765,10 +3765,7 @@ const initialTrades = [];
 
         function hasActiveAccountGoals() {
             if (isGlobalMetricsView) return false;
-            if (currentMode === "backtesting") {
-                const session = getActiveFondeoSession();
-                return Boolean(session && session.fondeo && session.fondeo.enabled);
-            }
+            if (currentMode === "backtesting") return false;
             const account = getActiveGoalAccount();
             if (!account) return false;
             const stage = getAccountStage(account);
@@ -4393,6 +4390,9 @@ const initialTrades = [];
             }
             if (tab === 'sessions' && groupBalanceChartInstance) {
                 requestAnimationFrame(() => { if (groupBalanceChartInstance) groupBalanceChartInstance.resize(); });
+            }
+            if (tab === 'dashboard' && currentMode === 'backtesting') {
+                renderFondeoPanel();
             }
             currentTabName = tab;
             updateBalanceHistoryTabVisibility();
@@ -5708,18 +5708,27 @@ function renderMonthlyPerformance() {
         }
 
         function renderFondeoPanel() {
-            const panel = document.getElementById("fondeo-panel");
-            if (!panel) return;
-            const session = getActiveFondeoSession();
-            if (!session) {
-                panel.classList.add("hidden");
-                panel.innerHTML = "";
-                return;
+            try {
+                const panel = document.getElementById("fondeo-panel");
+                if (!panel) return;
+                if (currentMode !== "backtesting") {
+                    panel.classList.add("hidden");
+                    panel.innerHTML = "";
+                    return;
+                }
+                const session = getActiveFondeoSession();
+                if (!session || !isFondeoSession(session)) {
+                    panel.classList.add("hidden");
+                    panel.innerHTML = "";
+                    return;
+                }
+                const sim = simulateFondeo(session);
+                checkFondeoMilestones(session, sim);
+                panel.classList.remove("hidden");
+                panel.innerHTML = buildFondeoPanelHtml(session, sim);
+            } catch (err) {
+                console.error("Error al renderizar panel de fondeo:", err);
             }
-            const sim = simulateFondeo(session);
-            checkFondeoMilestones(session, sim);
-            panel.classList.remove("hidden");
-            panel.innerHTML = buildFondeoPanelHtml(session, sim);
         }
 
         function buildFondeoPanelHtml(session, sim) {
@@ -5910,6 +5919,7 @@ function renderMonthlyPerformance() {
             session.fondeoStartAfter = sim.failure.key;
             session.celebratedPhases = 0;
             await saveToStorage();
+            renderFondeoPanel();
             showToast("Nuevo intento iniciado desde la Fase 1");
         }
 
@@ -5919,6 +5929,7 @@ function renderMonthlyPerformance() {
             delete session.fondeoStartAfter;
             session.celebratedPhases = simulateFondeo(session).history.length;
             await saveToStorage();
+            renderFondeoPanel();
             showToast("Reinicio deshecho");
         }
 

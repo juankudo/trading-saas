@@ -5,6 +5,19 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.6.0] - 2026-11-03
+
+### 🏆 Reglas de Simulación de Fondeo Integradas en Dashboard (Exclusivo Backtesting)
+- **Visualización Superior en Dashboard & Métricas (`app.html`):**
+  - Se reubicó el contenedor `#fondeo-panel` directamente en la cabecera de la sección **Dashboard & Métricas** (`#section-dashboard`), ubicándose sobre los controles de balance y gráficas para sesiones de evaluación.
+- **Aislamiento y Filtro Estricto por Modalidad (`js/app.js`):**
+  - **Solo Backtesting en Modo Fondeo:** Las tarjetas de fase, drawdown diario/máximo, consistencia, días mínimos y retiros simulados se despliegan únicamente cuando `currentMode === "backtesting"` y la sesión tiene `mode === "fondeo"`.
+  - **Trading Libre Limpio:** Si la sesión de backtesting es de trading libre, el panel se oculta y vacía automáticamente, manteniendo la vista despejada.
+  - **Cuentas Reales 100% Inalteradas:** Las cuentas reales no muestran jamás este panel. Conservan su pestaña dedicada *"Metas"*, el panel de objetivos (`#account-goal-panel`), su rendimiento por mes, calendario diario y navegación original sin ninguna interferencia.
+  - **Tolerancia a Fallos:** Incorporación de bloques `try/catch` defensivos en el renderizado de reglas para blindar el flujo de navegación de la aplicación ante cualquier imprevisto.
+
+---
+
 ## [v3.5.9] - 2026-11-03
 
 ### 🔄 Reversión y Restauración de Estabilidad en la Aplicación

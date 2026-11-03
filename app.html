@@ -261,6 +261,8 @@
         </div>
 
         <div id="section-dashboard" class="hidden space-y-6">
+            <!-- Panel de simulación de fondeo (solo sesiones de backtesting en modo fondeo) -->
+            <div id="fondeo-panel" class="hidden"></div>
 
             <div class="bg-card border border-main rounded-xl p-4 flex flex-wrap justify-between items-center gap-4 shadow">
                 <div class="flex items-center gap-4 flex-wrap">
@@ -430,10 +432,8 @@
             </div>
         </div>
 
-        <!-- SECCIÓN METAS -->
+        <!-- SECCIÓN METAS (solo cuentas reales) -->
         <div id="section-goals" class="hidden space-y-6">
-            <!-- Panel de simulación de fondeo (solo sesiones de backtesting en modo fondeo) -->
-            <div id="fondeo-panel" class="hidden"></div>
             <!-- Panel de etapa y metas (solo cuentas reales) -->
             <div id="account-goal-panel" class="hidden"></div>
         </div>
