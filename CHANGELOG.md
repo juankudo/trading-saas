@@ -5,6 +5,23 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.6.1] - 2026-11-03
+
+### 📅 Apertura Contextual del Calendario Diario en Backtesting con Aislamiento Estricto
+- **Apertura Referencial Inteligente en Backtesting (`js/app.js`):**
+  - El Calendario Diario (`#section-calendar`) en Backtesting ahora se posiciona automáticamente en el mes y año de inicio de la sesión o en la fecha del último trade registrado, mediante la función `getBacktestEntryReferenceDate(sessionId)`.
+  - Deja de abrir por defecto en el mes y año presente dentro de simulaciones históricas pasadas.
+  - Se eliminó la etiqueta indicadora *"Hoy"* en las celdas del calendario para Backtesting, ya que carece de sentido en simulaciones históricas.
+- **Aislamiento Total e Independencia de Cuentas Reales:**
+  - Se implementó seguimiento de contexto separado (`dailyCalendarSessionContextId` para sesiones de backtesting y `dailyCalendarRealAccountContextId` para cuentas reales).
+  - En **Cuentas Reales**, el Calendario Diario permanece 100% inalterado: continúa abriendo en la fecha y mes actuales del sistema con el indicador *"Hoy"* activo.
+  - Ni la navegación a Dashboard & Métricas ni el Rendimiento por Mes sufren interferencias.
+- **Tolerancia a Fallos y Población Defensiva:**
+  - Se garantiza que el selector de mes siempre contenga sus 12 opciones completas antes de asignar valores, evitando estados vacíos o `NaN`.
+  - El renderizado del calendario diario se ejecuta dentro de un bloque `try/catch` para blindar la ejecución general de la app ante cualquier eventualidad.
+
+---
+
 ## [v3.6.0] - 2026-11-03
 
 ### 🏆 Reglas de Simulación de Fondeo Integradas en Dashboard (Exclusivo Backtesting)

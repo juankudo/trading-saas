@@ -101,6 +101,8 @@ const initialTrades = [];
         let outcomesChartInstance = null;
         let groupBalanceChartInstance = null;
         let monthlyCalendarSessionContextId = null;
+        let dailyCalendarSessionContextId = null;
+        let dailyCalendarRealAccountContextId = null;
         let currentTabName = "sessions";
 
         const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -373,6 +375,9 @@ const initialTrades = [];
             activeRealAccountId = null; 
             activeAccountGroupId = null;
             activeSessionId = null; 
+            monthlyCalendarSessionContextId = null;
+            dailyCalendarSessionContextId = null;
+            dailyCalendarRealAccountContextId = null;
             await loadDataForMode();
 
             const btnReal = document.getElementById('btn-mode-real');
@@ -1463,6 +1468,7 @@ const initialTrades = [];
                     backtestSessions.push(newItem);
                 }
                 monthlyCalendarSessionContextId = null;
+                dailyCalendarSessionContextId = null;
             }
             
             await saveToStorage();
@@ -1513,9 +1519,14 @@ const initialTrades = [];
         
         function enterGroup(id) {
             setGlobalMetricsView(false);
-            if (currentMode === 'real') activeRealAccountId = id;
-            else activeSessionId = id;
-            if (currentMode === 'backtesting') monthlyCalendarSessionContextId = null;
+            if (currentMode === 'real') {
+                activeRealAccountId = id;
+                dailyCalendarRealAccountContextId = null;
+            } else {
+                activeSessionId = id;
+                monthlyCalendarSessionContextId = null;
+                dailyCalendarSessionContextId = null;
+            }
             populatePairDropdowns();
 
             document.getElementById('tab-btn-dashboard').classList.remove('hidden');
@@ -2259,7 +2270,7 @@ const initialTrades = [];
                 return lastEnteredTrade.trade.fecha;
             }
 
-            return isValidDate(session.startDate) ? session.startDate : null;
+            return isValidDate(session.startDate) ? session.startDate : (isValidDate(session.date) ? session.date : null);
         }
 
         function getBacktestStartYear() {
@@ -7537,239 +7548,284 @@ function renderMonthlyPerformance() {
         }
 
         function renderDailyCalendar() {
-            const section = document.getElementById("section-calendar");
-            if (!section) return;
+            try {
+                const section = document.getElementById("section-calendar");
+                if (!section) return;
 
-            const monthSelect = document.getElementById("dailyCalendarMonth");
-            const yearSelect = document.getElementById("dailyCalendarYear");
-            const gridContainer = document.getElementById("daily-calendar-grid");
-            const titleEl = document.getElementById("dailyCalendarTitle");
-            const summaryEl = document.getElementById("dailyCalendarMonthSummary");
-            if (!monthSelect || !yearSelect || !gridContainer) return;
+                const monthSelect = document.getElementById("dailyCalendarMonth");
+                const yearSelect = document.getElementById("dailyCalendarYear");
+                const gridContainer = document.getElementById("daily-calendar-grid");
+                const titleEl = document.getElementById("dailyCalendarTitle");
+                const summaryEl = document.getElementById("dailyCalendarMonthSummary");
+                if (!monthSelect || !yearSelect || !gridContainer) return;
 
-            const now = new Date();
-            const availableYears = getAvailableYears();
+                const now = new Date();
+                const availableYears = getAvailableYears();
 
-            // Sincronizar select de año
-            const currentYearOpts = Array.from(yearSelect.options).map(o => o.value).join(",");
-            const targetYearOpts = availableYears.map(y => String(y)).join(",");
-            if (currentYearOpts !== targetYearOpts) {
-                const prevYearVal = yearSelect.value || String(now.getFullYear());
-                yearSelect.innerHTML = availableYears.map(y => `<option value="${y}">${y}</option>`).join("");
-                yearSelect.value = availableYears.includes(parseInt(prevYearVal, 10)) ? prevYearVal : String(now.getFullYear());
-            }
-
-            // Sincronizar select de mes
-            if (monthSelect.children.length === 0) {
-                monthSelect.innerHTML = monthNames.map((m, idx) => `<option value="${idx}">${m}</option>`).join("");
-                monthSelect.value = String(now.getMonth());
-            }
-
-            const year = parseInt(yearSelect.value, 10);
-            const month = parseInt(monthSelect.value, 10);
-            dailyCalendarSelectedYear = year;
-            dailyCalendarSelectedMonth = month;
-
-            // Actualizar título con el mes y año completos
-            if (titleEl && monthNames[month]) {
-                titleEl.textContent = `${monthNames[month]} ${year}`;
-            }
-
-            // Trades resueltos de la cuenta activa
-            const allTrades = getBaseTrades().filter(t => isResolvedTrade(t) && t.fecha);
-            const initialBalance = getActiveInitialBalance();
-
-            const tradesByDate = {};
-            let monthTotalTrades = 0;
-            let monthNetPct = 0;
-
-            allTrades.forEach(t => {
-                const d = new Date(t.fecha + "T00:00:00");
-                if (!Number.isNaN(d.getTime()) && d.getFullYear() === year && d.getMonth() === month) {
-                    monthTotalTrades++;
-                    monthNetPct += getTradeOutcome(t);
+                // 1. Asegurar opciones del mes (12 meses)
+                if (monthSelect.children.length !== 12) {
+                    monthSelect.innerHTML = monthNames.map((m, idx) => `<option value="${idx}">${m}</option>`).join("");
                 }
-                if (!tradesByDate[t.fecha]) tradesByDate[t.fecha] = [];
-                tradesByDate[t.fecha].push(t);
-            });
 
-            // Resumen superior del mes
-            if (summaryEl) {
-                if (monthTotalTrades > 0) {
-                    const monthNetDollar = initialBalance * (monthNetPct / 100);
-                    const netColor = monthNetPct > 0 ? "text-emerald-400" : (monthNetPct < 0 ? "text-red-400" : "text-gray-300");
-                    summaryEl.innerHTML = `Retorno: <strong class="${netColor} font-mono">${formatSignedDollar(monthNetDollar)} (${monthNetPct >= 0 ? '+' : ''}${monthNetPct.toFixed(2)}%)</strong> · <span class="text-gray-400 font-normal">${monthTotalTrades} ops</span>`;
+                // 2. Sincronizar select de año con los años disponibles
+                const currentYearOpts = Array.from(yearSelect.options).map(o => o.value).join(",");
+                const targetYearOpts = availableYears.map(y => String(y)).join(",");
+                if (currentYearOpts !== targetYearOpts) {
+                    const prevYearVal = yearSelect.value || String(now.getFullYear());
+                    yearSelect.innerHTML = availableYears.map(y => `<option value="${y}">${y}</option>`).join("");
+                    if (availableYears.includes(parseInt(prevYearVal, 10))) {
+                        yearSelect.value = prevYearVal;
+                    }
+                }
+
+                // 3. Selección contextual independiente para Backtesting vs Cuentas Reales
+                if (currentMode === "backtesting") {
+                    const currentContext = activeSessionId ? String(activeSessionId) : null;
+                    if (currentContext && dailyCalendarSessionContextId !== currentContext) {
+                        dailyCalendarSessionContextId = currentContext;
+                        const refDateStr = getBacktestEntryReferenceDate(activeSessionId);
+                        if (refDateStr && typeof refDateStr === "string" && refDateStr.includes("-")) {
+                            const parts = refDateStr.split("-").map(Number);
+                            const targetYear = parts[0];
+                            const targetMonth = parts[1] - 1; // 0-indexed (0=Enero ... 11=Diciembre)
+                            if (Number.isFinite(targetYear) && Number.isFinite(targetMonth) && targetMonth >= 0 && targetMonth <= 11) {
+                                if (!Array.from(yearSelect.options).some(o => o.value === String(targetYear))) {
+                                    yearSelect.innerHTML = `<option value="${targetYear}">${targetYear}</option>` + yearSelect.innerHTML;
+                                }
+                                yearSelect.value = String(targetYear);
+                                monthSelect.value = String(targetMonth);
+                            }
+                        }
+                    }
+                    if (!yearSelect.value) yearSelect.value = String(now.getFullYear());
+                    if (!monthSelect.value) monthSelect.value = String(now.getMonth());
                 } else {
-                    summaryEl.innerHTML = `<span class="text-gray-500 font-normal text-xs">Sin operaciones en este mes</span>`;
+                    // Modo Cuentas Reales: completamente aislado
+                    const currentContext = activeRealAccountId ? String(activeRealAccountId) : "global";
+                    if (dailyCalendarRealAccountContextId !== currentContext) {
+                        dailyCalendarRealAccountContextId = currentContext;
+                        yearSelect.value = String(now.getFullYear());
+                        monthSelect.value = String(now.getMonth());
+                    }
+                    if (!yearSelect.value || !availableYears.includes(parseInt(yearSelect.value, 10))) {
+                        yearSelect.value = String(now.getFullYear());
+                    }
+                    if (!monthSelect.value) {
+                        monthSelect.value = String(now.getMonth());
+                    }
                 }
-            }
 
-            // Cálculos del calendario ISO (Lunes=0 ... Domingo=6)
-            const firstDay = new Date(year, month, 1);
-            const firstDayIso = (firstDay.getDay() + 6) % 7;
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-            const daysInPrevMonth = new Date(year, month, 0).getDate();
+                const rawYear = parseInt(yearSelect.value, 10);
+                const rawMonth = parseInt(monthSelect.value, 10);
+                const year = Number.isFinite(rawYear) ? rawYear : now.getFullYear();
+                const month = (Number.isFinite(rawMonth) && rawMonth >= 0 && rawMonth <= 11) ? rawMonth : now.getMonth();
+                dailyCalendarSelectedYear = year;
+                dailyCalendarSelectedMonth = month;
 
-            const totalSlots = firstDayIso + daysInMonth;
-            const totalWeeks = Math.ceil(totalSlots / 7);
+                // Actualizar título con el mes y año completos
+                if (titleEl && monthNames[month]) {
+                    titleEl.textContent = `${monthNames[month]} ${year}`;
+                }
 
-            const pad2 = n => String(n).padStart(2, "0");
+                // Trades resueltos de la cuenta activa
+                const allTrades = getBaseTrades().filter(t => isResolvedTrade(t) && t.fecha);
+                const initialBalance = getActiveInitialBalance();
 
-            let gridHtml = "";
+                const tradesByDate = {};
+                let monthTotalTrades = 0;
+                let monthNetPct = 0;
 
-            for (let w = 0; w < totalWeeks; w++) {
-                let weekTrades = [];
-                let weekDaysHtml = "";
+                allTrades.forEach(t => {
+                    const d = new Date(t.fecha + "T00:00:00");
+                    if (!Number.isNaN(d.getTime()) && d.getFullYear() === year && d.getMonth() === month) {
+                        monthTotalTrades++;
+                        monthNetPct += getTradeOutcome(t);
+                    }
+                    if (!tradesByDate[t.fecha]) tradesByDate[t.fecha] = [];
+                    tradesByDate[t.fecha].push(t);
+                });
 
-                for (let d = 0; d < 7; d++) {
-                    const slotIndex = w * 7 + d;
-                    let dayNum = 0;
-                    let isCurrentMonth = true;
-                    let dateKey = "";
-
-                    if (slotIndex < firstDayIso) {
-                        isCurrentMonth = false;
-                        dayNum = daysInPrevMonth - (firstDayIso - 1 - slotIndex);
-                        const prevM = month === 0 ? 11 : month - 1;
-                        const prevY = month === 0 ? year - 1 : year;
-                        dateKey = `${prevY}-${pad2(prevM + 1)}-${pad2(dayNum)}`;
-                    } else if (slotIndex >= firstDayIso + daysInMonth) {
-                        isCurrentMonth = false;
-                        dayNum = slotIndex - (firstDayIso + daysInMonth) + 1;
-                        const nextM = month === 11 ? 0 : month + 1;
-                        const nextY = month === 11 ? year + 1 : year;
-                        dateKey = `${nextY}-${pad2(nextM + 1)}-${pad2(dayNum)}`;
+                // Resumen superior del mes
+                if (summaryEl) {
+                    if (monthTotalTrades > 0) {
+                        const monthNetDollar = initialBalance * (monthNetPct / 100);
+                        const netColor = monthNetPct > 0 ? "text-emerald-400" : (monthNetPct < 0 ? "text-red-400" : "text-gray-300");
+                        summaryEl.innerHTML = `Retorno: <strong class="${netColor} font-mono">${formatSignedDollar(monthNetDollar)} (${monthNetPct >= 0 ? '+' : ''}${monthNetPct.toFixed(2)}%)</strong> · <span class="text-gray-400 font-normal">${monthTotalTrades} ops</span>`;
                     } else {
-                        dayNum = slotIndex - firstDayIso + 1;
-                        dateKey = `${year}-${pad2(month + 1)}-${pad2(dayNum)}`;
+                        summaryEl.innerHTML = `<span class="text-gray-500 font-normal text-xs">Sin operaciones en este mes</span>`;
                     }
+                }
 
-                    const dayTrades = tradesByDate[dateKey] || [];
-                    if (isCurrentMonth) {
-                        weekTrades.push(...dayTrades);
-                    }
+                // Cálculos del calendario ISO (Lunes=0 ... Domingo=6)
+                const firstDay = new Date(year, month, 1);
+                const firstDayIso = (firstDay.getDay() + 6) % 7;
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const daysInPrevMonth = new Date(year, month, 0).getDate();
 
-                    const isToday = isCurrentMonth && now.getFullYear() === year && now.getMonth() === month && now.getDate() === dayNum;
+                const totalSlots = firstDayIso + daysInMonth;
+                const totalWeeks = Math.ceil(totalSlots / 7);
 
-                    let dayContentHtml = "";
-                    let dayCellClasses = "daily-day-cell rounded-lg flex flex-col justify-between transition-all relative overflow-hidden ";
+                const pad2 = n => String(n).padStart(2, "0");
 
-                    if (!isCurrentMonth) {
-                        dayCellClasses += "bg-[#0b0e14]/40 border border-gray-900/60 opacity-30 select-none";
-                        dayContentHtml = `
-                            <div class="flex justify-between items-start leading-none">
-                                <span class="text-[10px] sm:text-[11px] font-semibold text-gray-600">${dayNum}</span>
-                            </div>
-                            <div class="flex-grow"></div>
-                        `;
-                    } else if (dayTrades.length > 0) {
-                        const netPct = dayTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
-                        const netDollar = initialBalance * (netPct / 100);
-                        const isWin = netPct > 0.001;
-                        const isLoss = netPct < -0.001;
+                let gridHtml = "";
 
-                        let cardBg = "bg-indigo-950/20 border-indigo-500/40 text-indigo-300";
-                        let textDollarColor = "text-indigo-300";
-                        let textPctColor = "text-indigo-400";
-                        if (isWin) {
-                            cardBg = "bg-emerald-950/30 border-emerald-500/40 text-emerald-400 hover:border-emerald-400 hover:bg-emerald-900/30";
-                            textDollarColor = "text-emerald-400";
-                            textPctColor = "text-emerald-300";
-                        } else if (isLoss) {
-                            cardBg = "bg-red-950/30 border-red-500/40 text-red-400 hover:border-red-400 hover:bg-red-900/30";
-                            textDollarColor = "text-red-400";
-                            textPctColor = "text-red-300";
+                for (let w = 0; w < totalWeeks; w++) {
+                    let weekTrades = [];
+                    let weekDaysHtml = "";
+
+                    for (let d = 0; d < 7; d++) {
+                        const slotIndex = w * 7 + d;
+                        let dayNum = 0;
+                        let isCurrentMonth = true;
+                        let dateKey = "";
+
+                        if (slotIndex < firstDayIso) {
+                            isCurrentMonth = false;
+                            dayNum = daysInPrevMonth - (firstDayIso - 1 - slotIndex);
+                            const prevM = month === 0 ? 11 : month - 1;
+                            const prevY = month === 0 ? year - 1 : year;
+                            dateKey = `${prevY}-${pad2(prevM + 1)}-${pad2(dayNum)}`;
+                        } else if (slotIndex >= firstDayIso + daysInMonth) {
+                            isCurrentMonth = false;
+                            dayNum = slotIndex - (firstDayIso + daysInMonth) + 1;
+                            const nextM = month === 11 ? 0 : month + 1;
+                            const nextY = month === 11 ? year + 1 : year;
+                            dateKey = `${nextY}-${pad2(nextM + 1)}-${pad2(dayNum)}`;
+                        } else {
+                            dayNum = slotIndex - firstDayIso + 1;
+                            dateKey = `${year}-${pad2(month + 1)}-${pad2(dayNum)}`;
                         }
 
-                        dayCellClasses += "bg-[#111622] border border-gray-800 shadow-sm";
-                        dayContentHtml = `
-                            <div class="flex justify-between items-center leading-none mb-0.5">
-                                <span class="text-[10px] sm:text-[11px] font-bold ${isToday ? 'text-amber-400' : 'text-gray-300'}">${dayNum}</span>
-                                ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
-                            </div>
-                            <div onclick="openDailyTradeAnalysis('${dateKey}')" title="Ver análisis de ${dayTrades.length} operaciones del ${dayNum}" class="flex-grow min-h-0 flex flex-col justify-center items-center rounded p-1 border cursor-pointer transition-all hover:scale-[1.02] ${cardBg}">
-                                <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${textDollarColor}">
-                                    ${formatSignedDollar(netDollar)}
+                        const dayTrades = tradesByDate[dateKey] || [];
+                        if (isCurrentMonth) {
+                            weekTrades.push(...dayTrades);
+                        }
+
+                        // En backtesting se omite la etiqueta "Hoy" (simulación histórica)
+                        const isToday = currentMode !== "backtesting" && isCurrentMonth && now.getFullYear() === year && now.getMonth() === month && now.getDate() === dayNum;
+
+                        let dayContentHtml = "";
+                        let dayCellClasses = "daily-day-cell rounded-lg flex flex-col justify-between transition-all relative overflow-hidden ";
+
+                        if (!isCurrentMonth) {
+                            dayCellClasses += "bg-[#0b0e14]/40 border border-gray-900/60 opacity-30 select-none";
+                            dayContentHtml = `
+                                <div class="flex justify-between items-start leading-none">
+                                    <span class="text-[10px] sm:text-[11px] font-semibold text-gray-600">${dayNum}</span>
                                 </div>
-                                <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${textPctColor} mt-0.5">
-                                    ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}% · ${dayTrades.length} ops
+                                <div class="flex-grow"></div>
+                            `;
+                        } else if (dayTrades.length > 0) {
+                            const netPct = dayTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
+                            const netDollar = initialBalance * (netPct / 100);
+                            const isWin = netPct > 0.001;
+                            const isLoss = netPct < -0.001;
+
+                            let cardBg = "bg-indigo-950/20 border-indigo-500/40 text-indigo-300";
+                            let textDollarColor = "text-indigo-300";
+                            let textPctColor = "text-indigo-400";
+                            if (isWin) {
+                                cardBg = "bg-emerald-950/30 border-emerald-500/40 text-emerald-400 hover:border-emerald-400 hover:bg-emerald-900/30";
+                                textDollarColor = "text-emerald-400";
+                                textPctColor = "text-emerald-300";
+                            } else if (isLoss) {
+                                cardBg = "bg-red-950/30 border-red-500/40 text-red-400 hover:border-red-400 hover:bg-red-900/30";
+                                textDollarColor = "text-red-400";
+                                textPctColor = "text-red-300";
+                            }
+
+                            dayCellClasses += "bg-[#111622] border border-gray-800 shadow-sm";
+                            dayContentHtml = `
+                                <div class="flex justify-between items-center leading-none mb-0.5">
+                                    <span class="text-[10px] sm:text-[11px] font-bold ${isToday ? 'text-amber-400' : 'text-gray-300'}">${dayNum}</span>
+                                    ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                                </div>
+                                <div onclick="openDailyTradeAnalysis('${dateKey}')" title="Ver análisis de ${dayTrades.length} operaciones del ${dayNum}" class="flex-grow min-h-0 flex flex-col justify-center items-center rounded p-1 border cursor-pointer transition-all hover:scale-[1.02] ${cardBg}">
+                                    <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${textDollarColor}">
+                                        ${formatSignedDollar(netDollar)}
+                                    </div>
+                                    <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${textPctColor} mt-0.5">
+                                        ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}% · ${dayTrades.length} ops
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            dayCellClasses += "bg-[#0d1117] border border-gray-800/80";
+                            dayContentHtml = `
+                                <div class="flex justify-between items-start leading-none">
+                                    <span class="text-[10px] sm:text-[11px] font-semibold ${isToday ? 'text-amber-400 font-bold' : 'text-gray-500'}">${dayNum}</span>
+                                    ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                                </div>
+                                <div class="flex-grow flex items-center justify-center text-gray-800 text-[10px] select-none">·</div>
+                            `;
+                        }
+
+                        weekDaysHtml += `<div class="${dayCellClasses}">${dayContentHtml}</div>`;
+                    }
+
+                    const weekNum = w + 1;
+                    let weekNetHtml = "";
+                    let weekCardClasses = "daily-week-card rounded-lg flex flex-col justify-between border ";
+
+                    if (weekTrades.length > 0) {
+                        const weekNetPct = weekTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
+                        const weekNetDollar = initialBalance * (weekNetPct / 100);
+                        const isWeekWin = weekNetPct > 0.001;
+                        const isWeekLoss = weekNetPct < -0.001;
+
+                        let weekDollarColor = "text-indigo-300";
+                        let weekPctColor = "text-indigo-400";
+                        let weekBorder = "border-gray-800 bg-[#0d1117]";
+
+                        if (isWeekWin) {
+                            weekDollarColor = "text-emerald-400";
+                            weekPctColor = "text-emerald-400/90";
+                            weekBorder = "border-emerald-900/40 bg-[#0a1516]";
+                        } else if (isWeekLoss) {
+                            weekDollarColor = "text-red-400";
+                            weekPctColor = "text-red-400/90";
+                            weekBorder = "border-red-900/40 bg-[#160d10]";
+                        }
+
+                        weekCardClasses += weekBorder;
+                        weekNetHtml = `
+                            <div class="leading-none mb-0.5">
+                                <span class="text-[10px] sm:text-[11px] font-bold text-gray-300">Semana ${weekNum}</span>
+                            </div>
+                            <div class="flex-grow min-h-0 flex flex-col justify-center">
+                                <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${weekDollarColor}">
+                                    ${formatSignedDollar(weekNetDollar)}
+                                </div>
+                                <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${weekPctColor} mt-0.5">
+                                    ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}% · ${weekTrades.length} ops
                                 </div>
                             </div>
                         `;
                     } else {
-                        dayCellClasses += "bg-[#0d1117] border border-gray-800/80";
-                        dayContentHtml = `
-                            <div class="flex justify-between items-start leading-none">
-                                <span class="text-[10px] sm:text-[11px] font-semibold ${isToday ? 'text-amber-400 font-bold' : 'text-gray-500'}">${dayNum}</span>
-                                ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                        weekCardClasses += "border-gray-800 bg-[#0d1117]";
+                        weekNetHtml = `
+                            <div class="leading-none">
+                                <span class="text-[10px] sm:text-[11px] font-bold text-gray-400">Semana ${weekNum}</span>
                             </div>
-                            <div class="flex-grow flex items-center justify-center text-gray-800 text-[10px] select-none">·</div>
+                            <div class="text-xs text-gray-600 font-bold leading-none">—</div>
                         `;
                     }
 
-                    weekDaysHtml += `<div class="${dayCellClasses}">${dayContentHtml}</div>`;
-                }
-
-                const weekNum = w + 1;
-                let weekNetHtml = "";
-                let weekCardClasses = "daily-week-card rounded-lg flex flex-col justify-between border ";
-
-                if (weekTrades.length > 0) {
-                    const weekNetPct = weekTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
-                    const weekNetDollar = initialBalance * (weekNetPct / 100);
-                    const isWeekWin = weekNetPct > 0.001;
-                    const isWeekLoss = weekNetPct < -0.001;
-
-                    let weekDollarColor = "text-indigo-300";
-                    let weekPctColor = "text-indigo-400";
-                    let weekBorder = "border-gray-800 bg-[#0d1117]";
-
-                    if (isWeekWin) {
-                        weekDollarColor = "text-emerald-400";
-                        weekPctColor = "text-emerald-400/90";
-                        weekBorder = "border-emerald-900/40 bg-[#0a1516]";
-                    } else if (isWeekLoss) {
-                        weekDollarColor = "text-red-400";
-                        weekPctColor = "text-red-400/90";
-                        weekBorder = "border-red-900/40 bg-[#160d10]";
-                    }
-
-                    weekCardClasses += weekBorder;
-                    weekNetHtml = `
-                        <div class="leading-none mb-0.5">
-                            <span class="text-[10px] sm:text-[11px] font-bold text-gray-300">Semana ${weekNum}</span>
+                    gridHtml += `
+                        <div class="daily-calendar-row grid grid-cols-[100px_repeat(7,1fr)] sm:grid-cols-[115px_repeat(7,1fr)] gap-2">
+                            <div class="${weekCardClasses}">${weekNetHtml}</div>
+                            ${weekDaysHtml}
                         </div>
-                        <div class="flex-grow min-h-0 flex flex-col justify-center">
-                            <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${weekDollarColor}">
-                                ${formatSignedDollar(weekNetDollar)}
-                            </div>
-                            <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${weekPctColor} mt-0.5">
-                                ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}% · ${weekTrades.length} ops
-                            </div>
-                        </div>
-                    `;
-                } else {
-                    weekCardClasses += "border-gray-800 bg-[#0d1117]";
-                    weekNetHtml = `
-                        <div class="leading-none">
-                            <span class="text-[10px] sm:text-[11px] font-bold text-gray-400">Semana ${weekNum}</span>
-                        </div>
-                        <div class="text-xs text-gray-600 font-bold leading-none">—</div>
                     `;
                 }
 
-                gridHtml += `
-                    <div class="daily-calendar-row grid grid-cols-[100px_repeat(7,1fr)] sm:grid-cols-[115px_repeat(7,1fr)] gap-2">
-                        <div class="${weekCardClasses}">${weekNetHtml}</div>
-                        ${weekDaysHtml}
-                    </div>
-                `;
+                gridContainer.style.gridTemplateRows = `repeat(${totalWeeks}, minmax(0, 1fr))`;
+                gridContainer.innerHTML = gridHtml;
+
+                requestAnimationFrame(fitDailyCalendarGrid);
+            } catch (err) {
+                console.error("Error in renderDailyCalendar:", err);
             }
-
-            gridContainer.style.gridTemplateRows = `repeat(${totalWeeks}, minmax(0, 1fr))`;
-            gridContainer.innerHTML = gridHtml;
-
-            requestAnimationFrame(fitDailyCalendarGrid);
         }
 
         function navDailyCalendar(direction) {
@@ -7785,8 +7841,7 @@ function renderMonthlyPerformance() {
                 m = 0;
                 y += 1;
             }
-            const years = getAvailableYears();
-            if (!years.includes(y)) {
+            if (!Array.from(yearSelect.options).some(o => o.value === String(y))) {
                 yearSelect.innerHTML = `<option value="${y}">${y}</option>` + yearSelect.innerHTML;
             }
             yearSelect.value = String(y);
