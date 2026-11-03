@@ -5,6 +5,25 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.3] - 2026-11-03
+
+### 🕒 Unificación y Normalización Canónica de Nombres de Sesiones
+- **Normalización Canónica de Sesiones (`normalizeSessionName`):**
+  - Se unificaron los nombres de sesiones en desuso y abreviaturas hacia sus nombres canónicos actuales:
+    - `"NY"`, `"new york"`, `"newyork"` $\rightarrow$ `"New York"`
+    - `"London"`, `"londres"` $\rightarrow$ `"Londres"`
+    - `"Pre London"`, `"pre-london"` $\rightarrow$ `"Pre Londres"`
+    - `"Pre NY"`, `"pre-ny"`, `"pre new york"` $\rightarrow$ `"Pre New York"`
+    - `"Asia"`, `"asian"`, `"asiatica"` $\rightarrow$ `"Asia"`
+- **Migración y Sanitización Automática de Registros Históricos (`migrateLegacySessionNames`):**
+  - Al cargar la bitácora (`loadDataForMode`), se analizan los trades almacenados (cuentas reales, backtesting y métricas globales) y se migran automáticamente los registros antiguos hacia las sesiones oficiales.
+  - La sincronización en memoria, almacenamiento IndexedDB y guardado en la nube se ejecutan de manera transparente.
+- **Consolidación en "Efectividad por Sesión" y Dashboard:**
+  - El desglose de métricas por sesión agrupa ahora todas las operaciones bajo la sesión normalizada, eliminando filas divididas o duplicadas (ej. reuniendo las métricas de `NY` y `New York` en una sola fila consolidada de `New York`, e integrando `London` y `Londres` en `Londres`).
+  - Tanto la tabla de registro de trades como la galería y los filtros de sesión utilizan el valor canónico normalizado.
+
+---
+
 ## [v3.5.2] - 2026-11-03
 
 ### 🧹 Eliminación en Cascada de Balances de Cuentas Borradas

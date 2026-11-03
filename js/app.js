@@ -364,6 +364,7 @@ const initialTrades = [];
                 const storedSessions = await dbGet(STORAGE_KEY_SESSIONS);
                 backtestSessions = storedSessions !== null ? storedSessions : [];
             }
+            await migrateLegacySessionNames();
         }
 
         async function setMode(mode) {
@@ -794,7 +795,7 @@ const initialTrades = [];
                 pairInput.insertAdjacentHTML("beforeend", '<option value="' + escapeGalleryHtml(pair) + '">' + escapeGalleryHtml(pair) + '</option>');
             }
             pairInput.value = pair;
-            document.getElementById("inputSesion").value = entry.sesion || "";
+            document.getElementById("inputSesion").value = normalizeSessionName(entry.sesion || "");
             document.getElementById("inputTendencia").value = entry.tendencia || "";
             document.getElementById("inputPipsSL").value = entry.pipsSL === undefined ? "" : entry.pipsSL;
             document.getElementById("inputPipsTP").value = entry.pipsTP === undefined ? "" : entry.pipsTP;
@@ -1742,6 +1743,83 @@ const initialTrades = [];
                 if (london >= 8 * 60 && london < 16 * 60) return "Londres";
                 if (london >= 7 * 60 && london < 8 * 60) return "Pre Londres";
                 return "Asia";
+            }
+        }
+
+        // Normalización canónica de nombres de sesiones (ej: NY -> New York, London -> Londres)
+        function normalizeSessionName(session) {
+            if (!session || typeof session !== "string") return session || "";
+            const s = session.trim();
+            const lower = s.toLowerCase();
+            if (lower === "ny" || lower === "new york" || lower === "newyork") return "New York";
+            if (lower === "london" || lower === "londres") return "Londres";
+            if (lower === "pre london" || lower === "pre londres" || lower === "pre-london" || lower === "pre-londres") return "Pre Londres";
+            if (lower === "pre ny" || lower === "pre new york" || lower === "pre-ny" || lower === "pre-new york" || lower === "prenewyork") return "Pre New York";
+            if (lower === "asia" || lower === "asian" || lower === "asiatica") return "Asia";
+            return s;
+        }
+
+        // Migración de registros históricos para unificar nombres de sesiones en memoria y storage
+        async function migrateLegacySessionNames() {
+            let changedCurrent = false;
+            if (Array.isArray(trades) && trades.length) {
+                trades.forEach(t => {
+                    if (t.sesion) {
+                        const normalized = normalizeSessionName(t.sesion);
+                        if (normalized !== t.sesion) {
+                            t.sesion = normalized;
+                            changedCurrent = true;
+                        }
+                    }
+                });
+            }
+
+            if (changedCurrent) {
+                const keyTrades = currentMode === 'real' ? STORAGE_KEY_REAL : STORAGE_KEY_BACKTESTING;
+                try {
+                    await dbSet(keyTrades, trades);
+                    if (typeof triggerCloudSave === 'function') triggerCloudSave();
+                } catch (e) {
+                    console.error("Error al persistir migración de sesiones", e);
+                }
+            }
+
+            try {
+                const otherKey = currentMode === 'real' ? STORAGE_KEY_BACKTESTING : STORAGE_KEY_REAL;
+                const otherTrades = await dbGet(otherKey);
+                if (Array.isArray(otherTrades) && otherTrades.length) {
+                    let changedOther = false;
+                    otherTrades.forEach(t => {
+                        if (t.sesion) {
+                            const normalized = normalizeSessionName(t.sesion);
+                            if (normalized !== t.sesion) {
+                                t.sesion = normalized;
+                                changedOther = true;
+                            }
+                        }
+                    });
+                    if (changedOther) {
+                        await dbSet(otherKey, otherTrades);
+                    }
+                }
+            } catch (e) {}
+
+            if (Array.isArray(globalMetricsEntries) && globalMetricsEntries.length) {
+                let changedGlobal = false;
+                globalMetricsEntries.forEach(g => {
+                    if (g.sesion) {
+                        const normalized = normalizeSessionName(g.sesion);
+                        if (normalized !== g.sesion) {
+                            g.sesion = normalized;
+                            changedGlobal = true;
+                        }
+                    }
+                });
+                if (changedGlobal) {
+                    try {
+                        await saveGlobalMetricsStore();
+                    } catch (e) {}
+                }
             }
         }
 
@@ -4380,7 +4458,7 @@ const initialTrades = [];
                     parEl.value = t.par || "EURUSD";
                     if (currentMode === "backtesting") configureTradePairField(t.sessionId, t.par);
                     
-                    document.getElementById("inputSesion").value = t.sesion;
+                    document.getElementById("inputSesion").value = normalizeSessionName(t.sesion);
                     document.getElementById("inputTendencia").value = t.tendencia;
                     document.getElementById("inputPipsSL").value = t.pipsSL;
                     document.getElementById("inputPipsTP").value = t.pipsTP;
@@ -4637,7 +4715,7 @@ const initialTrades = [];
                 fecha: document.getElementById("inputFecha").value,
                 hora: document.getElementById("inputHora").value,
                 par: currentMode === "backtesting" ? backtestPair : document.getElementById("inputPar").value.toUpperCase(),
-                sesion: document.getElementById("inputSesion").value,
+                sesion: normalizeSessionName(document.getElementById("inputSesion").value),
                 tendencia: document.getElementById("inputTendencia").value,
                 pipsSL: parseFloat(document.getElementById("inputPipsSL").value),
                 pipsTP: parseFloat(document.getElementById("inputPipsTP").value),
@@ -4921,7 +4999,7 @@ const initialTrades = [];
                 let dayName = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"][d];
                 addBreakdown(daysData, dayName, outcomePct);
 
-                addBreakdown(sessionsData, t.sesion, outcomePct);
+                addBreakdown(sessionsData, normalizeSessionName(t.sesion), outcomePct);
 
                 addBreakdown(trendsData, t.tendencia, outcomePct);
             });
@@ -5174,7 +5252,7 @@ function renderMonthlyPerformance() {
                 month.dailyStats[dayKey].total++;
                 month.dailyStats[dayKey].netPct += outcome;
 
-                const sessionKey = trade.sesion || "Sin sesión";
+                const sessionKey = normalizeSessionName(trade.sesion) || "Sin sesión";
                 if (!month.sessionStats[sessionKey]) month.sessionStats[sessionKey] = { total: 0, wins: 0, losses: 0, breakeven: 0, netPct: 0 };
                 const session = month.sessionStats[sessionKey];
                 session.total++;
@@ -5867,7 +5945,7 @@ function renderMonthlyPerformance() {
                     document.getElementById("filterPeriodoMonth").value,
                     document.getElementById("filterPeriodoSub").value) &&
                 (document.getElementById("filterEstado").value === "ALL" || t.estado === document.getElementById("filterEstado").value) &&
-                (document.getElementById("filterSesion").value === "ALL" || t.sesion === document.getElementById("filterSesion").value) &&
+                (document.getElementById("filterSesion").value === "ALL" || normalizeSessionName(t.sesion) === document.getElementById("filterSesion").value) &&
                 (!showPairColumn || document.getElementById("filterPar").value === "ALL" || (t.par||"").toUpperCase() === document.getElementById("filterPar").value) &&
                 (!textSearch || ((t.notaAntes||'')+" "+(t.notaDespues||'')+(showPairColumn ? " "+(t.par||'') : "")).toLowerCase().includes(textSearch))
             );
@@ -5924,7 +6002,7 @@ function renderMonthlyPerformance() {
                         <td class="px-2 py-2 font-mono whitespace-nowrap">${t.fecha}<br><span class="text-gray-500 text-[11px]">${t.hora}</span></td>
                         <td class="px-2 py-2 text-gray-300 capitalize">${dayName}</td>
                         ${showPairColumn ? `<td class="px-2 py-2 font-bold text-white"><span class="bg-gray-800 px-2 py-0.5 rounded border border-main">${(t.par || '-').toUpperCase()}</span></td>` : ""}
-                        <td class="px-2 py-2"><span class="bg-gray-900 text-gray-400 px-2 py-0.5 rounded border border-gray-800">${t.sesion || '-'}</span></td>
+                        <td class="px-2 py-2"><span class="bg-gray-900 text-gray-400 px-2 py-0.5 rounded border border-gray-800">${normalizeSessionName(t.sesion) || '-'}</span></td>
                         <td class="px-2 py-2 text-gray-400">${t.tendencia || '-'}</td>
                         <td class="px-2 py-2 font-mono whitespace-nowrap"><span class="text-red-400">${t.pipsSL}</span> / <span class="text-emerald-400">${t.pipsTP}</span></td>
                         <td class="px-2 py-2 whitespace-nowrap">${ord}</td>
@@ -6064,7 +6142,7 @@ function renderMonthlyPerformance() {
                 let html = `<div id="gallery-card-${galleryKey}" class="bg-card border ${borderColor} rounded-xl p-5 shadow-lg relative transition-all">`;
                 
                 html += `<div class="flex flex-wrap justify-between items-center mb-4 border-b border-main pb-2">
-                    <div class="flex items-center gap-3"><span class="font-bold text-white">${t.par}</span><span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> ${t.fecha} ${t.hora}</span><span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-gray-300 border border-gray-700">${t.sesion} / ${t.tendencia}</span></div>
+                    <div class="flex items-center gap-3"><span class="font-bold text-white">${t.par}</span><span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> ${t.fecha} ${t.hora}</span><span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-gray-300 border border-gray-700">${normalizeSessionName(t.sesion)} / ${t.tendencia}</span></div>
                     <div class="font-bold font-mono px-3 py-1 rounded ${badgeColor}">${out > 0 ? '+' : ''}${out.toFixed(2)}%</div>
                 </div>`;
                 
