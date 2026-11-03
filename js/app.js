@@ -929,15 +929,23 @@ const initialTrades = [];
             const accountStage = getAccountStage(item);
             const accountGoalMini = isBT ? "" : buildAccountGoalMiniHtml(item);
 
-            // Sin justify-between: el bloque de datos debe quedar arriba para alinear
-            // las barras de progreso entre tarjetas con más o menos contenido.
-            card.className = "bg-[#161b22] p-5 rounded-xl border border-main shadow relative hover:bg-[#1a2129] transition group flex flex-col";
+            // Tarjeta compacta: espacio superior aprovechado y botón de ajustes ⋮
+            card.className = "bg-[#161b22] p-4 sm:p-5 rounded-xl border border-main shadow relative hover:bg-[#1a2129] transition group flex flex-col";
             card.innerHTML = `
-                <div class="flex justify-end gap-1 -mt-2 -mr-2 mb-1">
-                    <button type="button" data-account-action="edit" title="Editar ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-blue-400 hover:bg-gray-800 rounded-lg transition p-2"><i class="fa-solid fa-pen"></i></button>
-                    <button type="button" data-account-action="delete" title="Borrar ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-red-400 hover:bg-gray-800 rounded-lg transition p-2"><i class="fa-solid fa-trash"></i></button>
+                <div class="relative flex justify-end -mt-1 -mr-1 mb-0.5">
+                    <button type="button" data-account-action="menu-toggle" title="Ajustes de ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-white hover:bg-gray-800/90 rounded-lg transition px-2 py-1 focus:outline-none" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+                    </button>
+                    <div data-account-menu class="hidden absolute right-0 top-7 w-36 bg-[#161b22] border border-gray-700/80 rounded-xl shadow-2xl py-1 z-30 backdrop-blur-md">
+                        <button type="button" data-account-action="edit" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800 hover:text-blue-400 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-pen text-[11px] w-4 text-center"></i> Editar
+                        </button>
+                        <button type="button" data-account-action="delete" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-red-950/60 hover:text-red-400 flex items-center gap-2 transition">
+                            <i class="fa-solid fa-trash text-[11px] w-4 text-center text-red-400"></i> Borrar
+                        </button>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-sm mb-12 pr-4">
+                <div class="grid grid-cols-2 gap-y-1.5 gap-x-4 text-sm mb-11 pr-3">
                     <div class="text-gray-400 font-semibold text-left">Nombre:</div><div class="text-white text-right truncate font-medium">${escapeGalleryHtml(item.name)}</div>
                     ${isBT ? `<div class="text-gray-400 font-semibold text-left">Activo/Par:</div><div class="text-white text-right font-medium">${escapeGalleryHtml(item.pair || "-")}</div>` : ""}
                     ${isBT ? `<div class="text-gray-400 font-semibold text-left">Inicio:</div><div class="text-white text-right font-medium">${item.startDate ? new Date(item.startDate + "T00:00:00").toLocaleDateString("es-AR") : "-"}</div>` : ""}
@@ -946,26 +954,63 @@ const initialTrades = [];
                     ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">Bal. efectivo:</div><div class="${actualBalanceClass} text-right font-medium" title="${balanceTitle}">${displayedActual}${balanceBaseLabel ? `<span class="text-[10px] font-normal text-gray-500">${balanceBaseLabel}</span>` : ""}</div>`}
                     <div class="text-gray-400 font-semibold text-left">Return:</div><div class="${retClass} text-right font-bold font-mono">${ret > 0 ? "+" : ""}${ret.toFixed(2)}%</div>
                     ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">Etapa:</div><div class="text-right"><span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${ACCOUNT_STAGE_BADGES[accountStage]}"><i class="${ACCOUNT_STAGE_ICONS[accountStage]}"></i>${ACCOUNT_STAGE_LABELS[accountStage]}</span></div>`}
-                    ${accountGoalMini ? `<div class="col-span-2 mt-1">${accountGoalMini}</div>` : ""}
+                    ${accountGoalMini ? `<div class="col-span-2 mt-0.5">${accountGoalMini}</div>` : ""}
                 </div>
                 ${isBT ? `
-                    <div class="absolute bottom-5 left-5 right-5 flex gap-2">
-                        <button type="button" data-account-action="start" class="flex-1 min-w-0 bg-blue-600 text-white border border-blue-500/50 rounded-lg px-1 py-2.5 flex items-center justify-center gap-2 hover:bg-blue-500 transition shadow-lg text-[11px] font-bold whitespace-nowrap">
+                    <div class="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 flex gap-2">
+                        <button type="button" data-account-action="start" class="flex-1 min-w-0 bg-blue-600 text-white border border-blue-500/50 rounded-lg px-1 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 transition shadow-lg text-[11px] font-bold whitespace-nowrap">
                             <i class="fa-solid fa-play"></i><span>Empezar</span>
                         </button>
                     </div>
                 ` : `
-                <div class="absolute bottom-5 left-5 right-5 flex gap-2">
-                    <button type="button" data-account-action="quick" class="flex-1 min-w-0 bg-gray-800 text-amber-300 border border-amber-900/50 rounded-lg px-1 py-2.5 flex items-center justify-center gap-1 hover:bg-amber-500 hover:text-black transition shadow-lg text-[11px] font-bold whitespace-nowrap">
+                <div class="absolute bottom-4 left-4 right-4 sm:bottom-5 sm:left-5 sm:right-5 flex gap-2">
+                    <button type="button" data-account-action="quick" class="flex-1 min-w-0 bg-gray-800 text-amber-300 border border-amber-900/50 rounded-lg px-1 py-2 flex items-center justify-center gap-1 hover:bg-amber-500 hover:text-black transition shadow-lg text-[11px] font-bold whitespace-nowrap">
                         <i class="fa-solid fa-plus"></i><span>Nueva entrada</span>
                     </button>
-                    <button type="button" data-account-action="metrics" class="flex-1 min-w-0 bg-[#112130] text-green-400 hover:bg-green-600 border border-green-900/50 rounded-lg px-1 py-2.5 flex items-center justify-center gap-1 hover:text-white border transition shadow-lg text-[11px] font-bold whitespace-nowrap">
+                    <button type="button" data-account-action="metrics" class="flex-1 min-w-0 bg-[#112130] text-green-400 hover:bg-green-600 border border-green-900/50 rounded-lg px-1 py-2 flex items-center justify-center gap-1 hover:text-white border transition shadow-lg text-[11px] font-bold whitespace-nowrap">
                         <i class="fa-solid fa-chart-line"></i><span>Métricas</span>
                     </button>
                 </div>`}
             `;
-            card.querySelector('[data-account-action="edit"]').addEventListener("click", () => editGroup(item.id));
-            card.querySelector('[data-account-action="delete"]').addEventListener("click", () => deleteGroup(item.id));
+
+            const menuToggle = card.querySelector('[data-account-action="menu-toggle"]');
+            const menuDropdown = card.querySelector('[data-account-menu]');
+
+            if (menuToggle && menuDropdown) {
+                menuToggle.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    document.querySelectorAll('[data-account-menu]').forEach(m => {
+                        if (m !== menuDropdown) m.classList.add("hidden");
+                    });
+                    menuDropdown.classList.toggle("hidden");
+                    const isOpen = !menuDropdown.classList.contains("hidden");
+                    menuToggle.setAttribute("aria-expanded", String(isOpen));
+                });
+
+                document.addEventListener("click", (e) => {
+                    if (!menuDropdown.contains(e.target) && e.target !== menuToggle) {
+                        menuDropdown.classList.add("hidden");
+                        menuToggle.setAttribute("aria-expanded", "false");
+                    }
+                });
+            }
+
+            const editBtn = card.querySelector('[data-account-action="edit"]');
+            if (editBtn) {
+                editBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (menuDropdown) menuDropdown.classList.add("hidden");
+                    editGroup(item.id);
+                });
+            }
+            const deleteBtn = card.querySelector('[data-account-action="delete"]');
+            if (deleteBtn) {
+                deleteBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    if (menuDropdown) menuDropdown.classList.add("hidden");
+                    deleteGroup(item.id);
+                });
+            }
             const quickButton = card.querySelector('[data-account-action="quick"]');
             const metricsButton = card.querySelector('[data-account-action="metrics"]');
             const startButton = card.querySelector('[data-account-action="start"]');
@@ -3335,22 +3380,31 @@ const initialTrades = [];
                 bad: "border-red-800 bg-red-900/30 text-red-300",
                 muted: "border-gray-700 bg-gray-800/60 text-gray-400"
             };
-            const chipIcons = { ok: "fa-check", bad: "fa-xmark", muted: "fa-minus" };
-            const chip = (ok, text, tone = null) => {
+            const chip = (ok, iconClass, text, titleText, tone = null) => {
                 const finalTone = tone || (ok ? "ok" : "bad");
-                return `<span class="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 ${chipStyles[finalTone]}"><i class="fa-solid ${chipIcons[finalTone]} text-[8px]"></i>${text}</span>`;
+                return `<span class="inline-flex items-center gap-1 rounded-full border px-1.5 py-0.5 text-[10px] font-semibold whitespace-nowrap shrink-0 ${chipStyles[finalTone]}" title="${titleText}"><i class="${iconClass} text-[9px]"></i>${text}</span>`;
             };
             const chips = [];
             if (rules.consistency.enabled) {
                 const evaluable = rules.consistency.state === "evaluada";
                 const ratioText = rules.consistency.ratio === null ? "—" : `${Math.round(rules.consistency.ratio)}%`;
-                chips.push(chip(rules.consistency.ok, `Cons. ${ratioText}/${rules.consistency.limit}%`, evaluable ? null : "muted"));
+                const title = `Regla de consistencia: ${ratioText} (límite máx ${rules.consistency.limit}%)`;
+                chips.push(chip(rules.consistency.ok, "fa-solid fa-chart-pie", `${ratioText}/${rules.consistency.limit}%`, title, evaluable ? null : "muted"));
             }
-            if (rules.tradingDays.enabled) chips.push(chip(rules.tradingDays.ok, `Días ${rules.tradingDays.count}/${rules.tradingDays.min}`));
-            if (rules.profitableDays.enabled) chips.push(chip(rules.profitableDays.ok, `Rentables ${rules.profitableDays.count}/${rules.profitableDays.min}`));
-            if (rules.dailyLoss.enabled) chips.push(chip(rules.dailyLoss.ok, `Pérdida diaria ${rules.dailyLoss.usedPct.toFixed(1)}%/${rules.dailyLoss.limit}%`));
+            if (rules.tradingDays.enabled) {
+                const title = `Días mínimos de trading: ${rules.tradingDays.count} de ${rules.tradingDays.min} días operados`;
+                chips.push(chip(rules.tradingDays.ok, "fa-solid fa-calendar-check", `${rules.tradingDays.count}/${rules.tradingDays.min}`, title));
+            }
+            if (rules.profitableDays.enabled) {
+                const title = `Días rentables: ${rules.profitableDays.count} de ${rules.profitableDays.min} días en beneficio`;
+                chips.push(chip(rules.profitableDays.ok, "fa-solid fa-arrow-trend-up", `${rules.profitableDays.count}/${rules.profitableDays.min}`, title));
+            }
+            if (rules.dailyLoss.enabled) {
+                const title = `Pérdida diaria máxima: ${rules.dailyLoss.usedPct.toFixed(1)}% (límite ${rules.dailyLoss.limit}%)`;
+                chips.push(chip(rules.dailyLoss.ok, "fa-solid fa-shield-halved", `${rules.dailyLoss.usedPct.toFixed(0)}%/${rules.dailyLoss.limit}%`, title));
+            }
             if (!chips.length) return "";
-            return `<div class="flex flex-wrap items-center gap-1"><span class="text-[9px] uppercase tracking-wide text-gray-500">Reglas:</span>${chips.join("")}</div>`;
+            return `<div class="flex items-center gap-1 overflow-x-auto whitespace-nowrap no-scrollbar pt-0.5"><span class="text-[9px] uppercase tracking-wide text-gray-500 font-bold shrink-0">Reglas:</span>${chips.join("")}</div>`;
         }
 
         function buildAccountGoalMiniHtml(account) {

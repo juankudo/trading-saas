@@ -1952,3 +1952,34 @@ html.light .nav-pill-expandable.bg-gray-800 {
 html.light .nav-pill-expandable.bg-gray-800:hover {
     background-color: #e2e8f0;
 }
+
+/* Menú desplegable de ajustes en tarjetas de cuentas */
+[data-account-menu] {
+    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+html.light [data-account-menu] {
+    background-color: #ffffff;
+    border-color: #cbd5e1;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.06);
+}
+html.light [data-account-menu] button {
+    color: #334155;
+}
+html.light [data-account-menu] button:hover {
+    background-color: #f1f5f9;
+}
+html.light [data-account-menu] button[data-account-action="delete"]:hover {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+/* Ocultar barra de desplazamiento manteniendo scroll horizontal */
+.no-scrollbar::-webkit-scrollbar,
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar,
+.scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

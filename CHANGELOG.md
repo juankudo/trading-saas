@@ -5,6 +5,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.8] - 2026-11-02
+
+### 🗂️ Tarjetas de Cuenta Compactas: Menú de Ajustes ⋮ y Micro-Chips de Reglas en un Renglón
+- **Menú de Ajustes Desplegable (`⋮`) en Tarjetas de Cuenta:**
+  - Se reemplazaron los botones separados de edición y borrado por un botón de ajustes vertical (`⋮` / `fa-ellipsis-vertical`) situado en la esquina superior derecha de cada tarjeta individual.
+  - Al pulsar el botón se despliega un menú flotante estilizado con las opciones *"Editar"* y *"Borrar"*, con cierre automático al hacer clic fuera y aislamiento de eventos.
+- **Optimización de Espacio y Reducción de Altura:**
+  - Se redujo el espaciado superior y la cuadrícula de datos subió aprovechando el espacio recuperado, reduciendo sustancialmente la longitud de las tarjetas para una visualización más limpia y armónica.
+- **Micro-Chips de Reglas Limitados Estrictamente a un Renglón:**
+  - Las reglas activas de cada cuenta ahora se condensan en micro-chips en una sola línea horizontal (`no-scrollbar`) que no produce saltos de línea ni deforma la altura de la tarjeta.
+  - Cada regla cuenta con su icono representativo específico (`📊` consistencia, `📅` días de trading, `📈` días rentables, `🛡️` pérdida diaria) y un tooltip explicativo completo al posar el cursor.
+- **Soporte Completo de Modo Claro y Oscuro:**
+  - Adaptación cuidada de contrastes, bordes y hover para el menú desplegable de ajustes en ambos esquemas de color.
+
+---
+
 ## [v3.4.7] - 2026-11-02
 
 ### 👤 Pastillas Dinámicas de Usuario: Tiempo Contraído y Email Desplegable
