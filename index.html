@@ -197,7 +197,7 @@
                     <!-- STORIES SEGMENTED PROGRESS BARS (4 BARRITAS SUPERIORES TIPO INSTAGRAM STORIES) -->
                     <div id="showcase-stories-bars" class="grid grid-cols-4 gap-1.5 sm:gap-2 mb-2 sm:mb-2.5 px-0.5" role="progressbar" aria-label="Progreso del auto-tour de la demo">
                         <!-- 1. Métricas -->
-                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('metrics')" title="Pestaña 1: Dashboard & Equidad">
+                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('metrics')" title="Pestaña 1: Dashboard & Métricas">
                             <div id="story-progress-metrics" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
                         </div>
                         <!-- 2. Trades -->
@@ -205,7 +205,7 @@
                             <div id="story-progress-trades" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
                         </div>
                         <!-- 3. Calendario -->
-                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('calendar')" title="Pestaña 3: Calendario Mensual">
+                        <div class="story-track bg-gray-800/80 hover:bg-gray-700/80 h-1 sm:h-1.5 rounded-full overflow-hidden relative cursor-pointer transition-colors" onclick="handleStoryBarClick('calendar')" title="Pestaña 3: Rendimiento Mensual">
                             <div id="story-progress-calendar" class="story-fill h-full bg-emerald-400 rounded-full w-0 transition-[width] duration-75 ease-linear shadow-[0_0_8px_rgba(52,211,153,0.7)]"></div>
                         </div>
                         <!-- 4. Fondeo -->
@@ -224,7 +224,7 @@
                             <i class="fa-solid fa-table-list text-[11px]" aria-hidden="true"></i>
                             <span class="truncate">Trades</span>
                         </button>
-                        <button id="showcase-tab-m-calendar" onclick="switchShowcaseTab('calendar')" aria-label="Ver calendario mensual de rendimiento" class="showcase-m-tab inactive py-1.5 px-1 rounded-lg text-[10px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-0.5 transition">
+                        <button id="showcase-tab-m-calendar" onclick="switchShowcaseTab('calendar')" aria-label="Ver rendimiento mensual" class="showcase-m-tab inactive py-1.5 px-1 rounded-lg text-[10px] font-medium text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 flex flex-col items-center justify-center gap-0.5 transition">
                             <i class="fa-solid fa-calendar-days text-[11px]" aria-hidden="true"></i>
                             <span class="truncate">Mes</span>
                         </button>
@@ -237,20 +237,20 @@
                     <!-- DESKTOP SHOWCASE TABS (>= sm) -->
                     <div class="hidden sm:flex items-center gap-1.5 border-b border-gray-800 pb-2 mb-2.5 overflow-x-auto text-xs font-bold scrollbar-none">
                         <button id="showcase-tab-metrics" onclick="switchShowcaseTab('metrics')" class="showcase-dt-tab-active px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 flex items-center gap-1.5 transition whitespace-nowrap shadow-sm font-bold text-xs">
-                            <i class="fa-solid fa-chart-line text-[11px]"></i> 1. Dashboard & Equidad
+                            <i class="fa-solid fa-chart-line text-[11px]"></i> 1. Dashboard & Métricas
                         </button>
                         <button id="showcase-tab-trades" onclick="switchShowcaseTab('trades')" class="showcase-dt-tab-inactive px-3 py-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-1.5 transition whitespace-nowrap font-medium text-xs">
                             <i class="fa-solid fa-table-list text-[11px]"></i> 2. Registro de Trades
                         </button>
                         <button id="showcase-tab-calendar" onclick="switchShowcaseTab('calendar')" class="showcase-dt-tab-inactive px-3 py-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-1.5 transition whitespace-nowrap font-medium text-xs">
-                            <i class="fa-solid fa-calendar-days text-[11px]"></i> 3. Calendario Mensual
+                            <i class="fa-solid fa-calendar-days text-[11px]"></i> 3. Rendimiento Mensual
                         </button>
                         <button id="showcase-tab-propfirm" onclick="switchShowcaseTab('propfirm')" class="showcase-dt-tab-inactive px-3 py-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-gray-800/80 flex items-center gap-1.5 transition whitespace-nowrap font-medium text-xs">
                             <i class="fa-solid fa-shield-halved text-[11px]"></i> 4. Auditoría de Fondeo
                         </button>
                     </div>
 
-                    <!-- VIEW 1: DASHBOARD & EQUIDAD (SIMULADOR INTERACTIVO DE TRANSFORMACIÓN) -->
+                    <!-- VIEW 1: DASHBOARD & MÉTRICAS (SIMULADOR INTERACTIVO DE TRANSFORMACIÓN) -->
                     <div id="showcase-view-metrics" class="space-y-1.5 sm:space-y-2">
                         
                         <!-- Interactive Evolution Controller Bar (Single Compact Strip) -->
@@ -930,7 +930,7 @@
 
                     </div>
 
-                    <!-- VIEW 3: CALENDARIO MENSUAL & RESUMEN ANUAL INSTITUCIONAL -->
+                    <!-- VIEW 3: RENDIMIENTO MENSUAL & RESUMEN ANUAL INSTITUCIONAL -->
                     <div id="showcase-view-calendar" class="hidden space-y-1.5 sm:space-y-2">
                         
                         <!-- Top Header & Annual Performance Controller -->

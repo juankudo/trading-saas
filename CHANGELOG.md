@@ -5,6 +5,15 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.8] - 2026-11-03
+
+### 🏷️ Actualización de Nombres de Pestañas en Showcase Interactivo
+- **Normalización de Nombres en la Demo de la Landing Page (`index.html`):**
+  - **Pestaña 1:** Se actualizó de `"1. Dashboard & Equidad"` a `"1. Dashboard & Métricas"`, alineándola con el nombre oficial de la plataforma.
+  - **Pestaña 3:** Se actualizó de `"3. Calendario Mensual"` a `"3. Rendimiento Mensual"`, homogeneizando los títulos de navegación tanto en escritorio como en móviles y barras de progreso story.
+
+---
+
 ## [v3.5.7] - 2026-11-03
 
 ### 💎 Rediseño Responsivo y Compacto de Tarjetas de Precios (Full-Width)
