@@ -929,24 +929,26 @@ const initialTrades = [];
             const accountStage = getAccountStage(item);
             const accountGoalMini = isBT ? "" : buildAccountGoalMiniHtml(item);
 
-            // Tarjeta compacta: espacio superior aprovechado y botón de ajustes ⋮
+            // Tarjeta compacta: nombre en la cabecera junto a ajustes ⋮ y texto elevado
             card.className = "bg-[#161b22] p-4 sm:p-5 rounded-xl border border-main shadow relative hover:bg-[#1a2129] transition group flex flex-col";
             card.innerHTML = `
-                <div class="relative flex justify-end -mt-1 -mr-1 mb-0.5">
-                    <button type="button" data-account-action="menu-toggle" title="Ajustes de ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-white hover:bg-gray-800/90 rounded-lg transition px-2 py-1 focus:outline-none" aria-haspopup="true" aria-expanded="false">
-                        <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
-                    </button>
-                    <div data-account-menu class="hidden absolute right-0 top-7 w-36 bg-[#161b22] border border-gray-700/80 rounded-xl shadow-2xl py-1 z-30 backdrop-blur-md">
-                        <button type="button" data-account-action="edit" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800 hover:text-blue-400 flex items-center gap-2 transition">
-                            <i class="fa-solid fa-pen text-[11px] w-4 text-center"></i> Editar
+                <div class="flex items-center justify-between gap-2.5 -mt-1 mb-2.5">
+                    <h3 class="font-bold text-white text-base truncate min-w-0" title="${escapeGalleryHtml(item.name)}">${escapeGalleryHtml(item.name)}</h3>
+                    <div class="relative shrink-0 -mr-1">
+                        <button type="button" data-account-action="menu-toggle" title="Ajustes de ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-white hover:bg-gray-800/90 rounded-lg transition px-2 py-1 focus:outline-none" aria-haspopup="true" aria-expanded="false">
+                            <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
                         </button>
-                        <button type="button" data-account-action="delete" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-red-950/60 hover:text-red-400 flex items-center gap-2 transition">
-                            <i class="fa-solid fa-trash text-[11px] w-4 text-center text-red-400"></i> Borrar
-                        </button>
+                        <div data-account-menu class="hidden absolute right-0 top-7 w-36 bg-[#161b22] border border-gray-700/80 rounded-xl shadow-2xl py-1 z-30 backdrop-blur-md">
+                            <button type="button" data-account-action="edit" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800 hover:text-blue-400 flex items-center gap-2 transition">
+                                <i class="fa-solid fa-pen text-[11px] w-4 text-center"></i> Editar
+                            </button>
+                            <button type="button" data-account-action="delete" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-red-950/60 hover:text-red-400 flex items-center gap-2 transition">
+                                <i class="fa-solid fa-trash text-[11px] w-4 text-center text-red-400"></i> Borrar
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-2 gap-y-1.5 gap-x-4 text-sm mb-11 pr-3">
-                    <div class="text-gray-400 font-semibold text-left">Nombre:</div><div class="text-white text-right truncate font-medium">${escapeGalleryHtml(item.name)}</div>
+                <div class="grid grid-cols-2 gap-y-1.5 gap-x-4 text-sm mb-11 pr-1">
                     ${isBT ? `<div class="text-gray-400 font-semibold text-left">Activo/Par:</div><div class="text-white text-right font-medium">${escapeGalleryHtml(item.pair || "-")}</div>` : ""}
                     ${isBT ? `<div class="text-gray-400 font-semibold text-left">Inicio:</div><div class="text-white text-right font-medium">${item.startDate ? new Date(item.startDate + "T00:00:00").toLocaleDateString("es-AR") : "-"}</div>` : ""}
                     ${isBT ? renderSessionModeRow(item) : ""}

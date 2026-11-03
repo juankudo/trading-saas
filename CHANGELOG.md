@@ -8,6 +8,10 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [v3.4.8] - 2026-11-02
 
 ### 🗂️ Tarjetas de Cuenta Compactas: Menú de Ajustes ⋮ y Micro-Chips de Reglas en un Renglón
+- **Nombre de la Cuenta en la Cabecera Superior (Junto al Menú ⋮):**
+  - El nombre de la cuenta ahora se ubica en la fila superior como título principal destacado (`font-bold text-white text-base`), perfectamente alineado a la izquierda del botón de ajustes `⋮`.
+  - Se eliminó la fila de *"Nombre:"* de la cuadrícula de métricas, elevando todos los datos una fila completa y reduciendo notablemente la longitud vertical de la tarjeta.
+  - Protección anticolisión: con `truncate min-w-0`, `gap-2.5` y `shrink-0`, los nombres extensos se cortan elegantemente con puntos suspensivos sin tocar jamás los tres puntos, manteniendo su tooltip completo al posar el ratón.
 - **Menú de Ajustes Desplegable (`⋮`) en Tarjetas de Cuenta:**
   - Se reemplazaron los botones separados de edición y borrado por un botón de ajustes vertical (`⋮` / `fa-ellipsis-vertical`) situado en la esquina superior derecha de cada tarjeta individual.
   - Al pulsar el botón se despliega un menú flotante estilizado con las opciones *"Editar"* y *"Borrar"*, con cierre automático al hacer clic fuera y aislamiento de eventos.
