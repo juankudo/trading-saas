@@ -2376,96 +2376,173 @@
         </section>
 
         <!-- Pricing Section -->
-        <section id="precios" class="py-20 px-4 sm:px-8 border-t border-gray-800/60 bg-[#0d121f]">
+        <section id="precios" class="py-12 sm:py-16 px-4 sm:px-6 lg:px-8 border-t border-gray-800/60 bg-[#0d121f]">
             <div class="max-w-5xl mx-auto text-center">
-                <span class="text-sm font-semibold text-emerald-400 block mb-2">Precios Simples y Transparentes</span>
-                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4">Un Solo Plan con Todo Desbloqueado</h2>
-                <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto mb-10">
-                    Sin límites artificiales ni características bloqueadas. Elige el período que mejor se adapte a ti y ahorra hasta un 30% en pagos anuales.
+                <span class="text-xs sm:text-sm font-semibold text-emerald-400 block mb-1">Precios Simples y Transparentes</span>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2">Un Solo Plan con Todo Desbloqueado</h2>
+                <p class="text-gray-400 text-xs sm:text-sm max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed">
+                    Sin límites artificiales ni características bloqueadas. Elige tu período y ahorra hasta un 30%. Todos los planes incluyen 7 días de prueba gratis ($0 hoy).
                 </p>
 
-                <!-- Billing Period Toggle -->
-                <div class="inline-flex items-center max-w-full flex-wrap sm:flex-nowrap justify-center gap-1 bg-gray-900 border border-gray-700/80 rounded-xl p-1.5 mb-12">
-                    <button id="plan-btn-1" onclick="selectPlanPeriod(1)" class="px-5 py-2 rounded-lg text-xs font-bold bg-emerald-500 text-gray-950 shadow-sm transition">
-                        1 Mes
-                    </button>
-                    <button id="plan-btn-3" onclick="selectPlanPeriod(3)" class="px-5 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition flex items-center gap-1.5">
-                        3 Meses <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1.5 py-0.2 rounded">-15%</span>
-                    </button>
-                    <button id="plan-btn-12" onclick="selectPlanPeriod(12)" class="px-5 py-2 rounded-lg text-xs font-bold text-gray-400 hover:text-white transition flex items-center gap-1.5">
-                        12 Meses <span class="text-[10px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1.5 py-0.2 rounded">-30%</span>
-                    </button>
-                </div>
+                <!-- 3 Pricing Cards Row (Desktop: 3 cols, Mobile: Stacked compact) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 max-w-5xl mx-auto mb-6">
 
-                <!-- Pricing Card -->
-                <div class="max-w-md mx-auto bg-[#111726] border-2 border-emerald-500/80 rounded-3xl p-8 shadow-2xl relative">
-                    <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-md">
-                        Membresía Pro Ilimitada
-                    </span>
-
-                    <div class="mb-6 pt-2">
-                        <div class="flex items-baseline justify-center gap-1">
-                            <span class="text-gray-400 text-2xl font-bold">$</span>
-                            <span id="price-display" class="text-5xl font-black text-white">19</span>
-                            <span id="period-display" class="text-gray-400 text-sm font-semibold">/ mes</span>
+                    <!-- Plan 1: Mensual -->
+                    <div class="bg-[#111726] border border-gray-800 hover:border-gray-700/80 rounded-2xl p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 relative group shadow-lg text-left">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Mensual</span>
+                                <span class="text-[10px] font-semibold text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded border border-gray-700/60">Flexibilidad</span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-gray-400 text-xl font-bold">$</span>
+                                    <span class="text-4xl lg:text-5xl font-black text-white">19</span>
+                                    <span class="text-gray-400 text-xs font-semibold">/ mes</span>
+                                </div>
+                                <p class="text-[11px] text-gray-400 mt-1 font-medium">Facturado mensualmente</p>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-4 leading-snug">Ideal para probar mes a mes sin compromisos ni ataduras.</p>
                         </div>
-                        <p id="total-billed-display" class="text-xs text-gray-400 mt-1 font-medium">Facturado mensualmente</p>
+                        <div>
+                            <button onclick="selectPlanAndRegister('month')" class="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5">
+                                <span>Comenzar 7 Días</span>
+                                <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                            </button>
+                            <span class="text-[10px] text-gray-500 block text-center mt-2">$0 hoy · Cancela cuando quieras</span>
+                        </div>
                     </div>
 
-                    <!-- Features included -->
-                    <ul class="space-y-3.5 text-left text-xs sm:text-sm text-gray-300 mb-8 border-t border-b border-gray-800 py-6">
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                            <span>Cuentas Reales y de Fondeo <strong>Ilimitadas</strong></span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-flask-vial text-amber-400"></i>
-                            <span><strong>Laboratorio de Backtesting Pro</strong> con auditoría de fondeo</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                            <span>Registro y auditoría de trades sin restricciones</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                            <span>Control de Drawdown y Reglas de Prop Firms</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
+                    <!-- Plan 2: Trimestral (Popular / Destacado) -->
+                    <div class="bg-gradient-to-b from-[#131f33] to-[#101726] border-2 border-emerald-500 rounded-2xl p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 relative shadow-2xl shadow-emerald-500/10 md:-translate-y-1 md:scale-[1.02] z-10 text-left">
+                        <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-md whitespace-nowrap">
+                            ⭐ Más Elegido · -15%
+                        </span>
+                        <div>
+                            <div class="flex items-center justify-between mb-3 pt-1">
+                                <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Trimestral</span>
+                                <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">Ahorras $9</span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-gray-400 text-xl font-bold">$</span>
+                                    <span class="text-4xl lg:text-5xl font-black text-white">16</span>
+                                    <span class="text-gray-400 text-xs font-semibold">/ mes</span>
+                                </div>
+                                <p class="text-[11px] text-emerald-400 mt-1 font-semibold">Facturado $48 cada 3 meses</p>
+                            </div>
+                            <p class="text-xs text-gray-300 mb-4 leading-snug">El ciclo perfecto para preparar y pasar tus desafíos de fondeo.</p>
+                        </div>
+                        <div>
+                            <button onclick="selectPlanAndRegister('quarter')" class="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 hover:brightness-110 text-gray-950 shadow-lg shadow-emerald-500/25 transition flex items-center justify-center gap-1.5">
+                                <i class="fa-solid fa-rocket text-xs"></i>
+                                <span>Comenzar 7 Días</span>
+                            </button>
+                            <span class="text-[10px] text-emerald-400/90 font-medium block text-center mt-2">$0 hoy · Acceso Pro total inmediato</span>
+                        </div>
+                    </div>
+
+                    <!-- Plan 3: Anual (Mejor Valor) -->
+                    <div class="bg-[#111726] border border-gray-800 hover:border-gray-700/80 rounded-2xl p-5 lg:p-6 flex flex-col justify-between transition-all duration-300 relative group shadow-lg text-left">
+                        <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 shadow-md whitespace-nowrap">
+                            🚀 Mejor Valor · -30%
+                        </span>
+                        <div>
+                            <div class="flex items-center justify-between mb-3 pt-1">
+                                <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Anual</span>
+                                <span class="text-[10px] font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-700/60">Ahorras $72</span>
+                            </div>
+                            <div class="mb-3">
+                                <div class="flex items-baseline gap-1">
+                                    <span class="text-gray-400 text-xl font-bold">$</span>
+                                    <span class="text-4xl lg:text-5xl font-black text-white">13</span>
+                                    <span class="text-gray-400 text-xs font-semibold">/ mes</span>
+                                </div>
+                                <p class="text-[11px] text-amber-400 mt-1 font-semibold">Facturado $156 al año</p>
+                            </div>
+                            <p class="text-xs text-gray-400 mb-4 leading-snug">Para traders comprometidos que construyen consistencia a largo plazo.</p>
+                        </div>
+                        <div>
+                            <button onclick="selectPlanAndRegister('year')" class="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-bold bg-gray-800 hover:bg-gray-700 text-white border border-gray-700 hover:border-amber-500/50 shadow-md transition flex items-center justify-center gap-1.5">
+                                <span>Comenzar 7 Días</span>
+                                <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                            </button>
+                            <span class="text-[10px] text-gray-500 block text-center mt-2">$0 hoy · Mayor ahorro garantizado</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Features & Included Capabilities Grid (Full-Width Banner) -->
+                <div class="max-w-5xl mx-auto bg-[#111726]/90 border border-gray-800 rounded-2xl p-5 sm:p-6 shadow-xl text-left">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3.5 mb-4 border-b border-gray-800 gap-2">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-wand-magic-sparkles text-emerald-400 text-sm"></i>
+                            <h3 class="text-xs sm:text-sm font-extrabold text-white tracking-wide uppercase">
+                                Todos los planes incluyen la Membresía Pro completa con todo desbloqueado:
+                            </h3>
+                        </div>
+                        <span class="self-start sm:self-auto text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            100% Desbloqueado
+                        </span>
+                    </div>
+
+                    <!-- 8 Features in 4 columns on desktop, 2 on tablet, 1 on small mobile -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-3 text-xs text-gray-300">
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
+                            <span>Cuentas Reales y Fondeo <strong>Ilimitadas</strong></span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-flask-vial text-amber-400 shrink-0 text-sm"></i>
+                            <span><strong>Backtesting Pro</strong> con auditoría</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
+                            <span>Control Drawdown & Reglas Prop</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
                             <span>Calculadora de Lotaje Pro completa</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                            <span>Calendario interactivo y curva de equidad</span>
-                        </li>
-                        <li class="flex items-center gap-3">
-                            <i class="fa-solid fa-circle-check text-emerald-400"></i>
-                            <span>Copias de seguridad automáticas en la nube</span>
-                        </li>
-                    </ul>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
+                            <span>Registro y auditoría sin restricciones</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
+                            <span>Calendario interactivo y curva equidad</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
+                            <span>Copias en la nube automáticas</span>
+                        </div>
+                        <div class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-circle-check text-emerald-400 shrink-0 text-sm"></i>
+                            <span>Acceso prioritario a MT5 Cloud Sync</span>
+                        </div>
+                    </div>
 
-                    <!-- CTA -->
-                    <button onclick="openAuthModal('register')" class="w-full py-4 rounded-xl text-base font-extrabold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-xl shadow-emerald-500/20 transition mb-4">
-                        Comenzar 7 Días Gratis
-                    </button>
-                    <span class="text-[11px] text-gray-400 block mb-6">Prueba de 7 días con tarjeta ($0 hoy). Cancela antes del día 14 sin costo.</span>
-
-                    <!-- Payment Badges Supported -->
-                    <div class="border-t border-gray-800/80 pt-5">
-                        <span class="text-[11px] uppercase tracking-wider text-gray-400 font-bold block mb-3">Métodos de pago aceptados</span>
-                        <div class="flex flex-wrap items-center justify-center gap-2">
-                            <span class="px-2.5 py-1 rounded bg-gray-800/80 border border-gray-700/80 text-[11px] font-semibold text-gray-300 flex items-center gap-1.5">
+                    <!-- Bottom trust row: trial guarantee + payment methods -->
+                    <div class="flex flex-col md:flex-row items-center justify-between gap-3 pt-4 mt-4 border-t border-gray-800/80 text-[11px] text-gray-400">
+                        <div class="flex items-center gap-2 text-center md:text-left">
+                            <i class="fa-solid fa-shield-check text-emerald-400 text-sm shrink-0"></i>
+                            <span>Prueba de 7 días con tarjeta ($0 hoy). Cancela antes del día 7 con 1 solo clic desde tu panel sin costo.</span>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-center gap-2 shrink-0">
+                            <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] text-gray-300 flex items-center gap-1">
                                 <i class="fa-brands fa-cc-visa text-blue-400"></i> Visa
                             </span>
-                            <span class="px-2.5 py-1 rounded bg-gray-800/80 border border-gray-700/80 text-[11px] font-semibold text-gray-300 flex items-center gap-1.5">
+                            <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] text-gray-300 flex items-center gap-1">
                                 <i class="fa-brands fa-cc-mastercard text-amber-500"></i> Mastercard
                             </span>
-                            <span class="px-2.5 py-1 rounded bg-gray-800/80 border border-gray-700/80 text-[11px] font-semibold text-emerald-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-coins text-emerald-400"></i> USDT (TRC20 / BSC / Polygon / Solana)
+                            <span class="px-2 py-0.5 rounded bg-gray-900 border border-gray-800 text-[10px] text-emerald-300 flex items-center gap-1">
+                                <i class="fa-solid fa-coins text-emerald-400"></i> USDT (TRC20 / BSC / Polygon)
                             </span>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -4974,6 +5051,16 @@
             3: { price: 16, periodText: '/ mes', totalText: 'Facturado $48 trimestralmente (Ahorras 15%)' },
             12: { price: 13, periodText: '/ mes', totalText: 'Facturado $156 anualmente (Ahorras 30%)' }
         };
+
+        
+        function selectPlanAndRegister(period) {
+            try {
+                localStorage.setItem('preferred_billing_cycle', period);
+            } catch (e) {}
+            if (typeof openAuthModal === 'function') {
+                openAuthModal('register');
+            }
+        }
 
         function selectPlanPeriod(months) {
             [1, 3, 12].forEach(m => {

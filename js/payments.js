@@ -48,7 +48,7 @@ const PAYMENTS_CONFIG = {
             price: 19, 
             periodDays: 30, 
             periodText: 'por 1 Mes', 
-            desc: '14 días de prueba ($0 cobrados hoy si es primera vez)' 
+            desc: '7 días de prueba ($0 cobrados hoy si es primera vez)' 
         },
         quarter: { 
             price: 48, 

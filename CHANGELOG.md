@@ -5,6 +5,29 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.7] - 2026-11-03
+
+### 💎 Rediseño Responsivo y Compacto de Tarjetas de Precios (Full-Width)
+- **Eliminación de la Tarjeta Estirada Verticalmente:**
+  - Se reemplazó el contenedor estrecho y alargado (`max-w-md`) de la sección de precios (`#precios`), el cual requería hacer scroll vertical para ver el botón de acción, la garantía y las insignias de pago.
+- **Distribución Horizontal de 3 Planes Lado a Lado (`max-w-5xl`):**
+  - Se distribuyen en 3 columnas en escritorio (`md:grid-cols-3`):
+    1. **1 Mes ($19/mes):** Opción mensual flexible sin ataduras.
+    2. **3 Meses ($16/mes · -15%):** Plan destacado con borde esmeralda e insignia `"⭐ Más Elegido"`.
+    3. **12 Meses ($13/mes · -30%):** Opción anual con insignia `"🚀 Mejor Valor"` y ahorro de $72.
+  - Cada tarjeta cuenta con su propio botón de acción directo `"Comenzar 7 Días"`, vinculando la selección del ciclo preferido.
+- **Banner Horizontal Unificado de Funcionalidades:**
+  - Debajo de las 3 tarjetas se integró un banner de ancho completo con las 8 características Pro en 4 columnas (`lg:grid-cols-4`), demostrando con claridad que todos los ciclos tienen acceso al 100% de la plataforma desbloqueada sin muros de pago entre planes.
+  - Incluye la garantía de prueba de 7 días y los métodos de pago aceptados (Visa, Mastercard, USDT).
+- **Ajuste en una Sola Pantalla (No Scroll):**
+  - La altura total de la sección de precios se redujo más de un 55%, logrando que el título, los 3 planes, precios, botones, lista de funcionalidades y garantías queden completamente visibles en pantalla en monitores y laptops estándar sin requerir scroll.
+- **Optimización Responsive para Celulares:**
+  - En móviles las 3 tarjetas se presentan en formato compacto y ligero (~115px cada una), evitando el scroll repetitivo y manteniendo un flujo limpio y táctil para cualquier dispositivo.
+- **Consistencia en Pagos:**
+  - Actualización del texto descriptivo mensual en `js/payments.js` a 7 días de prueba.
+
+---
+
 ## [v3.5.6] - 2026-11-03
 
 ### 🎬 Recorrido Narrativo Auto-Tour del Showcase y Duración de Prueba a 7 Días
