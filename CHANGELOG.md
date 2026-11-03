@@ -8,6 +8,9 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [v3.4.8] - 2026-11-02
 
 ### 🗂️ Tarjetas de Cuenta Compactas: Menú de Ajustes ⋮ y Micro-Chips de Reglas en un Renglón
+- **Eliminación del Encabezado 'Cuentas sin agrupar':**
+  - Se eliminó la etiqueta divisoria intermedia *"CUENTAS SIN AGRUPAR"* en la vista principal de cuentas reales.
+  - Las tarjetas de cuenta ahora se posicionan inmediatamente debajo de la barra de acciones superior, elevando el contenido y logrando una interfaz mucho más limpia, compacta y directa.
 - **Nombre de la Cuenta en la Cabecera Superior (Junto al Menú ⋮):**
   - El nombre de la cuenta ahora se ubica en la fila superior como título principal destacado (`font-bold text-white text-base`), perfectamente alineado a la izquierda del botón de ajustes `⋮`.
   - Se eliminó la fila de *"Nombre:"* de la cuadrícula de métricas, elevando todos los datos una fila completa y reduciendo notablemente la longitud vertical de la tarjeta.

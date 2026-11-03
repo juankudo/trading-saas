@@ -1162,13 +1162,7 @@ const initialTrades = [];
 
             const groupedIds = new Set(accountGroups.flatMap(group => Array.isArray(group.accountIds) ? group.accountIds.map(String) : []));
             const ungroupedAccounts = realAccounts.filter(account => !groupedIds.has(String(account.id))).sort((a, b) => b.id - a.id);
-            if (ungroupedAccounts.length) {
-                const heading = document.createElement("h3");
-                heading.className = "col-span-full mt-1 text-xs font-bold uppercase tracking-wider text-gray-500";
-                heading.textContent = "Cuentas sin agrupar";
-                grid.appendChild(heading);
-                ungroupedAccounts.forEach(account => appendAccountCard(grid, account, false));
-            }
+            ungroupedAccounts.forEach(account => appendAccountCard(grid, account, false));
 
             if (!accountGroups.length && !realAccounts.length) {
                 grid.innerHTML = `<div class="col-span-full rounded-xl border border-main bg-[#161b22] py-12 text-center text-gray-500 shadow"><i class="fa-regular fa-folder-open mb-3 block text-4xl text-gray-600"></i>No hay cuentas creadas. Puedes crear una cuenta o un grupo.</div>`;
