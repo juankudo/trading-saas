@@ -4908,9 +4908,14 @@ const initialTrades = [];
             let avgRR = countRR > 0 ? (totalRR / countRR) : 0;
             const profitFactor = grossLoss > 0 ? grossProfit / grossLoss : (grossProfit > 0 ? Infinity : null);
             const profitFactorEl = document.getElementById("kpi-edge");
-            profitFactorEl.textContent = profitFactor === null ? "—" : (Number.isFinite(profitFactor) ? `${profitFactor.toFixed(2)}x` : "∞");
-            profitFactorEl.className = "text-2xl font-bold mt-1 " + (profitFactor === null ? "text-gray-200" : (profitFactor >= 1 ? "text-emerald-400" : "text-red-400"));
-            document.getElementById("kpi-avg-rr").textContent = "1:" + avgRR.toFixed(1);
+            if (profitFactorEl) {
+                profitFactorEl.textContent = profitFactor === null ? "—" : (Number.isFinite(profitFactor) ? `${profitFactor.toFixed(2)}x` : "∞");
+                profitFactorEl.className = "text-2xl font-bold mt-1 " + (profitFactor === null ? "text-gray-200" : (profitFactor >= 1 ? "text-emerald-400" : "text-red-400"));
+            }
+            const avgRrEl = document.getElementById("kpi-avg-rr");
+            if (avgRrEl) {
+                avgRrEl.textContent = "1:" + avgRR.toFixed(1);
+            }
 
             document.getElementById("kpi-drawdown").textContent = maxDrawdownPct.toFixed(2) + "%";
             document.getElementById("kpi-drawdown-dollar").textContent = ""; // Se eliminó la etiqueta de dólares del drawdown

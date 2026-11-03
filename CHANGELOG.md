@@ -5,6 +5,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.0] - 2026-11-02
+
+### 🎯 Eliminación de KPIs Duplicados: Profit Factor y R:R Concentrados en 'Objetivos & Distribución'
+- **Remoción de Duplicados en la Fila Superior de KPIs:**
+  - Se eliminaron las tarjetas redundantes de *"Profit Factor"* y *"Promedio RR"* de la barra superior de métricas del Dashboard.
+  - Ambas métricas se concentran exclusivamente en el bloque contiguo de *"Objetivos & Distribución"*, evitando duplicación de datos innecesaria.
+- **Cuadrícula Superior Rediseñada a 4 Métricas Clave:**
+  - La fila superior ahora se organiza en una cuadrícula simétrica de 4 KPIs (`grid-cols-2 lg:grid-cols-4 gap-4`):
+    1. Retorno Total
+    2. Efectividad Global (con desglose de trades Ganados / Perdidos / BE)
+    3. Max Drawdown
+    4. Mejor / Peor Trade
+  - Mayor amplitud visual, legibilidad optimizada y diseño equilibrado en todas las resoluciones.
+
+---
+
 ## [v3.4.9] - 2026-11-02
 
 ### 📐 Cuadrícula de 4 Tarjetas por Fila, Marquesina en Nombres Largos y Balances Simplificados
