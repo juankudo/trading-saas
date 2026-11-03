@@ -5,6 +5,28 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.6] - 2026-11-03
+
+### 🎬 Recorrido Narrativo Auto-Tour del Showcase y Duración de Prueba a 7 Días
+- **Narrativa Continua del Auto-Tour en la Landing Page:**
+  - El recorrido guiado automático del showcase se reestructuró para contar una historia completa y fluida:
+    1. **Fase 1 (A Ciegas - Caos):** Muestra el estado inicial con curva descendente roja, drawdown descontrolado y diagnóstico de revenge trading.
+    2. **Fase 2 (15 Trades - Filtros):** Transiciona a la optimización, eliminando sesiones tóxicas (Asia) y mostrando la recuperación del drawdown.
+    3. **Fase 3 (Bitácora Pro - Consistencia):** Activa la operativa con checklist institucional y ejecuta la simulación de trades en vivo (US30 y XAUUSD) elevando la equidad y acumulando +$4,850.
+    4. **Pestañas 2 y 3 (Trades y Calendario):** Recorre el registro detallado con checklist visual y el mapa de calor mensual.
+    5. **Pestaña 4 (Auditoría de Fondeo & Clímax):** Avanza por las reglas de evaluación hasta alcanzar la meta (+10.20%), desplegando el estatus `"👑 CUENTA FONDEADA APROBADA"`, confeti y la ventana de felicitaciones oficial de cuenta fondeada.
+- **Pausa Inteligente Exclusiva por Clic o Salida del Viewport:**
+  - Se eliminó la pausa por `mouseenter`, `mouseleave` y `touchstart`. La animación ya no se interrumpe al mover el cursor sobre la demo.
+  - La auto-animación se detiene **únicamente** cuando el usuario interactúa explícitamente haciendo clic sobre controles/pestañas, o cuando se realiza scroll hacia abajo dejando de ver el showcase en la pantalla (se reanuda automáticamente al regresar al campo de visión).
+- **Actualización de Prueba Gratuita a 7 Días:**
+  - Se ajustó el período de prueba gratuita de 14 días a **7 días** de forma unificada en todo el sistema:
+    - **Frontend & Landing Page (`index.html`):** Barra superior, encabezados, tarjetas de precios, preguntas frecuentes, garantías y modal de registro.
+    - **App & Checkout Dual (`app.html`):** Pastilla de usuario, banner de solo lectura, modal de checkout y herramienta sandbox de restablecimiento.
+    - **Lógica de Autenticación & Pagos (`js/auth.js`, `js/payments.js`, `js/supabase-client.js`):** Cálculo de `trial_ends_at` con `7 * 24 * 60 * 60 * 1000` y etiquetas descriptivas.
+    - **Esquema de Base de Datos (`supabase_schema.sql`):** Trigger de nuevas suscripciones configurado con `now() + interval '7 days'`.
+
+---
+
 ## [v3.5.5] - 2026-11-03
 
 ### 📅 Fecha de Referencia Histórica en Calendario Diario (Solo Backtesting)

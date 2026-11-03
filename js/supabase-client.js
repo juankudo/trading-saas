@@ -50,10 +50,10 @@ async function apiSignUp(email, password, fullName) {
             email: data.user.email,
             name: fullName.trim() || data.user.email.split('@')[0],
             created_at: data.user.created_at,
-            trial_ends_at: new Date(Date.now() + 14 * 86400000).toISOString(),
+            trial_ends_at: new Date(Date.now() + 7 * 86400000).toISOString(),
             subscription: {
                 status: 'trialing',
-                plan: 'Pro Trial (14 días)'
+                plan: 'Pro Trial (7 días)'
             }
         };
         saveUserSession(userSession);
@@ -93,7 +93,7 @@ async function apiSignIn(email, password) {
         id: data.user.id,
         email: data.user.email,
         name: (profile && profile.full_name) || (data.user.user_metadata && data.user.user_metadata.full_name) || data.user.email.split('@')[0],
-        trial_ends_at: (sub && sub.trial_ends_at) || new Date(Date.now() + 14 * 86400000).toISOString(),
+        trial_ends_at: (sub && sub.trial_ends_at) || new Date(Date.now() + 7 * 86400000).toISOString(),
         subscription: sub || { status: 'trialing', plan: 'Pro Trial' }
     };
 

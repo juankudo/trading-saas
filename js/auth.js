@@ -157,7 +157,7 @@ async function loginUser(email, password) {
         email: email.trim().toLowerCase(),
         name: email.split('@')[0],
         created_at: now.toISOString(),
-        trial_ends_at: new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000).toISOString(),
+        trial_ends_at: new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         subscription: {
             status: 'trial',
             plan: 'Pro Trial'

@@ -101,7 +101,7 @@ function checkSubscriptionAccess() {
         }
     }
 
-    // 2. Si está en período de prueba gratuito (14 días)
+    // 2. Si está en período de prueba gratuito (7 días)
     const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 14 };
     
     if (trial.expired) {
@@ -506,8 +506,8 @@ function simulateRestoreTrial() {
         user = { id: 'usr_test', email: 'trader@email.com', name: 'Trader Test' };
     }
 
-    user.trial_ends_at = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
-    user.subscription = { status: 'trial', plan: 'Pro Trial (14 días)' };
+    user.trial_ends_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    user.subscription = { status: 'trial', plan: 'Pro Trial (7 días)' };
 
     if (typeof saveUserSession === 'function') {
         saveUserSession(user);

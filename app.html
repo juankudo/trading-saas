@@ -72,7 +72,7 @@
                     <!-- Pastilla de Tiempo / Plan (Icono 🕒, despliega días/plan al hover) -->
                     <span id="app-user-badge" class="nav-pill-expandable bg-emerald-950/90 border border-emerald-800 text-emerald-400 cursor-default select-none" title="Prueba activa">
                         <i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>
-                        <span class="nav-pill-label text-xs font-bold text-emerald-400 whitespace-nowrap overflow-hidden">Prueba 14 días</span>
+                        <span class="nav-pill-label text-xs font-bold text-emerald-400 whitespace-nowrap overflow-hidden">Prueba 7 días</span>
                     </span>
 
                     <!-- Botón Cerrar Sesión -->
@@ -161,7 +161,7 @@
     <!-- Banner de Modo Solo Lectura (Oculto por defecto) -->
     <div id="readonly-warning-banner" class="hidden bg-amber-950/90 border-b border-amber-600/70 px-4 py-2.5 text-center text-xs text-amber-200 font-semibold flex items-center justify-center gap-3 sticky top-[73px] z-30 backdrop-blur-md">
         <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
-        <span id="readonly-banner-msg">Tu prueba de 14 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
+        <span id="readonly-banner-msg">Tu prueba de 7 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
         <button onclick="openCheckoutModal()" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-black shadow-md transition ml-1">
             <i class="fa-solid fa-credit-card mr-1"></i> Renovar Acceso Pro
         </button>
@@ -1298,7 +1298,7 @@
             <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-5">
                 <span id="checkout-price-amount" class="text-3xl font-black text-white block">$19 USD</span>
                 <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5">por 1 Mes</span>
-                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1">14 días de prueba ($0 cobrados hoy si es primera vez)</span>
+                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
             </div>
 
             <!-- Opciones de Pago (Pasarela Dual) -->
@@ -1403,7 +1403,7 @@
                 <div class="flex items-center gap-2">
                     <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura">Simular Prueba Vencida</button>
                     <span>·</span>
-                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 14 días">Restablecer 14 Días</button>
+                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días">Restablecer 7 Días</button>
                 </div>
             </div>
 

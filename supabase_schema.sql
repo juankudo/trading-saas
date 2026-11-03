@@ -164,8 +164,8 @@ begin
         new.id,
         'stripe',
         'trialing',
-        now() + interval '14 days',
-        now() + interval '14 days'
+        now() + interval '7 days',
+        now() + interval '7 days'
     )
     on conflict do nothing;
 
