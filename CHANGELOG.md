@@ -5,6 +5,18 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.2] - 2026-11-03
+
+### 🧹 Eliminación en Cascada de Balances de Cuentas Borradas
+- **Eliminación en Cascada de Registros de Balance:**
+  - Al borrar una cuenta real, ahora se eliminan automáticamente todos sus registros y columnas en el historial de **Seguimiento de Balances**.
+  - Si un registro histórico contenía únicamente la cuenta eliminada, la fila completa se descarta de forma limpia tanto en el almacenamiento local como en la nube.
+- **Saneamiento Automático de Cuentas Huérfanas:**
+  - Se incorporó la función `cleanOrphanBalanceHistory()` que purga de forma reactiva cualquier rastro de cuentas previamente borradas (ej. cuentas de fases superadas o eliminadas como *Fondeo PropXP Fase 2*).
+  - La tabla de seguimiento de balances ahora construye sus columnas exclusivamente a partir de las cuentas reales activas (`getRealBalanceHistoryAccounts`).
+
+---
+
 ## [v3.5.1] - 2026-11-03
 
 ### 📋 Registro de Trades: Orden Cronológico Inverso (Trades más Recientes Primero)

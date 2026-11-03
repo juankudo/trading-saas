@@ -441,6 +441,8 @@ async function deleteFromCloud(type, id) {
         } else if (type === 'session') {
             await client.from('backtest_sessions').delete().eq('id', idStr).eq('user_id', user.id);
             await client.from('trades').delete().eq('session_id', idStr).eq('user_id', user.id);
+        } else if (type === 'snapshot') {
+            await client.from('balance_snapshots').delete().eq('id', idStr).eq('user_id', user.id);
         }
     } catch (err) {
         console.warn(`Error eliminando ${type} (${id}) de la nube:`, err);

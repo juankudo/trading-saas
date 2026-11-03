@@ -356,6 +356,7 @@ const initialTrades = [];
                 accountGroups = Array.isArray(storedAccountGroups) ? storedAccountGroups : [];
                 const storedBalanceHistory = await dbGet(STORAGE_KEY_REAL_BALANCE_HISTORY);
                 realBalanceHistory = Array.isArray(storedBalanceHistory) ? storedBalanceHistory : [];
+                cleanOrphanBalanceHistory();
                 await migrateLegacyBalanceActualDates();
             } else {
                 const storedTrades = await dbGet(STORAGE_KEY_BACKTESTING);
@@ -1482,6 +1483,22 @@ const initialTrades = [];
                         ...group,
                         accountIds: (Array.isArray(group.accountIds) ? group.accountIds : []).filter(accountId => String(accountId) !== String(id))
                     }));
+                    // Eliminación en cascada de los registros de balance de la cuenta eliminada
+                    let removedSnapIds = [];
+                    realBalanceHistory = (Array.isArray(realBalanceHistory) ? realBalanceHistory : []).map(snapshot => ({
+                        ...snapshot,
+                        accounts: (Array.isArray(snapshot.accounts) ? snapshot.accounts : []).filter(acc => String(acc.accountId) !== String(id))
+                    })).filter(snapshot => {
+                        if (!snapshot.accounts || snapshot.accounts.length === 0) {
+                            if (snapshot.id) removedSnapIds.push(snapshot.id);
+                            return false;
+                        }
+                        return true;
+                    });
+                    await dbSet(STORAGE_KEY_REAL_BALANCE_HISTORY, realBalanceHistory);
+                    removedSnapIds.forEach(snapId => {
+                        if (typeof deleteFromCloud === "function") deleteFromCloud("snapshot", snapId);
+                    });
                     if (typeof deleteFromCloud === "function") deleteFromCloud("account", id);
                 } else {
                     backtestSessions = backtestSessions.filter(s => s.id !== id);
@@ -2339,15 +2356,41 @@ const initialTrades = [];
             return `${sign}${Math.abs(amount).toLocaleString("es-AR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         }
 
+        // Limpieza de balances huérfanos de cuentas previamente eliminadas
+        function cleanOrphanBalanceHistory() {
+            if (!Array.isArray(realAccounts) || !Array.isArray(realBalanceHistory) || !realBalanceHistory.length) return false;
+            const existingAccountIds = new Set(realAccounts.map(a => String(a.id)));
+            let changed = false;
+            const removedSnapshotIds = [];
+
+            realBalanceHistory = realBalanceHistory.map(snapshot => {
+                const filtered = (Array.isArray(snapshot.accounts) ? snapshot.accounts : []).filter(acc => existingAccountIds.has(String(acc.accountId)));
+                if (filtered.length !== (snapshot.accounts || []).length) changed = true;
+                return { ...snapshot, accounts: filtered };
+            }).filter(snapshot => {
+                if (!snapshot.accounts || snapshot.accounts.length === 0) {
+                    changed = true;
+                    if (snapshot.id) removedSnapshotIds.push(snapshot.id);
+                    return false;
+                }
+                return true;
+            });
+
+            if (changed) {
+                dbSet(STORAGE_KEY_REAL_BALANCE_HISTORY, realBalanceHistory).catch(e => {
+                    console.error("Error al persistir historial de balances limpio", e);
+                });
+                removedSnapshotIds.forEach(snapId => {
+                    if (typeof deleteFromCloud === "function") deleteFromCloud("snapshot", snapId);
+                });
+                if (typeof triggerCloudSave === "function") triggerCloudSave();
+            }
+            return changed;
+        }
+
         function getRealBalanceHistoryAccounts() {
             const accounts = new Map();
             realAccounts.forEach(account => accounts.set(String(account.id), { id: account.id, name: account.name }));
-            realBalanceHistory.forEach(snapshot => {
-                (Array.isArray(snapshot.accounts) ? snapshot.accounts : []).forEach(account => {
-                    const key = String(account.accountId);
-                    if (!accounts.has(key)) accounts.set(key, { id: account.accountId, name: account.accountName });
-                });
-            });
             return Array.from(accounts.values());
         }
 
@@ -2544,6 +2587,7 @@ const initialTrades = [];
         }
 
         function renderRealBalanceHistory() {
+            cleanOrphanBalanceHistory();
             const container = document.getElementById("balance-history-table-container");
             if (!realBalanceHistory.length) {
                 container.innerHTML = `<p class="p-6 text-sm text-gray-400">Todavía no hay registros. Usa “Cargar balances” para actualizar todas tus cuentas reales y guardar una captura histórica.</p>`;
@@ -2897,6 +2941,7 @@ const initialTrades = [];
             try {
                 await dbSet(STORAGE_KEY_REAL_BALANCE_HISTORY, nextHistory);
                 realBalanceHistory = nextHistory;
+                if (typeof deleteFromCloud === "function") deleteFromCloud("snapshot", id);
                 await autoSaveJSONToFolder(true);
                 renderRealBalanceHistory();
                 showToast("Registro de balances eliminado");
