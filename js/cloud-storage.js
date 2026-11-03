@@ -454,17 +454,28 @@ function updateCloudSyncIndicator(status, text) {
     const indicator = document.getElementById('cloud-sync-status');
     if (!indicator) return;
 
+    let iconHtml = '<i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>';
+    let textColor = 'text-emerald-400';
+    let defaultText = text || 'Sincronizado';
+
     if (status === 'syncing') {
-        indicator.innerHTML = `<i class="fa-solid fa-arrows-rotate fa-spin text-blue-400"></i> <span class="hidden xl:inline">${text}</span>`;
-        indicator.className = "flex items-center gap-1.5 text-xs text-blue-400 font-medium";
-        indicator.title = text || "Sincronizando con la nube...";
+        iconHtml = '<i class="fa-solid fa-arrows-rotate fa-spin text-blue-400 text-sm shrink-0"></i>';
+        textColor = 'text-blue-400';
+        defaultText = text || 'Sincronizando...';
     } else if (status === 'synced') {
-        indicator.innerHTML = `<i class="fa-solid fa-cloud-check text-emerald-400"></i> <span class="hidden xl:inline">${text}</span>`;
-        indicator.className = "flex items-center gap-1.5 text-xs text-emerald-400 font-medium";
-        indicator.title = text || "Sincronizado con la nube";
+        iconHtml = '<i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>';
+        textColor = 'text-emerald-400';
+        defaultText = text || 'Sincronizado';
     } else if (status === 'error') {
-        indicator.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-amber-400"></i> <span class="hidden xl:inline">${text}</span>`;
-        indicator.className = "flex items-center gap-1.5 text-xs text-amber-400 font-medium";
-        indicator.title = text || "Error de sincronización";
+        iconHtml = '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm shrink-0"></i>';
+        textColor = 'text-amber-400';
+        defaultText = text || 'Error de sincronización';
     }
+
+    indicator.innerHTML = `
+        ${iconHtml}
+        <span class="nav-pill-label text-xs font-medium ${textColor}">${defaultText}</span>
+    `;
+    indicator.className = `nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main ${textColor} cursor-default select-none`;
+    indicator.title = defaultText;
 }

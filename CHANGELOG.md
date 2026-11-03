@@ -5,6 +5,20 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.6] - 2026-11-02
+
+### 🧭 Reorganización de Cabecera y Pastillas Dinámicas de Barra de Herramientas
+- **Centrado Perfecto de Cambio de Modo (Cuenta Real / Backtesting):**
+  - Se estructuró la fila superior del encabezado en una cuadrícula simétrica (`1fr auto 1fr`) que garantiza el centrado horizontal matemático del selector de operativas en cualquier resolución de pantalla.
+- **Elevación del Registro de Usuario al Encabezado:**
+  - El menú de usuario con badge de prueba/plan y botón de cierre de sesión (`#app-user-menu-container`) se trasladó al extremo derecho de la primera fila, despejando la barra de herramientas inferior.
+- **Compresión y Expansión Dinámica de Suscripción y Sincronización:**
+  - El botón de *Suscripción* se comprimió a un elegante botón pastilla con el icono de diamante (`💎`) que despliega suavemente el texto *"Suscripción"* al pasar el cursor (`hover`) con microtransición fluida.
+  - El indicador de *Sincronización en la nube* se condensó a un icono de check (`✓`) que revela el estado *"Sincronizado"* al acercar el cursor sin saltos de línea ni provocar desplazamientos (`nowrap` y `overflow-hidden`).
+  - Total compatibilidad visual en Modo Oscuro y Modo Claro.
+
+---
+
 ## [v3.4.5] - 2026-11-02
 
 ### 📅 Rendimiento por Mes: Eliminación de Desplazamiento y Salto en Meses Superiores

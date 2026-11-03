@@ -32,29 +32,49 @@
         <span id="toastMsg" class="text-xs font-medium">Operación realizada con éxito</span>
     </div>
 
-    <header class="bg-card border-b border-main px-6 py-4 flex flex-wrap justify-between items-center gap-4 sticky top-0 z-40">
-        <div class="flex items-center space-x-3">
-            <i id="main-header-icon" class="fa-solid fa-chart-line text-2xl text-green-500"></i>
-            <h1 class="text-xl font-bold text-white tracking-wide flex items-center">
-                TRADING JOURNAL 
-                <span id="title-mode-badge" class="text-xs bg-green-900/50 text-green-400 border border-green-700 px-2 py-0.5 rounded ml-2">PRO DASHBOARD</span>
-            </h1>
-        </div>
-        
-        <div class="flex items-center space-x-1 bg-gray-900 border border-main rounded-lg p-1">
-            <button id="btn-mode-real" onclick="setMode('real')" class="px-3 py-1.5 rounded-md text-xs font-bold bg-green-900/60 text-green-400 shadow-sm transition-all">
-                <i class="fa-solid fa-wallet mr-1"></i> Cuenta Real
-            </button>
-            <button id="btn-mode-backtesting" onclick="setMode('backtesting')" class="px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all">
-                <i class="fa-solid fa-flask mr-1"></i> Backtesting
-            </button>
-            <button id="btn-mt5-sync" onclick="openMt5Modal()" style="display: none !important;" class="hidden" aria-hidden="true">
-                <i class="fa-solid fa-robot"></i>
-                <span id="mt5StatusText">MT5</span>
-            </button>
+        <header class="bg-card border-b border-main px-6 py-3.5 flex flex-col gap-3 sticky top-0 z-40">
+        <!-- FILA 1: Encabezado Principal (Logo a la izquierda, Modo Centrado, Registro de Usuario a la derecha) -->
+        <div class="app-header-top-row">
+            <!-- Izquierda: Logo y Nombre de Bitácora -->
+            <div class="flex items-center space-x-3 justify-start shrink-0">
+                <i id="main-header-icon" class="fa-solid fa-chart-line text-2xl text-green-500 shrink-0"></i>
+                <h1 class="text-xl font-bold text-white tracking-wide flex items-center whitespace-nowrap">
+                    TRADING JOURNAL 
+                    <span id="title-mode-badge" class="text-xs bg-green-900/50 text-green-400 border border-green-700 px-2 py-0.5 rounded ml-2">PRO DASHBOARD</span>
+                </h1>
+            </div>
+            
+            <!-- Centro: Modo Cuenta Real / Backtesting (Rigurosamente Centrado) -->
+            <div class="flex items-center justify-center">
+                <div class="flex items-center space-x-1 bg-gray-900 border border-main rounded-lg p-1">
+                    <button id="btn-mode-real" onclick="setMode('real')" class="px-3 py-1.5 rounded-md text-xs font-bold bg-green-900/60 text-green-400 shadow-sm transition-all whitespace-nowrap">
+                        <i class="fa-solid fa-wallet mr-1"></i> Cuenta Real
+                    </button>
+                    <button id="btn-mode-backtesting" onclick="setMode('backtesting')" class="px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all whitespace-nowrap">
+                        <i class="fa-solid fa-flask mr-1"></i> Backtesting
+                    </button>
+                    <button id="btn-mt5-sync" onclick="openMt5Modal()" style="display: none !important;" class="hidden" aria-hidden="true">
+                        <i class="fa-solid fa-robot"></i>
+                        <span id="mt5StatusText">MT5</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Derecha: Registro de Usuario / Badge / Cerrar Sesión -->
+            <div class="flex items-center justify-end">
+                <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2.5 py-1.5 rounded-lg text-xs shrink-0 shadow-sm" title="Usuario conectado">
+                    <i class="fa-solid fa-user text-gray-400 text-[11px] ml-0.5"></i>
+                    <span id="app-user-badge" class="px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 whitespace-nowrap">Prueba 14 días</span>
+                    <span id="app-user-email" class="hidden">trader@email.com</span>
+                    <button onclick="logout()" class="ml-1 text-gray-400 hover:text-red-400 p-1 transition" title="Cerrar sesión">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </div>
+            </div>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+        <!-- FILA 2: Barra de Herramientas y Acciones Rápidas -->
+        <div class="flex items-center justify-start gap-1.5 sm:gap-2 flex-wrap w-full border-t border-gray-800/60 pt-2.5">
             <button id="theme-toggle-btn" onclick="toggleTheme()" class="bg-gray-800 hover:bg-gray-700 border border-main text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">
                 <i class="fa-solid fa-sun theme-toggle-icon theme-icon-sun"></i>
                 <span class="text-gray-600">/</span>
@@ -113,23 +133,18 @@
             <button onclick="openResetModal()" title="Reiniciar Entorno" class="bg-gray-800 hover:bg-red-900/40 border border-main text-gray-400 hover:text-red-400 text-sm p-2 rounded-lg transition">
                 <i class="fa-solid fa-rotate-left"></i>
             </button>
-            <!-- Cloud Sync Indicator -->
-            <div id="cloud-sync-status" class="flex items-center gap-1.5 text-xs text-gray-400 px-2" title="Sincronización en la nube">
-                <i class="fa-solid fa-cloud text-gray-500"></i>
-            </div>
-            <button onclick="openCheckoutModal()" class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 shadow transition" title="Ver planes y suscripción">
-                <i class="fa-solid fa-gem"></i> Suscripción
-            </button>
-            <!-- SaaS User Menu -->
-            <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2.5 py-1.5 rounded-lg text-xs shrink-0" title="Usuario conectado">
-                <i class="fa-solid fa-user text-gray-400 text-[11px] ml-0.5"></i>
-                <span id="app-user-badge" class="px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800">Prueba 14 días</span>
-                <span id="app-user-email" class="hidden">trader@email.com</span>
-                <button onclick="logout()" class="ml-1 text-gray-400 hover:text-red-400 p-1 transition" title="Cerrar sesión">
-                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
-                </button>
+            
+            <!-- Cloud Sync Indicator (Comprimido a check, despliega al hover sin romper la línea) -->
+            <div id="cloud-sync-status" class="nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main text-emerald-400 cursor-default select-none" title="Sincronizado con la nube">
+                <i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>
+                <span class="nav-pill-label text-xs font-medium text-emerald-400">Sincronizado</span>
             </div>
 
+            <!-- Botón Suscripción (Comprimido a diamante, despliega al hover sin romper la línea) -->
+            <button onclick="openCheckoutModal()" class="nav-pill-expandable font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 shadow cursor-pointer" title="Ver planes y suscripción">
+                <i class="fa-solid fa-gem text-xs shrink-0"></i>
+                <span class="nav-pill-label text-xs">Suscripción</span>
+            </button>
         </div>
     </header>
 

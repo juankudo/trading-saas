@@ -1872,3 +1872,65 @@ button, a, input, select, textarea {
         html.light .daily-day-cell { background-color: #f8fafc; border-color: #e2e8f0; }
         html.light #dailyTradeAnalysisModal > div { background-color: #ffffff; border-color: #cbd5e1; color: #0f172a; }
         html.light #dailyAnalysisModalDate { color: #0f172a; }
+
+/* =========================================================================
+   CABECERA Y BARRA DE NAVEGACIÓN PRO (Layout Centrado y Pastillas Dinámicas)
+   ========================================================================= */
+.app-header-top-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    width: 100%;
+    gap: 0.75rem;
+}
+@media (max-width: 860px) {
+    .app-header-top-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+}
+
+/* Pastillas expandibles de la barra de navegación (Suscripción y Sincronización) */
+.nav-pill-expandable {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 38px;
+    padding: 0 11px;
+    border-radius: 0.5rem;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    transition: all 260ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-pill-expandable .nav-pill-label {
+    max-width: 0;
+    opacity: 0;
+    margin-left: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    display: inline-block;
+    transition: max-width 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease, margin-left 260ms ease;
+}
+.nav-pill-expandable:hover .nav-pill-label,
+.nav-pill-expandable:focus-visible .nav-pill-label {
+    max-width: 140px;
+    opacity: 1;
+    margin-left: 6px;
+}
+
+/* Modo Claro para Cabecera y Pastillas */
+html.light .app-header-top-row #app-user-menu-container {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #0f172a;
+}
+html.light .nav-pill-expandable.bg-gray-800 {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+html.light .nav-pill-expandable.bg-gray-800:hover {
+    background-color: #e2e8f0;
+}
