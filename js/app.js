@@ -107,6 +107,26 @@ const initialTrades = [];
 
         const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
+        function updateActiveAccountBadgeName(name) {
+            const badge = document.getElementById("active-account-badge");
+            const nameEl = document.getElementById("active-account-name");
+            const containerEl = document.getElementById("active-account-name-container");
+            if (!badge || !nameEl) return;
+            const text = String(name || "").trim();
+            nameEl.textContent = text;
+            badge.title = text;
+            
+            requestAnimationFrame(() => {
+                if (!containerEl) return;
+                nameEl.classList.remove("animate-account-marquee");
+                void nameEl.offsetWidth;
+                const isOverflow = nameEl.scrollWidth > containerEl.clientWidth + 1;
+                if (isOverflow) {
+                    nameEl.classList.add("animate-account-marquee");
+                }
+            });
+        }
+
         let customPairsList = [];
         let backtestPairsList = [];
         const baseDefaultPairs = ["EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD", "GBPJPY", "XAUUSD", "USDCHF", "NZDUSD", "US30", "US100", "BTCUSD"];
@@ -399,7 +419,7 @@ const initialTrades = [];
                 document.getElementById('reset-mode-text').textContent = "Real";
                 mainIcon.className = "fa-solid fa-chart-line text-2xl text-green-500";
                 
-                btnNewTrade.className = "mb-1 bg-green-600 hover:bg-green-700 text-white font-semibold px-4 py-1.5 rounded-lg text-sm flex items-center gap-2 shadow-lg transition-all";
+                btnNewTrade.className = "compact-expand-btn group bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold text-white transition";
                 
                 document.getElementById('sessions-title').textContent = "Cuentas Reales";
@@ -418,7 +438,7 @@ const initialTrades = [];
                 document.getElementById('reset-mode-text').textContent = "Backtesting";
                 mainIcon.className = "fa-solid fa-chart-line text-2xl text-blue-500";
                 
-                btnNewTrade.className = "mb-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-1.5 rounded-lg text-sm flex items-center gap-2 shadow-lg transition-all";
+                btnNewTrade.className = "compact-expand-btn group bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded font-semibold text-white transition";
                 
                 document.getElementById('sessions-title').textContent = "Backtest Sessions";
@@ -508,19 +528,20 @@ const initialTrades = [];
                 chartIcon.nextSibling.textContent = enabled ? " Retorno acumulado (%)" : " Evoluci\u00f3n de la Cuenta ($)";
             }
             const badge = document.getElementById("active-account-badge");
-            const name = document.getElementById("active-account-name");
             if (enabled) {
-                name.textContent = "M\u00e9tricas globales";
-                badge.classList.remove("hidden");
-            } else if (name) {
+                updateActiveAccountBadgeName("M\u00e9tricas globales");
+                if (badge) badge.classList.remove("hidden");
+            } else {
                 const selected = currentMode === "real"
                     ? realAccounts.find(item => item.id === activeRealAccountId)
                     : backtestSessions.find(item => item.id === activeSessionId);
-                name.textContent = selected ? selected.name : "";
+                updateActiveAccountBadgeName(selected ? selected.name : "");
             }
-            document.getElementById("btn-new-trade").style.display = enabled
-                ? "none"
-                : (activeRealAccountId || activeSessionId ? "flex" : "none");
+            const showTradeBtn = !enabled && Boolean(activeRealAccountId || activeSessionId);
+            const btnTrade = document.getElementById("btn-new-trade");
+            const btnTradeWrap = document.getElementById("btn-new-trade-wrap");
+            if (btnTrade) btnTrade.style.display = showTradeBtn ? "inline-flex" : "none";
+            if (btnTradeWrap) btnTradeWrap.style.display = showTradeBtn ? "block" : "none";
             updateBalanceHistoryTabVisibility();
         }
 
@@ -1535,7 +1556,10 @@ const initialTrades = [];
             document.getElementById('tab-btn-monthly').classList.remove('hidden');
             document.getElementById('tab-btn-calendar').classList.remove('hidden');
             updateGoalsTabVisibility();
-            document.getElementById('btn-new-trade').style.display = 'flex';
+            const btnTrade = document.getElementById('btn-new-trade');
+            const btnTradeWrap = document.getElementById('btn-new-trade-wrap');
+            if (btnTrade) btnTrade.style.display = 'inline-flex';
+            if (btnTradeWrap) btnTradeWrap.style.display = 'block';
             
             const list = currentMode === 'real' ? realAccounts : backtestSessions;
             const item = list.find(x => x.id === id);
@@ -1547,8 +1571,8 @@ const initialTrades = [];
                 document.getElementById('dashboardBalanceActual').value = enterActualBal !== null ? enterActualBal : '';
                 
                 const badge = document.getElementById('active-account-badge');
-                badge.classList.remove('hidden');
-                document.getElementById('active-account-name').textContent = item.name;
+                if (badge) badge.classList.remove('hidden');
+                updateActiveAccountBadgeName(item.name);
             }
 
             onDashboardPeriodTypeChange();
@@ -4366,10 +4390,20 @@ const initialTrades = [];
             if(tab === 'sessions' || tab === 'balance-history') {
                 const badge = document.getElementById('active-account-badge');
                 if (badge) badge.classList.add('hidden');
+                const btnTrade = document.getElementById('btn-new-trade');
+                const btnTradeWrap = document.getElementById('btn-new-trade-wrap');
+                if (btnTrade) btnTrade.style.display = 'none';
+                if (btnTradeWrap) btnTradeWrap.style.display = 'none';
             } else {
                 if (isGlobalMetricsView || activeRealAccountId || activeSessionId) {
                     const badge = document.getElementById('active-account-badge');
                     if (badge) badge.classList.remove('hidden');
+                    const btnTrade = document.getElementById('btn-new-trade');
+                    const btnTradeWrap = document.getElementById('btn-new-trade-wrap');
+                    if (!isGlobalMetricsView && (activeRealAccountId || activeSessionId)) {
+                        if (btnTrade) btnTrade.style.display = 'inline-flex';
+                        if (btnTradeWrap) btnTradeWrap.style.display = 'block';
+                    }
                 }
             }
             
@@ -5385,6 +5419,12 @@ function renderMonthlyPerformance() {
         function renderAll() {
 
             trades.sort((a, b) => new Date(a.fecha + "T" + a.hora) - new Date(b.fecha + "T" + b.hora));
+            const currentActiveItem = currentMode === "real"
+                ? realAccounts.find(item => item.id === activeRealAccountId)
+                : backtestSessions.find(item => item.id === activeSessionId);
+            if (currentActiveItem && !isGlobalMetricsView) {
+                updateActiveAccountBadgeName(currentActiveItem.name);
+            }
             renderTable(); renderGallery(); updateMetricsAndCharts(); renderMonthlyPerformance(); renderDailyCalendar();
             renderFondeoPanel();
             renderAccountGoalPanel();

@@ -2003,3 +2003,108 @@ html.light [data-account-menu] button[data-account-action="delete"]:hover {
         transform: translateX(var(--marquee-dist, -40px));
     }
 }
+
+/* ==========================================================================
+   Header Navigation: Botón Nueva Entrada Compacto y Badge con Marquesina
+   ========================================================================== */
+
+.btn-new-trade-wrapper {
+    position: relative;
+    width: 34px;
+    height: 32px;
+    flex-shrink: 0;
+    margin-bottom: 3px;
+}
+
+.compact-expand-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 32px;
+    width: 34px;
+    padding: 0 9px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: width 0.22s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease, background-color 0.15s ease;
+    z-index: 30;
+    cursor: pointer;
+}
+
+.compact-expand-btn:hover,
+.compact-expand-btn:focus-visible {
+    width: 140px;
+    padding: 0 12px;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6), 0 8px 10px -6px rgba(0, 0, 0, 0.6);
+}
+
+.compact-expand-btn .btn-text-expand {
+    opacity: 0;
+    max-width: 0;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 0.18s ease, max-width 0.22s cubic-bezier(0.4, 0, 0.2, 1), margin-left 0.18s ease;
+    margin-left: 0;
+    font-size: 0.8125rem;
+    line-height: 1;
+}
+
+.compact-expand-btn:hover .btn-text-expand,
+.compact-expand-btn:focus-visible .btn-text-expand {
+    opacity: 1;
+    max-width: 95px;
+    margin-left: 6px;
+}
+
+/* Badge de cuenta activa con ancho fijo y marquesina continua */
+.active-account-badge-fixed {
+    width: 125px;
+    max-width: 125px;
+    flex-shrink: 0;
+    box-sizing: border-box;
+}
+
+.active-account-name-container {
+    overflow: hidden;
+    position: relative;
+    white-space: nowrap;
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#active-account-name {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+@keyframes accountBadgeMarqueeContinuous {
+    0% {
+        transform: translateX(0%);
+    }
+    15% {
+        transform: translateX(0%);
+    }
+    85% {
+        transform: translateX(calc(-100% - 12px));
+    }
+    85.001% {
+        transform: translateX(90px);
+    }
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+.animate-account-marquee {
+    animation: accountBadgeMarqueeContinuous 7s linear infinite;
+    will-change: transform;
+}
+
+#active-account-badge:hover .animate-account-marquee {
+    animation-play-state: paused;
+}

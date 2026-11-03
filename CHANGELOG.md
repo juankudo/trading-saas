@@ -5,6 +5,21 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.6.2] - 2026-11-03
+
+### 🎯 Optimización de Barra de Navegación: Botón Compacto y Marquesina en Badge de Cuenta
+- **Botón 'Nueva Entrada' Compacto con Despliegue Flotante hacia la Izquierda (`app.html`, `css/styles.css`, `js/app.js`):**
+  - El botón `#btn-new-trade` se muestra contraído por defecto ocupando solo 34px (icono `+`).
+  - Al pasar el cursor (`:hover`), se expande suavemente hacia la izquierda mostrando *"Nueva Entrada"* sobreponiéndose en una capa superior (`z-index: 30`) sin alterar el espacio del DOM ni empujar elementos.
+- **Pestaña de Cuenta con Ancho Fijo y Marquesina Continua (`app.html`, `css/styles.css`, `js/app.js`):**
+  - El badge `#active-account-badge` tiene un ancho fijo equilibrado de 125px.
+  - Si el nombre de la cuenta o sesión supera el espacio visible, se activa una animación de marquesina continua en bucle que recorre el texto hacia la izquierda y reaparece por la derecha.
+  - Al hacer hover sobre el badge, la animación se pausa y se muestra el `title` con el nombre completo.
+- **Prevención de Salto de Línea en Barra de Pestañas (`app.html`):**
+  - Se fijó la barra de navegación en una sola línea (`sm:flex-nowrap`) con scroll horizontal suave (`overflow-x-auto no-scrollbar`), evitando que los controles de la derecha bajen a una segunda fila.
+
+---
+
 ## [v3.6.1] - 2026-11-03
 
 ### 📅 Apertura Contextual del Calendario Diario en Backtesting con Aislamiento Estricto
