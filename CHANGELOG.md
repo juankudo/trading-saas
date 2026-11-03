@@ -5,6 +5,16 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.1] - 2026-11-03
+
+### 📋 Registro de Trades: Orden Cronológico Inverso (Trades más Recientes Primero)
+- **Visualización Descendente en Registro de Trades:**
+  - Las operaciones en la tabla de la bitácora ahora se presentan en orden cronológico inverso (los trades más nuevos y recientes aparecen en la primera fila superior).
+  - Integridad histórica preservada: el cálculo acumulativo de rendimiento (`ACUMULADO`) y balance proyectado (`BALANCE`) se procesa cronológicamente antes de la inversión, garantizando que cada trade conserve su balance y resultado acumulado histórico exacto.
+  - Optimización de rendimiento DOM: renderizado de filas por lote (`map().join("")`), eliminando re-parseos innecesarios en la tabla.
+
+---
+
 ## [v3.5.0] - 2026-11-02
 
 ### 🎯 Eliminación de KPIs Duplicados: Profit Factor y R:R Concentrados en 'Objetivos & Distribución'

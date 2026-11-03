@@ -5829,16 +5829,29 @@ function renderMonthlyPerformance() {
 
             if (!fList.length) { tbody.innerHTML = `<tr><td colspan="${emptyRowColspan}" class="p-8 text-center text-gray-500"><i class="fa-solid fa-search text-2xl mb-2 block"></i>No se encontraron operaciones</td></tr>`; return; }
 
+            // Orden cronológico ascendente para cálculo exacto de acumulados y balances por operación
+            const sortedAsc = [...fList].sort((a, b) => new Date((a.fecha || "") + "T" + (a.hora || "00:00")) - new Date((b.fecha || "") + "T" + (b.hora || "00:00")));
+
             let initialBalance = getActiveInitialBalance();
             let currentBalance = initialBalance;
             let acumPct = 0;
 
-            fList.forEach(t => {
+            const computedRows = sortedAsc.map(t => {
                 const outcomePct = getTradeOutcome(t);
                 const plDollar = initialBalance * (outcomePct / 100);
                 currentBalance += plDollar;
                 acumPct += outcomePct;
+                return {
+                    trade: t,
+                    outcomePct,
+                    plDollar,
+                    currentBalance,
+                    acumPct
+                };
+            });
 
+            // Mostramos los trades más nuevos primero (orden descendente)
+            const rowsHtml = computedRows.reverse().map(({ trade: t, outcomePct, plDollar, currentBalance, acumPct }) => {
                 const stColors = {
                     "Full TP":"bg-emerald-900/60 text-emerald-400 border-emerald-700",
                     "SL":"bg-red-900/60 text-red-400 border-red-700",
@@ -5861,7 +5874,7 @@ function renderMonthlyPerformance() {
                 const rr = Number(t.rr);
                 const tradeKey = isGlobalMetricsView ? Number(t.globalId) : Number(t.id);
 
-                tbody.innerHTML += `
+                return `
                     <tr class="bg-card-hover transition">
                         <td class="px-2 py-2 font-mono whitespace-nowrap">${t.fecha}<br><span class="text-gray-500 text-[11px]">${t.hora}</span></td>
                         <td class="px-2 py-2 text-gray-300 capitalize">${dayName}</td>
@@ -5884,7 +5897,9 @@ function renderMonthlyPerformance() {
                             <button onclick="${isGlobalMetricsView ? `deleteGlobalMetricEntry(${tradeKey})` : `deleteTrade(${tradeKey})`}" class="text-gray-500 hover:text-red-400 p-1 transition" title="Eliminar"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>`;
-            });
+            }).join("");
+
+            tbody.innerHTML = rowsHtml;
         }
 
         // FUNCIONES DE LA GALERÍA Y LIGHTBOX COMPLETADAS
