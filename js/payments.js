@@ -133,8 +133,12 @@ function updateAppSubscriptionUI(subState) {
     const userEmail = document.getElementById('app-user-email');
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
 
+    const userPill = document.getElementById('app-user-pill');
     if (userEmail && user && user.email) {
         userEmail.textContent = user.email;
+    }
+    if (userPill && user && user.email) {
+        userPill.title = `Usuario: ${user.email}`;
     }
     const userContainer = document.getElementById('app-user-menu-container');
     if (userContainer && user && user.email) {
@@ -142,21 +146,35 @@ function updateAppSubscriptionUI(subState) {
     }
 
     if (userBadge) {
+        let iconHtml = '<i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>';
+        let badgeText = 'Prueba';
+        let colorClasses = "bg-emerald-950/90 text-emerald-400 border-emerald-800";
+
         if (subState.isPaid) {
             const expDateStr = subState.expiresAt instanceof Date 
                 ? subState.expiresAt.toLocaleDateString() 
                 : new Date(subState.expiresAt).toLocaleDateString();
-            userBadge.innerHTML = `<i class="fa-solid fa-crown text-amber-400 mr-1"></i> Pro Activo (${expDateStr})`;
-            userBadge.className = "px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/80 shadow-sm";
+            iconHtml = '<i class="fa-solid fa-crown text-amber-400 text-xs shrink-0"></i>';
+            badgeText = `Pro Activo (${expDateStr})`;
+            colorClasses = "bg-emerald-950/90 text-emerald-300 border-emerald-700/80 shadow-sm";
         } else if (subState.expired) {
-            userBadge.innerHTML = `<i class="fa-solid fa-lock text-rose-400 mr-1"></i> Solo Lectura`;
-            userBadge.className = "px-2 py-0.5 rounded font-bold bg-rose-950/80 text-rose-300 border border-rose-700/80 shadow-sm animate-pulse";
+            iconHtml = '<i class="fa-solid fa-lock text-rose-400 text-xs shrink-0"></i>';
+            badgeText = `Solo Lectura`;
+            colorClasses = "bg-rose-950/90 text-rose-300 border-rose-700/80 shadow-sm animate-pulse";
         } else if (subState.isTrial) {
-            userBadge.innerHTML = `<i class="fa-solid fa-clock text-amber-400 mr-1"></i> Prueba: ${subState.daysRemaining}d`;
-            userBadge.className = subState.daysRemaining <= 3 
-                ? "px-2 py-0.5 rounded font-bold bg-amber-950 text-amber-400 border border-amber-700 animate-pulse"
-                : "px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800";
+            iconHtml = '<i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>';
+            badgeText = `Prueba: ${subState.daysRemaining}d`;
+            colorClasses = subState.daysRemaining <= 3 
+                ? "bg-amber-950/90 text-amber-400 border-amber-700 animate-pulse"
+                : "bg-emerald-950/90 text-emerald-400 border-emerald-800";
         }
+
+        userBadge.innerHTML = `
+            ${iconHtml}
+            <span class="nav-pill-label text-xs font-bold whitespace-nowrap overflow-hidden">${badgeText}</span>
+        `;
+        userBadge.className = `nav-pill-expandable border shadow-sm cursor-default select-none ${colorClasses}`;
+        userBadge.title = badgeText;
     }
 }
 

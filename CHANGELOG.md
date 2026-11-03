@@ -5,6 +5,20 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.4.7] - 2026-11-02
+
+### 👤 Pastillas Dinámicas de Usuario: Tiempo Contraído y Email Desplegable
+- **Pastilla de Tiempo/Plan con Icono de Reloj Contraído:**
+  - El badge de prueba y suscripción (`#app-user-badge`) ahora permanece contraído por defecto mostrando únicamente el icono representativo (`🕒` reloj en prueba, `👑` corona en Pro o `🔒` candado en solo lectura).
+  - Al posar el cursor (`hover`), el tiempo restante o estado del plan (ej. *"Prueba: 8d"*) se despliega suavemente hacia la derecha con microanimación fluida.
+- **Pastilla de Usuario con Despliegue de Email desde el Icono:**
+  - El icono de usuario (`👤`) ahora se encuentra encapsulado en una pastilla interactiva (`#app-user-pill`).
+  - Al pasar el cursor sobre el icono de usuario, el correo electrónico del trader registrado se expande suavemente desde el icono con elipsis segura para evitar cualquier salto o desborde.
+- **Microinteracciones Homogéneas:**
+  - Todo el bloque superior de usuario y las herramientas inferiores comparten la misma convención de diseño basada en pastillas expandibles al hover (`.nav-pill-expandable`).
+
+---
+
 ## [v3.4.6] - 2026-11-02
 
 ### 🧭 Reorganización de Cabecera y Pastillas Dinámicas de Barra de Herramientas

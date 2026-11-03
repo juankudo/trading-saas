@@ -62,12 +62,22 @@
 
             <!-- Derecha: Registro de Usuario / Badge / Cerrar Sesión -->
             <div class="flex items-center justify-end">
-                <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2.5 py-1.5 rounded-lg text-xs shrink-0 shadow-sm" title="Usuario conectado">
-                    <i class="fa-solid fa-user text-gray-400 text-[11px] ml-0.5"></i>
-                    <span id="app-user-badge" class="px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800 whitespace-nowrap">Prueba 14 días</span>
-                    <span id="app-user-email" class="hidden">trader@email.com</span>
-                    <button onclick="logout()" class="ml-1 text-gray-400 hover:text-red-400 p-1 transition" title="Cerrar sesión">
-                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2 py-1 rounded-lg text-xs shrink-0 shadow-sm" title="Usuario conectado">
+                    <!-- Pastilla de Usuario / Email (Icono 👤, despliega email al hover) -->
+                    <div id="app-user-pill" class="nav-pill-expandable bg-gray-800/80 hover:bg-gray-700/80 border border-main/80 text-gray-300 cursor-default select-none" title="Usuario conectado">
+                        <i class="fa-solid fa-user text-gray-400 text-xs shrink-0"></i>
+                        <span id="app-user-email" class="nav-pill-label text-xs text-gray-300 font-medium whitespace-nowrap overflow-hidden">trader@email.com</span>
+                    </div>
+
+                    <!-- Pastilla de Tiempo / Plan (Icono 🕒, despliega días/plan al hover) -->
+                    <span id="app-user-badge" class="nav-pill-expandable bg-emerald-950/90 border border-emerald-800 text-emerald-400 cursor-default select-none" title="Prueba activa">
+                        <i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>
+                        <span class="nav-pill-label text-xs font-bold text-emerald-400 whitespace-nowrap overflow-hidden">Prueba 14 días</span>
+                    </span>
+
+                    <!-- Botón Cerrar Sesión -->
+                    <button onclick="logout()" class="p-1.5 text-gray-400 hover:text-red-400 transition rounded-md hover:bg-gray-800" title="Cerrar sesión">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
                     </button>
                 </div>
             </div>
