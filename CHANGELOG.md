@@ -5,6 +5,23 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.5.5] - 2026-11-03
+
+### 📅 Fecha de Referencia Histórica en Calendario Diario (Solo Backtesting)
+- **Apertura Contextual en Calendario Diario:**
+  - En el modo Backtesting, el mes y año iniciales del **Calendario Diario** ahora se calculan mediante la función `getBacktestSessionReferenceDate`:
+    1. Si la sesión cuenta con operaciones, se sitúa automáticamente en el mes y año del **último trade registrado**.
+    2. Si aún no cuenta con operaciones, toma como referencia la **fecha de inicio configurada o la fecha de creación de la sesión**.
+  - Se elimina la apertura por defecto en la fecha del sistema real (ej. Noviembre 2026) que mostraba calendarios vacíos al simular datos de otros periodos.
+- **Sincronización con Rendimiento por Mes:**
+  - El selector de año de **Rendimiento por mes** también adopta la fecha contextual del backtest para mantener coherencia en todas las vistas temporales.
+- **Inactivación de la Etiqueta 'Hoy' en Simulaciones Históricas:**
+  - La insignia `"Hoy"` se restringe exclusivamente al modo de Cuentas Reales, evitando destacar días anacrónicos sobre simulaciones pasadas.
+- **Cuentas Reales Inalteradas:**
+  - Las Cuentas Reales siguen abriéndose en el mes y año presente con el indicador `"Hoy"` activo.
+
+---
+
 ## [v3.5.4] - 2026-11-03
 
 ### 🏆 Reglas de Simulación de Fondeo Integradas en Dashboard (Solo Backtesting)
