@@ -26,7 +26,7 @@ const PAYMENTS_CONFIG = {
     stripe: {
         publishableKey: window.ENV_STRIPE_KEY || "pk_test_sample",
         paymentLinks: {
-            month: "https://buy.stripe.com/test_month_14days_trial",
+            month: "https://buy.stripe.com/test_month_7days_trial",
             quarter: "https://buy.stripe.com/test_quarter_plan",
             year: "https://buy.stripe.com/test_year_plan"
         }
@@ -102,10 +102,10 @@ function checkSubscriptionAccess() {
     }
 
     // 2. Si está en período de prueba gratuito (7 días)
-    const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 14 };
+    const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 7 };
     
     if (trial.expired) {
-        applyReadOnlyMode(true, "Tu período de prueba de 14 días ha finalizado. Tu cuenta está en Modo Solo Lectura.");
+        applyReadOnlyMode(true, "Tu período de prueba de 7 días ha finalizado. Tu cuenta está en Modo Solo Lectura.");
         updateAppSubscriptionUI({
             isPaid: false,
             isTrial: true,

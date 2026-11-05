@@ -1,11 +1,11 @@
 /**
  * Auth & Subscription Client Module — Trading Journal Pro SaaS
- * Diseñado para gestionar sesiones, período de prueba de 14 días y pasarelas de pago.
+ * Diseñado para gestionar sesiones, período de prueba de 7 días y pasarelas de pago.
  * Compatible con Supabase Auth y listo para integración directa.
  */
 
 const AUTH_STORAGE_KEY = 'trading_saas_user_session';
-const TRIAL_DURATION_DAYS = 14;
+const TRIAL_DURATION_DAYS = 7;
 
 // Estado del usuario en memoria
 let currentUser = null;
@@ -105,7 +105,7 @@ function logout() {
 }
 
 /**
- * Registro de nuevo usuario (activa 14 días gratis)
+ * Registro de nuevo usuario (activa 7 días gratis)
  */
 async function registerUser(name, email, password) {
     if (!name || !email || !password) {
@@ -115,7 +115,7 @@ async function registerUser(name, email, password) {
         throw new Error("La contraseña debe tener al menos 6 caracteres.");
     }
 
-    // Fecha fin de prueba: 14 días desde ahora
+    // Fecha fin de prueba: 7 días desde ahora
     const now = new Date();
     const trialEndsAt = new Date(now.getTime() + TRIAL_DURATION_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
@@ -127,7 +127,7 @@ async function registerUser(name, email, password) {
         trial_ends_at: trialEndsAt,
         subscription: {
             status: 'trial',
-            plan: 'Pro Trial (14 días)'
+            plan: 'Pro Trial (7 días)'
         }
     };
 

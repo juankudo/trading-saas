@@ -5,6 +5,82 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.6.6] - 2026-11-05
+
+### 🔒 Unificación Completa de la Prueba Gratuita a 7 Días
+- **Alineación de Autenticación y Duración de Sesión (`js/auth.js`):**
+  - Se actualizó la constante central `TRIAL_DURATION_DAYS` de 14 a **7**.
+  - Registro de usuarios locales configurado con expiración a 7 días y plan `"Pro Trial (7 días)"`.
+- **Actualización de Pasarelas y Mensajes de Modo Solo Lectura (`js/payments.js`):**
+  - Corrección de fallback de días restantes a 7 días.
+  - Actualización del mensaje de aviso al vencer el período a *"Tu período de prueba de 7 días ha finalizado"*.
+  - Enlace de prueba con Stripe actualizado a `test_month_7days_trial`.
+- **Documentación del Esquema de Base de Datos (`supabase_schema.sql`):**
+  - Comentarios del script actualizados para reflejar el intervalo de 7 días en el trigger de nuevos registros.
+
+---
+
+## [v3.6.5] - 2026-11-04
+
+### 🚀 Flujo 1-Click Maestro Autónomo en Google Colab con Checkpoints & Empaquetado Ligero
+- **Arquitectura 1-Click de Inicio a Fin (`TradingJournalPro_VideoGenerator_Colab.ipynb`):**
+  - Consolidación del flujo en una **única celda maestra auto-suficiente** que ejecuta todo el pipeline de producción sin intervención manual:
+    1. Montaje automático de Google Drive (`/content/drive/MyDrive`).
+    2. Doble detección de recursos: Extrae `trading_saas_bundle.zip` o sincroniza desde `/MyDrive/trading-saas` (con fallback de clonado desde GitHub).
+    3. Instalación desatendida de FFmpeg, Chromium Headless, Playwright, Edge-TTS y mutagen.
+    4. Levantamiento de servidor HTTP local multi-hilo en segundo plano.
+    5. Auditoría y síntesis fonética en inglés de las 30 escenas con `es-MX-JorgeNeural`.
+    6. Renderizado modular con **Checkpoints Inteligentes**: Detecta videos ya generados en Drive y los salta automáticamente para ahorrar tiempo en reconexiones.
+    7. **Aislamiento Total contra Conflicto de AsyncIO en Colab:** Se migró la invocación de Playwright a un subproceso desacoplado del bucle de eventos de IPython, erradicando el error `Playwright Sync API inside the asyncio loop` y garantizando compatibilidad nativa multiplataforma (Linux/Ubuntu/Colab con Chromium headless y banderas `--no-sandbox`).
+    8. Mezcla Lo-Fi (-24 dB) y depósito directo de los videos MP4 1080p y miniaturas en `/MyDrive/TradingJournalPro_Tutorials_YouTube/`.
+- **Script de Empaquetado Automático para Drive (`scripts/package_for_drive.py`):**
+  - Genera un archivo ZIP ultra-optimizado de solo 12.8 MB (`trading_saas_bundle.zip`) que excluye artefactos temporales y librerías pesadas para subirse a Google Drive en segundos.
+- **Reproductor HTML5 de Auditoría en Vivo:**
+  - Selector de video integrado para reproducir cualquier tutorial en pantalla completa directamente dentro de Colab antes de publicarlo en YouTube.
+
+---
+
+## [v3.6.4] - 2026-11-03
+
+### ☁️ Estudio en la Nube de Google Colab para Generación de Videos de YouTube
+- **Libreta Oficial de Google Colab (`TradingJournalPro_VideoGenerator_Colab.ipynb`):**
+  - Diseñada para renderizar los 5 videos tutoriales para YouTube en resolución 1080p (Full HD) de forma 100% remota en los servidores de Google, eliminando caídas de frames y carga en computadoras locales con recursos limitados.
+  - **Botón Directo "Open in Colab"** integrado en el encabezado.
+  - **Integración con Google Drive (`/content/drive/MyDrive/TradingJournalPro_Tutorials_YouTube/`):** Almacena automáticamente los videos MP4 finales y sus correspondientes miniaturas en alta resolución en la nube del usuario.
+  - **Entorno Automático en Linux/Ubuntu:** Instalación desatendida de FFmpeg, Chromium Headless, Playwright, Edge-TTS y mutagen.
+  - **Motor Modular de Grabación Sincronizada (`scripts/render/render_modular_tutorials.py`):**
+    - Grabación escena por escena con duración idéntica a su locución para erradicar cualquier desincronización entre audio y video.
+    - **Efecto Spotlight Profesional:** Máscara oscura al 65% con recorte y borde neón esmeralda (`#10b981`) que resalta los botones y métricas activas.
+    - **Cursor Virtual & Ripple:** Puntero institucional con suavizado cúbico y animación de pulso verde en cada clic.
+    - **Zoom Dinámico Pan & Zoom (1.4x a 1.6x):** Transiciones fluidas a formularios de trades, curva de equidad, calendario y panel de riesgo.
+    - **Lower-Third Badges:** Tarjetas flotantes translúcidas con icono de paso y subtítulo explicativo de cada acción.
+    - **Música de Fondo Lo-Fi:** Mezcla estéreo continua a -24 dB mediante bucle nativo sin saturación de memoria.
+  - **Panel Interactivo de Renderizado:** Selector desplegable para renderizar tutoriales individuales (`Tutorial 1`, `Tutorial 2`, `Tutorial 3`, `Tutorial 4`, `Tutorial 5`) o la serie completa en bucle.
+  - **Reproductor HTML5 Integrado:** Permite visualizar y auditar cualquier video generado en pantalla completa directamente dentro de Colab antes de descargarlo o subirlo a YouTube.
+- **Sincronización Exacta de Capítulos en YouTube (`media/youtube_tutorials/GUIA_PUBLICACION_OFICIAL_YOUTUBE.md`):**
+  - Ajuste de marcas de tiempo y capítulos de YouTube en los 5 tutoriales para coincidir exactamente con los audios de 2m 26s a 2m 36s de `manifest.json`.
+
+---
+
+## [v3.6.3] - 2026-11-03
+
+### 🎬 Suite Oficial de Empaquetado y Publicación para YouTube
+- **Diseño y Renderizado de 5 Miniaturas Oficiales en 1920x1080 PNG (`media/youtube_tutorials/thumbnails/`):**
+  - Creadas con estética premium de trading institucional en fondo oscuro (`#0a0f1d`), cuadrícula técnica sutil, marcos esmeralda (`#10b981`), badges de alto impacto visual (CTR booster) y mockups flotantes de alta fidelidad:
+    - `thumb_01.png`: *Onboarding y Configuración de Cuenta de Fondeo* (Badge "REGLAS 5% / 10%", tarjeta visual de cuenta $100K y reglas de evaluación).
+    - `thumb_02.png`: *Registro de Trades y R:R Automático* (Badge "RATIO 1:2.5 CALCULADO", modal de orden en XAUUSD con stop loss y take profit en tiempo real).
+    - `thumb_03.png`: *Laboratorio de Backtesting y Simulador de Payouts* (Badge "PROFIT SPLIT 90%", balance liquidado, desglose de cobro al trader y certificado de aprobación).
+    - `thumb_04.png`: *Dashboard Institucional y Calendario de Rentabilidad* (Badge "WIN RATE 68% + DÍAS VERDES", curva de equidad ascendente y calendario mensual verde).
+    - `thumb_05.png`: *Auditoría Anti-Quiebre y Blindaje de Drawdown* (Badge "PROTECCIÓN DRAWDOWN DIARIO", termómetro de drawdown con aguja indicadora y margen seguro disponible).
+- **Guía Maestra Oficial de Publicación (`media/youtube_tutorials/GUIA_PUBLICACION_OFICIAL_YOUTUBE.md`):**
+  - Documentación exhaustiva lista para copiar y pegar en YouTube Studio.
+  - Títulos optimizados para el algoritmo (alto CTR y búsqueda orgánica en trading de prop firms).
+  - Descripciones completas enriquecidas con el enlace de registro con 14 días gratis (`https://tradingjournalpro.pages.dev`), redes sociales oficiales, beneficios y llamadas a la acción.
+  - 18 etiquetas / tags estratégicos seleccionados por cada uno de los 5 videos.
+  - Estructura oficial de marcas de tiempo / capítulos de YouTube para habilitar capítulos automáticos.
+
+---
+
 ## [v3.6.2] - 2026-11-03
 
 ### 🎯 Optimización de Barra de Navegación: Botón Compacto y Marquesina en Badge de Cuenta

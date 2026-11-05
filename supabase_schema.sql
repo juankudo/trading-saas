@@ -147,7 +147,7 @@ on conflict (id) do update set public = true;
 -- ==============================================================================
 
 -- Cuando un usuario se registra en Supabase Auth, se crea automáticamente su
--- perfil y se le asigna su suscripción de prueba de 14 días.
+-- perfil y se le asigna su suscripción de prueba de 7 días.
 create or replace function public.handle_new_user()
 returns trigger as $$
 begin
