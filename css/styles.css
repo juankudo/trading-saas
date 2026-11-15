@@ -565,6 +565,345 @@ button, a, input, select, textarea {
             background: #1e293b !important;
         }
 
+        /* ==========================================================================
+           BARAJA DE CARTAS 3D INTERACTIVA (3D PRICING CARD STACK)
+           ========================================================================== */
+        .pricing-stack-stage {
+            position: relative;
+            width: 100%;
+            max-width: 980px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 460px;
+            padding: 16px 0 16px 0;
+        }
+
+        .pricing-stack-viewport {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            height: 415px;
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        .stack-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 1.25rem;
+            transition: transform 0.65s cubic-bezier(0.34, 1.35, 0.64, 1),
+                        opacity 0.45s ease,
+                        box-shadow 0.45s ease,
+                        filter 0.45s ease,
+                        border-color 0.45s ease;
+            transform-style: preserve-3d;
+            will-change: transform, opacity;
+            user-select: none;
+        }
+
+        /* Posición Frontal (Centro Activo) */
+        .stack-pos-center {
+            transform: translate3d(0, 0, 40px) scale(1);
+            opacity: 1;
+            z-index: 30;
+            pointer-events: auto;
+            cursor: default;
+        }
+
+        /* Posición Derecha Flanqueante */
+        .stack-pos-right {
+            transform: translate3d(310px, 0, -70px) rotateY(-12deg) scale(0.9);
+            opacity: 0.7;
+            z-index: 20;
+            cursor: pointer;
+            filter: brightness(0.88);
+        }
+        .stack-pos-right:hover {
+            opacity: 0.95;
+            filter: brightness(1.05);
+            transform: translate3d(305px, 0, -50px) rotateY(-8deg) scale(0.92);
+        }
+
+        /* Posición Izquierda Flanqueante */
+        .stack-pos-left {
+            transform: translate3d(-310px, 0, -70px) rotateY(12deg) scale(0.9);
+            opacity: 0.7;
+            z-index: 20;
+            cursor: pointer;
+            filter: brightness(0.88);
+        }
+        .stack-pos-left:hover {
+            opacity: 0.95;
+            filter: brightness(1.05);
+            transform: translate3d(-305px, 0, -50px) rotateY(8deg) scale(0.92);
+        }
+
+        /* Posición Trasera (Capa de Fondo) */
+        .stack-pos-back {
+            transform: translate3d(0, -18px, -150px) scale(0.82);
+            opacity: 0.22;
+            z-index: 10;
+            cursor: pointer;
+            filter: brightness(0.65);
+        }
+        .stack-pos-back:hover {
+            opacity: 0.45;
+            filter: brightness(0.85);
+        }
+
+        /* Adaptación Responsiva para Tablets y Móviles */
+        @media (max-width: 860px) {
+            .pricing-stack-viewport {
+                max-width: 350px;
+                height: 420px;
+            }
+            .stack-pos-right {
+                transform: translate3d(65px, 0, -50px) rotateY(-10deg) scale(0.88);
+                opacity: 0.4;
+            }
+            .stack-pos-left {
+                transform: translate3d(-65px, 0, -50px) rotateY(10deg) scale(0.88);
+                opacity: 0.4;
+            }
+            .stack-pos-back {
+                transform: translate3d(0, 0, -90px) scale(0.8);
+                opacity: 0;
+                pointer-events: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pricing-stack-viewport {
+                max-width: 315px;
+                height: 420px;
+            }
+            .stack-pos-right {
+                transform: translate3d(40px, 0, -40px) rotateY(-8deg) scale(0.88);
+                opacity: 0.35;
+            }
+            .stack-pos-left {
+                transform: translate3d(-40px, 0, -40px) rotateY(8deg) scale(0.88);
+                opacity: 0.35;
+            }
+        }
+
+        /* Pestañas Segmentadas de Navegación */
+        .pricing-tab-btn {
+            background-color: transparent;
+            color: #94a3b8;
+            border: 1px solid transparent;
+            overflow: hidden;
+            position: relative;
+        }
+        .pricing-tab-btn:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+        .pricing-tab-btn.active {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: #ffffff;
+            border-color: rgba(16, 185, 129, 0.4);
+            box-shadow: 0 4px 15px -3px rgba(16, 185, 129, 0.2);
+        }
+        .tab-progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0%;
+            height: 2.5px;
+            background: linear-gradient(90deg, #10b981, #14b8a6);
+            border-radius: 9999px;
+            transition: width 0.1s linear;
+        }
+        .pricing-tab-btn.active.is-auto-rotating .tab-progress-bar {
+            animation: tabProgressBar 5s linear infinite;
+        }
+        @keyframes tabProgressBar {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* Micro-Animaciones Cascada de Beneficios */
+        @keyframes benefitSlideIn {
+            0% {
+                opacity: 0;
+                transform: translateX(-12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Glassmorphism y Sombras de las Tarjetas */
+        .pricing-glass-card {
+            background-color: rgba(17, 23, 38, 0.85);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1px solid rgba(55, 65, 81, 0.7);
+            box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Tarjeta Semestral Hero en Modo Oscuro */
+        #pricing-card-semester {
+            background: linear-gradient(180deg, rgba(19, 34, 56, 0.92) 0%, rgba(14, 23, 38, 0.96) 50%, rgba(11, 16, 29, 1) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid #10b981;
+            box-shadow: 0 25px 50px -12px rgba(16, 185, 129, 0.28), 0 0 35px -5px rgba(16, 185, 129, 0.2);
+        }
+
+        /* Tarjeta Anual Destacada */
+        #pricing-card-year {
+            border: 1px solid rgba(245, 158, 11, 0.5);
+        }
+        #pricing-card-year.stack-pos-center {
+            border: 2px solid #f59e0b;
+            box-shadow: 0 25px 50px -12px rgba(245, 158, 11, 0.25), 0 0 30px -5px rgba(245, 158, 11, 0.15);
+        }
+
+        /* Modo Claro: Tarjetas de Precios y Baraja 3D */
+        html.light .pricing-tab-btn {
+            color: #64748b;
+        }
+        html.light .pricing-tab-btn:hover {
+            color: #0f172a;
+            background-color: #f1f5f9;
+        }
+        html.light .pricing-tab-btn.active {
+            background-color: #ecfdf5;
+            color: #065f46;
+            border-color: #10b981;
+            box-shadow: 0 4px 12px -2px rgba(16, 185, 129, 0.15);
+        }
+        html.light #pricing-tabs-container {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05) !important;
+        }
+        html.light .stack-card {
+            background-color: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.08) !important;
+        }
+        html.light .stack-card .text-white {
+            color: #0f172a !important;
+        }
+        html.light .stack-card .text-gray-400 {
+            color: #475569 !important;
+        }
+        html.light .stack-card .text-gray-300 {
+            color: #334155 !important;
+        }
+        html.light .stack-pos-right,
+        html.light .stack-pos-left {
+            filter: brightness(0.96) !important;
+        }
+
+        html.light #pricing-card-semester {
+            background: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%) !important;
+            background-image: linear-gradient(180deg, #ecfdf5 0%, #ffffff 100%) !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 20px 35px -5px rgba(16, 185, 129, 0.18), 0 0 20px -5px rgba(16, 185, 129, 0.12) !important;
+        }
+        html.light #pricing-card-semester.stack-pos-center {
+            box-shadow: 0 25px 50px -10px rgba(16, 185, 129, 0.28), 0 0 35px -5px rgba(16, 185, 129, 0.2) !important;
+        }
+        html.light #pricing-card-semester .text-white {
+            color: #0f172a !important;
+        }
+        html.light #pricing-card-semester .text-emerald-400 {
+            color: #047857 !important;
+        }
+        html.light #pricing-card-semester .text-emerald-300 {
+            color: #059669 !important;
+        }
+        html.light #pricing-card-semester .text-gray-300,
+        html.light #pricing-card-semester .text-gray-400 {
+            color: #334155 !important;
+        }
+        html.light #pricing-card-semester span.text-emerald-400\/90 {
+            color: #047857 !important;
+        }
+
+        html.light #pricing-card-year.stack-pos-center {
+            background: linear-gradient(180deg, #fffbeb 0%, #ffffff 100%) !important;
+            border-color: #f59e0b !important;
+            box-shadow: 0 25px 50px -10px rgba(245, 158, 11, 0.22) !important;
+        }
+
+        /* Flechas Laterales */
+        html.light #pricing-stack-prev,
+        html.light #pricing-stack-next {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+            color: #0f172a !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08) !important;
+        }
+        html.light #pricing-stack-prev:hover,
+        html.light #pricing-stack-next:hover {
+            background-color: #10b981 !important;
+            border-color: #10b981 !important;
+            color: #ffffff !important;
+        }
+
+        /* Badges y Textos dentro de las tarjetas en Modo Claro */
+        html.light #precios .text-amber-400 {
+            color: #b45309 !important;
+        }
+        html.light #precios .text-amber-300 {
+            color: #d97706 !important;
+        }
+        html.light #precios .text-emerald-400 {
+            color: #047857 !important;
+        }
+        html.light #precios .text-emerald-300 {
+            color: #059669 !important;
+        }
+        html.light #precios .bg-emerald-950\/80 {
+            background-color: #d1fae5 !important;
+            border-color: #a7f3d0 !important;
+            color: #065f46 !important;
+        }
+        html.light #precios .bg-amber-950\/80 {
+            background-color: #fef3c7 !important;
+            border-color: #fde68a !important;
+            color: #92400e !important;
+        }
+        html.light #precios .bg-gray-800\/80 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #475569 !important;
+        }
+        html.light #precios .border-gray-800\/60,
+        html.light #precios .border-gray-800\/80 {
+            border-color: #e2e8f0 !important;
+        }
+        html.light #precios .bg-gray-800\/90 {
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+        html.light #precios .bg-gray-800\/90:hover {
+            background-color: #e2e8f0 !important;
+        }
+        html.light #precios .bg-gray-900\/80 {
+            background-color: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #334155 !important;
+        }
+        html.light #precios .text-gray-300 {
+            color: #334155 !important;
+        }
+        html.light #precios .text-gray-300 strong {
+            color: #0f172a !important;
+        }
+
         /* Elementos generales de formularios y cajas */
         html.light .bg-gray-900\/90,
         html.light .bg-gray-900\/80,

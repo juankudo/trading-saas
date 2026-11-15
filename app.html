@@ -1288,33 +1288,36 @@
             </div>
 
             <!-- Selector de Períodos -->
-            <div class="grid grid-cols-3 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-5 text-center">
-                <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-3 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-5 text-center">
+                <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-2.5 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
                     1 Mes
                 </button>
-                <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-3 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    3 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-15%</span>
+                <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                    3 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
                 </button>
-                <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-3 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    12 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-30%</span>
+                <button type="button" id="checkout-period-semester" onclick="selectCheckoutPeriod('semester')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                    6 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-10%</span>
+                </button>
+                <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                    12 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-17%</span>
                 </button>
             </div>
 
             <!-- Precio Seleccionado -->
             <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-5">
-                <span id="checkout-price-amount" class="text-3xl font-black text-white block">$19 USD</span>
+                <span id="checkout-price-amount" class="text-3xl font-black text-white block">$25 USD</span>
                 <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5">por 1 Mes</span>
                 <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
             </div>
 
             <!-- Opciones de Pago (Pasarela Dual) -->
             <div class="space-y-3 mb-5">
-                <!-- Opción 1: Tarjetas Globales (Lemon Squeezy MoR) -->
-                <button onclick="handleLemonSqueezyCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
+                <!-- Opción 1: Tarjetas Globales (Stripe) -->
+                <button onclick="handleStripeCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
                     <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-credit-card text-base"></i> Pagar con Tarjeta (Visa, Mastercard, Apple Pay)
+                        <i class="fa-solid fa-credit-card text-base"></i> Pagar con Tarjeta (Visa, Mastercard, Apple Pay vía Stripe)
                     </span>
-                    <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono font-bold">Lemon Squeezy &rarr;</span>
+                    <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono font-bold">Stripe &rarr;</span>
                 </button>
 
                 <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
@@ -1326,11 +1329,11 @@
                 </button>
             </div>
 
-            <!-- Lemon Squeezy Card Sandbox Simulation Drawer -->
+            <!-- Stripe Card Sandbox Simulation Drawer -->
             <div id="checkout-stripe-sandbox" class="hidden bg-gray-900 border border-emerald-500/50 rounded-xl p-4 mb-4 text-xs animate-in fade-in">
                 <div class="flex items-center justify-between mb-2.5 border-b border-gray-800 pb-2">
                     <span class="font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-flask text-emerald-400"></i> Simulación Lemon Squeezy Checkout (Sandbox)
+                        <i class="fa-solid fa-flask text-emerald-400"></i> Simulación Stripe Checkout (Sandbox)
                     </span>
                     <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60">TEST MODE</span>
                 </div>
@@ -1342,7 +1345,7 @@
                     </div>
                     <div class="flex justify-between text-gray-400">
                         <span>Monto del plan:</span>
-                        <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$19.00 USD</span>
+                        <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$25.00 USD</span>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2">
@@ -1361,7 +1364,7 @@
                     <span class="font-bold text-emerald-400 flex items-center gap-1.5">
                         <i class="fa-brands fa-ethereum"></i> Transferencia USDT / USDC
                     </span>
-                    <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">19.00 USDT</span>
+                    <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">25.00 USDT</span>
                 </div>
                 
                 <p class="text-gray-400 mb-2">Envía el monto exacto a una de nuestras billeteras oficiales:</p>

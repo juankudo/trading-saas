@@ -28,6 +28,7 @@ const PAYMENTS_CONFIG = {
         paymentLinks: {
             month: "https://buy.stripe.com/test_month_7days_trial",
             quarter: "https://buy.stripe.com/test_quarter_plan",
+            semester: "https://buy.stripe.com/test_semester_plan",
             year: "https://buy.stripe.com/test_year_plan"
         }
     },
@@ -45,22 +46,28 @@ const PAYMENTS_CONFIG = {
 
     pricing: {
         month: { 
-            price: 19, 
+            price: 25, 
             periodDays: 30, 
             periodText: 'por 1 Mes', 
             desc: '7 días de prueba ($0 cobrados hoy si es primera vez)' 
         },
         quarter: { 
-            price: 48, 
+            price: 70, 
             periodDays: 90, 
             periodText: 'por 3 Meses', 
-            desc: 'Ahorras 15% ($16/mes) · Facturado cada 3 meses' 
+            desc: 'Ahorras 7% ($23.33/mes · Ahorras $5) · Facturado cada 3 meses' 
+        },
+        semester: { 
+            price: 135, 
+            periodDays: 180, 
+            periodText: 'por 6 Meses', 
+            desc: 'Ahorras 10% ($22.50/mes · Ahorras $15) · Facturado cada 6 meses' 
         },
         year: { 
-            price: 156, 
+            price: 250, 
             periodDays: 365, 
             periodText: 'por 12 Meses', 
-            desc: 'Ahorras 30% ($13/mes) · Facturado anualmente' 
+            desc: 'Ahorras 17% ($20.83/mes · Ahorras $50) · Facturado anualmente' 
         }
     }
 };
@@ -210,7 +217,12 @@ function applyReadOnlyMode(isReadOnly, message = "") {
  * Control del Modal de Checkout
  */
 function openCheckoutModal(defaultPeriod = 'month') {
-    selectedCheckoutPeriod = defaultPeriod;
+    const savedPeriod = localStorage.getItem('preferred_billing_cycle');
+    if (savedPeriod && PAYMENTS_CONFIG.pricing[savedPeriod]) {
+        selectedCheckoutPeriod = savedPeriod;
+    } else {
+        selectedCheckoutPeriod = defaultPeriod;
+    }
     const modal = document.getElementById('checkoutModal');
     if (!modal) return;
 
@@ -234,7 +246,7 @@ function closeCheckoutModal() {
 
 function selectCheckoutPeriod(period) {
     selectedCheckoutPeriod = period;
-    ['month', 'quarter', 'year'].forEach(p => {
+    ['month', 'quarter', 'semester', 'year'].forEach(p => {
         const btn = document.getElementById('checkout-period-' + p);
         if (btn) {
             if (p === period) {
@@ -284,9 +296,9 @@ function updateSandboxModeBanner() {
 }
 
 /**
- * Procesa el pago con Tarjeta (Lemon Squeezy Merchant of Record o Stripe)
+ * Procesa el pago con Tarjeta (Stripe como pasarela principal)
  */
-function handleLemonSqueezyCheckout() {
+function handleStripeCheckout() {
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
     hideCryptoInvoice();
 
@@ -296,30 +308,31 @@ function handleLemonSqueezyCheckout() {
         return;
     }
 
-    // En Producción: Redirige al Checkout oficial de Lemon Squeezy
-    const url = PAYMENTS_CONFIG.lemonsqueezy.checkoutUrls[selectedCheckoutPeriod];
-    if (url && url.startsWith('http')) {
+    // En Producción: Redirige al Checkout oficial de Stripe
+    const stripeLink = PAYMENTS_CONFIG.stripe && PAYMENTS_CONFIG.stripe.paymentLinks[selectedCheckoutPeriod];
+    if (stripeLink && stripeLink.startsWith('http')) {
         const userEmail = encodeURIComponent((user && user.email) || '');
-        const userId = encodeURIComponent((user && user.id) || '');
-        const sep = url.includes('?') ? '&' : '?';
-        const targetUrl = `${url}${sep}checkout[email]=${userEmail}&checkout[custom][user_id]=${userId}`;
-        window.open(targetUrl, '_blank');
+        const clientRef = encodeURIComponent((user && user.id) || '');
+        const sep = stripeLink.includes('?') ? '&' : '?';
+        window.open(`${stripeLink}${sep}prefilled_email=${userEmail}&client_reference_id=${clientRef}`, '_blank');
     } else {
-        // Fallback Stripe si estuviese configurado
-        const stripeLink = PAYMENTS_CONFIG.stripe && PAYMENTS_CONFIG.stripe.paymentLinks[selectedCheckoutPeriod];
-        if (stripeLink && stripeLink.startsWith('http')) {
+        // Fallback Lemon Squeezy si estuviese configurado
+        const url = PAYMENTS_CONFIG.lemonsqueezy && PAYMENTS_CONFIG.lemonsqueezy.checkoutUrls[selectedCheckoutPeriod];
+        if (url && url.startsWith('http')) {
             const userEmail = encodeURIComponent((user && user.email) || '');
-            const clientRef = encodeURIComponent((user && user.id) || '');
-            window.open(`${stripeLink}?prefilled_email=${userEmail}&client_reference_id=${clientRef}`, '_blank');
+            const userId = encodeURIComponent((user && user.id) || '');
+            const sep = url.includes('?') ? '&' : '?';
+            const targetUrl = `${url}${sep}checkout[email]=${userEmail}&checkout[custom][user_id]=${userId}`;
+            window.open(targetUrl, '_blank');
         } else {
-            alert("Enlace de Lemon Squeezy en configuración. Asigna tus URLs en js/payments.js");
+            alert("Enlace de Stripe en configuración. Asigna tus URLs en js/payments.js");
         }
     }
 }
 
 // Aliases para compatibilidad completa
-const handleCardCheckout = handleLemonSqueezyCheckout;
-const handleStripeCheckout = handleLemonSqueezyCheckout;
+const handleCardCheckout = handleStripeCheckout;
+const handleLemonSqueezyCheckout = handleStripeCheckout;
 
 function showCardSandbox() {
     const sandboxDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
@@ -337,12 +350,12 @@ function hideCardSandbox() {
 const hideStripeSandbox = hideCardSandbox;
 
 /**
- * Simula la aprobación exitosa de un pago con Tarjeta (Lemon Squeezy) en Sandbox
+ * Simula la aprobación exitosa de un pago con Tarjeta (Stripe) en Sandbox
  */
 async function simulateCardPaymentSuccess() {
     const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
-    const transId = 'ls_sub_test_' + Date.now().toString(36);
-    await completeSubscriptionPayment(selectedCheckoutPeriod, 'lemonsqueezy', transId);
+    const transId = 'stripe_sub_test_' + Date.now().toString(36);
+    await completeSubscriptionPayment(selectedCheckoutPeriod, 'stripe', transId);
 }
 const simulateStripePaymentSuccess = simulateCardPaymentSuccess;
 

@@ -5,6 +5,47 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.6.7] - 2026-11-15
+
+### 🃏 Baraja de Cartas 3D Interactiva con Rotación Fluida (3D Pricing Card Stack)
+- **Escenario 3D con Perspectiva y Física Elástica (`index.html`, `css/styles.css`):**
+  - Implementación de un escenario 3D (`perspective: 1200px`, `transform-style: preserve-3d`) para las 4 tarjetas de precios.
+  - La tarjeta activa se sitúa al frente con escala completa, resplandor ambiental y micro-animaciones en cascada para cada una de sus características.
+  - Las tarjetas secundarias reposan a los costados y detrás en capas tridimensionales con rotación sutil (`rotateY(±14deg)`), profundidad z y translucidez elegante, invitando a la exploración táctil.
+  - **Ajuste de Proporciones y Altura Esbelta:** Calibración de altura a 415px (reduciendo 135px de espacio vacío vertical entre beneficios y botón de acción) para un acabado balanceado y compacto.
+- **Sistema de Control Multicanal y Gestual:**
+  - **Tabs Segmentadas:** 4 pestañas interactivas superiores con indicadores de ahorro y barra de progreso animada sincronizada con la auto-rotación.
+  - **Clic Directo en Tarjetas:** Tocar cualquier tarjeta del fondo la traslada fluidamente hacia el frente mediante curvas de transición elástica (`spring cubic-bezier`).
+  - **Flechas Flotantes Laterales:** Botones prev/next para navegación ágil de escritorio.
+  - **Control Gestual Táctil (Swipe):** Detección nativa de gestos `touchstart`/`touchend` para deslizar entre planes en dispositivos móviles y tabletas.
+  - **Auto-Rotación Inteligente:** Rotación automática demostrativa cada 5 segundos que se pausa temporalmente al posar el cursor y se desactiva permanentemente en el momento en que el usuario interactúa manualmente con cualquier control.
+- **Micro-Animaciones en Cascada (Staggered Benefits):**
+  - Cada vez que una tarjeta pasa al frente, sus 5 viñetas de valor se animan de forma secuencial y escalonada con checks luminosos.
+- **Garantía Visual y Contrastes en Modo Claro / Oscuro:**
+  - Estilos específicos de alto contraste para modo claro (`#ffffff`, bordes `#e2e8f0`, textos `#0f172a` y degradados de acento), asegurando legibilidad absoluta en ambos temas.
+
+### 💳 Integración de Stripe y Nueva Estructura de 4 Planes de Precios
+- **Stripe como Pasarela Oficial de Tarjetas (`index.html`, `app.html`, `js/payments.js`):**
+  - Se configuró Stripe como el procesador principal para tarjetas de crédito y débito (Visa, Mastercard, Apple Pay, Google Pay) con enlaces directos de pago seguros y certificación PCI Service Provider Nivel 1.
+  - Actualización de textos en FAQs, insignias de seguridad, avisos de reembolso y modales legales.
+  - Actualización del entorno de simulación interactiva a *Stripe Checkout (Sandbox)*.
+- **Cuatro Opciones de Suscripción con Desglose de Ahorros (`index.html`):**
+  - **Mensual:** $25 USD / mes (Tarifa base flexible).
+  - **Trimestral:** $70 USD ($23.33/mes &bull; Ahorras $5 USD / 7%).
+  - **Semestral:** $135 USD ($22.50/mes &bull; Ahorras $15 USD / 10% &bull; *Opción Destacada*).
+  - **Anual:** $250 USD ($20.83/mes &bull; Ahorras $50 USD / 17% &bull; *Mayor Ahorro*).
+- **Rediseño Bento Glassmorphism & Suite SaaS Premium (`index.html`, `css/styles.css`):**
+  - **Estética Glassmorphism:** Fondo translúcido con desenfoque (`backdrop-blur-xl`), bordes reactivos al cursor y resplandor ambiental (*ambient glow*) esmeralda de fondo.
+  - **Jerarquía Asimétrica:** Plan Semestral ($135 USD) transformado en tarjeta Hero con borde esmeralda luminoso, elevación y botón interactivo; plan Anual ($250 USD) destacado con acentos ámbar de máximo ahorro; y planes Mensual y Trimestral con diseño sobrio y moderno.
+  - **Beneficios Directos por Tarjeta:** Cada plan incorpora su propia lista de 4 a 5 viñetas de valor clave con micro-checks vectoriales estilizados.
+  - **Optimización de Espacio:** Se eliminó el bloque inferior de características para dar lugar a una franja compacta de garantías (7 días de prueba, cancelación en 1 clic) y métodos de pago (Visa, Mastercard, USDT).
+  - **Compatibilidad Dual:** Perfeccionamiento de contrastes y degradados tanto para Modo Oscuro como para Modo Claro.
+- **Módulo de Pagos y Checkout (`js/payments.js`, `app.html`):**
+  - Registro de los 4 intervalos (`month`, `quarter`, `semester`, `year`) en `PAYMENTS_CONFIG.pricing` y `PAYMENTS_CONFIG.stripe.paymentLinks`.
+  - Soporte de 4 botones de selección rápida en el modal de checkout de la aplicación.
+
+---
+
 ## [v3.6.6] - 2026-11-05
 
 ### 🔒 Unificación Completa de la Prueba Gratuita a 7 Días
