@@ -21,12 +21,13 @@ window.__initStudioMotionEngine = function() {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 1920px;
+            height: 1080px;
             pointer-events: none;
             z-index: 9999900;
             overflow: hidden;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            transform: none !important;
         }
 
         /* SVG Motion Canvas */
@@ -239,7 +240,7 @@ window.__initStudioMotionEngine = function() {
             <div id="studio-cursor-ripple"></div>
         </div>
     `;
-    document.body.appendChild(container);
+    (document.documentElement || document.body).appendChild(container);
 
     window.__curX = 840;
     window.__curY = 472;
@@ -344,12 +345,13 @@ window.__pulseRingAround = function(selector, padding = 8) {
     const rect = el.getBoundingClientRect();
     const ring = document.createElement('div');
     ring.className = 'studio-pulse-ring';
-    ring.style.left = (rect.left - padding) + 'px';
-    ring.style.top = (rect.top - padding) + 'px';
-    ring.style.width = (rect.width + padding * 2) + 'px';
-    ring.style.height = (rect.height + padding * 2) + 'px';
+    ring.style.left = Math.round(rect.left - padding) + 'px';
+    ring.style.top = Math.round(rect.top - padding) + 'px';
+    ring.style.width = Math.round(rect.width + padding * 2) + 'px';
+    ring.style.height = Math.round(rect.height + padding * 2) + 'px';
 
-    document.getElementById('studio-motion-container').appendChild(ring);
+    const container = document.getElementById('studio-motion-container');
+    if (container) container.appendChild(ring);
     window.__pulseRingEl = ring;
 };
 
@@ -361,7 +363,7 @@ window.__removePulseRing = function() {
 };
 
 // -------------------------------------------------------------
-// CALLOUT BADGE & LOWER THIRD
+// CALLOUT BADGE & LOWER THIRD (AUTO-CLAMPING & COLLISION-SAFE)
 // -------------------------------------------------------------
 window.__showCalloutBadge = function(targetSelector, icon, tag, title, subtitle, placement = 'right') {
     const badge = document.getElementById('studio-callout-badge');
@@ -375,19 +377,44 @@ window.__showCalloutBadge = function(targetSelector, icon, tag, title, subtitle,
     const el = document.querySelector(targetSelector);
     if (el) {
         const rect = el.getBoundingClientRect();
+        const badgeW = 540;
+        const badgeH = 110;
+        let x = 0, y = 0;
+
         if (placement === 'right') {
-            badge.style.left = (rect.right + 25) + 'px';
-            badge.style.top = (rect.top + rect.height / 2 - 40) + 'px';
+            x = rect.right + 25;
+            y = rect.top + (rect.height / 2) - (badgeH / 2);
+            // Si desborda por la derecha del viewport (1920px), voltear a la izquierda
+            if (x + badgeW > 1880) {
+                x = rect.left - badgeW - 25;
+            }
         } else if (placement === 'left') {
-            badge.style.left = (rect.left - 420) + 'px';
-            badge.style.top = (rect.top + rect.height / 2 - 40) + 'px';
+            x = rect.left - badgeW - 25;
+            y = rect.top + (rect.height / 2) - (badgeH / 2);
+            if (x < 30) {
+                x = rect.right + 25;
+            }
         } else if (placement === 'bottom') {
-            badge.style.left = (rect.left) + 'px';
-            badge.style.top = (rect.bottom + 20) + 'px';
-        } else {
-            badge.style.left = (rect.left) + 'px';
-            badge.style.top = (rect.top - 100) + 'px';
+            x = rect.left;
+            y = rect.bottom + 20;
+            // Si colisiona con el Lower-Third en la parte inferior (y > 880px), voltear arriba
+            if (y + badgeH > 880) {
+                y = rect.top - badgeH - 20;
+            }
+        } else { // top
+            x = rect.left;
+            y = rect.top - badgeH - 20;
+            if (y < 30) {
+                y = rect.bottom + 20;
+            }
         }
+
+        // Clamp estricto a los límites físicos del viewport Full HD (1920x1080)
+        x = Math.max(30, Math.min(1920 - badgeW - 30, x));
+        y = Math.max(30, Math.min(1080 - badgeH - 30, y));
+
+        badge.style.left = Math.round(x) + 'px';
+        badge.style.top = Math.round(y) + 'px';
     }
     badge.classList.add('active');
 };
@@ -412,9 +439,9 @@ window.__hideLowerThird = function() {
 };
 
 // -------------------------------------------------------------
-// SPOTLIGHT
+// SPOTLIGHT (100% NATIVE 1920x1080 PIXEL-PERFECT)
 // -------------------------------------------------------------
-window.__spotlightElement = function(selector, padding = 12) {
+window.__spotlightElement = function(selector, padding = 10) {
     const overlay = document.getElementById('studio-spotlight-overlay');
     const hole = document.getElementById('studio-spotlight-hole');
     if (!overlay || !hole) return;
@@ -426,10 +453,10 @@ window.__spotlightElement = function(selector, padding = 12) {
     }
 
     const rect = el.getBoundingClientRect();
-    hole.style.left = (rect.left - padding) + 'px';
-    hole.style.top = (rect.top - padding) + 'px';
-    hole.style.width = (rect.width + padding * 2) + 'px';
-    hole.style.height = (rect.height + padding * 2) + 'px';
+    hole.style.left = Math.round(rect.left - padding) + 'px';
+    hole.style.top = Math.round(rect.top - padding) + 'px';
+    hole.style.width = Math.round(rect.width + padding * 2) + 'px';
+    hole.style.height = Math.round(rect.height + padding * 2) + 'px';
     overlay.classList.add('active');
 };
 

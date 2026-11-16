@@ -5,6 +5,25 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.0] - 2026-11-16
+
+### 🎬 Suite de Producción V5: Arquitectura de Toma Maestra Continua (Zero White Flashes)
+- **Toma Maestra Continua en Vivo (`render_video_01_astrade.py`):**
+  - Erradicación definitiva de la fragmentación en navegadores independientes. Toda la operativa dentro de `app.html` (88.75s) se filma en una sola sesión continua e ininterrumpida de Chromium.
+  - El modal se abre en vivo, se selecciona la modalidad Challenge, se escriben los datos de la cuenta ($100K y reglas 8%/10%) y se guarda la sesión en un flujo natural sin recargas de página ni pantallas en blanco.
+  - Al hacer click en "Crear", el modal se cierra y la tarjeta institucional recién creada ya está visible y lista en el grid.
+- **Calibración Matemática 1:1 del Studio Motion Engine (`studio_motion_engine.js`):**
+  - Eliminación total de CSS `zoom`, erradicando el bug de doble escalado ($1.10 \times 1.10 = 1.21$) que desplazaba los recuadros de spotlight 150px fuera de posición.
+  - Algoritmo de auto-clamping inteligente en `__showCalloutBadge`: voltea automáticamente de derecha a izquierda si se aproxima al borde derecho del viewport (1920px), y voltea hacia arriba si colisiona con el Lower-Third en la parte inferior ($y > 880\text{px}$).
+  - Coordenadas redondeadas a píxeles exactos en spotlights, pulse rings y cursores virtuales.
+- **Blindaje Físico Anti-Flash Blanco en Transiciones:**
+  - Flags nativos de Chromium (`--background-color=0b0f19`), inyección CDP `setDefaultBackgroundColorOverride` y descarte preventivo de pre-roll (`-ss 0.200` y `-ss 0.150` en FFmpeg).
+  - Reducción de transiciones globales a solo 2 disoluciones cinematográficas de 0.5s: Intro ➔ Toma Maestra Continua ➔ Outro.
+- **Sincronización Autónoma en Google Drive:**
+  - `astrade_video01_bundle.zip` y `trading_saas_bundle.zip` actualizados directamente en Google Drive.
+
+---
+
 ## [v3.7.9] - 2026-11-16
 
 ### 🎬 Tutorial #1 V4: Enfoque Monotemático, Intro/Outro Cinemático y Remotion Skill

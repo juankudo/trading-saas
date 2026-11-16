@@ -1,13 +1,15 @@
 """
-AsTrade Studio Master Render Pipeline — Tutorial #1 (V4)
-Single-Topic Focus: Creación y Configuración de Cuentas de Trading.
+AsTrade Studio Master Render Pipeline — Tutorial #1 (V5)
+Master Take Edition: Single Seamless Continuous Recording for app.html.
 Features:
-- Animated Intro with AsTrade official logo, glowing neon halo, and lesson title.
-- Real 1920x1080 native resolution (zero grey letterboxing borders).
-- Step-by-step account configuration (Account types, Initial Balance vs Actual Balance, Fondeo rules 8%/10%).
-- Account Card revealed in the grid with all badges, balance, and action buttons.
-- Animated Outro with official domain astradehub.com.
-- Smooth FFmpeg cross-fades and music ducking.
+- Zero White Flashes: Chromium background color flags, CDP override, and pre-roll trimming.
+- Continuous Take (88.75s): The browser session NEVER reloads or resets between blocks.
+  Form opens in live motion, rules unfold dynamically, inputs are filled, submit closes the modal,
+  and the created card is highlighted directly in the grid.
+- Pixel-Perfect Motion Engine: 100% native 1920x1080 coordinates (zero CSS zoom drift),
+  smart boundary clamping, and anti-collision against the Lower-Third.
+- Animated Intro (9.65s) and Outro (6.38s) with official domain astradehub.com.
+- Smooth 2-transition FFmpeg assembly with music ducking.
 """
 
 import os
@@ -27,7 +29,6 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 SCRATCH_DIR = os.path.join(BASE_DIR, "scratch", "video_01_v3")
 AUDIO_DIR = os.path.join(SCRATCH_DIR, "audio")
 SCENES_DIR = os.path.join(SCRATCH_DIR, "scenes")
-MANIFEST_PATH = os.path.join(AUDIO_DIR, "manifest_v3.json")
 OUTPUT_DIR = os.path.join(BASE_DIR, "media", "youtube_tutorials")
 FINAL_MP4 = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_01_Onboarding_1080p.mp4")
 FINAL_MP4_ALIAS = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_01_Cuentas_1080p.mp4")
@@ -75,371 +76,152 @@ def start_http_server():
         return None
 
 # -------------------------------------------------------------
-# 2. CHOREOGRAPHY PER BLOCK
+# 2. AUDIO ASSETS VERIFICATION & CONCATENATION
 # -------------------------------------------------------------
-async def choreograph_block(page, block_id, duration):
+def prepare_continuous_audio():
     """
-    Executes precise motion graphics, SVG arrow drawing, spotlights,
-    typewriting, and card highlights for each scene block.
+    Ensures that app_flow_continuous.mp3 exists by concatenating
+    the 4 modular audio blocks seamlessly.
     """
-    t_start = time.time()
-    print(f"\n🎬 Coreografiando {block_id} (Meta: {duration:.2f}s)...")
+    cont_audio = os.path.join(AUDIO_DIR, "app_flow_continuous.mp3")
+    b1 = os.path.join(AUDIO_DIR, "block1_accounts_panel.mp3")
+    b2 = os.path.join(AUDIO_DIR, "block2_account_types.mp3")
+    b3 = os.path.join(AUDIO_DIR, "block3_balances_rules.mp3")
+    b4 = os.path.join(AUDIO_DIR, "block4_created_card.mp3")
 
-    # In Intro and Outro, the HTML template runs its own animations
-    if block_id == "intro":
-        await asyncio.sleep(duration - 1.2)
-        try:
-            await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
-        except Exception:
-            pass
-        await asyncio.sleep(1.2)
-        print(f"✅ Bloque {block_id} completado en {time.time() - t_start:.2f}s")
-        return
+    for f in [b1, b2, b3, b4]:
+        if not os.path.exists(f):
+            raise FileNotFoundError(f"Falta archivo de audio modular: {f}")
 
-    if block_id == "outro":
-        await asyncio.sleep(duration - 1.0)
-        try:
-            await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
-        except Exception:
-            pass
-        await asyncio.sleep(1.0)
-        print(f"✅ Bloque {block_id} completado en {time.time() - t_start:.2f}s")
-        return
-
-    # In app.html blocks, inject the motion engine
-    with open(MOTION_ENGINE_JS, "r", encoding="utf-8") as f:
-        engine_code = f.read()
-
-    await page.evaluate(engine_code)
-    await page.evaluate("window.__initStudioMotionEngine()")
-
-    # Eradicate tours and overlays
-    await page.evaluate("""
-        const t = document.getElementById('tourOverlay');
-        if (t) t.remove();
-        const g = document.getElementById('lifecycleGuideModal');
-        if (g) g.remove();
-        const lo = document.getElementById('lifecycleGuideOverlay');
-        if (lo) lo.remove();
-    """)
-
-    if block_id == "block1_accounts_panel":
-        # ---------------------------------------------------------
-        # BLOCK 1: Panel de Cuentas y Botón Nueva Cuenta (12.17s)
-        # ---------------------------------------------------------
-        await page.evaluate("""
-            window.__showLowerThird('⚡', 'PASO 1: GESTIÓN DE CUENTAS', 'Panel Tus Cuentas: Centro de Mando de Capital');
-        """)
-        await asyncio.sleep(1.2)
-
-        # Glide cursor towards "Nueva Cuenta"
-        btn_selector = "#btn-new-session"
-        await page.evaluate(f"""
-            window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{btn_selector}', -0.25, 750);
-            window.__pulseRingAround('{btn_selector}', 6);
-            window.__showCalloutBadge('{btn_selector}', '⚡', 'GESTIÓN', 'Crear Nueva Cuenta', 'Auditoría institucional en 1 o 2 fases', 'bottom');
-        """)
-        await asyncio.sleep(4.5)
-
-        # Clear arrow and glide cursor
-        await page.evaluate("""
-            window.__clearMotionArrows();
-            window.__hideCalloutBadge();
-            window.__removePulseRing();
-        """)
-        await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 600)")
-        await asyncio.sleep(0.7)
-
-        # Click ripple + open modal
-        await page.evaluate("window.__clickRipple()")
-        await asyncio.sleep(0.3)
-        await page.evaluate(f"""
-            const btn = document.querySelector('{btn_selector}');
-            if (btn) btn.click();
-            else if (typeof openSessionModal === 'function') openSessionModal();
-        """)
-        try:
-            await page.wait_for_selector("#sessionModal:not(.hidden)", state="visible", timeout=2500)
-        except Exception:
-            await page.evaluate("if (typeof openSessionModal === 'function') openSessionModal();")
-        await asyncio.sleep(1.0)
-
-    elif block_id == "block2_account_types":
-        # ---------------------------------------------------------
-        # BLOCK 2: Tipos de Cuenta y sus Diferencias (18.41s)
-        # ---------------------------------------------------------
-        # Ensure modal is open
-        await page.evaluate("""
-            if (document.getElementById('sessionModal').classList.contains('hidden')) {
-                if (typeof openSessionModal === 'function') openSessionModal();
-            }
-            window.__showLowerThird('📋', 'PASO 2: MODALIDADES', 'Cuentas Reales, Challenges, Fondeadas e Instant');
-        """)
-        await asyncio.sleep(1.2)
-
-        # Glide cursor to select #inputAccountStage
-        stage_sel = "#inputAccountStage"
-        await page.evaluate(f"""
-            window.__glideCursorToElement('{stage_sel}', 600);
-            window.__pulseRingAround('{stage_sel}', 6);
-            window.__showCalloutBadge('{stage_sel}', '📋', 'MODALIDADES', 'Tipos de Cuenta Soportados', 'Real, Challenge, Fondeada e Instant', 'right');
-        """)
-        await asyncio.sleep(4.0)
-
-        # Cycle visually through account types: Real
-        await page.evaluate("""
-            const el = document.querySelector('#inputAccountStage');
-            if (el) {
-                el.value = 'real';
-                if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
-            }
-            window.__showCalloutBadge('#inputAccountStage', '💼', 'CAPITAL PROPIO', 'Cuenta Real', 'Auditoría de tu capital personal', 'right');
-        """)
-        await asyncio.sleep(3.5)
-
-        # Select "prueba" (Challenge)
-        await page.evaluate("""
-            const el = document.querySelector('#inputAccountStage');
-            if (el) {
-                el.value = 'prueba';
-                if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
-            }
-            window.__showCalloutBadge('#inputAccountStage', '🎯', 'SELECCIÓN: FASE DE PRUEBA', 'Evaluación / Challenge', 'Auditoría estricta de metas y límites de pérdida', 'right');
-        """)
-        await asyncio.sleep(4.5)
-
-        # Clean spotlight & badge
-        await page.evaluate("""
-            window.__removePulseRing();
-            window.__hideCalloutBadge();
-        """)
-
-    elif block_id == "block3_balances_rules":
-        # ---------------------------------------------------------
-        # BLOCK 3: Balance Inicial vs Saldo Actual & Reglas (36.74s)
-        # ---------------------------------------------------------
-        await page.evaluate("""
-            if (document.getElementById('sessionModal').classList.contains('hidden')) {
-                if (typeof openSessionModal === 'function') openSessionModal();
-            }
-            const el = document.querySelector('#inputAccountStage');
-            if (el) {
-                el.value = 'prueba';
-                if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
-            }
-            window.__showLowerThird('💰', 'PASO 3: BALANCES & REGLAS', 'Balance Inicial $100K vs Saldo Actual & Reglas');
-        """)
-        await asyncio.sleep(1.2)
-
-        # 1. Type account name: 'Fondeo 100K FTMO'
-        await page.evaluate("window.__glideCursorToElement('#inputSessionName', 500)")
-        await asyncio.sleep(0.5)
-        await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 45)")
-        await asyncio.sleep(1.2)
-
-        # 2. Spotlight Initial Balance: $100,000 USD
-        bal_el = "#inputSessionBalance"
-        await page.evaluate(f"""
-            window.__glideCursorToElement('{bal_el}', 500);
-            window.__spotlightElement('{bal_el}', 8);
-            window.__showCalloutBadge('{bal_el}', '💰', 'CAPITAL AUDITADO', 'Balance Inicial: $100,000 USD', 'Base estricta para el cálculo de riesgo % por trade', 'right');
-        """)
-        await asyncio.sleep(6.5)
-
-        # 3. Spotlight Balance Actual (Opcional)
-        bal_act_el = "#inputSessionBalanceActual"
-        await page.evaluate(f"""
-            window.__hideSpotlight();
-            window.__glideCursorToElement('{bal_act_el}', 500);
-            window.__spotlightElement('{bal_act_el}', 8);
-            window.__showCalloutBadge('{bal_act_el}', '📊', 'BALANCE ACTUAL (OPCIONAL)', 'Saldo de Corte / Cierre', 'Vacío si es nueva. O tu saldo actual si ya venías operando.', 'right');
-        """)
-        await asyncio.sleep(7.5)
-
-        # 4. Profit Target: 8%
-        target_el = "#inputAccountGoalTargetPct"
-        await page.evaluate(f"""
-            window.__hideSpotlight();
-            window.__glideCursorToElement('{target_el}', 500);
-            window.__spotlightElement('{target_el}', 8);
-            const tInput = document.querySelector('{target_el}');
-            if (tInput) tInput.value = '8';
-            window.__showCalloutBadge('{target_el}', '🎯', 'OBJETIVO', 'Profit Target: 8%', 'Meta institucional de $8,000 USD', 'right');
-        """)
-        await asyncio.sleep(5.5)
-
-        # 5. Drawdown Máximo: 10%
-        dd_el = "#inputAccountGoalMaxDD"
-        await page.evaluate(f"""
-            window.__hideSpotlight();
-            window.__glideCursorToElement('{dd_el}', 500);
-            window.__spotlightElement('{dd_el}', 8);
-            const dInput = document.querySelector('{dd_el}');
-            if (dInput) dInput.value = '10';
-            window.__showCalloutBadge('{dd_el}', '🛡️', 'LÍMITES', 'Drawdown Máximo: 10%', 'Protección de capital estricta ($10,000 USD)', 'right');
-        """)
-        await asyncio.sleep(5.5)
-
-        # 6. Click button "Crear" / Submit
-        btn_submit = "#btn-submit-session"
-        await page.evaluate(f"""
-            window.__hideSpotlight();
-            window.__hideCalloutBadge();
-            window.__glideCursorToElement('{btn_submit}', 600);
-            window.__pulseRingAround('{btn_submit}', 6);
-        """)
-        await asyncio.sleep(1.2)
-        await page.evaluate("window.__clickRipple()")
-        await asyncio.sleep(0.3)
-        await page.evaluate(f"""
-            const btn = document.querySelector('{btn_submit}');
-            if (btn) btn.click();
-            else if (typeof saveSession === 'function') saveSession(new Event('submit'));
-        """)
-        await asyncio.sleep(0.5)
-        await page.evaluate("""
-            window.__removePulseRing();
-            if (typeof closeSessionModal === 'function') closeSessionModal();
-            window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo 100K FTMO configurada con reglas 8% / 10%');
-        """)
-        await asyncio.sleep(1.5)
-
-    elif block_id == "block4_created_card":
-        # ---------------------------------------------------------
-        # BLOCK 4: Tarjeta de Cuenta Creada en el Grid (21.38s)
-        # ---------------------------------------------------------
-        # Inject created account and re-render grid
-        await page.evaluate("""
-            const newAcc = {
-                id: 1700000000001,
-                name: "Fondeo 100K FTMO",
-                pair: "",
-                startDate: null,
-                balance: 100000,
-                balanceActual: null,
-                balanceActualAt: null,
-                date: new Date().toLocaleDateString('es-ES'),
-                stage: "prueba",
-                goal: {
-                    stage: "prueba",
-                    targetPct: 8,
-                    maxDDPct: 10,
-                    dailyDDPct: 5,
-                    minTradingDays: 4,
-                    maxTradingDays: 30
-                },
-                mt5Login: "",
-                withdrawals: []
-            };
-            if (typeof realAccounts !== 'undefined') {
-                realAccounts = [newAcc];
-            }
-            if (typeof renderGroups === 'function') {
-                renderGroups();
-            }
-            window.__showLowerThird('🗂️', 'PASO 4: CUENTA HABILITADA', 'Tarjeta Institucional Creada y Lista en el Grid');
-        """)
-        await asyncio.sleep(1.5)
-
-        # Highlight newly created card with animated arrow and pulse ring
-        first_card = "#sessions-grid > div:first-child"
-        await page.evaluate(f"""
-            window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{first_card}', -0.25, 750);
-            window.__pulseRingAround('{first_card}', 10);
-            window.__showCalloutBadge('{first_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K FTMO', 'Saldo $100,000 USD | Target 8% | Max DD 10%', 'bottom');
-        """)
-        await asyncio.sleep(6.5)
-
-        # Clear arrow and glide cursor to "Entrar" button
-        enter_btn = "#sessions-grid > div:first-child button"
-        await page.evaluate(f"""
-            window.__clearMotionArrows();
-            window.__hideCalloutBadge();
-            window.__removePulseRing();
-            window.__glideCursorToElement('{enter_btn}', 650);
-            window.__pulseRingAround('{enter_btn}', 4);
-        """)
-        await asyncio.sleep(3.5)
-
-        # Glide cursor to "Editar" pencil button
-        edit_btn = '#sessions-grid > div:first-child [data-account-action="edit"], #sessions-grid > div:first-child .fa-pen-to-square'
-        await page.evaluate(f"""
-            window.__removePulseRing();
-            window.__glideCursorToElement('{edit_btn}', 550);
-            window.__pulseRingAround('{edit_btn}', 4);
-        """)
-        await asyncio.sleep(2.5)
-
-        # Show Callout Badge teasing Tutorial #2
-        await page.evaluate(f"""
-            window.__removePulseRing();
-            window.__showCalloutBadge('{first_card}', '🚀', 'PRÓXIMO TUTORIAL', 'Registro y Auditoría de Trades', 'Análisis técnico y capturas antes y después', 'bottom');
-        """)
-        await asyncio.sleep(4.0)
-
-    # Fill remaining scene time smoothly to match exact audio length
-    elapsed = time.time() - t_start
-    rem = duration - elapsed
-    if rem > 0:
-        print(f"   -> Manteniendo toma final ({rem:.2f}s restantes)...")
-        await asyncio.sleep(rem)
-
-    print(f"✅ Bloque {block_id} completado en {time.time() - t_start:.2f}s (Meta: {duration:.2f}s)")
+    if not os.path.exists(cont_audio) or os.path.getsize(cont_audio) < 100000:
+        print("🎙️ Concatenando audios modulares para la Toma Maestra Continua (88.75s)...")
+        cmd = [
+            FFMPEG_EXE, "-y",
+            "-i", b1, "-i", b2, "-i", b3, "-i", b4,
+            "-filter_complex", "[0:a][1:a][2:a][3:a]concat=n=4:v=0:a=1[a]",
+            "-map", "[a]",
+            "-b:a", "192k",
+            cont_audio
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True)
+        if res.returncode != 0:
+            raise RuntimeError(f"Error al concatenar audios: {res.stderr}")
+        print(f"✅ Audio continuo generado: {cont_audio} ({os.path.getsize(cont_audio)/(1024*1024):.2f} MB)")
+    return cont_audio
 
 # -------------------------------------------------------------
-# 3. RENDER SINGLE BLOCK TO MP4
+# 3. SCENE 1: ANIMATED INTRO (9.65s)
 # -------------------------------------------------------------
-async def record_scene_block(p, block_info):
-    block_id = block_info["id"]
-    duration = block_info["duration_seconds"]
-    
-    # Audio path resolution
-    audio_file = block_info.get("audio_file") or f"{block_id}.mp3"
-    audio_path = os.path.join(AUDIO_DIR, audio_file)
-    if not os.path.exists(audio_path):
-        raw_ap = block_info.get("audio_path", "")
-        if raw_ap and os.path.exists(raw_ap):
-            audio_path = raw_ap
-        else:
-            base_fn = os.path.basename(raw_ap) if raw_ap else f"{block_id}.mp3"
-            audio_path = os.path.join(AUDIO_DIR, base_fn)
-    
-    if not os.path.exists(audio_path):
-        raise FileNotFoundError(f"Audio no encontrado para {block_id}: {audio_path}")
+async def record_intro(p):
+    scene_id = "intro"
+    duration = 9.65
+    scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
+    audio_path = os.path.join(AUDIO_DIR, "intro.mp3")
 
-    # Checkpoint check
-    scene_mp4 = os.path.join(SCENES_DIR, f"{block_id}.mp4")
-    force_rerender = "--force" in sys.argv
-    if not force_rerender and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 500000:
-        print(f"⏩ Checkpoint activo para {block_id} ({os.path.getsize(scene_mp4)/(1024*1024):.2f} MB). Saltando grabación...")
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 300000:
+        print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
         return scene_mp4
 
-    raw_dir = os.path.join(SCENES_DIR, f"raw_{block_id}")
-    if os.path.exists(raw_dir):
-        shutil.rmtree(raw_dir, ignore_errors=True)
+    print(f"\n🎬 [1/3] Filmando Escena Intro Cinemático ({duration:.2f}s)...")
+    raw_dir = os.path.join(SCENES_DIR, f"raw_{scene_id}")
+    shutil.rmtree(raw_dir, ignore_errors=True)
     os.makedirs(raw_dir, exist_ok=True)
 
-    # 1920x1080 Native Setup (Eliminates all grey borders)
-    launch_args = [
-        "--no-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-background-timer-throttling",
-        "--disable-renderer-backgrounding",
-        "--font-render-hinting=none",
-        "--window-size=1920,1080"
-    ]
     browser = await p.chromium.launch(
         headless=True,
-        args=launch_args
+        args=[
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--background-color=0b0f19",
+            "--window-size=1920,1080"
+        ]
     )
-
     context = await browser.new_context(
         viewport={"width": 1920, "height": 1080},
         record_video_dir=raw_dir,
         record_video_size={"width": 1920, "height": 1080}
     )
 
-    # Init script: Active session + Eradicate intrusive tours + Macro-UI scale
+    page = await context.new_page()
+    try:
+        cdp = await context.new_cdp_session(page)
+        await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
+            "color": {"r": 11, "g": 15, "b": 25, "a": 1}
+        })
+    except Exception:
+        pass
+
+    url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=intro"
+    await page.goto(url, wait_until="domcontentloaded")
+    await asyncio.sleep(duration - 1.2)
+    try:
+        await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
+    except Exception:
+        pass
+    await asyncio.sleep(1.2)
+
+    await page.close()
+    await context.close()
+    await browser.close()
+
+    webms = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
+    if not webms:
+        raise RuntimeError("No se encontró WebM para intro")
+    raw_webm = webms[0]
+
+    # Mux with audio and pre-roll trim (cut first 0.15s to discard any blank frame)
+    mux_cmd = [
+        FFMPEG_EXE, "-y",
+        "-ss", "0.150",
+        "-i", raw_webm,
+        "-i", audio_path,
+        "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
+        "-map", "[v]",
+        "-map", "1:a",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "18",
+        "-c:a", "aac", "-b:a", "192k",
+        "-t", f"{duration:.3f}",
+        scene_mp4
+    ]
+    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"✅ Intro completado: {scene_mp4}")
+    return scene_mp4
+
+# -------------------------------------------------------------
+# 4. SCENE 2: MASTER CONTINUOUS TAKE IN APP.HTML (88.75s)
+# -------------------------------------------------------------
+async def record_app_flow_continuous(p, cont_audio_path):
+    scene_id = "app_flow_continuous"
+    duration = 88.75
+    scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
+
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 1000000:
+        print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
+        return scene_mp4
+
+    print(f"\n🎬 [2/3] Filmando Toma Maestra Continua en app.html ({duration:.2f}s)...")
+    print("   -> 1 Sola Sesión de Chromium Sin Recargas ni Pantallas en Blanco")
+
+    raw_dir = os.path.join(SCENES_DIR, f"raw_{scene_id}")
+    shutil.rmtree(raw_dir, ignore_errors=True)
+    os.makedirs(raw_dir, exist_ok=True)
+
+    browser = await p.chromium.launch(
+        headless=True,
+        args=[
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--background-color=0b0f19",
+            "--window-size=1920,1080"
+        ]
+    )
+    context = await browser.new_context(
+        viewport={"width": 1920, "height": 1080},
+        record_video_dir=raw_dir,
+        record_video_size={"width": 1920, "height": 1080}
+    )
+
+    # Inyección preventiva: sesión activa, cero tours y tipografía institucional limpia SIN CSS ZOOM
     await context.add_init_script("""
         localStorage.setItem('trading_saas_user_session', JSON.stringify({
             id: 'usr_astrade_pro',
@@ -468,9 +250,12 @@ async def record_scene_block(p, block_info):
         window.showFondeoCelebration = function() { return false; };
         window.confetti = function() {};
 
-        const macroStyle = document.createElement('style');
-        macroStyle.id = 'studio-macro-ui-style';
-        macroStyle.innerHTML = `
+        const cleanStyle = document.createElement('style');
+        cleanStyle.id = 'studio-clean-style';
+        cleanStyle.innerHTML = `
+            html, body {
+                background-color: #0b0f19 !important;
+            }
             #tourOverlay, .tour-overlay, #tourSvgMask, #tourTooltip, #tourHighlightRing,
             #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element,
             .fondeo-celebration, .fondeo-confetti, #confettiCanvas {
@@ -478,12 +263,10 @@ async def record_scene_block(p, block_info):
                 visibility: hidden !important;
                 opacity: 0 !important;
                 pointer-events: none !important;
-                width: 0 !important;
-                height: 0 !important;
             }
+            /* Tipografía institucional nítida para YouTube 1080p sin alterar coordenadas (Cero Zoom) */
             html {
                 font-size: 17.5px !important;
-                zoom: 1.10 !important;
             }
             .text-xs { font-size: 0.88rem !important; }
             .text-sm { font-size: 1.02rem !important; }
@@ -491,50 +274,373 @@ async def record_scene_block(p, block_info):
             input, select, button {
                 font-size: 1.02rem !important;
             }
-            .account-card {
-                transform: scale(1.02);
-            }
         `;
-        if (document.head) {
-            document.head.appendChild(macroStyle);
-        } else {
-            document.addEventListener('DOMContentLoaded', () => document.head.appendChild(macroStyle));
-        }
+        if (document.head) document.head.appendChild(cleanStyle);
+        else document.addEventListener('DOMContentLoaded', () => document.head.appendChild(cleanStyle));
     """)
 
     page = await context.new_page()
+    try:
+        cdp = await context.new_cdp_session(page)
+        await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
+            "color": {"r": 11, "g": 15, "b": 25, "a": 1}
+        })
+    except Exception:
+        pass
 
-    # Determine start URL
-    if block_id == "intro":
-        start_url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=intro"
-    elif block_id == "outro":
-        start_url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=outro"
-    else:
-        start_url = f"http://127.0.0.1:{PORT}/app.html"
-
-    await page.goto(start_url, wait_until="domcontentloaded")
+    url = f"http://127.0.0.1:{PORT}/app.html"
+    await page.goto(url, wait_until="domcontentloaded")
     await asyncio.sleep(0.5)
 
-    # Execute choreography
-    await choreograph_block(page, block_id, duration)
+    # Inyectar Studio Motion Engine
+    with open(MOTION_ENGINE_JS, "r", encoding="utf-8") as f:
+        engine_code = f.read()
+    await page.evaluate(engine_code)
+    await page.evaluate("window.__initStudioMotionEngine()")
 
-    # Close to finalize WebM
+    t_start = time.time()
+
+    # -------------------------------------------------------------
+    # PARTE 1: PANEL DE CUENTAS & BOTÓN NUEVA CUENTA (0.00s - 12.17s)
+    # -------------------------------------------------------------
+    print("   -> [Parte 1/4] Panel Tus Cuentas y Apertura de Modal...")
+    await page.evaluate("""
+        window.__showLowerThird('⚡', 'PASO 1: GESTIÓN DE CUENTAS', 'Panel Tus Cuentas: Centro de Mando de Capital');
+    """)
+    await asyncio.sleep(1.2)
+
+    btn_selector = "#btn-new-session"
+    await page.evaluate(f"""
+        window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{btn_selector}', -0.25, 750);
+        window.__pulseRingAround('{btn_selector}', 6);
+        window.__showCalloutBadge('{btn_selector}', '⚡', 'GESTIÓN', 'Crear Nueva Cuenta', 'Auditoría institucional en 1 o 2 fases', 'bottom');
+    """)
+    await asyncio.sleep(5.0)
+
+    await page.evaluate("""
+        window.__clearMotionArrows();
+        window.__hideCalloutBadge();
+        window.__removePulseRing();
+    """)
+    await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 600)")
+    await asyncio.sleep(0.8)
+
+    # Click ripple y abrir modal
+    await page.evaluate("window.__clickRipple()")
+    await asyncio.sleep(0.3)
+    await page.evaluate(f"""
+        const btn = document.querySelector('{btn_selector}');
+        if (btn) btn.click();
+        else if (typeof openSessionModal === 'function') openSessionModal();
+    """)
+    try:
+        await page.wait_for_selector("#sessionModal:not(.hidden)", state="visible", timeout=2500)
+    except Exception:
+        await page.evaluate("if (typeof openSessionModal === 'function') openSessionModal();")
+    
+    # Mantener hasta el segundo 12.17
+    rem1 = 12.17 - (time.time() - t_start)
+    if rem1 > 0:
+        await asyncio.sleep(rem1)
+
+    # -------------------------------------------------------------
+    # PARTE 2: MODALIDADES Y TIPOS DE CUENTA (12.17s - 30.58s)
+    # MODAL PERMANECE ABIERTO DE FORMA CONTINUA
+    # -------------------------------------------------------------
+    print("   -> [Parte 2/4] Selector de Modalidades (Real, Challenge, Fondeada, Instant)...")
+    await page.evaluate("""
+        window.__showLowerThird('📋', 'PASO 2: MODALIDADES', 'Cuentas Reales, Challenges, Fondeadas e Instant');
+    """)
+    await asyncio.sleep(1.0)
+
+    stage_sel = "#inputAccountStage"
+    await page.evaluate(f"""
+        window.__glideCursorToElement('{stage_sel}', 600);
+        window.__pulseRingAround('{stage_sel}', 6);
+        window.__showCalloutBadge('{stage_sel}', '📋', 'MODALIDAD', 'Tipos de Cuenta Soportados', 'Real, Challenge, Fondeada e Instant', 'right');
+    """)
+    await asyncio.sleep(4.5)
+
+    # Demostrar cambio visual a Cuenta Real
+    await page.evaluate("""
+        const el = document.querySelector('#inputAccountStage');
+        if (el) {
+            el.value = 'real';
+            if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
+        }
+        window.__showCalloutBadge('#inputAccountStage', '💼', 'CAPITAL PROPIO', 'Cuenta Real', 'Auditoría de tu capital personal', 'right');
+    """)
+    await asyncio.sleep(4.0)
+
+    # Fijar Fase de prueba (Challenge) y desplegar reglas
+    await page.evaluate("""
+        const el = document.querySelector('#inputAccountStage');
+        if (el) {
+            el.value = 'prueba';
+            if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
+        }
+        window.__showCalloutBadge('#inputAccountStage', '🎯', 'SELECCIÓN: FASE DE PRUEBA', 'Evaluación / Challenge', 'Auditoría estricta de metas y límites de pérdida', 'right');
+    """)
+    await asyncio.sleep(5.0)
+
+    await page.evaluate("""
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
+    """)
+
+    # Mantener hasta el segundo 30.58
+    rem2 = 30.58 - (time.time() - t_start)
+    if rem2 > 0:
+        await asyncio.sleep(rem2)
+
+    # -------------------------------------------------------------
+    # PARTE 3: BALANCES & REGLAS (30.58s - 67.32s)
+    # MODAL PERMANECE ABIERTO CON CHALLENGE SELECCIONADO
+    # -------------------------------------------------------------
+    print("   -> [Parte 3/4] Balance Inicial vs Saldo Actual & Reglas de Fondeo...")
+    await page.evaluate("""
+        window.__showLowerThird('💰', 'PASO 3: BALANCES & REGLAS', 'Balance Inicial $100K vs Saldo Actual & Reglas');
+    """)
+    await asyncio.sleep(1.0)
+
+    # 1. Escribir nombre: 'Fondeo 100K FTMO'
+    await page.evaluate("window.__glideCursorToElement('#inputSessionName', 500)")
+    await asyncio.sleep(0.5)
+    await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 45)")
+    await asyncio.sleep(1.2)
+
+    # 2. Spotlight Balance Inicial: $100,000 USD
+    bal_el = "#inputSessionBalance"
+    await page.evaluate(f"""
+        window.__glideCursorToElement('{bal_el}', 500);
+        window.__spotlightElement('{bal_el}', 8);
+        window.__showCalloutBadge('{bal_el}', '💰', 'CAPITAL AUDITADO', 'Balance Inicial: $100,000 USD', 'Base estricta para el cálculo de riesgo % por trade', 'right');
+    """)
+    await asyncio.sleep(6.5)
+
+    # 3. Spotlight Balance Actual (Opcional)
+    bal_act_el = "#inputSessionBalanceActual"
+    await page.evaluate(f"""
+        window.__hideSpotlight();
+        window.__glideCursorToElement('{bal_act_el}', 500);
+        window.__spotlightElement('{bal_act_el}', 8);
+        window.__showCalloutBadge('{bal_act_el}', '📊', 'BALANCE ACTUAL (OPCIONAL)', 'Saldo de Corte / Cierre', 'Vacío si es nueva. O tu saldo actual si venías operando.', 'right');
+    """)
+    await asyncio.sleep(7.5)
+
+    # 4. Profit Target: 8%
+    target_el = "#inputAccountGoalTargetPct"
+    await page.evaluate(f"""
+        window.__hideSpotlight();
+        window.__glideCursorToElement('{target_el}', 500);
+        window.__spotlightElement('{target_el}', 8);
+        const tInput = document.querySelector('{target_el}');
+        if (tInput) tInput.value = '8';
+        window.__showCalloutBadge('{target_el}', '🎯', 'OBJETIVO', 'Profit Target: 8%', 'Meta institucional de $8,000 USD', 'right');
+    """)
+    await asyncio.sleep(5.5)
+
+    # 5. Drawdown Máximo: 10%
+    dd_el = "#inputAccountGoalMaxDD"
+    await page.evaluate(f"""
+        window.__hideSpotlight();
+        window.__glideCursorToElement('{dd_el}', 500);
+        window.__spotlightElement('{dd_el}', 8);
+        const dInput = document.querySelector('{dd_el}');
+        if (dInput) dInput.value = '10';
+        window.__showCalloutBadge('{dd_el}', '🛡️', 'LÍMITES', 'Drawdown Máximo: 10%', 'Protección de capital estricta ($10,000 USD)', 'right');
+    """)
+    await asyncio.sleep(5.5)
+
+    # 6. Click en "Crear" / Submit para guardar en vivo
+    btn_submit = "#btn-submit-session"
+    await page.evaluate(f"""
+        window.__hideSpotlight();
+        window.__hideCalloutBadge();
+        window.__glideCursorToElement('{btn_submit}', 600);
+        window.__pulseRingAround('{btn_submit}', 6);
+    """)
+    await asyncio.sleep(1.2)
+    await page.evaluate("window.__clickRipple()")
+    await asyncio.sleep(0.3)
+    await page.evaluate(f"""
+        const btn = document.querySelector('{btn_submit}');
+        if (btn) btn.click();
+        else if (typeof saveSession === 'function') saveSession(new Event('submit'));
+    """)
+    await asyncio.sleep(0.6)
+    await page.evaluate("""
+        window.__removePulseRing();
+        if (typeof closeSessionModal === 'function') closeSessionModal();
+        window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo 100K FTMO creada con éxito');
+    """)
+
+    # Mantener hasta el segundo 67.32
+    rem3 = 67.32 - (time.time() - t_start)
+    if rem3 > 0:
+        await asyncio.sleep(rem3)
+
+    # -------------------------------------------------------------
+    # PARTE 4: TARJETA INSTITUCIONAL EN EL GRID (67.32s - 88.75s)
+    # MODAL YA ESTÁ CERRADO Y LA TARJETA YA ESTÁ EN EL GRID
+    # -------------------------------------------------------------
+    print("   -> [Parte 4/4] Tarjeta de Cuenta Creada en el Grid...")
+    # Asegurar que el estado de realAccounts contenga la cuenta y renderizar si es necesario
+    await page.evaluate("""
+        if (typeof realAccounts !== 'undefined' && realAccounts.length === 0) {
+            realAccounts.push({
+                id: 1700000000001,
+                name: "Fondeo 100K FTMO",
+                balance: 100000,
+                balanceActual: null,
+                date: new Date().toLocaleDateString('es-ES'),
+                stage: "prueba",
+                goal: {
+                    stage: "prueba",
+                    targetPct: 8,
+                    maxDDPct: 10,
+                    dailyDDPct: 5
+                },
+                mt5Login: "",
+                withdrawals: []
+            });
+            if (typeof renderGroups === 'function') renderGroups();
+        }
+        window.__showLowerThird('🗂️', 'PASO 4: CUENTA HABILITADA', 'Tarjeta Institucional Creada y Lista en el Grid');
+    """)
+    await asyncio.sleep(1.5)
+
+    first_card = "#sessions-grid > div:first-child"
+    await page.evaluate(f"""
+        window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{first_card}', -0.25, 750);
+        window.__pulseRingAround('{first_card}', 10);
+        window.__showCalloutBadge('{first_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K FTMO', 'Saldo $100,000 USD | Target 8% | Max DD 10%', 'right');
+    """)
+    await asyncio.sleep(6.5)
+
+    # Cursor sobre botón "Entrar"
+    enter_btn = "#sessions-grid > div:first-child button"
+    await page.evaluate(f"""
+        window.__clearMotionArrows();
+        window.__hideCalloutBadge();
+        window.__removePulseRing();
+        window.__glideCursorToElement('{enter_btn}', 650);
+        window.__pulseRingAround('{enter_btn}', 4);
+    """)
+    await asyncio.sleep(3.5)
+
+    # Cursor sobre botón "Editar"
+    edit_btn = '#sessions-grid > div:first-child [data-account-action="edit"], #sessions-grid > div:first-child .fa-pen-to-square'
+    await page.evaluate(f"""
+        window.__removePulseRing();
+        window.__glideCursorToElement('{edit_btn}', 550);
+        window.__pulseRingAround('{edit_btn}', 4);
+    """)
+    await asyncio.sleep(2.5)
+
+    # Teaser Tutorial #2
+    await page.evaluate(f"""
+        window.__removePulseRing();
+        window.__showCalloutBadge('{first_card}', '🚀', 'PRÓXIMO TUTORIAL', 'Registro y Auditoría de Trades', 'Análisis técnico y capturas antes y después', 'right');
+    """)
+    await asyncio.sleep(4.0)
+
+    # Completar duración total
+    rem4 = duration - (time.time() - t_start)
+    if rem4 > 0:
+        print(f"   -> Manteniendo toma final ({rem4:.2f}s restantes)...")
+        await asyncio.sleep(rem4)
+
     await page.close()
     await context.close()
     await browser.close()
 
-    # Find recorded WebM
-    webm_files = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
-    if not webm_files:
-        raise RuntimeError(f"No se encontró archivo WebM grabado para {block_id}")
-    raw_webm = webm_files[0]
+    webms = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
+    if not webms:
+        raise RuntimeError("No se encontró WebM para app_flow_continuous")
+    raw_webm = webms[0]
 
-    # Convert to MP4 muxed with scene audio
-    scene_mp4 = os.path.join(SCENES_DIR, f"{block_id}.mp4")
-    print(f"⚙️ Muxeando video y audio para {block_id}...")
-    
+    print("⚙️ Muxeando video continuo con audio concatenado...")
     mux_cmd = [
         FFMPEG_EXE, "-y",
+        "-ss", "0.200",
+        "-i", raw_webm,
+        "-i", cont_audio_path,
+        "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
+        "-map", "[v]",
+        "-map", "1:a",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "18",
+        "-c:a", "aac", "-b:a", "192k",
+        "-t", f"{duration:.3f}",
+        scene_mp4
+    ]
+    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"✅ Toma continua completada: {scene_mp4} ({os.path.getsize(scene_mp4)/(1024*1024):.2f} MB)")
+    return scene_mp4
+
+# -------------------------------------------------------------
+# 5. SCENE 3: ANIMATED OUTRO (6.38s)
+# -------------------------------------------------------------
+async def record_outro(p):
+    scene_id = "outro"
+    duration = 6.38
+    scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
+    audio_path = os.path.join(AUDIO_DIR, "outro.mp3")
+
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 200000:
+        print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
+        return scene_mp4
+
+    print(f"\n🎬 [3/3] Filmando Escena Outro Cinemático ({duration:.2f}s)...")
+    raw_dir = os.path.join(SCENES_DIR, f"raw_{scene_id}")
+    shutil.rmtree(raw_dir, ignore_errors=True)
+    os.makedirs(raw_dir, exist_ok=True)
+
+    browser = await p.chromium.launch(
+        headless=True,
+        args=[
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--background-color=0b0f19",
+            "--window-size=1920,1080"
+        ]
+    )
+    context = await browser.new_context(
+        viewport={"width": 1920, "height": 1080},
+        record_video_dir=raw_dir,
+        record_video_size={"width": 1920, "height": 1080}
+    )
+
+    page = await context.new_page()
+    try:
+        cdp = await context.new_cdp_session(page)
+        await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
+            "color": {"r": 11, "g": 15, "b": 25, "a": 1}
+        })
+    except Exception:
+        pass
+
+    url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=outro"
+    await page.goto(url, wait_until="domcontentloaded")
+    await asyncio.sleep(duration - 1.0)
+    try:
+        await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
+    except Exception:
+        pass
+    await asyncio.sleep(1.0)
+
+    await page.close()
+    await context.close()
+    await browser.close()
+
+    webms = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
+    if not webms:
+        raise RuntimeError("No se encontró WebM para outro")
+    raw_webm = webms[0]
+
+    mux_cmd = [
+        FFMPEG_EXE, "-y",
+        "-ss", "0.150",
         "-i", raw_webm,
         "-i", audio_path,
         "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
@@ -545,79 +651,64 @@ async def record_scene_block(p, block_info):
         "-t", f"{duration:.3f}",
         scene_mp4
     ]
-    proc = subprocess.run(mux_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    if proc.returncode != 0:
-        print(f"❌ Error FFmpeg al muxear {block_id}:")
-        print(proc.stderr[-1000:])
-        raise RuntimeError(f"FFmpeg mux failed for {block_id}")
-    print(f"   -> Creado: {scene_mp4} ({os.path.getsize(scene_mp4)/(1024*1024):.2f} MB)")
+    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"✅ Outro completado: {scene_mp4}")
     return scene_mp4
 
 # -------------------------------------------------------------
-# 4. FINAL ASSEMBLY WITH XFADE & MUSIC DUCKING
+# 6. FINAL MASTER ASSEMBLY (2 TRANSITIONS ONLY)
 # -------------------------------------------------------------
-def assemble_final_video(scene_mp4s, manifest_blocks):
+def assemble_final_video(intro_mp4, app_mp4, outro_mp4):
     print("\n" + "=" * 70)
-    print("🎞️ ENSAMBLANDO VIDEO MAESTRO CON TRANSICIONES CINEMÁTICAS (XFADE)")
+    print("🎞️ ENSAMBLANDO VIDEO MAESTRO (ARQUITECTURA MASTER TAKE V5)")
     print("=" * 70)
 
-    n = len(scene_mp4s)
-    trans_dur = 0.4  # 0.4s smooth cross-dissolve
+    scenes = [intro_mp4, app_mp4, outro_mp4]
+    durations = [9.65, 88.75, 6.38]
+    trans_dur = 0.5  # 0.5s smooth cross-dissolve
 
-    durations = [b["duration_seconds"] for b in manifest_blocks]
-    offsets = []
-    accum = 0.0
-    for i in range(n - 1):
-        accum += durations[i]
-        offset = accum - (i + 1) * trans_dur
-        offsets.append(offset)
+    # Offset 1: intro -> app (9.65 - 0.5 = 9.15s)
+    off1 = durations[0] - trans_dur
+    # Offset 2: app -> outro (9.15 + 88.75 - 0.5 = 97.40s)
+    off2 = off1 + durations[1] - trans_dur
 
-    cmd = [FFMPEG_EXE, "-y"]
-    for s in scene_mp4s:
-        cmd.extend(["-i", s])
+    total_len = off2 + durations[2]
+
+    cmd = [
+        FFMPEG_EXE, "-y",
+        "-i", intro_mp4,
+        "-i", app_mp4,
+        "-i", outro_mp4
+    ]
 
     has_music = os.path.exists(BG_MUSIC)
     if has_music:
         cmd.extend(["-i", BG_MUSIC])
-        music_idx = n
+        music_idx = 3
     else:
         music_idx = None
 
-    filter_parts = []
-    
-    # Video cross-dissolves
-    last_v = "0:v"
-    for i in range(1, n):
-        out_v = f"v_trans_{i}"
-        off = offsets[i-1]
-        filter_parts.append(f"[{last_v}][{i}:v]xfade=transition=fade:duration={trans_dur}:offset={off:.3f}[{out_v}]")
-        last_v = out_v
+    filter_complex = [
+        f"[0:v][1:v]xfade=transition=fade:duration={trans_dur}:offset={off1:.3f}[v01]",
+        f"[v01][2:v]xfade=transition=fade:duration={trans_dur}:offset={off2:.3f}[v_master]",
+        f"[0:a][1:a]acrossfade=d={trans_dur}:c1=tri:c2=tri[a01]",
+        f"[a01][2:a]acrossfade=d={trans_dur}:c1=tri:c2=tri[a_scenes]"
+    ]
 
-    # Audio cross-fades
-    last_a = "0:a"
-    for i in range(1, n):
-        out_a = f"a_trans_{i}"
-        filter_parts.append(f"[{last_a}][{i}:a]acrossfade=d={trans_dur}:c1=tri:c2=tri[{out_a}]")
-        last_a = out_a
-
-    # Music ducking and fade out
-    total_len = accum + durations[-1] - (n - 1) * trans_dur
     if has_music:
         fade_out_start = max(0, total_len - 2.5)
-        filter_parts.append(
+        filter_complex.append(
             f"[{music_idx}:a]volume=0.065,afade=t=out:st={fade_out_start:.2f}:d=2.5[bgm];"
-            f"[{last_a}][bgm]amix=inputs=2:duration=first:dropout_transition=2[a_final]"
+            f"[a_scenes][bgm]amix=inputs=2:duration=first:dropout_transition=2[a_final]"
         )
-        final_audio_label = "[a_final]"
+        final_audio_map = "[a_final]"
     else:
-        final_audio_label = f"[{last_a}]"
-
-    final_filter = ";".join(filter_parts)
+        final_audio_map = "[a_scenes]"
 
     cmd.extend([
-        "-filter_complex", final_filter,
-        "-map", f"[{last_v}]",
-        "-map", final_audio_label,
+        "-filter_complex", ";".join(filter_complex),
+        "-map", "[v_master]",
+        "-map", final_audio_map,
         "-c:v", "libx264", "-preset", "slow", "-crf", "17",
         "-c:a", "aac", "-b:a", "192k",
         "-movflags", "+faststart",
@@ -625,13 +716,14 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
     ])
 
     print("🚀 Ejecutando FFmpeg Master Assembly...")
-    p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    p = subprocess.run(cmd, capture_output=True, text=True)
     if p.returncode != 0:
         print("[FFmpeg Error]", p.stderr[-800:])
         raise RuntimeError("FFmpeg assembly failed")
 
     size_mb = os.path.getsize(FINAL_MP4) / (1024 * 1024)
     shutil.copy2(FINAL_MP4, FINAL_MP4_ALIAS)
+
     print("=" * 70)
     print(f"🎉 VIDEO MAESTRO COMPLETADO CON ÉXITO:")
     print(f"📍 Archivo: {FINAL_MP4}")
@@ -641,35 +733,23 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
     return FINAL_MP4
 
 # -------------------------------------------------------------
-# 5. MAIN ENTRY POINT
+# 7. MAIN ENTRY POINT
 # -------------------------------------------------------------
 async def main():
     print("=" * 70)
-    print("🚀 INICIANDO RENDERIZADO MAESTRO ASTRADE — TUTORIAL #1 (V4)")
-    print("🎬 Tema: Creación y Configuración de Cuentas de Trading")
+    print("🚀 INICIANDO RENDERIZADO MAESTRO ASTRADE — TUTORIAL #1 (V5)")
+    print("🎬 Modalidad: Toma Maestra Continua (Zero White Flashes, Cero Reinicios)")
     print("=" * 70)
 
-    # 1. Start server
     server = start_http_server()
+    cont_audio = prepare_continuous_audio()
 
-    # 2. Load audio manifest
-    if not os.path.exists(MANIFEST_PATH):
-        raise FileNotFoundError(f"No se encontró el manifest de audio en {MANIFEST_PATH}.")
-
-    with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
-        manifest_data = json.load(f)
-
-    blocks = manifest_data["blocks"]
-    print(f"📋 Total bloques a procesar: {len(blocks)}")
-
-    scene_mp4s = []
     async with async_playwright() as p:
-        for b in blocks:
-            sc_mp4 = await record_scene_block(p, b)
-            scene_mp4s.append(sc_mp4)
+        intro_mp4 = await record_intro(p)
+        app_mp4 = await record_app_flow_continuous(p, cont_audio)
+        outro_mp4 = await record_outro(p)
 
-    # 3. Assemble Master Video
-    final_output = assemble_final_video(scene_mp4s, blocks)
+    final_output = assemble_final_video(intro_mp4, app_mp4, outro_mp4)
     return final_output
 
 if __name__ == "__main__":
