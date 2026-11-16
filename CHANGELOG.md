@@ -5,6 +5,51 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.4] - 2026-11-16
+
+### 🎬 Estudio Audiovisual V3 — Tutorial #1 AsTrade con Motion Graphics y Google Colab 1-Click
+- **Motor de Motion Graphics In-Browser (`scripts/render/studio_motion_engine.js`):**
+  - Incorporación de flechas vectoriales SVG auto-dibujadas con curvas Bézier suaves (`stroke-dashoffset` animado de 100% a 0%), punta elástica neón esmeralda (`#10b981`) y filtro de resplandor.
+  - Implementación de anillos de foco pulsantes (`.studio-pulse-ring`) alrededor de los botones reales del DOM y badges flotantes de estilo vidrio esmerilado (*callouts*).
+  - Eliminación total de deformaciones de zoom por escalado del `body`: toda la guía visual opera ahora con coordenadas físicas exactas calculadas vía `getBoundingClientRect()`.
+  - Disparador de celebración con lluvia de confeti nativo (`canvas-confetti`) sincronizado al pulsar *"Crear Cuenta"*.
+- **Demostración de Valor "El Después" (`scripts/render/mock_populated_data.js`):**
+  - Erradicación de la pantalla vacía: inyección en memoria e IndexedDB de una cuenta de fondeo institucional activa *"Fondeo 100K FTMO"* con balance de $104,250 USD (+4.25% de avance).
+  - Registro de 14 operaciones realistas (XAUUSD, EURUSD, US30) que activan la visualización del Dashboard con curva de equidad ascendente, Win Rate del 68.4%, Profit Factor de 2.35 y calendario mensual con días verdes.
+- **Renderizado Cinemático Anti-Destellos en FFmpeg (`scripts/render/render_video_01_astrade.py`):**
+  - Protocolo CDP (`Emulation.setDefaultBackgroundColorOverride` a `#0b0f19`) para arrancar Chromium directamente en modo oscuro antes de procesar cualquier hoja de estilo, eliminando 100% el fotograma blanco inicial.
+  - Transiciones de disolución cruzada cinematográfica de 0.5s entre bloques usando filtros FFmpeg `xfade=transition=fade` y `acrossfade=d=0.5`.
+  - Mezcla de música Lo-Fi a -24 dB con atenuación suave (*fade-out*) en los últimos 2.5 segundos.
+- **Locución Modular V3 con Jorge Neural (`scripts/audio/generate_video_01_v3_audio.py`):**
+  - Síntesis de 4 bloques modulares con Edge-TTS (`es-MX-JorgeNeural`) con dicción técnica en español neutro, alineados rigurosamente a la marca oficial **AsTrade** y al período de **7 días de prueba gratis**.
+- **Libreta Google Colab 1-Click & Paquetes de Drive (`TradingJournalPro_VideoGenerator_Colab.ipynb`, `scripts/package_video_01_colab.py`):**
+  - Libreta oficial actualizada para renderizar el Tutorial #1 de forma 100% autónoma en Google Colab sin consumir recursos locales.
+  - Arquitectura en subproceso que elimina definitivamente el conflicto `asyncio loop` con Playwright.
+  - Generación del paquete comprimido ultra-ligero `astrade_video01_bundle.zip` (5.68 MB) con todos los assets, código web, scripts y audios.
+  - Reproductor HTML5 1080p integrado para previsualizar el video terminado directamente en Colab.
+- **Auditoría de Calidad con Visión Artificial (`scripts/audit_video_01.py`):**
+  - Script automatizado para extraer fotogramas clave y validar mediante luminancia y Gemini Vision la ausencia de fotogramas blancos y la exactitud visual.
+
+---
+
+## [v3.7.3] - 2026-11-16
+
+### 🔊 Efectos de Sonido Táctiles Nativos en el Showcase (`index.html`, `css/styles.css`)
+- **Motor de Audio Sintético Aislado (`ShowcaseAudio` con Web Audio API):**
+  - Implementación de efectos de sonido táctiles ultra ligeros (cero latencia, generados en tiempo real sin archivos de audio externos ni descargas de red).
+  - Restricción estricta y exclusiva a la sección del showcase interactivo en la landing page (`index.html`).
+  - Clics táctiles discretos modulados para cambio de pestañas (`tab`), interacción con fichas y botones (`soft`) y avances de simulación (`step`).
+  - Arpegio mayor armónico suave (Do6 - Mi6 - Sol6) al alcanzar y celebrar la meta de fondeo aprobada.
+  - Botón de control rápido de sonido (🔊 / 🔇) incorporado en la cabecera del showcase (desktop y móvil) con persistencia de preferencia en `localStorage`.
+  - Desbloqueo perezoso conforme a las directivas de reproducción automática de los navegadores.
+
+### 🖱️ Nuevo Cursor Animado y Texto de Callout (`index.html`)
+- **Actualización Visual de la Píldora de Interactividad:**
+  - Sustitución del emoji de lápiz (`✏️`) por un cursor de flecha estilizado con ondas de clic concéntricas animadas (`fa-arrow-pointer` con pulso perimetral).
+  - Texto actualizado con precisión a: `Haz click, es 100% interactiva!`.
+
+---
+
 ## [v3.7.2] - 2026-11-15
 
 ### ⏱️ Fase 1: Control de Reproducción Inteligente del Showcase Interactivo (`index.html`)
