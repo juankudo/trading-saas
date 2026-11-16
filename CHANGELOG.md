@@ -18,6 +18,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
     - Configuración de reglas de fondeo: Profit Target (8% / $8,000) y Drawdown Máximo (10% / $10,000).
 - **Tarjeta Institucional Visible en Grid (`#sessions-grid`):**
   - En el Bloque 4, la tarjeta de la cuenta recién creada aparece visible e interactiva en el grid con todas sus etiquetas y saldo ($100,000 USD), señalizada con flecha animada y badge, recorriendo los botones "Entrar" y "Editar", y anticipando el Tutorial #2 (Registro y auditoría de trades).
+  - Corrección de escape de comillas en el selector del botón de edición para garantizar ejecución limpia en Playwright.
 - **Corrección de Resolución y Eliminación Total de Bandas Grises:**
   - Viewport y grabación configurados en 1920x1080 nativo (`record_video_size={"width": 1920, "height": 1080}`, `viewport={"width": 1920, "height": 1080}`, `--window-size=1920,1080`), erradicando las franjas grises de letterboxing causadas por la disparidad previa.
   - Escala Macro-UI aplicada mediante CSS `zoom: 1.10` y `font-size: 17.5px` para mantener máxima nitidez y legibilidad en pantallas móviles y YouTube.

@@ -362,7 +362,7 @@ async def choreograph_block(page, block_id, duration):
         await asyncio.sleep(3.5)
 
         # Glide cursor to "Editar" pencil button
-        edit_btn = "#sessions-grid > div:first-child .fa-pen-to-square, #sessions-grid > div:first-child [title*='Editar']"
+        edit_btn = '#sessions-grid > div:first-child [data-account-action="edit"], #sessions-grid > div:first-child .fa-pen-to-square'
         await page.evaluate(f"""
             window.__removePulseRing();
             window.__glideCursorToElement('{edit_btn}', 550);
