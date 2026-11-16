@@ -296,7 +296,7 @@ async def choreograph_block(page, block_id, duration):
         await asyncio.sleep(2.0)
 
         # Show arrow to the active populated account card in grid
-        account_card = "#sessions-grid > div:first-child, .account-card, [onclick*='enterGroup']"
+        account_card = "#sessions-grid > div:first-child, .account-card"
         await page.evaluate(f"""
             const card = document.querySelector('{account_card}');
             if (card) {{
