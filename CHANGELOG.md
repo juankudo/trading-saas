@@ -5,6 +5,16 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.1] - 2026-11-15
+
+### 🎨 Sincronización Cromática de Marca en Modo Backtesting (`app.html`, `js/app.js`)
+- **Acento Dinámico de "Trade" según Modo Operativo:**
+  - Se vinculó el elemento de acento con `id="main-header-trade-accent"` y clases de transición suave `transition-colors duration-200`.
+  - En modo **Backtesting**, el acento `"Trade"` transmuta a **Azul Eléctrico** (`text-blue-400`), consolidando una armonía visual 100% coherente con el isotipo "A" azul y la insignia `BACKTESTING`.
+  - En modo **Cuenta Real**, el acento `"Trade"` regresa suavemente a **Verde Esmeralda** (`text-emerald-400`), sincronizado con el isotipo esmeralda y el badge `PRO DASHBOARD`.
+
+---
+
 ## [v3.7.0] - 2026-11-15
 
 ### 👑 Rebranding Oficial a "AsTrade" & Rediseño de Identidad Visual de Élite

@@ -432,6 +432,10 @@ const initialTrades = [];
                         appGradStops[2].setAttribute('stop-color', '#34d399');
                     }
                 }
+                const tradeAccent = document.getElementById('main-header-trade-accent');
+                if (tradeAccent) {
+                    tradeAccent.className = "text-emerald-400 transition-colors duration-200";
+                }
                 
                 btnNewTrade.className = "compact-expand-btn group bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold text-white transition";
@@ -464,6 +468,10 @@ const initialTrades = [];
                         appGradStops[1].setAttribute('stop-color', '#3b82f6');
                         appGradStops[2].setAttribute('stop-color', '#60a5fa');
                     }
+                }
+                const tradeAccent = document.getElementById('main-header-trade-accent');
+                if (tradeAccent) {
+                    tradeAccent.className = "text-blue-400 transition-colors duration-200";
                 }
                 
                 btnNewTrade.className = "compact-expand-btn group bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg";
