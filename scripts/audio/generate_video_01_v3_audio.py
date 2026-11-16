@@ -124,7 +124,7 @@ async def generate_block_audio(block):
     
     block_result = dict(block)
     block_result["audio_file"] = mp3_name
-    block_result["audio_path"] = mp3_path
+    block_result["audio_path"] = f"scratch/video_01_v3/audio/{mp3_name}"
     block_result["duration_seconds"] = dur
     return block_result
 

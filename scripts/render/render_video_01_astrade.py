@@ -327,7 +327,20 @@ async def choreograph_block(page, block_id, duration):
 async def record_scene_block(p, block_info):
     block_id = block_info["id"]
     duration = block_info["duration_seconds"]
-    audio_path = block_info["audio_path"]
+    
+    # Robust cross-platform audio path resolution
+    audio_file = block_info.get("audio_file") or f"{block_id}.mp3"
+    audio_path = os.path.join(AUDIO_DIR, audio_file)
+    if not os.path.exists(audio_path):
+        raw_ap = block_info.get("audio_path", "")
+        if raw_ap and os.path.exists(raw_ap):
+            audio_path = raw_ap
+        else:
+            base_fn = os.path.basename(raw_ap) if raw_ap else f"{block_id}.mp3"
+            audio_path = os.path.join(AUDIO_DIR, base_fn)
+    
+    if not os.path.exists(audio_path):
+        raise FileNotFoundError(f"Audio no encontrado para {block_id}: {audio_path}")
 
     raw_dir = os.path.join(SCENES_DIR, f"raw_{block_id}")
     if os.path.exists(raw_dir):
@@ -405,7 +418,11 @@ async def record_scene_block(p, block_info):
         "-t", f"{duration:.3f}",
         scene_mp4
     ]
-    subprocess.run(mux_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    proc = subprocess.run(mux_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if proc.returncode != 0:
+        print(f"❌ Error FFmpeg al muxear {block_id}:")
+        print(proc.stderr[-1000:])
+        raise RuntimeError(f"FFmpeg mux failed for {block_id}")
     print(f"   -> Creado: {scene_mp4} ({os.path.getsize(scene_mp4)/(1024*1024):.2f} MB)")
     return scene_mp4
 
