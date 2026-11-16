@@ -283,7 +283,13 @@ async def choreograph_block(page, block_id, duration):
         # BLOCK 4: La Transformación — Dashboard con Datos Reales
         # ---------------------------------------------------------
         # Inject populated challenge data ($104,250 balance, 14 trades, 68.4% WR, 2.35 PF)
-        await page.evaluate("if (typeof window.__injectPopulatedChallengeData === 'function') await window.__injectPopulatedChallengeData();")
+        await page.evaluate("""
+            async () => {
+                if (typeof window.__injectPopulatedChallengeData === 'function') {
+                    await window.__injectPopulatedChallengeData();
+                }
+            }
+        """)
         await page.evaluate("""
             window.__showLowerThird('📊', 'PASO 4: RESULTADO EN VIVO', 'Dashboard Cobrando Vida: Consistencia Demostrada');
         """)
@@ -317,7 +323,11 @@ async def choreograph_block(page, block_id, duration):
         # Click Dashboard Tab
         await page.evaluate("window.__clickRipple()")
         await asyncio.sleep(0.3)
-        await page.evaluate("if (typeof switchTab === 'function') switchTab('dashboard');")
+        await page.evaluate("""
+            if (typeof switchTab === 'function') switchTab('dashboard');
+            if (typeof renderAll === 'function') renderAll();
+            if (typeof renderDashboard === 'function') renderDashboard();
+        """)
         await asyncio.sleep(1.5)
 
         # Spotlight Equity Curve and Metrics
@@ -367,6 +377,13 @@ async def record_scene_block(p, block_info):
     
     if not os.path.exists(audio_path):
         raise FileNotFoundError(f"Audio no encontrado para {block_id}: {audio_path}")
+
+    # Checkpoint: si la escena ya fue grabada y muxeada, la reutilizamos para no perder tiempo
+    scene_mp4 = os.path.join(SCENES_DIR, f"{block_id}.mp4")
+    force_rerender = "--force" in sys.argv
+    if not force_rerender and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 500000:
+        print(f"⏩ Checkpoint activo para {block_id} ({os.path.getsize(scene_mp4)/(1024*1024):.2f} MB). Saltando grabación...")
+        return scene_mp4
 
     raw_dir = os.path.join(SCENES_DIR, f"raw_{block_id}")
     if os.path.exists(raw_dir):
