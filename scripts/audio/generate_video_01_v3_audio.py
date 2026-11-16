@@ -23,65 +23,76 @@ VOLUME = "+0%"
 
 BLOCKS = [
     {
-        "id": "block1_welcome",
+        "id": "intro",
         "index": 1,
-        "title": "Bienvenida y Acceso a la Plataforma",
-        "tag": "PASO 1: ACCESO",
+        "title": "Intro Animado AsTrade",
+        "tag": "INTRO: ASTRADE",
         "icon": "⚡",
         "text": (
-            "Si operas cuentas de fondeo o buscas superar un desafío institucional, "
-            "sabes que el mayor peligro no es el mercado, sino la falta de disciplina y el descontrol del drawdown. "
-            "Te damos la bienvenida a AsTrade, la bitácora profesional en la nube desarrollada específicamente "
-            "para traders de futuros y forex que auditan su operativa con rigor. "
-            "Olvídate de bitácoras vacías en hojas de cálculo desordenadas. "
-            "En este tutorial de inicio rápido, aprenderás a activar tus 7 días de prueba gratis "
-            "y a configurar tu primera cuenta de fondeo en menos de dos minutos."
+            "Bienvenido a AsTrade. En este tutorial aprenderás a crear y configurar "
+            "correctamente tus cuentas de trading paso a paso desde el primer día."
         )
     },
     {
-        "id": "block2_new_account",
+        "id": "block1_accounts_panel",
         "index": 2,
-        "title": "Apertura de Cuenta Challenge 100K",
-        "tag": "PASO 2: NUEVA CUENTA",
-        "icon": "💼",
+        "title": "El Panel de Cuentas y Botón Nueva Cuenta",
+        "tag": "PASO 1: GESTIÓN DE CUENTAS",
+        "icon": "⚡",
         "text": (
-            "Comenzamos en la sección principal de Cuentas Reales. "
-            "Para dar de alta tu desafío, hacemos clic en el botón 'Nueva Cuenta'. "
-            "AsTrade abrirá de inmediato el asistente de configuración guiada. "
-            "Aquí asignamos un nombre a nuestra cuenta, por ejemplo, 'Fondeo 100K FTMO'. "
-            "Seleccionamos el tipo de cuenta: 'Fase de prueba o Challenge', "
-            "e ingresamos el balance inicial de cien mil dólares. "
-            "La interfaz intuitiva mantiene cada parámetro ordenado y listo para auditoría continua."
+            "Dentro de la plataforma, la pestaña Tus Cuentas es el centro de mando "
+            "donde organizas tu capital. Para comenzar, hacemos clic en el botón "
+            "Nueva Cuenta para abrir el gestor institucional."
         )
     },
     {
-        "id": "block3_rules_celebration",
+        "id": "block2_account_types",
         "index": 3,
-        "title": "Reglas de Fondeo y Activación",
-        "tag": "PASO 3: REGLAS & ACTIVACIÓN",
-        "icon": "🎯",
+        "title": "Tipos de Cuenta y sus Diferencias",
+        "tag": "PASO 2: MODALIDADES DE CUENTA",
+        "icon": "📋",
         "text": (
-            "El verdadero poder de AsTrade radica en la gestión automática de las reglas de tu empresa de fondeo. "
-            "Configuramos el objetivo de beneficio en 8%, "
-            "definimos el límite estricto de pérdida diaria en 5% "
-            "y el drawdown máximo acumulado en 10%. "
-            "Al registrar estos valores, la plataforma auditará cada trade antes de que arriesgues tu capital. "
-            "Guardamos la configuración y listo: tu cuenta institucional queda activada y protegida al instante."
+            "AsTrade te permite adaptar tu bitácora a cualquier modelo operativo: "
+            "Cuentas Reales con capital propio, Fases de prueba o Challenges para evaluaciones de fondeo, "
+            "Cuentas Fondeadas con porcentaje de retiro, o Cuentas Instantáneas. "
+            "Para este ejemplo, seleccionamos Fase de prueba."
         )
     },
     {
-        "id": "block4_dashboard_reveal",
+        "id": "block3_balances_rules",
         "index": 4,
-        "title": "El Resultado: Dashboard con Métricas Reales",
-        "tag": "PASO 4: RESULTADO EN VIVO",
-        "icon": "📊",
+        "title": "Balance Inicial, Balance Base y Reglas",
+        "tag": "PASO 3: BALANCES & REGLAS",
+        "icon": "💰",
         "text": (
-            "Observa el resultado: tu cuenta de fondeo ya está activa con métricas en tiempo real. "
-            "Al pasar a la pestaña de Dashboard, AsTrade cobra vida. "
-            "Visualiza tu curva de equidad con operaciones reales, una tasa de acierto del 68.4%, "
-            "un factor de beneficio de 2.35 y el calendario mensual con días verdes de consistencia matemática. "
-            "Así es como se audita el trading profesional. "
-            "Comienza hoy mismo tus 7 días gratis en astrade punto app y lleva tu cuenta de fondeo al siguiente nivel."
+            "Asignamos un nombre a la cuenta y definimos el Balance Inicial, en este caso 100,000 dólares. "
+            "Este valor es clave, ya que sobre él se calculará estrictamente tu porcentaje de riesgo por operación. "
+            "Si comienzas una cuenta nueva, dejas el Balance Actual vacío. Pero si ya venías operándola antes de ingresar a AsTrade, "
+            "puedes colocar aquí tu saldo de cierre para auditar tu progreso real sin descalibrar el cálculo de riesgo. "
+            "Finalmente, activamos las reglas de tu firma: un objetivo de beneficio del 8% y un límite de drawdown máximo del 10%."
+        )
+    },
+    {
+        "id": "block4_created_card",
+        "index": 5,
+        "title": "Tarjeta de Cuenta Creada en el Grid",
+        "tag": "PASO 4: CUENTA HABILITADA",
+        "icon": "🗂️",
+        "text": (
+            "Al hacer clic en Crear, tu cuenta queda inmediatamente activa en tu panel. "
+            "Desde su tarjeta puedes verificar tu saldo, consultar tus límites de pérdida y acceder a la operativa. "
+            "En el próximo tutorial, aprenderemos a registrar y auditar tus primeros trades "
+            "sobre esta cuenta con análisis técnico y capturas antes y después."
+        )
+    },
+    {
+        "id": "outro",
+        "index": 6,
+        "title": "Outro y Despedida",
+        "tag": "OUTRO: ASTRADE",
+        "icon": "🚀",
+        "text": (
+            "Comienza hoy tu prueba gratuita en astradehub punto com y lleva tu operativa al nivel profesional."
         )
     }
 ]
@@ -109,8 +120,11 @@ def to_phonetic_spanish(text: str) -> str:
     replacements = [
         # Marcas y Enlaces
         (r'\bAsTrade\b', 'As Trade'),
-        (r'\bastrade\b', 'as trade'),
+        (r'\bastradehub punto com\b', 'As Trade jób punto com'),
+        (r'\bastradehub\.com\b', 'As Trade jób punto com'),
+        (r'\bastradehub\b', 'As Trade jób'),
         (r'\bastrade punto app\b', 'As Trade punto app'),
+        (r'\bastrade\b', 'as trade'),
         (r'\bFTMO\b', 'Efe Te Eme O'),
         # Terminología de Trading con Fonética Inglesa Perfecta
         (r'\btrading\b', 'tréiding'),

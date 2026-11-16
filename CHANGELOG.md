@@ -5,6 +5,29 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.9] - 2026-11-16
+
+### 🎬 Tutorial #1 V4: Enfoque Monotemático, Intro/Outro Cinemático y Remotion Skill
+- **Rediseño Monotemático y Estructura Cinemática V4 (`render_video_01_astrade.py`, `generate_video_01_v3_audio.py`):**
+  - Enfoque 100% exclusivo en **Creación y Configuración de Cuentas de Trading**, resolviendo la dispersión temática y la ausencia de tarjeta en el grid del video anterior.
+  - Creación de **Intro Cinemático Animado** (`scripts/render/intro_outro_motion.html?mode=intro`) con logotipo vectorial oficial de AsTrade, halo neón `#10b981`, retícula cyber y tarjeta de lección Full HD.
+  - Creación de **Outro Cinemático de Cierre** (`scripts/render/intro_outro_motion.html?mode=outro`) con logotipo de AsTrade, mensaje de prueba gratuita de 7 días y llamado a la acción con el dominio oficial **`astradehub.com`**.
+  - Explicación visual y auditada paso a paso:
+    - Despliegue de tipos de cuenta: Real (capital propio), Fase de prueba (Challenge), Fondeada e Instant.
+    - Diferenciación clara entre Balance Inicial ($100,000 USD como base matemática de riesgo por trade) y Balance Actual / Saldo de Cierre opcional.
+    - Configuración de reglas de fondeo: Profit Target (8% / $8,000) y Drawdown Máximo (10% / $10,000).
+- **Tarjeta Institucional Visible en Grid (`#sessions-grid`):**
+  - En el Bloque 4, la tarjeta de la cuenta recién creada aparece visible e interactiva en el grid con todas sus etiquetas y saldo ($100,000 USD), señalizada con flecha animada y badge, recorriendo los botones "Entrar" y "Editar", y anticipando el Tutorial #2 (Registro y auditoría de trades).
+- **Corrección de Resolución y Eliminación Total de Bandas Grises:**
+  - Viewport y grabación configurados en 1920x1080 nativo (`record_video_size={"width": 1920, "height": 1080}`, `viewport={"width": 1920, "height": 1080}`, `--window-size=1920,1080`), erradicando las franjas grises de letterboxing causadas por la disparidad previa.
+  - Escala Macro-UI aplicada mediante CSS `zoom: 1.10` y `font-size: 17.5px` para mantener máxima nitidez y legibilidad en pantallas móviles y YouTube.
+- **Creación de Skill Remotion (`.agents/skills/remotion/`):**
+  - Análisis e indexación del tutorial de Remotion + IA en YouTube, creando la skill completa con principios de frames deterministas, `spring()`, `interpolate()`, desacoplamiento JSON y plantilla React TypeScript en `examples/astrade_intro_outro.tsx`.
+- **Sincronización Autónoma en Google Drive (`gdrive`):**
+  - Actualización de los paquetes `astrade_video01_bundle.zip` y `trading_saas_bundle.zip` en Google Drive del usuario sin necesidad de descargas ni subidas manuales.
+
+---
+
 ## [v3.7.8] - 2026-11-16
 
 ### 🎬 Suite de Producción Audiovisual: Pulido Visual Radical para Tutorial #1 YouTube

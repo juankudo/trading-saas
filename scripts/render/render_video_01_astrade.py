@@ -1,7 +1,13 @@
 """
-AsTrade Studio Master Render Pipeline — Tutorial #1 (V3)
-Cinematic Screen Production with Motion Graphics, Animated SVG Arrows,
-Real Populated Data ("The After"), Zero White Flashes, and Smooth FFmpeg Transitions.
+AsTrade Studio Master Render Pipeline — Tutorial #1 (V4)
+Single-Topic Focus: Creación y Configuración de Cuentas de Trading.
+Features:
+- Animated Intro with AsTrade official logo, glowing neon halo, and lesson title.
+- Real 1920x1080 native resolution (zero grey letterboxing borders).
+- Step-by-step account configuration (Account types, Initial Balance vs Actual Balance, Fondeo rules 8%/10%).
+- Account Card revealed in the grid with all badges, balance, and action buttons.
+- Animated Outro with official domain astradehub.com.
+- Smooth FFmpeg cross-fades and music ducking.
 """
 
 import os
@@ -24,10 +30,10 @@ SCENES_DIR = os.path.join(SCRATCH_DIR, "scenes")
 MANIFEST_PATH = os.path.join(AUDIO_DIR, "manifest_v3.json")
 OUTPUT_DIR = os.path.join(BASE_DIR, "media", "youtube_tutorials")
 FINAL_MP4 = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_01_Onboarding_1080p.mp4")
+FINAL_MP4_ALIAS = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_01_Cuentas_1080p.mp4")
 BG_MUSIC = os.path.join(BASE_DIR, "media", "video1_assets", "music", "happy-beats-business-moves-vol-1-by-ende-dot-app.mp3")
 
 MOTION_ENGINE_JS = os.path.join(BASE_DIR, "scripts", "render", "studio_motion_engine.js")
-MOCK_DATA_JS = os.path.join(BASE_DIR, "scripts", "render", "mock_populated_data.js")
 
 PORT = 8089
 FFMPEG_EXE = imageio_ffmpeg.get_ffmpeg_exe()
@@ -74,305 +80,302 @@ def start_http_server():
 async def choreograph_block(page, block_id, duration):
     """
     Executes precise motion graphics, SVG arrow drawing, spotlights,
-    typewriting, and celebration confetti for each scene block.
+    typewriting, and card highlights for each scene block.
     """
     t_start = time.time()
     print(f"\n🎬 Coreografiando {block_id} (Meta: {duration:.2f}s)...")
 
-    # Read JS scripts to inject
+    # In Intro and Outro, the HTML template runs its own animations
+    if block_id == "intro":
+        await asyncio.sleep(duration - 1.2)
+        try:
+            await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
+        except Exception:
+            pass
+        await asyncio.sleep(1.2)
+        print(f"✅ Bloque {block_id} completado en {time.time() - t_start:.2f}s")
+        return
+
+    if block_id == "outro":
+        await asyncio.sleep(duration - 1.0)
+        try:
+            await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
+        except Exception:
+            pass
+        await asyncio.sleep(1.0)
+        print(f"✅ Bloque {block_id} completado en {time.time() - t_start:.2f}s")
+        return
+
+    # In app.html blocks, inject the motion engine
     with open(MOTION_ENGINE_JS, "r", encoding="utf-8") as f:
         engine_code = f.read()
-    with open(MOCK_DATA_JS, "r", encoding="utf-8") as f:
-        mock_code = f.read()
 
     await page.evaluate(engine_code)
-    await page.evaluate(mock_code)
     await page.evaluate("window.__initStudioMotionEngine()")
 
-    if block_id == "block1_welcome":
+    # Eradicate tours and overlays
+    await page.evaluate("""
+        const t = document.getElementById('tourOverlay');
+        if (t) t.remove();
+        const g = document.getElementById('lifecycleGuideModal');
+        if (g) g.remove();
+        const lo = document.getElementById('lifecycleGuideOverlay');
+        if (lo) lo.remove();
+    """)
+
+    if block_id == "block1_accounts_panel":
         # ---------------------------------------------------------
-        # BLOCK 1: Bienvenida en index.html y acceso
-        # ---------------------------------------------------------
-        await page.evaluate("""
-            window.__showLowerThird('⚡', 'PASO 1: ACCESO', 'Bienvenida a AsTrade: Bitácora Institucional');
-        """)
-        await asyncio.sleep(2.0)
-
-        # Glide cursor from center towards Hero
-        await page.evaluate("window.__glideCursorTo(680, 420, 900)")
-        await asyncio.sleep(1.0)
-
-        # Draw animated neon arrow pointing to CTA "Mi Bitácora" / "Comenzar"
-        cta_selector = 'a[href="app.html"]'
-        await page.evaluate(f"""
-            window.__drawAnimatedArrow({{ offsetX: -200, offsetY: 70 }}, '{cta_selector}', 0.3, 850);
-            window.__pulseRingAround('{cta_selector}');
-            window.__showCalloutBadge('{cta_selector}', '🚀', 'PRUEBA GRATUITA', '7 Días de Acceso Total', 'Auditoría estricta para cuentas de fondeo', 'bottom');
-        """)
-        await asyncio.sleep(6.5)
-
-        # Clear arrow and glide to CTA
-        await page.evaluate("""
-            window.__clearMotionArrows();
-            window.__hideCalloutBadge();
-            window.__removePulseRing();
-        """)
-        await page.evaluate(f"window.__glideCursorToElement('{cta_selector}', 750)")
-        await asyncio.sleep(0.8)
-
-        # Click ripple + Navigate to app.html
-        await page.evaluate("window.__clickRipple()")
-        await asyncio.sleep(0.4)
-        await page.evaluate(f"document.querySelector('{cta_selector}').click()")
-        await page.wait_for_load_state("domcontentloaded")
-        await asyncio.sleep(1.5)
-
-        # Re-inject engine on newly loaded page and guarantee tour eradication
-        await page.evaluate(engine_code)
-        await page.evaluate("window.__initStudioMotionEngine()")
-        await page.evaluate("""
-            const t = document.getElementById('tourOverlay');
-            if (t) t.remove();
-            const g = document.getElementById('lifecycleGuideModal');
-            if (g) g.remove();
-            window.startAppTour = () => {};
-            window.openTradeLifecycleGuide = () => {};
-            window.showFondeoCelebration = () => {};
-            window.launchConfetti = () => {};
-            window.confetti = () => {};
-        """)
-        await page.evaluate("window.__showLowerThird('💼', 'PASO 1: ACCESO', 'Ingresando al entorno de alta concentración');")
-
-    elif block_id == "block2_new_account":
-        # ---------------------------------------------------------
-        # BLOCK 2: app.html -> Botón Nueva Cuenta y Formulario 100K
+        # BLOCK 1: Panel de Cuentas y Botón Nueva Cuenta (12.17s)
         # ---------------------------------------------------------
         await page.evaluate("""
-            const t = document.getElementById('tourOverlay');
-            if (t) t.remove();
-            const g = document.getElementById('lifecycleGuideModal');
-            if (g) g.remove();
-            window.__showLowerThird('💼', 'PASO 2: NUEVA CUENTA', 'Creación de Cuenta Challenge $100K');
+            window.__showLowerThird('⚡', 'PASO 1: GESTIÓN DE CUENTAS', 'Panel Tus Cuentas: Centro de Mando de Capital');
         """)
-        await asyncio.sleep(1.5)
+        await asyncio.sleep(1.2)
 
-        # Arrow pointing to "Nueva Cuenta"
+        # Glide cursor towards "Nueva Cuenta"
         btn_selector = "#btn-new-session"
         await page.evaluate(f"""
-            window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 60 }}, '{btn_selector}', -0.25, 800);
-            window.__pulseRingAround('{btn_selector}');
-            window.__showCalloutBadge('{btn_selector}', '⚡', 'GESTIÓN', 'Crear Nueva Cuenta', 'Auditoría en 1 o 2 fases', 'bottom');
+            window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{btn_selector}', -0.25, 750);
+            window.__pulseRingAround('{btn_selector}', 6);
+            window.__showCalloutBadge('{btn_selector}', '⚡', 'GESTIÓN', 'Crear Nueva Cuenta', 'Auditoría institucional en 1 o 2 fases', 'bottom');
         """)
-        await asyncio.sleep(5.0)
+        await asyncio.sleep(4.5)
 
-        # Clear arrow & glide cursor
+        # Clear arrow and glide cursor
         await page.evaluate("""
             window.__clearMotionArrows();
             window.__hideCalloutBadge();
             window.__removePulseRing();
         """)
-        await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 700)")
-        await asyncio.sleep(0.8)
+        await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 600)")
+        await asyncio.sleep(0.7)
 
-        # Click ripple + open modal safely
+        # Click ripple + open modal
         await page.evaluate("window.__clickRipple()")
         await asyncio.sleep(0.3)
         await page.evaluate(f"""
             const btn = document.querySelector('{btn_selector}');
-            if (btn) {{
-                btn.click();
-            }} else if (typeof openSessionModal === 'function') {{
-                openSessionModal();
-            }}
+            if (btn) btn.click();
+            else if (typeof openSessionModal === 'function') openSessionModal();
         """)
         try:
-            await page.wait_for_selector("#sessionModal:not(.hidden)", state="visible", timeout=3000)
+            await page.wait_for_selector("#sessionModal:not(.hidden)", state="visible", timeout=2500)
         except Exception:
             await page.evaluate("if (typeof openSessionModal === 'function') openSessionModal();")
         await asyncio.sleep(1.0)
 
-        # Glide cursor to Account Name Input and Type
-        await page.evaluate("window.__glideCursorToElement('#inputSessionName', 600)")
-        await asyncio.sleep(0.6)
+    elif block_id == "block2_account_types":
+        # ---------------------------------------------------------
+        # BLOCK 2: Tipos de Cuenta y sus Diferencias (18.41s)
+        # ---------------------------------------------------------
+        # Ensure modal is open
         await page.evaluate("""
-            const nameEl = document.querySelector('#inputSessionName');
-            if (nameEl) window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 55);
+            if (document.getElementById('sessionModal').classList.contains('hidden')) {
+                if (typeof openSessionModal === 'function') openSessionModal();
+            }
+            window.__showLowerThird('📋', 'PASO 2: MODALIDADES', 'Cuentas Reales, Challenges, Fondeadas e Instant');
         """)
         await asyncio.sleep(1.2)
 
-        # Stage Selection
-        await page.evaluate("window.__glideCursorToElement('#inputAccountStage', 600)")
-        await asyncio.sleep(0.6)
-        await page.evaluate("""
-            const stageEl = document.querySelector('#inputAccountStage');
-            if (stageEl) {
-                stageEl.value = 'prueba';
-                stageEl.dispatchEvent(new Event('change'));
-            }
+        # Glide cursor to select #inputAccountStage
+        stage_sel = "#inputAccountStage"
+        await page.evaluate(f"""
+            window.__glideCursorToElement('{stage_sel}', 600);
+            window.__pulseRingAround('{stage_sel}', 6);
+            window.__showCalloutBadge('{stage_sel}', '📋', 'MODALIDADES', 'Tipos de Cuenta Soportados', 'Real, Challenge, Fondeada e Instant', 'right');
         """)
-        await asyncio.sleep(1.0)
+        await asyncio.sleep(4.0)
 
-        # Spotlight Initial Balance $100,000
+        # Cycle visually through account types: Real
         await page.evaluate("""
-            window.__glideCursorToElement('#inputSessionBalance', 600);
-            window.__spotlightElement('#inputSessionBalance');
-            window.__showCalloutBadge('#inputSessionBalance', '💰', 'CAPITAL', 'Balance $100,000 USD', 'Saldo institucional para auditar', 'right');
+            const el = document.querySelector('#inputAccountStage');
+            if (el) {
+                el.value = 'real';
+                if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
+            }
+            window.__showCalloutBadge('#inputAccountStage', '💼', 'CAPITAL PROPIO', 'Cuenta Real', 'Auditoría de tu capital personal', 'right');
+        """)
+        await asyncio.sleep(3.5)
+
+        # Select "prueba" (Challenge)
+        await page.evaluate("""
+            const el = document.querySelector('#inputAccountStage');
+            if (el) {
+                el.value = 'prueba';
+                if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
+            }
+            window.__showCalloutBadge('#inputAccountStage', '🎯', 'SELECCIÓN: FASE DE PRUEBA', 'Evaluación / Challenge', 'Auditoría estricta de metas y límites de pérdida', 'right');
         """)
         await asyncio.sleep(4.5)
+
+        # Clean spotlight & badge
         await page.evaluate("""
-            window.__hideSpotlight();
+            window.__removePulseRing();
             window.__hideCalloutBadge();
         """)
 
-    elif block_id == "block3_rules_celebration":
+    elif block_id == "block3_balances_rules":
         # ---------------------------------------------------------
-        # BLOCK 3: Configuración de Reglas y Celebración
+        # BLOCK 3: Balance Inicial vs Saldo Actual & Reglas (36.74s)
         # ---------------------------------------------------------
-        # Ensure modal is open with prefilled data and overlays are destroyed
         await page.evaluate("""
-            const t = document.getElementById('tourOverlay');
-            if (t) t.remove();
-            const g = document.getElementById('lifecycleGuideModal');
-            if (g) g.remove();
             if (document.getElementById('sessionModal').classList.contains('hidden')) {
-                openSessionModal();
+                if (typeof openSessionModal === 'function') openSessionModal();
             }
-            document.getElementById('inputSessionName').value = 'Fondeo 100K FTMO';
-            document.getElementById('inputAccountStage').value = 'prueba';
-            if (typeof fillAccountStageForm === 'function') fillAccountStageForm(null);
-            window.__showLowerThird('🎯', 'PASO 3: REGLAS & ACTIVACIÓN', 'Auditoría de Drawdown y Activación');
+            const el = document.querySelector('#inputAccountStage');
+            if (el) {
+                el.value = 'prueba';
+                if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
+            }
+            window.__showLowerThird('💰', 'PASO 3: BALANCES & REGLAS', 'Balance Inicial $100K vs Saldo Actual & Reglas');
         """)
-        await asyncio.sleep(1.5)
+        await asyncio.sleep(1.2)
 
-        # Spotlight Profit Target 8%
+        # 1. Type account name: 'Fondeo 100K FTMO'
+        await page.evaluate("window.__glideCursorToElement('#inputSessionName', 500)")
+        await asyncio.sleep(0.5)
+        await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 45)")
+        await asyncio.sleep(1.2)
+
+        # 2. Spotlight Initial Balance: $100,000 USD
+        bal_el = "#inputSessionBalance"
+        await page.evaluate(f"""
+            window.__glideCursorToElement('{bal_el}', 500);
+            window.__spotlightElement('{bal_el}', 8);
+            window.__showCalloutBadge('{bal_el}', '💰', 'CAPITAL AUDITADO', 'Balance Inicial: $100,000 USD', 'Base estricta para el cálculo de riesgo % por trade', 'right');
+        """)
+        await asyncio.sleep(6.5)
+
+        # 3. Spotlight Balance Actual (Opcional)
+        bal_act_el = "#inputSessionBalanceActual"
+        await page.evaluate(f"""
+            window.__hideSpotlight();
+            window.__glideCursorToElement('{bal_act_el}', 500);
+            window.__spotlightElement('{bal_act_el}', 8);
+            window.__showCalloutBadge('{bal_act_el}', '📊', 'BALANCE ACTUAL (OPCIONAL)', 'Saldo de Corte / Cierre', 'Vacío si es nueva. O tu saldo actual si ya venías operando.', 'right');
+        """)
+        await asyncio.sleep(7.5)
+
+        # 4. Profit Target: 8%
         target_el = "#inputAccountGoalTargetPct"
         await page.evaluate(f"""
-            window.__glideCursorToElement('{target_el}', 600);
-            window.__spotlightElement('{target_el}', 10);
-            window.__pulseRingAround('{target_el}', 6);
-            window.__showCalloutBadge('{target_el}', '🎯', 'OBJETIVO', 'Profit Target 8%', 'Meta institucional de $8,000 USD', 'right');
-        """)
-        await asyncio.sleep(5.0)
-
-        # Spotlight Daily Loss & Max DD
-        dd_el = "#inputAccountGoalMaxDD"
-        await page.evaluate(f"""
             window.__hideSpotlight();
-            window.__removePulseRing();
-            window.__glideCursorToElement('{dd_el}', 600);
-            window.__spotlightElement('{dd_el}', 10);
-            window.__showCalloutBadge('{dd_el}', '🛡️', 'LÍMITES', 'Drawdown Máximo 10%', 'Pérdida diaria 5% blindada', 'right');
-        """)
-        await asyncio.sleep(5.0)
-
-        # Clear spotlight and glide to submit button
-        submit_btn = "#btn-submit-session"
-        await page.evaluate(f"""
-            window.__hideSpotlight();
-            window.__hideCalloutBadge();
-            window.__glideCursorToElement('{submit_btn}', 700);
-            window.__pulseRingAround('{submit_btn}', 8);
-        """)
-        await asyncio.sleep(1.8)
-
-        # Click submit safely
-        await page.evaluate("window.__clickRipple()")
-        await asyncio.sleep(0.3)
-        await page.evaluate(f"""
-            const sBtn = document.querySelector('{submit_btn}');
-            if (sBtn) {{
-                sBtn.click();
-            }} else if (typeof saveSession === 'function') {{
-                saveSession(new Event('submit'));
-            }}
-        """)
-        await asyncio.sleep(0.5)
-
-        # Close modal if open & trigger CELEBRATION
-        await page.evaluate("""
-            window.__removePulseRing();
-            if (typeof closeSessionModal === 'function') closeSessionModal();
-            window.__triggerCelebrationConfetti();
-            window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo $100,000 USD listo para auditar con reglas 5%/10%');
-        """)
-        await asyncio.sleep(3.0)
-
-    elif block_id == "block4_dashboard_reveal":
-        # ---------------------------------------------------------
-        # BLOCK 4: La Transformación — Dashboard con Datos Reales
-        # ---------------------------------------------------------
-        # Eradicate any guides/overlays
-        await page.evaluate("""
-            const t = document.getElementById('tourOverlay');
-            if (t) t.remove();
-            const g = document.getElementById('lifecycleGuideModal');
-            if (g) g.remove();
-        """)
-        # Inject populated challenge data ($104,250 balance, 14 trades, 68.4% WR, 2.35 PF)
-        await page.evaluate("""
-            async () => {
-                if (typeof window.__injectPopulatedChallengeData === 'function') {
-                    await window.__injectPopulatedChallengeData();
-                }
-            }
-        """)
-        await page.evaluate("""
-            window.__showLowerThird('📊', 'PASO 4: RESULTADO EN VIVO', 'Dashboard Cobrando Vida: Consistencia Demostrada');
-        """)
-        await asyncio.sleep(2.0)
-
-        # Show arrow to the active populated account card in grid
-        account_card = "#sessions-grid > div:first-child, .account-card"
-        await page.evaluate(f"""
-            const card = document.querySelector('{account_card}');
-            if (card) {{
-                window.__drawAnimatedArrow({{ offsetX: 200, offsetY: 50 }}, '{account_card}', -0.25, 800);
-                window.__pulseRingAround('{account_card}', 10);
-                window.__showCalloutBadge('{account_card}', '📈', 'PROGRESO', 'Fondeo 100K FTMO', 'Balance $104,250 (+4.25% hacia el objetivo)', 'bottom');
-            }}
+            window.__glideCursorToElement('{target_el}', 500);
+            window.__spotlightElement('{target_el}', 8);
+            const tInput = document.querySelector('{target_el}');
+            if (tInput) tInput.value = '8';
+            window.__showCalloutBadge('{target_el}', '🎯', 'OBJETIVO', 'Profit Target: 8%', 'Meta institucional de $8,000 USD', 'right');
         """)
         await asyncio.sleep(5.5)
 
-        # Clear arrow and glide to Dashboard Tab
-        dash_tab = "#tab-btn-dashboard"
+        # 5. Drawdown Máximo: 10%
+        dd_el = "#inputAccountGoalMaxDD"
+        await page.evaluate(f"""
+            window.__hideSpotlight();
+            window.__glideCursorToElement('{dd_el}', 500);
+            window.__spotlightElement('{dd_el}', 8);
+            const dInput = document.querySelector('{dd_el}');
+            if (dInput) dInput.value = '10';
+            window.__showCalloutBadge('{dd_el}', '🛡️', 'LÍMITES', 'Drawdown Máximo: 10%', 'Protección de capital estricta ($10,000 USD)', 'right');
+        """)
+        await asyncio.sleep(5.5)
+
+        # 6. Click button "Crear" / Submit
+        btn_submit = "#btn-submit-session"
+        await page.evaluate(f"""
+            window.__hideSpotlight();
+            window.__hideCalloutBadge();
+            window.__glideCursorToElement('{btn_submit}', 600);
+            window.__pulseRingAround('{btn_submit}', 6);
+        """)
+        await asyncio.sleep(1.2)
+        await page.evaluate("window.__clickRipple()")
+        await asyncio.sleep(0.3)
+        await page.evaluate(f"""
+            const btn = document.querySelector('{btn_submit}');
+            if (btn) btn.click();
+            else if (typeof saveSession === 'function') saveSession(new Event('submit'));
+        """)
+        await asyncio.sleep(0.5)
+        await page.evaluate("""
+            window.__removePulseRing();
+            if (typeof closeSessionModal === 'function') closeSessionModal();
+            window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo 100K FTMO configurada con reglas 8% / 10%');
+        """)
+        await asyncio.sleep(1.5)
+
+    elif block_id == "block4_created_card":
+        # ---------------------------------------------------------
+        # BLOCK 4: Tarjeta de Cuenta Creada en el Grid (21.38s)
+        # ---------------------------------------------------------
+        # Inject created account and re-render grid
+        await page.evaluate("""
+            const newAcc = {
+                id: 1700000000001,
+                name: "Fondeo 100K FTMO",
+                pair: "",
+                startDate: null,
+                balance: 100000,
+                balanceActual: null,
+                balanceActualAt: null,
+                date: new Date().toLocaleDateString('es-ES'),
+                stage: "prueba",
+                goal: {
+                    stage: "prueba",
+                    targetPct: 8,
+                    maxDDPct: 10,
+                    dailyDDPct: 5,
+                    minTradingDays: 4,
+                    maxTradingDays: 30
+                },
+                mt5Login: "",
+                withdrawals: []
+            };
+            if (typeof realAccounts !== 'undefined') {
+                realAccounts = [newAcc];
+            }
+            if (typeof renderGroups === 'function') {
+                renderGroups();
+            }
+            window.__showLowerThird('🗂️', 'PASO 4: CUENTA HABILITADA', 'Tarjeta Institucional Creada y Lista en el Grid');
+        """)
+        await asyncio.sleep(1.5)
+
+        # Highlight newly created card with animated arrow and pulse ring
+        first_card = "#sessions-grid > div:first-child"
+        await page.evaluate(f"""
+            window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{first_card}', -0.25, 750);
+            window.__pulseRingAround('{first_card}', 10);
+            window.__showCalloutBadge('{first_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K FTMO', 'Saldo $100,000 USD | Target 8% | Max DD 10%', 'bottom');
+        """)
+        await asyncio.sleep(6.5)
+
+        # Clear arrow and glide cursor to "Entrar" button
+        enter_btn = "#sessions-grid > div:first-child button"
         await page.evaluate(f"""
             window.__clearMotionArrows();
             window.__hideCalloutBadge();
             window.__removePulseRing();
-            const tab = document.querySelector('{dash_tab}');
-            if (tab) tab.classList.remove('hidden');
-            window.__glideCursorToElement('{dash_tab}', 650);
-            window.__pulseRingAround('{dash_tab}', 6);
+            window.__glideCursorToElement('{enter_btn}', 650);
+            window.__pulseRingAround('{enter_btn}', 4);
         """)
-        await asyncio.sleep(1.5)
+        await asyncio.sleep(3.5)
 
-        # Click Dashboard Tab
-        await page.evaluate("window.__clickRipple()")
-        await asyncio.sleep(0.3)
-        await page.evaluate("""
-            if (typeof switchTab === 'function') switchTab('dashboard');
-            if (typeof renderAll === 'function') renderAll();
-            if (typeof renderDashboard === 'function') renderDashboard();
-        """)
-        await asyncio.sleep(1.5)
-
-        # Spotlight Equity Curve and Metrics
-        await page.evaluate("""
+        # Glide cursor to "Editar" pencil button
+        edit_btn = "#sessions-grid > div:first-child .fa-pen-to-square, #sessions-grid > div:first-child [title*='Editar']"
+        await page.evaluate(f"""
             window.__removePulseRing();
-            const chartCanvas = document.querySelector('#equityChart, canvas');
-            if (chartCanvas) {
-                window.__spotlightElement(chartCanvas.id ? '#' + chartCanvas.id : 'canvas', 15);
-            }
-            window.__showLowerThird('💎', 'MÉTRICAS AUDITADAS', 'Win Rate 68.4% | Profit Factor 2.35 | Curva Ascendente');
+            window.__glideCursorToElement('{edit_btn}', 550);
+            window.__pulseRingAround('{edit_btn}', 4);
         """)
-        await asyncio.sleep(7.0)
+        await asyncio.sleep(2.5)
 
-        # Clean spotlight and show final callout
-        await page.evaluate("""
-            window.__hideSpotlight();
-            window.__showCalloutBadge('#tab-btn-dashboard', '🚀', 'COMIENZA HOY', '7 Días Gratis en AsTrade.app', 'Lleva tu cuenta de fondeo al siguiente nivel', 'bottom');
+        # Show Callout Badge teasing Tutorial #2
+        await page.evaluate(f"""
+            window.__removePulseRing();
+            window.__showCalloutBadge('{first_card}', '🚀', 'PRÓXIMO TUTORIAL', 'Registro y Auditoría de Trades', 'Análisis técnico y capturas antes y después', 'bottom');
         """)
-        await asyncio.sleep(3.0)
+        await asyncio.sleep(4.0)
 
     # Fill remaining scene time smoothly to match exact audio length
     elapsed = time.time() - t_start
@@ -390,7 +393,7 @@ async def record_scene_block(p, block_info):
     block_id = block_info["id"]
     duration = block_info["duration_seconds"]
     
-    # Robust cross-platform audio path resolution
+    # Audio path resolution
     audio_file = block_info.get("audio_file") or f"{block_id}.mp3"
     audio_path = os.path.join(AUDIO_DIR, audio_file)
     if not os.path.exists(audio_path):
@@ -404,7 +407,7 @@ async def record_scene_block(p, block_info):
     if not os.path.exists(audio_path):
         raise FileNotFoundError(f"Audio no encontrado para {block_id}: {audio_path}")
 
-    # Checkpoint: si la escena ya fue grabada y muxeada, la reutilizamos para no perder tiempo
+    # Checkpoint check
     scene_mp4 = os.path.join(SCENES_DIR, f"{block_id}.mp4")
     force_rerender = "--force" in sys.argv
     if not force_rerender and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 500000:
@@ -416,44 +419,37 @@ async def record_scene_block(p, block_info):
         shutil.rmtree(raw_dir, ignore_errors=True)
     os.makedirs(raw_dir, exist_ok=True)
 
-    # Launch browser with dark background override to prevent white flash
+    # 1920x1080 Native Setup (Eliminates all grey borders)
     launch_args = [
         "--no-sandbox",
         "--disable-dev-shm-usage",
         "--disable-background-timer-throttling",
         "--disable-renderer-backgrounding",
-        "--font-render-hinting=none"
+        "--font-render-hinting=none",
+        "--window-size=1920,1080"
     ]
     browser = await p.chromium.launch(
         headless=True,
         args=launch_args
     )
 
-    # Macro-UI Viewport: 1536x864 (16:9, escala 1.25x natural) con salida a 1080p para legibilidad nítida en YouTube
     context = await browser.new_context(
-        viewport={"width": 1536, "height": 864},
+        viewport={"width": 1920, "height": 1080},
         record_video_dir=raw_dir,
         record_video_size={"width": 1920, "height": 1080}
     )
 
-    # Inyectar sesión autenticada activa + Erradicar tours/guías invasivas + Macro-UI
+    # Init script: Active session + Eradicate intrusive tours + Macro-UI scale
     await context.add_init_script("""
-        // 1. Sesión activa para evitar redirección de app.html
         localStorage.setItem('trading_saas_user_session', JSON.stringify({
             id: 'usr_astrade_pro',
-            email: 'trader@astrade.app',
+            email: 'trader@astradehub.com',
             name: 'Trader Institucional',
             plan: 'pro_monthly',
             status: 'active',
-            createdAt: new Date().toISOString(),
-            subscription: {
-                status: 'active',
-                plan: 'pro_monthly',
-                current_period_end: new Date(Date.now() + 30*24*60*60*1000).toISOString()
-            }
+            createdAt: new Date().toISOString()
         }));
 
-        // 2. Erradicación radical de guías, onboarding tours y popups oscurecidos
         localStorage.setItem('journal_tour_never_show', 'true');
         localStorage.setItem('journal_tour_completed', 'true');
         localStorage.setItem('has_seen_onboarding', 'true');
@@ -465,24 +461,19 @@ async def record_scene_block(p, block_info):
         window.__smokeTestRunning = true;
         window.__VIDEO_RENDER_MODE__ = true;
 
-        // Desactivar funciones invasivas a nivel global
         window.startAppTour = function() { return false; };
         window.initTourAutoTrigger = function() { return false; };
         window.openTradeLifecycleGuide = function() { return false; };
         window.launchConfetti = function() { return false; };
         window.showFondeoCelebration = function() { return false; };
-        window.triggerConfettiEffect = function() { return false; };
         window.confetti = function() {};
-        window.confetti.reset = function() {};
 
-        // 3. Estilos CSS inyectados para bloquear overlays y elevar legibilidad de texto en YouTube
         const macroStyle = document.createElement('style');
         macroStyle.id = 'studio-macro-ui-style';
         macroStyle.innerHTML = `
             #tourOverlay, .tour-overlay, #tourSvgMask, #tourTooltip, #tourHighlightRing,
             #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element,
-            .fondeo-celebration, .fondeo-confetti, #confettiCanvas,
-            canvas[style*="pointer-events: none"] {
+            .fondeo-celebration, .fondeo-confetti, #confettiCanvas {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
@@ -490,9 +481,9 @@ async def record_scene_block(p, block_info):
                 width: 0 !important;
                 height: 0 !important;
             }
-            /* Macro-UI Readability Enhancements */
             html {
-                font-size: 17px !important;
+                font-size: 17.5px !important;
+                zoom: 1.10 !important;
             }
             .text-xs { font-size: 0.88rem !important; }
             .text-sm { font-size: 1.02rem !important; }
@@ -513,28 +504,21 @@ async def record_scene_block(p, block_info):
 
     page = await context.new_page()
 
-    # CDP Dark Canvas Override (#0b0f19)
-    try:
-        cdp = await context.new_cdp_session(page)
-        await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
-            "color": {"r": 11, "g": 15, "b": 25, "a": 1}
-        })
-    except Exception as e:
-        print(f"   [CDP Notice] {e}")
-
     # Determine start URL
-    if block_id == "block1_welcome":
-        start_url = f"http://127.0.0.1:{PORT}/index.html"
+    if block_id == "intro":
+        start_url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=intro"
+    elif block_id == "outro":
+        start_url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=outro"
     else:
         start_url = f"http://127.0.0.1:{PORT}/app.html"
 
     await page.goto(start_url, wait_until="domcontentloaded")
     await asyncio.sleep(0.5)
 
-    # Execute motion graphics
+    # Execute choreography
     await choreograph_block(page, block_id, duration)
 
-    # Close page and context to finalize Playwright WebM recording
+    # Close to finalize WebM
     await page.close()
     await context.close()
     await browser.close()
@@ -549,12 +533,11 @@ async def record_scene_block(p, block_info):
     scene_mp4 = os.path.join(SCENES_DIR, f"{block_id}.mp4")
     print(f"⚙️ Muxeando video y audio para {block_id}...")
     
-    # FFmpeg command to mux video + audio and ensure exact length
     mux_cmd = [
         FFMPEG_EXE, "-y",
         "-i", raw_webm,
         "-i", audio_path,
-        "-filter_complex", f"[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
+        "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
         "-map", "[v]",
         "-map", "1:a",
         "-c:v", "libx264", "-preset", "fast", "-crf", "18",
@@ -579,10 +562,8 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
     print("=" * 70)
 
     n = len(scene_mp4s)
-    trans_dur = 0.5  # 0.5s smooth cross-dissolve
+    trans_dur = 0.4  # 0.4s smooth cross-dissolve
 
-    # Calculate offsets for xfade
-    # offset_i = sum(durations[:i]) - i * trans_dur
     durations = [b["duration_seconds"] for b in manifest_blocks]
     offsets = []
     accum = 0.0
@@ -591,7 +572,6 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
         offset = accum - (i + 1) * trans_dur
         offsets.append(offset)
 
-    # Build inputs
     cmd = [FFMPEG_EXE, "-y"]
     for s in scene_mp4s:
         cmd.extend(["-i", s])
@@ -603,12 +583,9 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
     else:
         music_idx = None
 
-    # Filter complex
     filter_parts = []
     
     # Video cross-dissolves
-    # [0:v][1:v]xfade=transition=fade:duration=0.5:offset=offset_0[v01];
-    # [v01][2:v]xfade=transition=fade:duration=0.5:offset=offset_1[v02]...
     last_v = "0:v"
     for i in range(1, n):
         out_v = f"v_trans_{i}"
@@ -626,7 +603,6 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
     # Music ducking and fade out
     total_len = accum + durations[-1] - (n - 1) * trans_dur
     if has_music:
-        # Music volume -24 dB, loop/trim to total_len, fade out in last 2.5s
         fade_out_start = max(0, total_len - 2.5)
         filter_parts.append(
             f"[{music_idx}:a]volume=0.065,afade=t=out:st={fade_out_start:.2f}:d=2.5[bgm];"
@@ -655,6 +631,7 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
         raise RuntimeError("FFmpeg assembly failed")
 
     size_mb = os.path.getsize(FINAL_MP4) / (1024 * 1024)
+    shutil.copy2(FINAL_MP4, FINAL_MP4_ALIAS)
     print("=" * 70)
     print(f"🎉 VIDEO MAESTRO COMPLETADO CON ÉXITO:")
     print(f"📍 Archivo: {FINAL_MP4}")
@@ -668,7 +645,8 @@ def assemble_final_video(scene_mp4s, manifest_blocks):
 # -------------------------------------------------------------
 async def main():
     print("=" * 70)
-    print("🚀 INICIANDO RENDERIZADO MAESTRO ASTRADE — TUTORIAL #1 (V3)")
+    print("🚀 INICIANDO RENDERIZADO MAESTRO ASTRADE — TUTORIAL #1 (V4)")
+    print("🎬 Tema: Creación y Configuración de Cuentas de Trading")
     print("=" * 70)
 
     # 1. Start server
@@ -676,7 +654,7 @@ async def main():
 
     # 2. Load audio manifest
     if not os.path.exists(MANIFEST_PATH):
-        raise FileNotFoundError(f"No se encontró el manifest de audio en {MANIFEST_PATH}. Ejecuta scripts/audio/generate_video_01_v3_audio.py primero.")
+        raise FileNotFoundError(f"No se encontró el manifest de audio en {MANIFEST_PATH}.")
 
     with open(MANIFEST_PATH, "r", encoding="utf-8") as f:
         manifest_data = json.load(f)

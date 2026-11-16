@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AsTrade — Motion Intro & Outro</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            background: #0b0f19;
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            color: #ffffff;
+            user-select: none;
+        }
+
+        #canvas-stage {
+            position: relative;
+            width: 1920px;
+            height: 1080px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Ambient Glow & Grid */
+        .ambient-glow {
+            position: absolute;
+            width: 1000px;
+            height: 1000px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.08) 40%, rgba(11, 15, 25, 0) 70%);
+            pointer-events: none;
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { transform: scale(0.85); opacity: 0.7; }
+            100% { transform: scale(1.15); opacity: 1; }
+        }
+
+        .cyber-grid {
+            position: absolute;
+            inset: 0;
+            background-size: 60px 60px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            mask-image: radial-gradient(circle at center, rgba(0,0,0,1) 40%, transparent 80%);
+            pointer-events: none;
+        }
+
+        /* Container */
+        .content-box {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Logo Component */
+        .logo-row {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 36px;
+            transform: scale(0.7);
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .logo-row.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .logo-symbol {
+            width: 90px;
+            height: 90px;
+            border-radius: 24px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(5, 150, 105, 0.35) 100%);
+            border: 2px solid #10b981;
+            box-shadow: 0 0 45px rgba(16, 185, 129, 0.5), inset 0 0 20px rgba(16, 185, 129, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+        }
+
+        .brand-text-col {
+            text-align: left;
+        }
+        .brand-title {
+            font-size: 56px;
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1;
+            color: #ffffff;
+        }
+        .brand-title span {
+            color: #10b981;
+            text-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+        }
+        .brand-badge {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 3.5px;
+            text-transform: uppercase;
+            color: #34d399;
+            margin-top: 6px;
+        }
+
+        /* Title Card */
+        .title-card {
+            max-width: 950px;
+            transform: translateY(30px) scale(0.95);
+            opacity: 0;
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .title-card.active {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .tutorial-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 20px;
+            border-radius: 999px;
+            background: rgba(16, 185, 129, 0.16);
+            border: 1.5px solid #10b981;
+            color: #10b981;
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+        }
+
+        .main-headline {
+            font-size: 46px;
+            font-weight: 900;
+            line-height: 1.25;
+            color: #ffffff;
+            margin-bottom: 14px;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+
+        .sub-headline {
+            font-size: 20px;
+            font-weight: 500;
+            color: #94a3b8;
+            letter-spacing: 0.2px;
+        }
+
+        /* Outro Specific Elements */
+        .outro-cta-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 36px;
+            border-radius: 20px;
+            background: rgba(11, 15, 25, 0.95);
+            border: 2px solid #10b981;
+            box-shadow: 0 25px 65px rgba(0,0,0,0.9), 0 0 40px rgba(16, 185, 129, 0.4);
+            margin-top: 32px;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .outro-cta-box.active {
+            transform: scale(1);
+            opacity: 1;
+        }
+        .url-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 30px;
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: 1px;
+        }
+        .url-text span {
+            color: #10b981;
+        }
+
+        /* Global Fade-Out */
+        .fade-out {
+            opacity: 0 !important;
+            transition: opacity 0.5s ease !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-stage">
+        <div class="ambient-glow"></div>
+        <div class="cyber-grid"></div>
+
+        <div class="content-box">
+            <!-- Logo Row -->
+            <div class="logo-row" id="brand-logo-row">
+                <div class="logo-symbol">
+                    <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 100%; height: 100%;">
+                        <defs>
+                            <linearGradient id="intro_astrade_grad" x1="60" y1="460" x2="380" y2="50" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#047857"/>
+                                <stop offset="50%" stop-color="#10b981"/>
+                                <stop offset="100%" stop-color="#34d399"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M 124 308 L 204 122 C 216 92, 234 68, 256 68 C 278 68, 296 92, 308 122 L 456 448 C 462 460, 454 470, 440 470 L 374 470 C 362 470, 354 462, 348 450 L 282 236 C 274 210, 266 196, 256 196 C 246 196, 238 210, 230 236 L 192 292 L 124 308 Z" fill="url(#intro_astrade_grad)"/>
+                        <path d="M 56 448 C 50 460, 58 470, 72 470 L 138 470 C 150 470, 158 462, 164 450 L 176 414 C 186 380, 204 362, 244 362 C 276 362, 304 342, 328 298 L 314 270 C 290 300, 262 316, 234 316 C 202 316, 184 324, 170 336 L 186 312 L 118 328 L 92 382 C 76 416, 64 436, 56 448 Z" fill="url(#intro_astrade_grad)"/>
+                    </svg>
+                </div>
+                <div class="brand-text-col">
+                    <div class="brand-title">As<span>Trade</span></div>
+                    <div class="brand-badge">Trading Journal Pro</div>
+                </div>
+            </div>
+
+            <!-- Title Card (Intro Mode) -->
+            <div class="title-card" id="intro-title-card" style="display: none;">
+                <div class="tutorial-pill">Tutorial #1</div>
+                <h1 class="main-headline">Creación y Configuración de Cuentas de Trading</h1>
+                <p class="sub-headline">Domina la gestión de capital y auditoría de reglas de fondeo</p>
+            </div>
+
+            <!-- Outro Elements (Outro Mode) -->
+            <div class="title-card" id="outro-title-card" style="display: none;">
+                <h1 class="main-headline" style="font-size: 40px; margin-bottom: 8px;">Comienza tu prueba gratuita de 7 días</h1>
+                <p class="sub-headline">Lleva tu operativa al estándar institucional con AsTrade</p>
+                <div class="outro-cta-box" id="outro-cta-box">
+                    <span style="font-size: 28px;">🌐</span>
+                    <span class="url-text">astrade<span>hub</span>.com</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const mode = params.get('mode') || 'intro';
+
+        window.__playIntroAnimation = function() {
+            const logoRow = document.getElementById('brand-logo-row');
+            const introCard = document.getElementById('intro-title-card');
+            introCard.style.display = 'block';
+
+            setTimeout(() => {
+                logoRow.classList.add('active');
+            }, 250);
+
+            setTimeout(() => {
+                introCard.classList.add('active');
+            }, 900);
+        };
+
+        window.__playOutroAnimation = function() {
+            const logoRow = document.getElementById('brand-logo-row');
+            const outroCard = document.getElementById('outro-title-card');
+            const ctaBox = document.getElementById('outro-cta-box');
+            outroCard.style.display = 'block';
+
+            setTimeout(() => {
+                logoRow.classList.add('active');
+            }, 200);
+
+            setTimeout(() => {
+                outroCard.classList.add('active');
+            }, 750);
+
+            setTimeout(() => {
+                ctaBox.classList.add('active');
+            }, 1250);
+        };
+
+        window.__fadeOutStage = function() {
+            document.getElementById('canvas-stage').classList.add('fade-out');
+        };
+
+        // Auto trigger based on mode query
+        if (mode === 'intro') {
+            window.__playIntroAnimation();
+        } else if (mode === 'outro') {
+            window.__playOutroAnimation();
+        }
+    </script>
+</body>
+</html>
