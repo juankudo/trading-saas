@@ -2342,12 +2342,16 @@ button, a, input, select, textarea {
             background-color: #059669 !important;
             box-shadow: 0 0 8px rgba(5, 150, 105, 0.4) !important;
         }
-        html.light #showcase-tour-status-btn {
+        html.light #showcase-tour-status-btn,
+        html.light #showcase-sound-btn,
+        html.light #showcase-sound-btn-m {
             background-color: #f1f5f9 !important;
             border-color: #cbd5e1 !important;
             color: #334155 !important;
         }
-        html.light #showcase-tour-status-btn:hover {
+        html.light #showcase-tour-status-btn:hover,
+        html.light #showcase-sound-btn:hover,
+        html.light #showcase-sound-btn-m:hover {
             background-color: #e2e8f0 !important;
             color: #0f172a !important;
         }

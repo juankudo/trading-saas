@@ -147,8 +147,12 @@
                     <!-- Flecha exterior dibujada a mano que resalta, aparece y desaparece (Desktop / Tablet) -->
                     <div id="showcase-interactive-callout" class="hidden sm:flex absolute -top-12 -right-2 md:right-4 z-30 flex-col items-end pointer-events-none transition-all duration-500 ease-out anim-callout-pulse" aria-hidden="true">
                         <div class="bg-gradient-to-r from-emerald-950/95 via-slate-900/95 to-emerald-950/95 border border-emerald-400/80 text-emerald-300 font-extrabold text-xs sm:text-[13px] px-4 py-1.5 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.35)] flex items-center gap-2 backdrop-blur-md">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
-                            <span>✏️ ¡Haz clic aquí, es 100% interactiva!</span>
+                            <!-- Cursor de flecha con ondas de clic -->
+                            <span class="relative flex items-center justify-center w-4 h-4 text-emerald-400">
+                                <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping"></span>
+                                <i class="fa-solid fa-arrow-pointer text-xs transform -rotate-12"></i>
+                            </span>
+                            <span>Haz click, es 100% interactiva!</span>
                         </div>
                         <!-- SVG Flecha Orgánica Dibujada a Mano -->
                         <svg class="w-14 h-12 -mt-1 mr-12 text-emerald-400 drop-shadow-[0_2px_8px_rgba(52,211,153,0.5)]" viewBox="0 0 80 70" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -160,8 +164,11 @@
                     <!-- Callout Móvil (< sm) -->
                     <div id="showcase-interactive-callout-m" class="flex sm:hidden justify-center mb-2 pointer-events-none transition-all duration-500 ease-out anim-callout-pulse" aria-hidden="true">
                         <div class="bg-gradient-to-r from-emerald-950/95 via-slate-900/95 to-emerald-950/95 border border-emerald-400/80 text-emerald-300 font-extrabold text-[11px] px-3.5 py-1 rounded-full shadow-[0_0_15px_rgba(16,185,129,0.35)] flex items-center gap-1.5 backdrop-blur-md">
-                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                            <span>✏️ ¡Toca aquí, es 100% interactiva!</span>
+                            <span class="relative flex items-center justify-center w-3.5 h-3.5 text-emerald-400">
+                                <span class="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping"></span>
+                                <i class="fa-solid fa-arrow-pointer text-[10px] transform -rotate-12"></i>
+                            </span>
+                            <span>Haz click, es 100% interactiva!</span>
                         </div>
                     </div>
 
@@ -201,6 +208,10 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-1.5">
+                                <!-- Botón Silenciar/Activar Sonido Móvil -->
+                                <button id="showcase-sound-btn-m" type="button" onclick="toggleShowcaseSound()" class="text-[9px] bg-gray-900/90 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700/80 w-6 h-5 rounded-full flex items-center justify-center transition shadow-sm" title="Silenciar o activar efectos de sonido">
+                                    <i id="showcase-sound-icon-m" class="fa-solid fa-volume-high text-emerald-400 text-[9px]"></i>
+                                </button>
                                 <button id="showcase-resume-pill-m" type="button" onclick="resumeShowcaseGlobalTour()" class="hidden text-[8px] bg-emerald-500 hover:bg-emerald-400 text-gray-950 px-2 py-0.5 rounded-full font-black flex items-center gap-1 transition shadow-sm animate-pulse" title="Reanudar rotación automática">
                                     <i class="fa-solid fa-play text-[7px]"></i> Auto
                                 </button>
@@ -228,6 +239,12 @@
                             <button id="showcase-tour-status-btn" type="button" onclick="toggleShowcaseGlobalTour()" class="text-[9px] bg-gray-900/90 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700/80 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1.5 transition shadow-sm" title="Clic para pausar o reactivar la rotación automática">
                                 <span id="showcase-tour-dot" class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
                                 <span id="showcase-tour-status-text">AUTO 11s</span>
+                            </button>
+
+                            <!-- Botón Silenciar/Activar Sonido Desktop -->
+                            <button id="showcase-sound-btn" type="button" onclick="toggleShowcaseSound()" class="text-[9px] bg-gray-900/90 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700/80 px-2.5 py-0.5 rounded-full font-mono font-bold flex items-center gap-1 transition shadow-sm" title="Silenciar o activar efectos de sonido táctiles">
+                                <i id="showcase-sound-icon" class="fa-solid fa-volume-high text-emerald-400 text-[10px]"></i>
+                                <span id="showcase-sound-label" class="text-[9px]">SONIDO</span>
                             </button>
                             
                             <span class="text-[9px] bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 px-2 py-0.5 rounded-full font-bold flex items-center gap-1">
@@ -3657,6 +3674,7 @@
 
         // Showcase Tab Switcher (Dual Desktop & Mobile Segmented Control)
         function switchShowcaseTab(tabKey, isFromAuto = false) {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('tab');
             if (!isFromAuto && typeof isShowcaseTourActive !== 'undefined') {
                 pauseShowcaseGlobalTour(true);
                 const idx = SHOWCASE_TABS.indexOf(tabKey);
@@ -3837,6 +3855,7 @@
         ];
 
         function setEvolutionStage(stageNum, isFromExtraTrade = false) {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('soft');
             currentEvoStage = stageNum;
             if (!isFromExtraTrade) extraTradesCount = 0;
 
@@ -3966,6 +3985,7 @@
         }
 
         function simulateNewTradeRegistration() {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('step');
             if (currentEvoStage === 1) {
                 setEvolutionStage(2);
                 showEvoToast("¡15 Trades Añadidos! Filtro de sobrelotaje aplicado -> Win Rate sube al 54%.", "fa-solid fa-arrow-trend-up text-sky-400", "Win Rate: 54%", "bg-sky-950 text-sky-400 border border-sky-800");
@@ -4155,6 +4175,7 @@
         };
 
         function inspectTradeAnalysis(id) {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('soft');
             currentInspectedTrade = id;
             const data = tradeInspectionData[id];
             if (!data) return;
@@ -4498,6 +4519,7 @@
         };
 
         function inspectShowcaseMonth(m) {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('soft');
             currentCalendarMonth = m;
             const data = calendarMonthsData[m];
             if (!data) return;
@@ -5082,6 +5104,7 @@
         };
 
         function selectPropfirmPreset(presetKey) {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('soft');
             currentPropfirmPresetKey = presetKey;
             currentPropfirmStep = 0;
             if (propfirmSimTimer) togglePropfirmAutoSim(); // stop if running
@@ -5121,6 +5144,10 @@
 
             const data = preset.steps[stepIndex];
             if (!data) return;
+
+            if (stepIndex > 0 && !data.celebrate && typeof ShowcaseAudio !== 'undefined') {
+                ShowcaseAudio.playClick('step');
+            }
 
             // Balance & Gain
             const balEl = document.getElementById('pf-current-balance');
@@ -5203,11 +5230,13 @@
         }
 
         function resetPropfirmSim() {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('soft');
             if (propfirmSimTimer) togglePropfirmAutoSim();
             renderPropfirmStep(0);
         }
 
         function togglePropfirmAutoSim() {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playClick('soft');
             const icon = document.getElementById('propfirm-auto-icon');
             const text = document.getElementById('propfirm-auto-text');
             const btn = document.getElementById('btn-propfirm-auto');
@@ -5242,6 +5271,7 @@
         }
 
         function triggerPropfirmCelebration(preset, lastStepData) {
+            if (typeof ShowcaseAudio !== 'undefined') ShowcaseAudio.playCelebrationChime();
             const modal = document.getElementById('phaseCelebrationModal');
             const title = document.getElementById('phaseCelebrationTitle');
             const account = document.getElementById('phaseCelebrationAccount');
@@ -5668,6 +5698,194 @@
         }
 
         // ==========================================================================
+        // MOTOR DE EFECTOS DE SONIDO TÁCTILES DEL SHOWCASE (WEB AUDIO API NATIVO)
+        // Aislado exclusivamente para la maqueta interactiva de la Landing Page
+        // ==========================================================================
+        const ShowcaseAudio = (function() {
+            let audioCtx = null;
+            let isSoundEnabled = true;
+
+            try {
+                const saved = localStorage.getItem('astrade_showcase_sound');
+                if (saved !== null) {
+                    isSoundEnabled = (saved === 'true');
+                }
+            } catch (e) {}
+
+            function getAudioContext() {
+                if (!audioCtx && (window.AudioContext || window.webkitAudioContext)) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContextClass();
+                }
+                return audioCtx;
+            }
+
+            function unlockAudio() {
+                const ctx = getAudioContext();
+                if (ctx && ctx.state === 'suspended') {
+                    ctx.resume().catch(() => {});
+                }
+            }
+
+            window.addEventListener('click', unlockAudio, { once: true, passive: true });
+            window.addEventListener('touchstart', unlockAudio, { once: true, passive: true });
+            window.addEventListener('scroll', unlockAudio, { once: true, passive: true });
+
+            function playClick(variant = 'soft') {
+                if (!isSoundEnabled) return;
+                try {
+                    const ctx = getAudioContext();
+                    if (!ctx) return;
+                    if (ctx.state === 'suspended') {
+                        ctx.resume().catch(() => {});
+                    }
+                    if (ctx.state !== 'running') return;
+
+                    const now = ctx.currentTime;
+                    const osc = ctx.createOscillator();
+                    const gain = ctx.createGain();
+                    const filter = ctx.createBiquadFilter();
+
+                    filter.type = 'lowpass';
+
+                    if (variant === 'tab') {
+                        // Clic táctil de cambio de pestaña (frecuencia ágil)
+                        filter.frequency.setValueAtTime(3200, now);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(1150, now);
+                        osc.frequency.exponentialRampToValueAtTime(320, now + 0.016);
+
+                        gain.gain.setValueAtTime(0.04, now);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.018);
+
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(ctx.destination);
+
+                        osc.start(now);
+                        osc.stop(now + 0.02);
+                    } else if (variant === 'step') {
+                        // Clic sutil para avance de trades o métricas
+                        filter.frequency.setValueAtTime(2600, now);
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(850, now);
+                        osc.frequency.exponentialRampToValueAtTime(240, now + 0.014);
+
+                        gain.gain.setValueAtTime(0.035, now);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.016);
+
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(ctx.destination);
+
+                        osc.start(now);
+                        osc.stop(now + 0.018);
+                    } else {
+                        // Clic suave estándar (fichas, botones, selectores)
+                        filter.frequency.setValueAtTime(2200, now);
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(900, now);
+                        osc.frequency.exponentialRampToValueAtTime(250, now + 0.012);
+
+                        gain.gain.setValueAtTime(0.035, now);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.014);
+
+                        osc.connect(filter);
+                        filter.connect(gain);
+                        gain.connect(ctx.destination);
+
+                        osc.start(now);
+                        osc.stop(now + 0.016);
+                    }
+                } catch (e) {}
+            }
+
+            function playCelebrationChime() {
+                if (!isSoundEnabled) return;
+                try {
+                    const ctx = getAudioContext();
+                    if (!ctx) return;
+                    if (ctx.state === 'suspended') {
+                        ctx.resume().catch(() => {});
+                    }
+                    if (ctx.state !== 'running') return;
+
+                    const now = ctx.currentTime;
+                    // Arpegio mayor sutil: C6 (1046.5Hz), E6 (1318.5Hz), G6 (1567.98Hz)
+                    const notes = [
+                        { freq: 1046.50, delay: 0 },
+                        { freq: 1318.51, delay: 0.07 },
+                        { freq: 1567.98, delay: 0.14 }
+                    ];
+
+                    notes.forEach(({ freq, delay }) => {
+                        const osc = ctx.createOscillator();
+                        const gain = ctx.createGain();
+
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(freq, now + delay);
+
+                        gain.gain.setValueAtTime(0, now + delay);
+                        gain.gain.linearRampToValueAtTime(0.035, now + delay + 0.02);
+                        gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.5);
+
+                        osc.connect(gain);
+                        gain.connect(ctx.destination);
+
+                        osc.start(now + delay);
+                        osc.stop(now + delay + 0.55);
+                    });
+                } catch (e) {}
+            }
+
+            function toggleSound() {
+                isSoundEnabled = !isSoundEnabled;
+                try {
+                    localStorage.setItem('astrade_showcase_sound', isSoundEnabled ? 'true' : 'false');
+                } catch (e) {}
+                if (isSoundEnabled) {
+                    unlockAudio();
+                    playClick('soft');
+                }
+                updateSoundUI();
+                return isSoundEnabled;
+            }
+
+            function updateSoundUI() {
+                const btnDesktop = document.getElementById('showcase-sound-btn');
+                const iconDesktop = document.getElementById('showcase-sound-icon');
+                const labelDesktop = document.getElementById('showcase-sound-label');
+                const iconMobile = document.getElementById('showcase-sound-icon-m');
+
+                if (isSoundEnabled) {
+                    if (iconDesktop) iconDesktop.className = "fa-solid fa-volume-high text-emerald-400 text-[10px]";
+                    if (labelDesktop) labelDesktop.textContent = "SONIDO";
+                    if (iconMobile) iconMobile.className = "fa-solid fa-volume-high text-emerald-400 text-[9px]";
+                    if (btnDesktop) btnDesktop.title = "Sonido activado (clic para silenciar)";
+                } else {
+                    if (iconDesktop) iconDesktop.className = "fa-solid fa-volume-xmark text-gray-400 text-[10px]";
+                    if (labelDesktop) labelDesktop.textContent = "MUTED";
+                    if (iconMobile) iconMobile.className = "fa-solid fa-volume-xmark text-gray-400 text-[9px]";
+                    if (btnDesktop) btnDesktop.title = "Sonido silenciado (clic para activar)";
+                }
+            }
+
+            return {
+                playClick,
+                playCelebrationChime,
+                toggleSound,
+                updateSoundUI,
+                unlockAudio,
+                isEnabled: () => isSoundEnabled
+            };
+        })();
+
+        window.ShowcaseAudio = ShowcaseAudio;
+        function toggleShowcaseSound() {
+            ShowcaseAudio.toggleSound();
+        }
+
+        // ==========================================================================
         // SHOWCASE STORIES AUTO-TOUR ENGINE
         // ==========================================================================
         const SHOWCASE_TABS = ['metrics', 'trades', 'calendar', 'propfirm'];
@@ -5925,6 +6143,10 @@
             const container = document.getElementById('showcase-interactive-container');
             if (!container) return;
 
+            if (typeof ShowcaseAudio !== 'undefined') {
+                ShowcaseAudio.updateSoundUI();
+            }
+
             // Ocultar suavemente la flecha dibujada y el callout al interactuar
             const dismissCallout = () => {
                 const callout = document.getElementById('showcase-interactive-callout');
@@ -5942,6 +6164,9 @@
 
             // La animación auto SOLO se detiene al hacer clic (no por hover) o al hacer scroll fuera de pantalla
             container.addEventListener('click', (e) => {
+                if (typeof ShowcaseAudio !== 'undefined') {
+                    ShowcaseAudio.unlockAudio();
+                }
                 dismissCallout();
                 const target = e.target.closest('button, input, a, article, select');
                 if (!target) return;
