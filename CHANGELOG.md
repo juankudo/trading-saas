@@ -5,6 +5,34 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.7] - 2026-11-16
+
+### 🎬 Suite de Producción Audiovisual V3: Rediseño de Calidad para Tutorial #1 YouTube
+- **Fonética Anglosajona Nativa en Locución Neural (`generate_video_01_v3_audio.py`):**
+  - Implementación de motor de reemplazo fonético estricto (`to_phonetic_spanish`) para que la voz institucional `es-MX-JorgeNeural` pronuncie con acento y dicción anglosajona perfecta todos los términos técnicos de trading:
+    - `trading` -> `tréiding`
+    - `trade` -> `tréid` | `trades` -> `tréids`
+    - `trader` -> `tréider` | `traders` -> `tréiders`
+    - `drawdown` -> `dróudaun`
+    - `Win Rate` -> `uín reit` | `Profit Factor` -> `prófit fáctor`
+    - `FTMO` -> `Efe Te Eme O` | `AsTrade` -> `As Tréid`
+    - `100K` -> `cien ka` | `Challenge` -> `Chálendsh`
+  - Regeneración de los 4 audios modulares (`scratch/video_01_v3/audio/`) con duración total de voz de 132.12 segundos y manifiesto V3 actualizado.
+- **Erradicación Radical de Guías Interactivas y Overlays Oscurecidos (`render_video_01_astrade.py`):**
+  - Inyección preventiva de banderas de supresión total en `localStorage` antes de cualquier navegación (`journal_tour_never_show: 'true'`, `journal_tour_completed: 'true'`, `lifecycle_guide_dont_show: 'true'`).
+  - Activación de `window.__SMOKE_TEST__ = true` para anular disparadores automáticos (`initTourAutoTrigger`).
+  - Bloqueo en CSS inyectado (`#tourOverlay, .tour-overlay, #lifecycleGuideOverlay { display: none !important; }`) y remoción forzosa del nodo DOM en cada escena.
+- **Macro-UI Cinemática para Máxima Legibilidad en YouTube:**
+  - Viewport de rodaje adaptado a 1680x945 (16:9) escalado internamente a 1920x1080 Full HD, logrando un aumento visual de tamaño de interfaz del ~22%.
+  - Escala tipográfica ampliada: Lower-Third a 20px negrita (`#studio-lt-title`) y Callout Badges flotantes a 19px negrita (`.studio-callout-title`).
+- **Confeti de Celebración Controlado (`studio_motion_engine.js`):**
+  - Reducción de partículas a una ráfaga limpia de 65 proyectiles con auto-reseteo forzoso a los 1.2 segundos (`window.confetti.reset()`) para no saturar la pantalla.
+- **Automatización y Empaquetado Sincronizado en Google Drive:**
+  - `TradingJournalPro_VideoGenerator_Colab.ipynb` configurado con `forzar_re_renderizado = True` para evitar reuso de escenas obsoletas.
+  - Paquetes `astrade_video01_bundle.zip`, `trading_saas_bundle.zip` y libreta Colab sincronizados y actualizados directamente en Google Drive vía plugin `gdrive`.
+
+---
+
 ## [v3.7.6] - 2026-11-16
 
 ### 🌐 Internacionalización Institucional Definitiva: Página Dedicada en Inglés (`en.html`)

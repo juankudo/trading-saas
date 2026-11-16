@@ -127,9 +127,15 @@ async def choreograph_block(page, block_id, duration):
         await page.wait_for_load_state("domcontentloaded")
         await asyncio.sleep(1.5)
 
-        # Re-inject engine on newly loaded page
+        # Re-inject engine on newly loaded page and guarantee tour eradication
         await page.evaluate(engine_code)
         await page.evaluate("window.__initStudioMotionEngine()")
+        await page.evaluate("""
+            const t = document.getElementById('tourOverlay');
+            if (t) t.remove();
+            const g = document.getElementById('lifecycleGuideModal');
+            if (g) g.remove();
+        """)
         await page.evaluate("window.__showLowerThird('💼', 'PASO 1: ACCESO', 'Ingresando al entorno de alta concentración');")
 
     elif block_id == "block2_new_account":
@@ -137,6 +143,10 @@ async def choreograph_block(page, block_id, duration):
         # BLOCK 2: app.html -> Botón Nueva Cuenta y Formulario 100K
         # ---------------------------------------------------------
         await page.evaluate("""
+            const t = document.getElementById('tourOverlay');
+            if (t) t.remove();
+            const g = document.getElementById('lifecycleGuideModal');
+            if (g) g.remove();
             window.__showLowerThird('💼', 'PASO 2: NUEVA CUENTA', 'Creación de Cuenta Challenge $100K');
         """)
         await asyncio.sleep(1.5)
@@ -213,8 +223,12 @@ async def choreograph_block(page, block_id, duration):
         # ---------------------------------------------------------
         # BLOCK 3: Configuración de Reglas y Celebración
         # ---------------------------------------------------------
-        # Ensure modal is open with prefilled data
+        # Ensure modal is open with prefilled data and overlays are destroyed
         await page.evaluate("""
+            const t = document.getElementById('tourOverlay');
+            if (t) t.remove();
+            const g = document.getElementById('lifecycleGuideModal');
+            if (g) g.remove();
             if (document.getElementById('sessionModal').classList.contains('hidden')) {
                 openSessionModal();
             }
@@ -282,6 +296,13 @@ async def choreograph_block(page, block_id, duration):
         # ---------------------------------------------------------
         # BLOCK 4: La Transformación — Dashboard con Datos Reales
         # ---------------------------------------------------------
+        # Eradicate any guides/overlays
+        await page.evaluate("""
+            const t = document.getElementById('tourOverlay');
+            if (t) t.remove();
+            const g = document.getElementById('lifecycleGuideModal');
+            if (g) g.remove();
+        """)
         # Inject populated challenge data ($104,250 balance, 14 trades, 68.4% WR, 2.35 PF)
         await page.evaluate("""
             async () => {
@@ -403,15 +424,16 @@ async def record_scene_block(p, block_info):
         args=launch_args
     )
 
+    # Macro-UI Viewport: 1680x945 (16:9) con escalado a 1080p para maximizar la legibilidad
     context = await browser.new_context(
-        viewport={"width": 1920, "height": 1080},
-        device_scale_factor=1,
+        viewport={"width": 1680, "height": 945},
         record_video_dir=raw_dir,
         record_video_size={"width": 1920, "height": 1080}
     )
 
-    # Inyectar sesión autenticada activa para evitar que app.html redirija a index.html
+    # Inyectar sesión autenticada activa + Erradicar tours/guías invasivas + Macro-UI
     await context.add_init_script("""
+        // 1. Sesión activa para evitar redirección de app.html
         localStorage.setItem('trading_saas_user_session', JSON.stringify({
             id: 'usr_astrade_pro',
             email: 'trader@astrade.app',
@@ -425,6 +447,41 @@ async def record_scene_block(p, block_info):
                 current_period_end: new Date(Date.now() + 30*24*60*60*1000).toISOString()
             }
         }));
+
+        // 2. Erradicación radical de guías, onboarding tours y popups oscurecidos
+        localStorage.setItem('journal_tour_never_show', 'true');
+        localStorage.setItem('journal_tour_completed', 'true');
+        localStorage.setItem('lifecycle_guide_dont_show', 'true');
+        localStorage.setItem('user_lifecycle_guide_completed', 'true');
+        localStorage.setItem('trading_tour_seen', 'true');
+        window.__SMOKE_TEST__ = true;
+        window.__smokeTestRunning = true;
+
+        // 3. Estilos CSS inyectados para bloquear overlays y elevar legibilidad de texto en YouTube
+        const macroStyle = document.createElement('style');
+        macroStyle.id = 'studio-macro-ui-style';
+        macroStyle.innerHTML = `
+            #tourOverlay, .tour-overlay, #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                width: 0 !important;
+                height: 0 !important;
+            }
+            /* Macro-UI Readability Enhancements */
+            html {
+                font-size: 16.5px;
+            }
+            .text-xs { font-size: 0.82rem !important; }
+            .text-sm { font-size: 0.94rem !important; }
+            .account-card { transform: scale(1.02); }
+        `;
+        if (document.head) {
+            document.head.appendChild(macroStyle);
+        } else {
+            document.addEventListener('DOMContentLoaded', () => document.head.appendChild(macroStyle));
+        }
     """)
 
     page = await context.new_page()

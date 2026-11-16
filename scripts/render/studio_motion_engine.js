@@ -120,20 +120,20 @@ window.__initStudioMotionEngine = function() {
         /* Glassmorphic Lower-Third / Floating Callout Badge */
         #studio-callout-badge {
             position: absolute;
-            background: rgba(11, 15, 25, 0.92);
-            border: 1.8px solid #10b981;
-            border-radius: 16px;
-            padding: 16px 22px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9), 0 0 30px rgba(16, 185, 129, 0.25);
+            background: rgba(11, 15, 25, 0.94);
+            border: 2px solid #10b981;
+            border-radius: 18px;
+            padding: 18px 24px;
+            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.92), 0 0 35px rgba(16, 185, 129, 0.3);
             backdrop-filter: blur(14px);
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 16px;
             z-index: 9999930;
             transform: translateY(20px) scale(0.96);
             opacity: 0;
             transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 580px;
+            max-width: 640px;
             pointer-events: none;
         }
         #studio-callout-badge.active {
@@ -143,28 +143,29 @@ window.__initStudioMotionEngine = function() {
         .studio-pill-tag {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            background: rgba(16, 185, 129, 0.2);
-            border: 1px solid #10b981;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.22);
+            border: 1.2px solid #10b981;
             color: #10b981;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 800;
-            letter-spacing: 1.2px;
+            letter-spacing: 1.3px;
             text-transform: uppercase;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 999px;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
         }
         .studio-callout-title {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 19px;
+            font-weight: 800;
             color: #f8fafc;
             line-height: 1.35;
         }
         .studio-callout-subtitle {
-            font-size: 12px;
+            font-size: 14px;
+            font-weight: 500;
             color: #94a3b8;
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
         /* Lower Third Step Badge (Fixed at bottom left) */
@@ -172,20 +173,20 @@ window.__initStudioMotionEngine = function() {
             position: fixed;
             bottom: 40px;
             left: 45px;
-            background: rgba(11, 15, 25, 0.94);
-            border: 1.8px solid rgba(16, 185, 129, 0.85);
-            border-radius: 18px;
-            padding: 16px 24px;
-            box-shadow: 0 25px 60px rgba(0,0,0,0.95), 0 0 35px rgba(16, 185, 129, 0.2);
+            background: rgba(11, 15, 25, 0.95);
+            border: 2px solid rgba(16, 185, 129, 0.9);
+            border-radius: 20px;
+            padding: 18px 28px;
+            box-shadow: 0 30px 65px rgba(0,0,0,0.96), 0 0 40px rgba(16, 185, 129, 0.25);
             backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             z-index: 9999950;
             transform: translateY(120px);
             opacity: 0;
             transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 620px;
+            max-width: 720px;
             pointer-events: none;
         }
         #studio-lower-third.active {
@@ -227,12 +228,12 @@ window.__initStudioMotionEngine = function() {
             <div style="width: 46px; height: 46px; border-radius: 14px; background: rgba(16,185,129,0.22); border: 1.5px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #10b981; flex-shrink: 0;" id="studio-lt-icon">⚡</div>
             <div>
                 <div class="studio-pill-tag" id="studio-lt-tag">PASO 1: ONBOARDING</div>
-                <div style="font-size: 16px; font-weight: 700; color: #ffffff;" id="studio-lt-title">Acceso y bienvenida a AsTrade</div>
+                <div style="font-size: 20px; font-weight: 800; color: #ffffff; line-height: 1.25;" id="studio-lt-title">Acceso y bienvenida a AsTrade</div>
             </div>
         </div>
 
         <div id="studio-virtual-cursor">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none">
                 <path d="M5.65 2.15C5.35 1.85 4.8 2.06 4.8 2.5V20.5C4.8 2.95 5.38 21.15 5.68 20.8L10.3 15.68C10.45 15.52 10.66 15.43 10.88 15.43H18.5C18.94 15.43 19.16 14.88 18.83 14.58L5.65 2.15Z" fill="#0b0f19" stroke="#10b981" stroke-width="2.2"/>
             </svg>
             <div id="studio-cursor-ripple"></div>
@@ -240,8 +241,8 @@ window.__initStudioMotionEngine = function() {
     `;
     document.body.appendChild(container);
 
-    window.__curX = 960;
-    window.__curY = 540;
+    window.__curX = 840;
+    window.__curY = 472;
     window.__pulseRingEl = null;
 };
 
@@ -521,32 +522,35 @@ window.__typeIntoInput = function(selector, text, keyDelayMs = 55) {
 };
 
 // -------------------------------------------------------------
-// CELEBRATION CONFETTI TRIGGER
+// CELEBRATION CONFETTI TRIGGER (Cinematic & Controlled Duration)
 // -------------------------------------------------------------
 window.__triggerCelebrationConfetti = function() {
     if (typeof window.confetti === 'function') {
+        // Disparo sutil y elegante de celebración sin saturar la pantalla
         window.confetti({
-            particleCount: 120,
-            spread: 80,
-            origin: { y: 0.6 },
-            colors: ['#10b981', '#34d399', '#6ee7b7', '#38bdf8', '#fbbf24']
+            particleCount: 65,
+            spread: 70,
+            origin: { y: 0.65 },
+            colors: ['#10b981', '#34d399', '#6ee7b7', '#38bdf8', '#fbbf24'],
+            ticks: 120,
+            gravity: 1.2
         });
+
+        // Limpieza automática tras 1.2s para evitar que ensombrezca o tape la interfaz
         setTimeout(() => {
-            window.confetti({
-                particleCount: 80,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ['#10b981', '#38bdf8', '#fbbf24']
-            });
-            window.confetti({
-                particleCount: 80,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ['#10b981', '#38bdf8', '#fbbf24']
-            });
-        }, 250);
+            try {
+                if (typeof window.confetti.reset === 'function') {
+                    window.confetti.reset();
+                }
+                const canvases = document.querySelectorAll('canvas');
+                canvases.forEach(c => {
+                    if (c.style.pointerEvents === 'none' || c.width === window.innerWidth) {
+                        c.style.transition = 'opacity 0.4s ease';
+                        c.style.opacity = '0';
+                    }
+                });
+            } catch (e) {}
+        }, 1200);
     } else {
         console.log("[StudioMotion] Confetti fired (fallback mock)");
     }

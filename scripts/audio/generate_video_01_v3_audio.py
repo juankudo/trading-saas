@@ -8,6 +8,7 @@ import os
 import sys
 import json
 import asyncio
+import re
 import subprocess
 import imageio_ffmpeg
 import edge_tts
@@ -100,21 +101,63 @@ def get_audio_duration(file_path):
             return float(h) * 3600 + float(m) * 60 + float(s)
     return 25.0
 
+def to_phonetic_spanish(text: str) -> str:
+    """
+    Aplica fonetización estricta al español latinoamericano para que JorgeNeural
+    pronuncie con acento nativo anglosajón todos los términos técnicos de trading.
+    """
+    replacements = [
+        # Marcas y Enlaces
+        (r'\bAsTrade\b', 'As Trade'),
+        (r'\bastrade\b', 'as trade'),
+        (r'\bastrade punto app\b', 'As Trade punto app'),
+        (r'\bFTMO\b', 'Efe Te Eme O'),
+        # Terminología de Trading con Fonética Inglesa Perfecta
+        (r'\btrading\b', 'tréiding'),
+        (r'\bTrading\b', 'Tréiding'),
+        (r'\btraders\b', 'tréiders'),
+        (r'\bTraders\b', 'Tréiders'),
+        (r'\btrader\b', 'tréider'),
+        (r'\bTrader\b', 'Tréider'),
+        (r'\btrades\b', 'tréids'),
+        (r'\bTrades\b', 'Tréids'),
+        (r'\btrade\b', 'tréid'),
+        (r'\bTrade\b', 'Tréid'),
+        (r'\bdrawdown\b', 'dróudaun'),
+        (r'\bDrawdown\b', 'Dróudaun'),
+        (r'\bWin Rate\b', 'uín reit'),
+        (r'\bwin rate\b', 'uín reit'),
+        (r'\bProfit Factor\b', 'prófit fáctor'),
+        (r'\bprofit factor\b', 'prófit fáctor'),
+        (r'\bStop Loss\b', 'stóp los'),
+        (r'\bstop loss\b', 'stóp los'),
+        (r'\bTake Profit\b', 'téik prófit'),
+        (r'\btake profit\b', 'téik prófit'),
+        (r'\bChallenge\b', 'Chálendsh'),
+        (r'\bchallenge\b', 'chálendsh'),
+        (r'\bDashboard\b', 'Dáshbord'),
+        (r'\bdashboard\b', 'dáshbord'),
+        # Números, balances y porcentajes
+        (r'\b100K\b', 'cien ka'),
+        (r'68\.4%', 'sesenta y ocho punto cuatro por ciento'),
+        (r'2\.35', 'dos punto treinta y cinco'),
+        (r'8%', 'ocho por ciento'),
+        (r'5%', 'cinco por ciento'),
+        (r'10%', 'diez por ciento'),
+    ]
+    res = text
+    for pattern, repl in replacements:
+        res = re.sub(pattern, repl, res)
+    return res
+
 async def generate_block_audio(block):
     mp3_name = f"{block['id']}.mp3"
     mp3_path = os.path.join(AUDIO_DIR, mp3_name)
     print(f"🎙️ Generando audio: {block['id']} ({block['title']})...")
     
-    # Substitutions for cleaner Spanish pronunciation
-    spoken_text = block["text"]
-    spoken_text = spoken_text.replace("FTMO", "Efe Te Eme O")
-    spoken_text = spoken_text.replace("astrade punto app", "As Trade punto app")
-    spoken_text = spoken_text.replace("68.4%", "sesenta y ocho punto cuatro por ciento")
-    spoken_text = spoken_text.replace("2.35", "dos punto treinta y cinco")
-    spoken_text = spoken_text.replace("8%", "ocho por ciento")
-    spoken_text = spoken_text.replace("5%", "cinco por ciento")
-    spoken_text = spoken_text.replace("10%", "diez por ciento")
-    spoken_text = spoken_text.replace("100K", "cien ka")
+    # Conversión fonética profesional estricta
+    spoken_text = to_phonetic_spanish(block["text"])
+    print(f"   -> Fonética: \"{spoken_text[:80]}...\"")
 
     communicate = edge_tts.Communicate(spoken_text, VOICE, rate=RATE, volume=VOLUME)
     await communicate.save(mp3_path)
@@ -123,6 +166,7 @@ async def generate_block_audio(block):
     print(f"   -> Guardado en {mp3_name} | Duración exacta: {dur:.2f}s")
     
     block_result = dict(block)
+    block_result["text_phonetic"] = spoken_text
     block_result["audio_file"] = mp3_name
     block_result["audio_path"] = f"scratch/video_01_v3/audio/{mp3_name}"
     block_result["duration_seconds"] = dur
