@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256"><g transform="translate(1.28 1.28) scale(0.495)" fill="none">
+  
+  <defs>
+    <radialGradient id="ambient_glow" cx="256" cy="256" r="210" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981" stop-opacity="0.38"/>
+      <stop offset="50%" stop-color="#059669" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#064e3b" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="tile_bg" x1="0" y1="0" x2="0" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#111827"/>
+      <stop offset="100%" stop-color="#0b0f19"/>
+    </linearGradient>
+    <linearGradient id="ring_stroke" x1="60" y1="60" x2="450" y2="450" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.15"/>
+    </linearGradient>
+    <linearGradient id="icon_glyph_grad" x1="120" y1="410" x2="350" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="45%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <filter id="icon_glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#10b981" flood-opacity="0.45"/>
+    </filter>
+  </defs>
+
+  <!-- Tile squircle background -->
+  <rect x="8" y="8" width="496" height="496" rx="108" fill="url(#tile_bg)" stroke="#1f2937" stroke-width="4"/>
+  
+  <!-- Ambient radial glow behind mark -->
+  <circle cx="256" cy="256" r="210" fill="url(#ambient_glow)"/>
+
+  <!-- Subtle circular radar/orbit ring -->
+  <circle cx="256" cy="256" r="184" stroke="url(#ring_stroke)" stroke-width="3" fill="none"/>
+
+  <!-- Centered A mark with subtle elevation glow -->
+  <g transform="translate(56, 56) scale(0.78)" filter="url(#icon_glow)">
+    <path d="M 124 308 L 204 122 C 216 92, 234 68, 256 68 C 278 68, 296 92, 308 122 L 456 448 C 462 460, 454 470, 440 470 L 374 470 C 362 470, 354 462, 348 450 L 282 236 C 274 210, 266 196, 256 196 C 246 196, 238 210, 230 236 L 192 292 L 124 308 Z" fill="url(#icon_glyph_grad)"/>
+    <path d="M 56 448 C 50 460, 58 470, 72 470 L 138 470 C 150 470, 158 462, 164 450 L 176 414 C 186 380, 204 362, 244 362 C 276 362, 304 342, 328 298 L 314 270 C 290 300, 262 316, 234 316 C 202 316, 184 324, 170 336 L 186 312 L 118 328 L 92 382 C 76 416, 64 436, 56 448 Z" fill="url(#icon_glyph_grad)"/>
+  </g>
+</g></svg>

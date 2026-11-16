@@ -1,7 +1,39 @@
-# 📜 Registro de Versiones (Changelog) — Trading Journal Pro
+# 📜 Registro de Versiones (Changelog) — AsTrade
 
-Todas las modificaciones, mejoras y correcciones notables de Trading Journal Pro están documentadas en este archivo.
+Todas las modificaciones, mejoras y correcciones notables de AsTrade están documentadas en este archivo.
 El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/) y adhiere al versionado semántico.
+
+---
+
+## [v3.7.0] - 2026-11-15
+
+### 👑 Rebranding Oficial a "AsTrade" & Rediseño de Identidad Visual de Élite
+- **Evolución de Marca a AsTrade (`index.html`, `app.html`):**
+  - Adopción del nuevo nombre oficial **AsTrade** con descriptor: *"AsTrade — Plataforma de Analítica & Bitácora de Trading Profesional"*.
+  - Tratamiento tipográfico con acento cromático: `As` en blanco y `Trade` en verde esmeralda (`As<span class="text-emerald-400">Trade</span>`).
+- **Rediseño del Isotipo Oficial Fiel a la Referencia Visual (`assets/logo/astrade-mark.svg`):**
+  - Modelado geométrico del monograma "A" compuesto por dos piezas armónicas:
+    1. **Arco Arquitectónico & Pierna Derecha:** Cúpula superior suavemente redondeada con pilar derecho diagonal sólido que asienta en una base plana con esquinas suavizadas, finalizando el lado superior izquierdo con un corte en ángulo diagonal nítido.
+    2. **Ola de Impulso / Barra Dinámica (S-Curve):** Cinta continua que se origina en el pie inferior izquierdo, asciende y fluye horizontalmente como una onda de tendencia alcista cruzando el contraespacio interior hacia la pierna derecha, separada de la pierna superior por una ranura negativa paralela de 20px.
+  - **Tile de Aplicación & Favicon Squircle (`assets/logo/astrade-app-icon.svg`, `favicon.svg`):**
+    - Contenedor squircle oscuro (`#0b0f19` a `#111827`), resplandor radial esmeralda ambiental y anillo orbital circular translúcido, fiel a la referencia a 16px/32px/64px.
+  - **Adaptación Cromática Contextual en Dashboard (`js/app.js`):**
+    - En modo **Cuenta Real**, el isotipo irradia gradiente Verde Esmeralda (`#059669` → `#10b981` → `#34d399`) con borde esmeralda.
+    - En modo **Backtesting**, el isotipo conmuta dinámicamente a Azul Oceánico (`#1d4ed8` → `#3b82f6` → `#60a5fa`) con borde azul translúcido.
+  - **Auditoría Técnica & Kit de Producción (`export_variants.py`):**
+    - Puntuación 83/100 en `svg_audit.py` sin errores geométricos.
+    - Generación y despliegue del set completo de favicons (`favicon.ico`, `favicon.svg`, `apple-touch-icon.png`, `site.webmanifest`) y variantes monocromáticas (`black`, `white`, `mono`).
+- **Actualización Integral de Puntos de Contacto:**
+  - **Landing Page (`index.html`):** Nueva cabecera con el isotipo SVG, mobile showcase mockup, footer institucional y actualización del descargo de responsabilidad legal y regulatoria.
+  - **Panel de Usuario (`app.html`):** Cabecera principal actualizada a `AsTrade PRO DASHBOARD` con el nuevo isotipo vectorial.
+- **Continuidad y Cero Pérdida de Datos:**
+  - Preservación total de las claves de almacenamiento local (`localStorage`) e infraestructura de base de datos para garantizar que las sesiones activas, cuentas de fondeo y registros de trades de los usuarios existentes se mantengan 100% intactos.
+
+### 🐛 Corrección en Alternancia de Modo Backtesting (`app.html`, `js/app.js`)
+- **Restauración de `main-header-icon` y Programación Defensiva:**
+  - Se restauró el identificador `id="main-header-icon"` sobre el contenedor del nuevo logotipo en `app.html`.
+  - Se añadieron comprobaciones seguras `if (mainIcon)` en `setMode()` en `js/app.js`, erradicando el error `TypeError: null` que detenía la ejecución de la función y bloqueaba la carga de las sesiones de backtest.
+  - Ahora alternar entre **Cuenta Real** y **Backtesting** transiciona de forma instantánea, adaptando el título a *"Backtest Sessions"*, la pestaña a *"Tus Sesiones"*, ocultando los controles de cuenta real y renderizando todas las sesiones de simulación de forma limpia.
 
 ---
 

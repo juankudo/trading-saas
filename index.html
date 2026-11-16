@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Journal Pro — Bitácora en la Nube para Traders y Prop Firms</title>
+    <title>AsTrade — Plataforma de Analítica & Bitácora de Trading Profesional</title>
+    <!-- Web Icons & Favicons -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#0b0f19">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome -->
@@ -29,12 +35,22 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between gap-2 sm:gap-4">
             
             <!-- Brand Logo -->
-            <a href="index.html" class="flex items-center gap-2 sm:gap-3 group shrink-0">
-                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition">
-                    <i class="fa-solid fa-chart-line text-white text-base sm:text-lg"></i>
+            <a href="index.html" class="flex items-center gap-2.5 sm:gap-3 group shrink-0">
+                <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/10 group-hover:scale-105 group-hover:border-emerald-400/60 transition p-1.5">
+                    <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="nav_astrade_grad" x1="60" y1="460" x2="380" y2="50" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="50%" stop-color="#10b981"/>
+                                <stop offset="100%" stop-color="#34d399"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M 124 308 L 204 122 C 216 92, 234 68, 256 68 C 278 68, 296 92, 308 122 L 456 448 C 462 460, 454 470, 440 470 L 374 470 C 362 470, 354 462, 348 450 L 282 236 C 274 210, 266 196, 256 196 C 246 196, 238 210, 230 236 L 192 292 L 124 308 Z" fill="url(#nav_astrade_grad)"/>
+                        <path d="M 56 448 C 50 460, 58 470, 72 470 L 138 470 C 150 470, 158 462, 164 450 L 176 414 C 186 380, 204 362, 244 362 C 276 362, 304 342, 328 298 L 314 270 C 290 300, 262 316, 234 316 C 202 316, 184 324, 170 336 L 186 312 L 118 328 L 92 382 C 76 416, 64 436, 56 448 Z" fill="url(#nav_astrade_grad)"/>
+                    </svg>
                 </div>
                 <div>
-                    <span class="text-sm sm:text-base md:text-lg font-black tracking-wider text-white">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
+                    <span class="text-base sm:text-lg md:text-xl font-black tracking-tight text-white">As<span class="text-emerald-400">Trade</span></span>
                 </div>
             </a>
 
@@ -147,12 +163,16 @@
                         <!-- Mobile App Header Bar -->
                         <div class="flex items-center justify-between px-0.5">
                             <div class="flex items-center gap-2">
-                                <div class="w-6 h-6 rounded-lg bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-xs">
-                                    <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+                                <div class="w-6 h-6 rounded-lg bg-slate-900 border border-emerald-500/40 flex items-center justify-center p-1">
+                                    <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M256 86 L108 426 H188 L256 260 L256 86 Z" fill="#10b981"/>
+                                        <path d="M256 86 L256 260 L324 426 H404 L256 86 Z" fill="#059669"/>
+                                        <path d="M172 328 L256 272 L340 328 L320 368 L256 324 L192 368 Z" fill="#34d399"/>
+                                    </svg>
                                 </div>
                                 <div>
                                     <div class="text-xs font-bold text-white flex items-center gap-1.5 leading-none">
-                                        Trading Journal Pro
+                                        As<span class="text-emerald-400">Trade</span>
                                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                                     </div>
                                     <span class="text-[9px] text-gray-400">Fondo $100K • En Vivo</span>
@@ -175,7 +195,7 @@
                             <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
-                            <span class="text-[11px] text-gray-400 font-mono ml-1">app.tradingjournalpro.com — Vista de Cuenta Fondeada</span>
+                            <span class="text-[11px] text-gray-400 font-mono ml-1">app.astrade.app — Vista de Cuenta Fondeada</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <!-- Floating Resume Auto-Tour Pill -->
@@ -2902,10 +2922,16 @@
             
             <!-- Fila Superior: Marca y Navegación Principal -->
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pb-6 border-b border-gray-800/80">
-                <div class="flex items-center gap-2">
-                    <i class="fa-solid fa-chart-line text-emerald-400 text-base"></i>
-                    <span class="font-bold text-gray-200 tracking-wide text-sm">TRADING JOURNAL <span class="text-emerald-400">PRO</span></span>
-                    <span class="text-gray-500">· Suite de Analítica en la Nube</span>
+                <div class="flex items-center gap-2.5">
+                    <div class="w-6 h-6 rounded-lg bg-slate-900 border border-emerald-500/30 flex items-center justify-center p-1">
+                        <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M256 86 L108 426 H188 L256 260 L256 86 Z" fill="#10b981"/>
+                            <path d="M256 86 L256 260 L324 426 H404 L256 86 Z" fill="#059669"/>
+                            <path d="M172 328 L256 272 L340 328 L320 368 L256 324 L192 368 Z" fill="#34d399"/>
+                        </svg>
+                    </div>
+                    <span class="font-bold text-gray-200 tracking-tight text-base">As<span class="text-emerald-400">Trade</span></span>
+                    <span class="text-gray-500">· Plataforma de Analítica & Bitácora de Trading Profesional</span>
                 </div>
                 <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center text-gray-400">
                     <a href="#caracteristicas" class="hover:text-emerald-400 transition">Características</a>
@@ -2952,14 +2978,14 @@
                 </div>
                 <div class="flex items-center gap-2 text-gray-400 font-mono">
                     <i class="fa-solid fa-envelope text-emerald-400"></i>
-                    <span>Contacto: <a href="mailto:soporte@tradingjournalpro.com" class="text-gray-300 hover:text-white underline">soporte@tradingjournalpro.com</a></span>
+                    <span>Contacto: <a href="mailto:soporte@astrade.app" class="text-gray-300 hover:text-white underline">soporte@astrade.app</a></span>
                 </div>
             </div>
 
             <!-- Fila Inferior: Descargo de Responsabilidad Regulatorio (Risk Disclaimer) -->
             <div class="pt-4 border-t border-gray-800/60 text-[10px] leading-relaxed text-gray-400 text-center sm:text-left">
                 <p>
-                    <strong class="text-gray-300">Descargo de Responsabilidad Financiera:</strong> Trading Journal Pro es una plataforma tecnológica de software y registro de datos analíticos para la gestión personal de operativa. No provee asesoramiento financiero, gestión de fondos, señales de trading ni recomendaciones de inversión. El trading de activos financieros, Forex, futuros y cuentas de empresas de fondeo (prop firms) conlleva un riesgo sustancial de pérdida de capital y no es adecuado para todos los inversores. Todos los derechos reservados © 2026 Trading Journal Pro.
+                    <strong class="text-gray-300">Descargo de Responsabilidad Financiera:</strong> AsTrade es una plataforma tecnológica de software y registro de datos analíticos para la gestión personal de operativa. No provee asesoramiento financiero, gestión de fondos, señales de trading ni recomendaciones de inversión. El trading de activos financieros, Forex, futuros y cuentas de empresas de fondeo (prop firms) conlleva un riesgo sustancial de pérdida de capital y no es adecuado para todos los inversores. Todos los derechos reservados © 2026 AsTrade.
                 </p>
             </div>
 
@@ -2978,7 +3004,7 @@
                     </div>
                     <div>
                         <h3 id="legal-modal-title" class="text-base font-bold text-white">Avisos Legales & Políticas</h3>
-                        <p class="text-[11px] text-gray-400">Información contractual y regulatoria oficial de Trading Journal Pro</p>
+                        <p class="text-[11px] text-gray-400">Información contractual y regulatoria oficial de AsTrade</p>
                     </div>
                 </div>
                 <button onclick="closeLegalModal()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition" aria-label="Cerrar modal legal">
@@ -3001,7 +3027,7 @@
 
             <!-- Modal Footer -->
             <div class="p-4 border-t border-gray-800 bg-[#0c101d] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px]">
-                <span class="text-gray-400">¿Dudas legales? Escríbenos a <a href="mailto:soporte@tradingjournalpro.com" class="text-emerald-400 underline">soporte@tradingjournalpro.com</a></span>
+                <span class="text-gray-400">¿Dudas legales? Escríbenos a <a href="mailto:soporte@astrade.app" class="text-emerald-400 underline">soporte@astrade.app</a></span>
                 <button type="button" onclick="closeLegalModal()" class="px-5 py-2 rounded-xl bg-gray-800 hover:bg-gray-700 text-white font-semibold transition">
                     Cerrar
                 </button>
@@ -3018,7 +3044,7 @@
                 icon: "fa-solid fa-file-contract",
                 content: `
                     <h4 class="text-sm font-bold text-white mb-2">1. Objeto del Software</h4>
-                    <p class="mb-3">Trading Journal Pro otorga al usuario una licencia personal, no exclusiva e intransferible para el uso de nuestra suite de bitácora, analítica de métricas y laboratorio de backtesting en la nube.</p>
+                    <p class="mb-3">AsTrade otorga al usuario una licencia personal, no exclusiva e intransferible para el uso de nuestra suite de bitácora, analítica de métricas y laboratorio de backtesting en la nube.</p>
                     
                     <h4 class="text-sm font-bold text-white mb-2">2. Cuentas y Responsabilidad</h4>
                     <p class="mb-3">El usuario es responsable exclusivo de resguardar la confidencialidad de sus credenciales de acceso. Queda prohibida la redistribución, reventa, scraping o ingeniería inversa del software sin autorización expresa.</p>
@@ -3027,7 +3053,7 @@
                     <p class="mb-3">Nos esforzamos por ofrecer un 99.9% de disponibilidad continua mediante nuestra infraestructura distribuida en Cloudflare y Supabase. Sin embargo, no garantizamos la ausencia de interrupciones puntuales por mantenimiento o contingencias externas de red.</p>
                     
                     <h4 class="text-sm font-bold text-white mb-2">4. Modificaciones</h4>
-                    <p>Trading Journal Pro se reserva el derecho de actualizar o mejorar las características funcionales de la plataforma para beneficio de los usuarios registrados.</p>
+                    <p>AsTrade se reserva el derecho de actualizar o mejorar las características funcionales de la plataforma para beneficio de los usuarios registrados.</p>
                 `
             },
             privacy: {
@@ -3073,10 +3099,10 @@
                         <strong>Aviso Importante:</strong> El trading en mercados financieros implica un alto nivel de riesgo de capital.
                     </div>
                     <h4 class="text-sm font-bold text-white mb-2">1. Naturaleza del Software</h4>
-                    <p class="mb-3">Trading Journal Pro es exclusivamente una herramienta de registro contable, software de bitácora y calculadora de gestión de riesgo para el análisis retrospectivo del propio usuario. <strong>En ningún caso constituye asesoramiento financiero, legal ni recomendaciones de compra o venta de ningún instrumento financiero.</strong></p>
+                    <p class="mb-3">AsTrade es exclusivamente una herramienta de registro contable, software de bitácora y calculadora de gestión de riesgo para el análisis retrospectivo del propio usuario. <strong>En ningún caso constituye asesoramiento financiero, legal ni recomendaciones de compra o venta de ningún instrumento financiero.</strong></p>
                     
                     <h4 class="text-sm font-bold text-white mb-2">2. Independencia de Prop Firms</h4>
-                    <p class="mb-3">Las menciones a reglas de prop firms o evaluaciones de fondeo se realizan con fines exclusivamente informativos y educativos para simulación de métricas de drawdown. Trading Journal Pro es una entidad independiente y no está patrocinada, afiliada ni asociada contractualmente con ninguna firma de corretaje ni empresa de fondeo específica.</p>
+                    <p class="mb-3">Las menciones a reglas de prop firms o evaluaciones de fondeo se realizan con fines exclusivamente informativos y educativos para simulación de métricas de drawdown. AsTrade es una entidad independiente y no está patrocinada, afiliada ni asociada contractualmente con ninguna firma de corretaje ni empresa de fondeo específica.</p>
                     
                     <h4 class="text-sm font-bold text-white mb-2">3. Rendimientos Pasados</h4>
                     <p>Los resultados simulados en el Laboratorio de Backtesting o documentados en la bitácora no garantizan rendimientos futuros en los mercados reales. La gestión del capital y el riesgo es responsabilidad absoluta del operador.</p>

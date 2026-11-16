@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="sovereign_grad" x1="90" y1="420" x2="422" y2="92" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="40%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#6ee7b7"/>
+    </linearGradient>
+    <linearGradient id="sovereign_sub" x1="200" y1="200" x2="360" y2="360" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#047857"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer Arch of the A -->
+  <path d="M256 80 C272 80 286 90 294 106 L418 396 C424 410 414 426 398 426 H334 C322 426 312 418 306 406 L278 340 H180 L256 160 L204 290 L168 376 C162 390 148 400 134 400 H112 C96 400 86 384 92 370 L218 106 C226 90 240 80 256 80 Z" fill="url(#sovereign_grad)"/>
+  <!-- Interlocking S-Wave Crossbar -->
+  <path d="M192 310 C216 280 250 270 280 278 C306 286 324 308 348 316 C370 324 394 316 410 300 L426 328 C402 352 370 360 340 350 C314 340 298 320 272 312 C248 304 224 312 206 332 Z" fill="url(#sovereign_sub)"/>
+</svg>

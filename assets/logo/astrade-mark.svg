@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <title>AsTrade Logo</title>
+  <defs>
+    <linearGradient id="astrade_grad" x1="60" y1="460" x2="380" y2="50" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="50%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Shape 1: Solid Architectural Arch & Right Leg -->
+  <path d="M 124 308 L 204 122 C 216 92, 234 68, 256 68 C 278 68, 296 92, 308 122 L 456 448 C 462 460, 454 470, 440 470 L 374 470 C 362 470, 354 462, 348 450 L 282 236 C 274 210, 266 196, 256 196 C 246 196, 238 210, 230 236 L 192 292 L 124 308 Z" fill="url(#astrade_grad)"/>
+
+  <!-- Shape 2: Dynamic Wave / Momentum Crossbar & Lower Left Leg -->
+  <path d="M 56 448 C 50 460, 58 470, 72 470 L 138 470 C 150 470, 158 462, 164 450 L 176 414 C 186 380, 204 362, 244 362 C 276 362, 304 342, 328 298 L 314 270 C 290 300, 262 316, 234 316 C 202 316, 184 324, 170 336 L 186 312 L 118 328 L 92 382 C 76 416, 64 436, 56 448 Z" fill="url(#astrade_grad)"/>
+</svg>

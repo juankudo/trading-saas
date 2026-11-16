@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="quant_1" x1="140" y1="410" x2="372" y2="100" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="quant_2" x1="256" y1="100" x2="256" y2="410" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <!-- Top Apex Chevron -->
+  <path d="M256 90 L346 220 H286 L256 174 L226 220 H166 Z" fill="url(#quant_2)"/>
+  <!-- Middle Bar Tier (Breakout Level) -->
+  <path d="M256 220 L376 300 H316 L256 260 L196 300 H136 Z" fill="url(#quant_1)"/>
+  <!-- Foundation Wings -->
+  <path d="M256 304 L406 412 H338 L256 348 L174 412 H106 Z" fill="url(#quant_1)"/>
+</svg>

@@ -1,5 +1,5 @@
 /**
- * Payments & Subscriptions Module — Trading Journal Pro SaaS
+ * Payments & Subscriptions Module — AsTrade SaaS
  * Gestiona el Checkout para Tarjetas (Stripe) y Criptomonedas (NOWPayments USDT).
  * Incluye un Modo Sandbox / Test interactivo para probar el flujo completo sin dinero real.
  * Maneja el Modo Solo Lectura para cuentas con período vencido.

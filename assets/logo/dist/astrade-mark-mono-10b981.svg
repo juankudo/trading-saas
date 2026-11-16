@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none"><title>AsTrade Logo</title>
+  
+  <defs>
+    <linearGradient id="apex_left" x1="108" y1="426" x2="256" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="60%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="apex_right" x1="404" y1="426" x2="256" y2="86" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="50%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="apex_chevron" x1="172" y1="324" x2="340" y2="324" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <!-- Left Ascending Pylon -->
+  <path d="M256 86 L108 426 H188 L256 260 L256 86 Z" fill="url(#apex_left)"/>
+  <!-- Right Descending Pylon (Faceted depth) -->
+  <path d="M256 86 L256 260 L324 426 H404 L256 86 Z" fill="url(#apex_right)"/>
+  <!-- Dynamic Trend Crossbar (Breakout Chevron) -->
+  <path d="M172 328 L256 272 L340 328 L320 368 L256 324 L192 368 Z" fill="url(#apex_chevron)"/>
+</svg>

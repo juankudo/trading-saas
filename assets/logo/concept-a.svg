@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="apex_left" x1="120" y1="420" x2="256" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="60%" stop-color="#10b981"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="apex_right" x1="392" y1="420" x2="256" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#065f46"/>
+      <stop offset="50%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="apex_chevron" x1="170" y1="300" x2="342" y2="300" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <!-- Left Ascending Pylon -->
+  <path d="M256 86 L108 426 H188 L256 260 L256 86 Z" fill="url(#apex_left)"/>
+  <!-- Right Descending Pylon (Creates depth and precision facet) -->
+  <path d="M256 86 L256 260 L324 426 H404 L256 86 Z" fill="url(#apex_right)"/>
+  <!-- Dynamic Trend Crossbar (Chevron Key) -->
+  <path d="M172 328 L256 272 L340 328 L320 368 L256 324 L192 368 Z" fill="url(#apex_chevron)"/>
+</svg>

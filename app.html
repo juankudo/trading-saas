@@ -3,7 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bitácora de Trading Pro - PropFirm Dashboard</title>
+    <title>AsTrade — Dashboard Pro</title>
+    <!-- Web Icons & Favicons -->
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="48x48">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="manifest" href="site.webmanifest">
+    <meta name="theme-color" content="#0b0f19">
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
@@ -37,10 +43,22 @@
         <div class="app-header-top-row">
             <!-- Izquierda: Logo y Nombre de Bitácora -->
             <div class="flex items-center space-x-3 justify-start shrink-0">
-                <i id="main-header-icon" class="fa-solid fa-chart-line text-2xl text-green-500 shrink-0"></i>
-                <h1 class="text-xl font-bold text-white tracking-wide flex items-center whitespace-nowrap">
-                    TRADING JOURNAL 
-                    <span id="title-mode-badge" class="text-xs bg-green-900/50 text-green-400 border border-green-700 px-2 py-0.5 rounded ml-2">PRO DASHBOARD</span>
+                <div id="main-header-icon" class="w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-emerald-500/30 flex items-center justify-center p-1.5 shadow-sm shrink-0 transition-colors">
+                    <svg class="w-full h-full" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="app_astrade_grad" x1="60" y1="460" x2="380" y2="50" gradientUnits="userSpaceOnUse">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="50%" stop-color="#10b981"/>
+                                <stop offset="100%" stop-color="#34d399"/>
+                            </linearGradient>
+                        </defs>
+                        <path d="M 124 308 L 204 122 C 216 92, 234 68, 256 68 C 278 68, 296 92, 308 122 L 456 448 C 462 460, 454 470, 440 470 L 374 470 C 362 470, 354 462, 348 450 L 282 236 C 274 210, 266 196, 256 196 C 246 196, 238 210, 230 236 L 192 292 L 124 308 Z" fill="url(#app_astrade_grad)"/>
+                        <path d="M 56 448 C 50 460, 58 470, 72 470 L 138 470 C 150 470, 158 462, 164 450 L 176 414 C 186 380, 204 362, 244 362 C 276 362, 304 342, 328 298 L 314 270 C 290 300, 262 316, 234 316 C 202 316, 184 324, 170 336 L 186 312 L 118 328 L 92 382 C 76 416, 64 436, 56 448 Z" fill="url(#app_astrade_grad)"/>
+                    </svg>
+                </div>
+                <h1 class="text-xl font-black text-white tracking-tight flex items-center whitespace-nowrap">
+                    As<span class="text-emerald-400">Trade</span>
+                    <span id="title-mode-badge" class="text-xs bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 font-bold px-2 py-0.5 rounded ml-2">PRO DASHBOARD</span>
                 </h1>
             </div>
             

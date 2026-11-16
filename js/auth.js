@@ -1,5 +1,5 @@
 /**
- * Auth & Subscription Client Module — Trading Journal Pro SaaS
+ * Auth & Subscription Client Module — AsTrade SaaS
  * Diseñado para gestionar sesiones, período de prueba de 7 días y pasarelas de pago.
  * Compatible con Supabase Auth y listo para integración directa.
  */
