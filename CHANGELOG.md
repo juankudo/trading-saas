@@ -5,6 +5,28 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.5] - 2026-11-16
+
+### 🌐 Traducción Global Efectiva a Inglés (Google Website Translator)
+- **Motor Oficial de Google Website Translator Integrado (`index.html`):**
+  - Implementación de traducción in-place al inglés para el 100% de los textos de la Landing Page sin deformar la maqueta, sin romper eventos de JavaScript ni desencajar tarjetas o botones.
+  - Compatibilidad universal y probada en todos los navegadores (Chrome, Safari iOS, Firefox, Edge, Android) y bajo cualquier protocolo (`file:///`, `http://localhost` y `https://astrade.app`).
+- **Botón Toggle Limpio en Cabecera (`#lang-toggle-btn`):**
+  - Botón estilizado junto al selector de tema oscuro/claro que muestra `🌐 EN` cuando la página está en español y cambia a `🌐 ES` al traducir a inglés.
+  - Blindaje con atributos `translate="no"` y `class="notranslate"` para evitar que Google confunda la abreviatura "ES" con palabras en inglés ("IS").
+- **Protección Estricta de Marca y Tickers Financieros (`translate="no"` y `class="notranslate"`):**
+  - Blindaje de la identidad de marca `AsTrade` en la cabecera, showcase interactivo y pie de página legal para evitar traducciones literales o fonéticas.
+  - Blindaje de los tickers de divisas y materias primas (`XAUUSD`, `EURUSD`, `US30`, `GBPJPY`) y referencias de fondeo (`FTMO`).
+- **Ocultación Estricta de Banners de Google (`css/styles.css`):**
+  - Reglas CSS de máxima prioridad (`!important`) que suprimen en su totalidad el banner superior iframe (`.goog-te-banner-frame`), tooltips flotantes (`#goog-gt-tt`), globos y resaltados amarillos de texto (`.goog-text-highlight`).
+  - Fijación de `body { top: 0 !important; position: static !important; }` para erradicar cualquier desplazamiento vertical forzado por la inyección de Google.
+  - Estilos adaptados para temas oscuro y claro con transiciones fluidas.
+- **Persistencia y Arquitectura de Doble Capa (`AsTradeLanguage`):**
+  - Sincronización transparente con `localStorage.getItem('astrade_lang')` y cookie oficial `googtrans=/es/en`.
+  - Recarga limpia e instantánea al revertir a español para garantizar la restauración del DOM original sin residuos.
+
+---
+
 ## [v3.7.4] - 2026-11-16
 
 ### 🎬 Estudio Audiovisual V3 — Tutorial #1 AsTrade con Motion Graphics y Google Colab 1-Click

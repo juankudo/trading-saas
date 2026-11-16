@@ -17,6 +17,19 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
+    <!-- Language Preference Pre-initializer -->
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('astrade_lang') === 'en') {
+                    document.cookie = "googtrans=/es/en; path=/;";
+                    if (window.location.hostname) {
+                        document.cookie = "googtrans=/es/en; path=/; domain=" + window.location.hostname + ";";
+                    }
+                }
+            } catch(e) {}
+        })();
+    </script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
@@ -50,7 +63,7 @@
                     </svg>
                 </div>
                 <div>
-                    <span class="text-base sm:text-lg md:text-xl font-black tracking-tight text-white">As<span class="text-emerald-400">Trade</span></span>
+                    <span translate="no" class="notranslate text-base sm:text-lg md:text-xl font-black tracking-tight text-white">As<span class="text-emerald-400">Trade</span></span>
                 </div>
             </a>
 
@@ -69,6 +82,11 @@
             <!-- Actions Right -->
             <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
                 
+                <!-- Language Toggle Button (ES / EN) -->
+                <button id="lang-toggle-btn" translate="no" onclick="toggleLanguage()" class="notranslate px-2.5 py-1.5 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm" title="Change language / Cambiar idioma" aria-label="Cambiar idioma entre español e inglés">
+                    <i class="fa-solid fa-globe text-emerald-400 text-xs"></i>
+                    <span id="lang-toggle-label" translate="no" class="notranslate">EN</span>
+                </button>
 
                 <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-lg bg-gray-800/60 hover:bg-gray-800 border border-gray-700/60 text-gray-400 hover:text-white text-xs transition" title="Cambiar tema" aria-label="Alternar tema claro y oscuro">
                     <i id="theme-icon" class="fa-solid fa-moon"></i>
@@ -228,7 +246,7 @@
                             <span class="w-2.5 h-2.5 rounded-full bg-red-500/80"></span>
                             <span class="w-2.5 h-2.5 rounded-full bg-amber-500/80"></span>
                             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></span>
-                            <span class="text-[11px] text-gray-400 font-mono ml-1">app.astrade.app — Vista de Cuenta Fondeada</span>
+                            <span translate="no" class="notranslate text-[11px] text-gray-400 font-mono ml-1">app.astrade.app — Vista de Cuenta Fondeada</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <!-- Floating Resume Auto-Tour Pill -->
@@ -3082,7 +3100,7 @@
                             <path d="M172 328 L256 272 L340 328 L320 368 L256 324 L192 368 Z" fill="#34d399"/>
                         </svg>
                     </div>
-                    <span class="font-bold text-gray-200 tracking-tight text-base">As<span class="text-emerald-400">Trade</span></span>
+                    <span translate="no" class="notranslate font-bold text-gray-200 tracking-tight text-base">As<span class="text-emerald-400">Trade</span></span>
                     <span class="text-gray-500">· Plataforma de Analítica & Bitácora de Trading Profesional</span>
                 </div>
                 <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center text-gray-400">
@@ -6204,5 +6222,113 @@
         }
 
     </script>
+
+    <!-- Google Website Translator Element & Custom Language Controller -->
+    <div id="google_translate_element" style="display:none;" aria-hidden="true"></div>
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            try {
+                new google.translate.TranslateElement({
+                    pageLanguage: 'es',
+                    includedLanguages: 'en,es',
+                    autoDisplay: false
+                }, 'google_translate_element');
+            } catch (err) {
+                console.warn('Google Translate Init Warning:', err);
+            }
+        }
+
+        const AsTradeLanguage = {
+            setCookie: function(val) {
+                document.cookie = "googtrans=" + val + "; path=/;";
+                if (window.location.hostname) {
+                    document.cookie = "googtrans=" + val + "; path=/; domain=" + window.location.hostname + ";";
+                }
+            },
+            clearCookie: function() {
+                const exp = "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                document.cookie = "googtrans" + exp;
+                if (window.location.hostname) {
+                    document.cookie = "googtrans" + exp + " domain=" + window.location.hostname + ";";
+                }
+            },
+            getCurrent: function() {
+                try {
+                    const saved = localStorage.getItem('astrade_lang');
+                    if (saved === 'en' || saved === 'es') return saved;
+                    if (document.cookie.indexOf('googtrans=/es/en') !== -1) return 'en';
+                } catch(e) {}
+                return 'es';
+            },
+            updateUI: function(lang) {
+                const label = document.getElementById('lang-toggle-label');
+                if (label) {
+                    label.textContent = lang === 'en' ? 'ES' : 'EN';
+                }
+                const btn = document.getElementById('lang-toggle-btn');
+                if (btn) {
+                    btn.setAttribute('title', lang === 'en' ? 'Cambiar a Español' : 'Change language to English');
+                    btn.setAttribute('aria-label', lang === 'en' ? 'Cambiar idioma a Español' : 'Change language to English');
+                }
+            },
+            toggle: function() {
+                const current = this.getCurrent();
+                const target = current === 'en' ? 'es' : 'en';
+                try {
+                    localStorage.setItem('astrade_lang', target);
+                } catch(e) {}
+                this.updateUI(target);
+
+                const combo = document.querySelector('.goog-te-combo');
+                if (target === 'en') {
+                    this.setCookie('/es/en');
+                    if (combo) {
+                        combo.value = 'en';
+                        combo.dispatchEvent(new Event('change'));
+                    } else {
+                        window.location.reload();
+                    }
+                } else {
+                    this.clearCookie();
+                    this.setCookie('/es/es');
+                    if (combo) {
+                        combo.value = '';
+                        combo.dispatchEvent(new Event('change'));
+                    }
+                    // Recarga instantánea para restaurar el DOM original en español 100% limpio
+                    window.location.reload();
+                }
+            },
+            init: function() {
+                const current = this.getCurrent();
+                this.updateUI(current);
+                if (current === 'en') {
+                    this.setCookie('/es/en');
+                    const checkCombo = setInterval(() => {
+                        const combo = document.querySelector('.goog-te-combo');
+                        if (combo) {
+                            clearInterval(checkCombo);
+                            if (combo.value !== 'en') {
+                                combo.value = 'en';
+                                combo.dispatchEvent(new Event('change'));
+                            }
+                        }
+                    }, 150);
+                    setTimeout(() => clearInterval(checkCombo), 4000);
+                }
+            }
+        };
+
+        function toggleLanguage() {
+            AsTradeLanguage.toggle();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => AsTradeLanguage.init());
+        } else {
+            AsTradeLanguage.init();
+        }
+    </script>
+    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
