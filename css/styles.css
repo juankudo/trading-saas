@@ -2669,50 +2669,6 @@ html.light [data-account-menu] button[data-account-action="delete"]:hover {
     animation-play-state: paused;
 }
 
-/* ==========================================================================
-   Google Website Translator - Seamless Integration & Clean UI
-   ========================================================================== */
-
-/* Prevenir que Google Translate desplace el body o la pantalla */
-body {
-    top: 0px !important;
-    position: static !important;
-}
-
-/* Ocultar banners, barras superiores, tooltips, marcos flotantes y globos */
-.goog-te-banner-frame,
-.goog-te-banner-frame.skiptranslate,
-.goog-te-banner,
-#goog-gt-tt,
-#goog-gt-voting,
-.goog-te-balloon-frame,
-.goog-tooltip,
-.goog-tooltip:hover,
-.goog-te-spinner-pos {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-    pointer-events: none !important;
-}
-
-/* Evitar resaltados de texto, fondos amarillos o bordes al traducir */
-.goog-text-highlight {
-    background-color: transparent !important;
-    box-shadow: none !important;
-    border: none !important;
-}
-
-font {
-    background-color: transparent !important;
-    box-shadow: none !important;
-}
-
-/* Ocultar cualquier iframe residual de traducción */
-iframe.skiptranslate {
-    display: none !important;
-    visibility: hidden !important;
-}
-
 /* Estilo del Botón de Idioma en Tema Claro */
 html.light #lang-toggle-btn {
     background-color: #f1f5f9 !important;

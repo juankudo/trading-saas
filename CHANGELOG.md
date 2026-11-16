@@ -5,6 +5,35 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.6] - 2026-11-16
+
+### 🌐 Internacionalización Institucional Definitiva: Página Dedicada en Inglés (`en.html`)
+- **Arquitectura Dedicada de Cero Latencia (`en.html`):**
+  - Creación de una página de aterrizaje nativa en inglés (`en.html`) 100% limpia, erradicando por completo el script externo inestable de Google Website Translator que causaba traducciones parciales ("Spanglish"), retrasos de red de 3 a 5 segundos y sobrescritura de textos con cada interacción de JavaScript.
+  - Traducción al 100% de todo el contenido estático, dinámico y vectorial:
+    - **Cabecera y Hero:** Títulos, subtítulos, barra de anuncios superior y callout interactivo *"Click, it's 100% interactive!"*.
+    - **Showcase Interactivo (4 Vistas):**
+      - *Pestaña 1 (Dashboard & Metrics):* Diagnósticos en vivo (`evoStagesData`), estados de evolución (A Ciegas -> Pro Journal), toasts y badges de hitos de fondeo.
+      - *Pestaña 2 (Trades Registration):* 4 operaciones documentadas (XAUUSD, EURUSD, GBPJPY, US30), notas técnicas antes/después, títulos de análisis institucional, días de la semana nativos (`Thu`, `Wed`, `Tue`, `Mon`) y anotaciones SVG sobre gráficos de velas.
+      - *Pestaña 3 (Monthly Performance):* Resumen anual auditado, badges de rendimiento, matriz de los 12 meses (`January` a `December`), tarjetas de mejor mes (`October`), mejor trade, mejor día y desglose de sesión.
+      - *Pestaña 4 (Funding Audit):* Auditoría de cuentas de fondeo (`fundingPresetsData`: 100K 2-Phases, 50K 1-Phase, Instant 25K), simulador trade a trade, toasts de avance, y modal de celebración con confeti (*"Congratulations! Funded Account Passed"*).
+    - **Bento Grid:** 6 tarjetas de superpoderes analíticos (Curva de equidad, Calculadora de lotaje dinámico, Calendario y heatmap de consistencia, Auditoría de fondeo, Galería antes/después, Desglose quirúrgico por sesión).
+    - **Laboratorio Backtesting Pro:** Simulador de desafíos de fondeo (`backtestFirmsData`), comprobación de pérdida diaria, drawdown máximo, y simulador de retiros (payouts 80/20) con recibo dinámico.
+    - **Calculadora de Lotaje & MT5 Cloud Sync:** Especificaciones técnicas, categorías de mercado, y pase VIP para miembros Pro.
+    - **Precios & FAQ:** Tabla de precios (Mensual, Trimestral, Semestral, Anual) y acordeón completo de preguntas frecuentes traducido a inglés formal de negocios.
+    - **Pie de Página & Modales Legales:** Términos de Servicio, Política de Privacidad, Política de Reembolsos y Descargo de Responsabilidad Financiera (*Risk Disclaimer*).
+    - **Autenticación:** Modales de inicio de sesión, registro con 7 días gratis y recuperación de contraseña.
+- **Navegación Fluida y Persistencia de Idioma:**
+  - Botón toggle bidireccional en la barra de navegación:
+    - En `index.html`: Muestra `🌐 EN` y redirige de forma instantánea a `en.html`.
+    - En `en.html`: Muestra `🌐 ES` y redirige limpiamente a `index.html?lang=es`.
+  - Detección inmediata y pre-renderizado en `<head>` para evitar parpadeos visuales (*FOUC*), sincronizado con `localStorage.getItem('astrade_lang')`.
+- **Limpieza de Código:**
+  - Eliminación de scripts de Google Website Translator y reglas CSS obsoletas (`.goog-te-*`).
+  - Resolución del error tipográfico en la regla de consistencia del modal de celebración (`23.9% (≤ 30%) ✓ Passed`).
+
+---
+
 ## [v3.7.5] - 2026-11-16
 
 ### 🌐 Traducción Global Efectiva a Inglés (Google Website Translator)

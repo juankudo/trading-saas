@@ -17,15 +17,12 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/theme.js"></script>
     <script src="js/auth.js"></script>
-    <!-- Language Preference Pre-initializer -->
+    <!-- Language Preference Handler -->
     <script>
         (function() {
             try {
-                if (localStorage.getItem('astrade_lang') === 'en') {
-                    document.cookie = "googtrans=/es/en; path=/;";
-                    if (window.location.hostname) {
-                        document.cookie = "googtrans=/es/en; path=/; domain=" + window.location.hostname + ";";
-                    }
+                if (localStorage.getItem('astrade_lang') === 'en' && !window.location.search.includes('lang=es')) {
+                    window.location.replace('en.html');
                 }
             } catch(e) {}
         })();
@@ -5307,7 +5304,7 @@
                     </div>
                     <div class="flex items-center justify-between text-gray-300 border-b border-gray-800/60 py-1">
                         <span class="font-sans">Regla de Consistencia:</span>
-                        <span class="text-white font-bold">${lastStepData.consistPctVal} ≤ ${preset.consistPct} ✓ Cumplido</span>
+                        <span class="text-white font-bold">${lastStepData.consistPctVal} (${preset.consistPct}) ✓ Cumplido</span>
                     </div>
                     <div class="flex items-center justify-between text-gray-300 border-b border-gray-800/60 py-1">
                         <span class="font-sans">Pérdida Diaria Máxima:</span>
@@ -6223,112 +6220,14 @@
 
     </script>
 
-    <!-- Google Website Translator Element & Custom Language Controller -->
-    <div id="google_translate_element" style="display:none;" aria-hidden="true"></div>
-    <script type="text/javascript">
-        function googleTranslateElementInit() {
-            try {
-                new google.translate.TranslateElement({
-                    pageLanguage: 'es',
-                    includedLanguages: 'en,es',
-                    autoDisplay: false
-                }, 'google_translate_element');
-            } catch (err) {
-                console.warn('Google Translate Init Warning:', err);
-            }
-        }
-
-        const AsTradeLanguage = {
-            setCookie: function(val) {
-                document.cookie = "googtrans=" + val + "; path=/;";
-                if (window.location.hostname) {
-                    document.cookie = "googtrans=" + val + "; path=/; domain=" + window.location.hostname + ";";
-                }
-            },
-            clearCookie: function() {
-                const exp = "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-                document.cookie = "googtrans" + exp;
-                if (window.location.hostname) {
-                    document.cookie = "googtrans" + exp + " domain=" + window.location.hostname + ";";
-                }
-            },
-            getCurrent: function() {
-                try {
-                    const saved = localStorage.getItem('astrade_lang');
-                    if (saved === 'en' || saved === 'es') return saved;
-                    if (document.cookie.indexOf('googtrans=/es/en') !== -1) return 'en';
-                } catch(e) {}
-                return 'es';
-            },
-            updateUI: function(lang) {
-                const label = document.getElementById('lang-toggle-label');
-                if (label) {
-                    label.textContent = lang === 'en' ? 'ES' : 'EN';
-                }
-                const btn = document.getElementById('lang-toggle-btn');
-                if (btn) {
-                    btn.setAttribute('title', lang === 'en' ? 'Cambiar a Español' : 'Change language to English');
-                    btn.setAttribute('aria-label', lang === 'en' ? 'Cambiar idioma a Español' : 'Change language to English');
-                }
-            },
-            toggle: function() {
-                const current = this.getCurrent();
-                const target = current === 'en' ? 'es' : 'en';
-                try {
-                    localStorage.setItem('astrade_lang', target);
-                } catch(e) {}
-                this.updateUI(target);
-
-                const combo = document.querySelector('.goog-te-combo');
-                if (target === 'en') {
-                    this.setCookie('/es/en');
-                    if (combo) {
-                        combo.value = 'en';
-                        combo.dispatchEvent(new Event('change'));
-                    } else {
-                        window.location.reload();
-                    }
-                } else {
-                    this.clearCookie();
-                    this.setCookie('/es/es');
-                    if (combo) {
-                        combo.value = '';
-                        combo.dispatchEvent(new Event('change'));
-                    }
-                    // Recarga instantánea para restaurar el DOM original en español 100% limpio
-                    window.location.reload();
-                }
-            },
-            init: function() {
-                const current = this.getCurrent();
-                this.updateUI(current);
-                if (current === 'en') {
-                    this.setCookie('/es/en');
-                    const checkCombo = setInterval(() => {
-                        const combo = document.querySelector('.goog-te-combo');
-                        if (combo) {
-                            clearInterval(checkCombo);
-                            if (combo.value !== 'en') {
-                                combo.value = 'en';
-                                combo.dispatchEvent(new Event('change'));
-                            }
-                        }
-                    }, 150);
-                    setTimeout(() => clearInterval(checkCombo), 4000);
-                }
-            }
-        };
-
+    <!-- Language Switch Handler -->
+    <script>
         function toggleLanguage() {
-            AsTradeLanguage.toggle();
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => AsTradeLanguage.init());
-        } else {
-            AsTradeLanguage.init();
+            try {
+                localStorage.setItem('astrade_lang', 'en');
+            } catch(e) {}
+            window.location.href = 'en.html';
         }
     </script>
-    <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
