@@ -159,23 +159,42 @@ async def choreograph_block(page, block_id, duration):
         await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 700)")
         await asyncio.sleep(0.8)
 
-        # Click ripple + open modal
+        # Click ripple + open modal safely
         await page.evaluate("window.__clickRipple()")
         await asyncio.sleep(0.3)
-        await page.evaluate(f"document.querySelector('{btn_selector}').click()")
-        await page.wait_for_selector("#sessionModal:not(.hidden)", state="visible")
+        await page.evaluate(f"""
+            const btn = document.querySelector('{btn_selector}');
+            if (btn) {{
+                btn.click();
+            }} else if (typeof openSessionModal === 'function') {{
+                openSessionModal();
+            }}
+        """)
+        try:
+            await page.wait_for_selector("#sessionModal:not(.hidden)", state="visible", timeout=3000)
+        except Exception:
+            await page.evaluate("if (typeof openSessionModal === 'function') openSessionModal();")
         await asyncio.sleep(1.0)
 
         # Glide cursor to Account Name Input and Type
         await page.evaluate("window.__glideCursorToElement('#inputSessionName', 600)")
         await asyncio.sleep(0.6)
-        await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 55)")
+        await page.evaluate("""
+            const nameEl = document.querySelector('#inputSessionName');
+            if (nameEl) window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 55);
+        """)
         await asyncio.sleep(1.2)
 
         # Stage Selection
         await page.evaluate("window.__glideCursorToElement('#inputAccountStage', 600)")
         await asyncio.sleep(0.6)
-        await page.evaluate("document.querySelector('#inputAccountStage').value = 'prueba'; document.querySelector('#inputAccountStage').dispatchEvent(new Event('change'));")
+        await page.evaluate("""
+            const stageEl = document.querySelector('#inputAccountStage');
+            if (stageEl) {
+                stageEl.value = 'prueba';
+                stageEl.dispatchEvent(new Event('change'));
+            }
+        """)
         await asyncio.sleep(1.0)
 
         # Spotlight Initial Balance $100,000
@@ -237,10 +256,17 @@ async def choreograph_block(page, block_id, duration):
         """)
         await asyncio.sleep(1.8)
 
-        # Click submit
+        # Click submit safely
         await page.evaluate("window.__clickRipple()")
         await asyncio.sleep(0.3)
-        await page.evaluate(f"document.querySelector('{submit_btn}').click()")
+        await page.evaluate(f"""
+            const sBtn = document.querySelector('{submit_btn}');
+            if (sBtn) {{
+                sBtn.click();
+            }} else if (typeof saveSession === 'function') {{
+                saveSession(new Event('submit'));
+            }}
+        """)
         await asyncio.sleep(0.5)
 
         # Close modal if open & trigger CELEBRATION
@@ -257,14 +283,14 @@ async def choreograph_block(page, block_id, duration):
         # BLOCK 4: La Transformación — Dashboard con Datos Reales
         # ---------------------------------------------------------
         # Inject populated challenge data ($104,250 balance, 14 trades, 68.4% WR, 2.35 PF)
-        await page.evaluate("await window.__injectPopulatedChallengeData();")
+        await page.evaluate("if (typeof window.__injectPopulatedChallengeData === 'function') await window.__injectPopulatedChallengeData();")
         await page.evaluate("""
             window.__showLowerThird('📊', 'PASO 4: RESULTADO EN VIVO', 'Dashboard Cobrando Vida: Consistencia Demostrada');
         """)
         await asyncio.sleep(2.0)
 
         # Show arrow to the active populated account card in grid
-        account_card = ".account-card, [onclick*='enterGroup'], #accountsList > div:first-child"
+        account_card = "#sessions-grid > div:first-child, .account-card, [onclick*='enterGroup']"
         await page.evaluate(f"""
             const card = document.querySelector('{account_card}');
             if (card) {{
@@ -366,6 +392,23 @@ async def record_scene_block(p, block_info):
         record_video_dir=raw_dir,
         record_video_size={"width": 1920, "height": 1080}
     )
+
+    # Inyectar sesión autenticada activa para evitar que app.html redirija a index.html
+    await context.add_init_script("""
+        localStorage.setItem('trading_saas_user_session', JSON.stringify({
+            id: 'usr_astrade_pro',
+            email: 'trader@astrade.app',
+            name: 'Trader Institucional',
+            plan: 'pro_monthly',
+            status: 'active',
+            createdAt: new Date().toISOString(),
+            subscription: {
+                status: 'active',
+                plan: 'pro_monthly',
+                current_period_end: new Date(Date.now() + 30*24*60*60*1000).toISOString()
+            }
+        }));
+    """)
 
     page = await context.new_page()
 
