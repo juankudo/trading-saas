@@ -120,20 +120,20 @@ window.__initStudioMotionEngine = function() {
         /* Glassmorphic Lower-Third / Floating Callout Badge */
         #studio-callout-badge {
             position: absolute;
-            background: rgba(11, 15, 25, 0.94);
+            background: rgba(11, 15, 25, 0.98);
             border: 2px solid #10b981;
-            border-radius: 18px;
-            padding: 18px 24px;
-            box-shadow: 0 25px 55px rgba(0, 0, 0, 0.92), 0 0 35px rgba(16, 185, 129, 0.3);
-            backdrop-filter: blur(14px);
+            border-radius: 20px;
+            padding: 20px 28px;
+            box-shadow: 0 30px 65px rgba(0, 0, 0, 0.96), 0 0 40px rgba(16, 185, 129, 0.4);
+            backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 18px;
             z-index: 9999930;
             transform: translateY(20px) scale(0.96);
             opacity: 0;
             transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 640px;
+            max-width: 680px;
             pointer-events: none;
         }
         #studio-callout-badge.active {
@@ -144,49 +144,49 @@ window.__initStudioMotionEngine = function() {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(16, 185, 129, 0.22);
-            border: 1.2px solid #10b981;
+            background: rgba(16, 185, 129, 0.25);
+            border: 1.5px solid #10b981;
             color: #10b981;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
-            letter-spacing: 1.3px;
+            letter-spacing: 1.4px;
             text-transform: uppercase;
-            padding: 5px 14px;
+            padding: 6px 16px;
             border-radius: 999px;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
         .studio-callout-title {
-            font-size: 19px;
+            font-size: 22px;
             font-weight: 800;
-            color: #f8fafc;
+            color: #ffffff;
             line-height: 1.35;
         }
         .studio-callout-subtitle {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 500;
-            color: #94a3b8;
-            margin-top: 3px;
+            color: #cbd5e1;
+            margin-top: 4px;
         }
 
         /* Lower Third Step Badge (Fixed at bottom left) */
         #studio-lower-third {
             position: fixed;
-            bottom: 40px;
-            left: 45px;
-            background: rgba(11, 15, 25, 0.95);
-            border: 2px solid rgba(16, 185, 129, 0.9);
-            border-radius: 20px;
-            padding: 18px 28px;
-            box-shadow: 0 30px 65px rgba(0,0,0,0.96), 0 0 40px rgba(16, 185, 129, 0.25);
-            backdrop-filter: blur(16px);
+            bottom: 45px;
+            left: 50px;
+            background: rgba(11, 15, 25, 0.98);
+            border: 2.5px solid #10b981;
+            border-radius: 22px;
+            padding: 22px 32px;
+            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.98), 0 0 50px rgba(16, 185, 129, 0.4);
+            backdrop-filter: blur(18px);
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 20px;
             z-index: 9999950;
-            transform: translateY(120px);
+            transform: translateY(140px);
             opacity: 0;
             transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-            max-width: 720px;
+            max-width: 780px;
             pointer-events: none;
         }
         #studio-lower-third.active {
@@ -216,7 +216,7 @@ window.__initStudioMotionEngine = function() {
         </div>
 
         <div id="studio-callout-badge">
-            <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(16,185,129,0.18); border: 1.5px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 22px; color: #10b981; flex-shrink: 0;" id="studio-callout-icon">⚡</div>
+            <div style="width: 48px; height: 48px; border-radius: 14px; background: rgba(16,185,129,0.22); border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 25px; color: #10b981; flex-shrink: 0;" id="studio-callout-icon">⚡</div>
             <div>
                 <div class="studio-pill-tag" id="studio-callout-tag">PASO 1</div>
                 <div class="studio-callout-title" id="studio-callout-title">Título</div>
@@ -225,10 +225,10 @@ window.__initStudioMotionEngine = function() {
         </div>
 
         <div id="studio-lower-third">
-            <div style="width: 46px; height: 46px; border-radius: 14px; background: rgba(16,185,129,0.22); border: 1.5px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #10b981; flex-shrink: 0;" id="studio-lt-icon">⚡</div>
+            <div style="width: 52px; height: 52px; border-radius: 16px; background: rgba(16,185,129,0.25); border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 28px; color: #10b981; flex-shrink: 0;" id="studio-lt-icon">⚡</div>
             <div>
                 <div class="studio-pill-tag" id="studio-lt-tag">PASO 1: ONBOARDING</div>
-                <div style="font-size: 20px; font-weight: 800; color: #ffffff; line-height: 1.25;" id="studio-lt-title">Acceso y bienvenida a AsTrade</div>
+                <div style="font-size: 22px; font-weight: 800; color: #ffffff; line-height: 1.3;" id="studio-lt-title">Acceso y bienvenida a AsTrade</div>
             </div>
         </div>
 
@@ -522,36 +522,10 @@ window.__typeIntoInput = function(selector, text, keyDelayMs = 55) {
 };
 
 // -------------------------------------------------------------
-// CELEBRATION CONFETTI TRIGGER (Cinematic & Controlled Duration)
+// CELEBRATION FEEDBACK (Clean, Professional, Zero Clutter)
 // -------------------------------------------------------------
 window.__triggerCelebrationConfetti = function() {
-    if (typeof window.confetti === 'function') {
-        // Disparo sutil y elegante de celebración sin saturar la pantalla
-        window.confetti({
-            particleCount: 65,
-            spread: 70,
-            origin: { y: 0.65 },
-            colors: ['#10b981', '#34d399', '#6ee7b7', '#38bdf8', '#fbbf24'],
-            ticks: 120,
-            gravity: 1.2
-        });
-
-        // Limpieza automática tras 1.2s para evitar que ensombrezca o tape la interfaz
-        setTimeout(() => {
-            try {
-                if (typeof window.confetti.reset === 'function') {
-                    window.confetti.reset();
-                }
-                const canvases = document.querySelectorAll('canvas');
-                canvases.forEach(c => {
-                    if (c.style.pointerEvents === 'none' || c.width === window.innerWidth) {
-                        c.style.transition = 'opacity 0.4s ease';
-                        c.style.opacity = '0';
-                    }
-                });
-            } catch (e) {}
-        }, 1200);
-    } else {
-        console.log("[StudioMotion] Confetti fired (fallback mock)");
-    }
+    // Confetti particles completely disabled to maintain absolute clarity on YouTube.
+    // Clean, professional lower-third and glowing highlight are used instead.
+    console.log("[StudioMotion] Clean celebration triggered (zero particle clutter)");
 };

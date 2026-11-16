@@ -135,6 +135,11 @@ async def choreograph_block(page, block_id, duration):
             if (t) t.remove();
             const g = document.getElementById('lifecycleGuideModal');
             if (g) g.remove();
+            window.startAppTour = () => {};
+            window.openTradeLifecycleGuide = () => {};
+            window.showFondeoCelebration = () => {};
+            window.launchConfetti = () => {};
+            window.confetti = () => {};
         """)
         await page.evaluate("window.__showLowerThird('💼', 'PASO 1: ACCESO', 'Ingresando al entorno de alta concentración');")
 
@@ -288,7 +293,7 @@ async def choreograph_block(page, block_id, duration):
             window.__removePulseRing();
             if (typeof closeSessionModal === 'function') closeSessionModal();
             window.__triggerCelebrationConfetti();
-            window.__showLowerThird('🎉', 'ACTIVACIÓN COMPLETADA', 'Cuenta de Fondeo 100K Habilitada con Éxito');
+            window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo $100,000 USD listo para auditar con reglas 5%/10%');
         """)
         await asyncio.sleep(3.0)
 
@@ -424,9 +429,9 @@ async def record_scene_block(p, block_info):
         args=launch_args
     )
 
-    # Macro-UI Viewport: 1680x945 (16:9) con escalado a 1080p para maximizar la legibilidad
+    # Macro-UI Viewport: 1536x864 (16:9, escala 1.25x natural) con salida a 1080p para legibilidad nítida en YouTube
     context = await browser.new_context(
-        viewport={"width": 1680, "height": 945},
+        viewport={"width": 1536, "height": 864},
         record_video_dir=raw_dir,
         record_video_size={"width": 1920, "height": 1080}
     )
@@ -451,17 +456,33 @@ async def record_scene_block(p, block_info):
         // 2. Erradicación radical de guías, onboarding tours y popups oscurecidos
         localStorage.setItem('journal_tour_never_show', 'true');
         localStorage.setItem('journal_tour_completed', 'true');
+        localStorage.setItem('has_seen_onboarding', 'true');
+        localStorage.setItem('trade_form_spotlight_completed', 'true');
         localStorage.setItem('lifecycle_guide_dont_show', 'true');
         localStorage.setItem('user_lifecycle_guide_completed', 'true');
         localStorage.setItem('trading_tour_seen', 'true');
         window.__SMOKE_TEST__ = true;
         window.__smokeTestRunning = true;
+        window.__VIDEO_RENDER_MODE__ = true;
+
+        // Desactivar funciones invasivas a nivel global
+        window.startAppTour = function() { return false; };
+        window.initTourAutoTrigger = function() { return false; };
+        window.openTradeLifecycleGuide = function() { return false; };
+        window.launchConfetti = function() { return false; };
+        window.showFondeoCelebration = function() { return false; };
+        window.triggerConfettiEffect = function() { return false; };
+        window.confetti = function() {};
+        window.confetti.reset = function() {};
 
         // 3. Estilos CSS inyectados para bloquear overlays y elevar legibilidad de texto en YouTube
         const macroStyle = document.createElement('style');
         macroStyle.id = 'studio-macro-ui-style';
         macroStyle.innerHTML = `
-            #tourOverlay, .tour-overlay, #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element {
+            #tourOverlay, .tour-overlay, #tourSvgMask, #tourTooltip, #tourHighlightRing,
+            #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element,
+            .fondeo-celebration, .fondeo-confetti, #confettiCanvas,
+            canvas[style*="pointer-events: none"] {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
@@ -471,11 +492,17 @@ async def record_scene_block(p, block_info):
             }
             /* Macro-UI Readability Enhancements */
             html {
-                font-size: 16.5px;
+                font-size: 17px !important;
             }
-            .text-xs { font-size: 0.82rem !important; }
-            .text-sm { font-size: 0.94rem !important; }
-            .account-card { transform: scale(1.02); }
+            .text-xs { font-size: 0.88rem !important; }
+            .text-sm { font-size: 1.02rem !important; }
+            .text-base { font-size: 1.15rem !important; }
+            input, select, button {
+                font-size: 1.02rem !important;
+            }
+            .account-card {
+                transform: scale(1.02);
+            }
         `;
         if (document.head) {
             document.head.appendChild(macroStyle);

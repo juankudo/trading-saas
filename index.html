@@ -354,7 +354,7 @@
                                     </button>
                                     <button id="evo-btn-autoplay" onclick="toggleEvoAutoplay()" class="px-2 py-1 sm:py-1.5 rounded-lg text-[11px] font-semibold bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700/80 transition flex items-center gap-1" title="Reproducir evolución automática">
                                         <i id="evo-autoplay-icon" class="fa-solid fa-play text-emerald-400 text-xs"></i>
-                                        <span class="hidden sm:inline">Auto</span>
+                                        <span class="hidden sm:inline notranslate" translate="no">Auto</span>
                                     </button>
                                 </div>
                             </div>
@@ -523,7 +523,7 @@
                             <div class="flex items-center gap-1 shrink-0">
                                 <button id="btn-auto-inspect" onclick="toggleAutoTradeInspection()" class="px-2.5 py-1 rounded-md text-[10px] font-black bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 hover:brightness-110 text-gray-950 shadow-sm active:scale-95 transition flex items-center gap-1" title="Reproduce automáticamente la inspección de capturas y análisis trade a trade">
                                     <i id="auto-inspect-icon" class="fa-solid fa-play text-[9px]"></i>
-                                    <span id="auto-inspect-text">Auto</span>
+                                    <span id="auto-inspect-text" class="notranslate" translate="no">Auto</span>
                                 </button>
                             </div>
                         </div>
@@ -5316,7 +5316,7 @@
                     </div>
                     <div class="flex items-center justify-between text-gray-300 pt-1">
                         <span class="font-sans">Días Mínimos Operados:</span>
-                        <span class="text-white font-bold">${lastStepData.days} ✓</span>
+                        <span class="text-white font-bold">${lastStepData.days.endsWith("✓") ? lastStepData.days : lastStepData.days + " ✓"}</span>
                     </div>
                 `;
             }

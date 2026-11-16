@@ -354,7 +354,7 @@
                                     </button>
                                     <button id="evo-btn-autoplay" onclick="toggleEvoAutoplay()" class="px-2 py-1 sm:py-1.5 rounded-lg text-[11px] font-semibold bg-gray-900 hover:bg-gray-800 text-gray-300 hover:text-white border border-gray-700/80 transition flex items-center gap-1" title="Play automatic evolution tour">
                                         <i id="evo-autoplay-icon" class="fa-solid fa-play text-emerald-400 text-xs"></i>
-                                        <span class="hidden sm:inline">Auto</span>
+                                        <span class="hidden sm:inline notranslate" translate="no">Auto</span>
                                     </button>
                                 </div>
                             </div>
@@ -523,7 +523,7 @@
                             <div class="flex items-center gap-1 shrink-0">
                                 <button id="btn-auto-inspect" onclick="toggleAutoTradeInspection()" class="px-2.5 py-1 rounded-md text-[10px] font-black bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 hover:brightness-110 text-gray-950 shadow-sm active:scale-95 transition flex items-center gap-1" title="Automatically play trade inspection step by step">
                                     <i id="auto-inspect-icon" class="fa-solid fa-play text-[9px]"></i>
-                                    <span id="auto-inspect-text">Auto</span>
+                                    <span id="auto-inspect-text" class="notranslate" translate="no">Auto</span>
                                 </button>
                             </div>
                         </div>
@@ -959,7 +959,7 @@
                                         <span class="font-bold text-white text-xs flex items-center gap-1 truncate">
                                             <i class="fa-solid fa-chart-pie text-emerald-400 text-[10px]"></i> March 2026
                                         </span>
-                                        <span class="px-1.5 py-0.2 rounded font-mono font-bold text-[9px] border bg-emerald-900/60 text-emerald-300 border-emerald-700 shrink-0">+9.20% Excelente</span>
+                                        <span class="px-1.5 py-0.2 rounded font-mono font-bold text-[9px] border bg-emerald-900/60 text-emerald-300 border-emerald-700 shrink-0">+9.20% Excellent</span>
                                     </div>
                                     <div class="grid grid-cols-2 gap-1.5 text-[10px]">
                                         <div class="rounded border border-gray-800 bg-gray-950/90 p-1.5">
@@ -1061,7 +1061,7 @@
                                         <span class="font-bold text-white text-xs flex items-center gap-1 truncate">
                                             <i class="fa-solid fa-chart-pie text-emerald-400 text-[10px]"></i> May 2026
                                         </span>
-                                        <span class="px-1.5 py-0.2 rounded font-mono font-bold text-[9px] border bg-emerald-900/60 text-emerald-300 border-emerald-700 shrink-0">+7.60% Consistente</span>
+                                        <span class="px-1.5 py-0.2 rounded font-mono font-bold text-[9px] border bg-emerald-900/60 text-emerald-300 border-emerald-700 shrink-0">+7.60% Consistent</span>
                                     </div>
                                     <div class="grid grid-cols-2 gap-1.5 text-[10px]">
                                         <div class="rounded border border-gray-800 bg-gray-950/90 p-1.5">
@@ -1265,13 +1265,13 @@
                                         <span class="font-bold text-white text-xs flex items-center gap-1 truncate">
                                             <i class="fa-solid fa-chart-pie text-emerald-400 text-[10px]"></i> September 2026
                                         </span>
-                                        <span class="px-1.5 py-0.2 rounded font-mono font-bold text-[9px] border bg-emerald-900/60 text-emerald-300 border-emerald-700 shrink-0">+8.50% Excelente</span>
+                                        <span class="px-1.5 py-0.2 rounded font-mono font-bold text-[9px] border bg-emerald-900/60 text-emerald-300 border-emerald-700 shrink-0">+8.50% Excellent</span>
                                     </div>
                                     <div class="grid grid-cols-2 gap-1.5 text-[10px]">
                                         <div class="rounded border border-gray-800 bg-gray-950/90 p-1.5">
                                             <span class="block text-[8px] uppercase tracking-wide text-gray-400 font-semibold">🏆 Best trade</span>
                                             <strong class="block truncate text-[11px] text-emerald-400 font-mono">+3.60% (+$3,600)</strong>
-                                            <span class="block truncate text-[9px] text-gray-400">GBPJPY · Quiebre H4</span>
+                                            <span class="block truncate text-[9px] text-gray-400">GBPJPY · H4 Breakout</span>
                                         </div>
                                         <div class="rounded border border-gray-800 bg-gray-950/90 p-1.5">
                                             <span class="block text-[8px] uppercase tracking-wide text-gray-400 font-semibold">📅 Best day</span>
@@ -2181,7 +2181,7 @@
                                     <div>
                                         <div class="flex justify-between text-gray-300 mb-1 text-[10px]">
                                             <span>Historic Max Drawdown (-10.0% Max):</span>
-                                            <span id="bt-max-consumed" class="font-mono font-bold text-emerald-400">-1.12% (8.88% restante)</span>
+                                            <span id="bt-max-consumed" class="font-mono font-bold text-emerald-400">-1.12% (8.88% remaining)</span>
                                         </div>
                                         <div class="w-full bg-gray-950 h-1.5 rounded-full overflow-hidden border border-gray-800">
                                             <div id="bt-max-bar" class="bg-emerald-500 h-full rounded-full transition-all duration-500" style="width: 11.2%"></div>
@@ -2192,7 +2192,7 @@
                                 <!-- Checklist Indicators in 3 Pills -->
                                 <div class="grid grid-cols-3 gap-1.5 mt-3 pt-2.5 border-t border-gray-800/80 text-center">
                                     <div class="p-1.5 rounded-lg bg-gray-950/60 border border-gray-800">
-                                        <span class="text-[9px] text-gray-400 block">Days Operados</span>
+                                        <span class="text-[9px] text-gray-400 block">Days Traded</span>
                                         <span id="bt-pill-days" class="text-[11px] font-bold text-white font-mono">6 / 5 days ✓</span>
                                     </div>
                                     <div class="p-1.5 rounded-lg bg-gray-950/60 border border-gray-800">
@@ -2200,8 +2200,8 @@
                                         <span id="bt-pill-cons" class="text-[11px] font-bold text-emerald-400 font-mono">22.4% &le; 30% ✓</span>
                                     </div>
                                     <div class="p-1.5 rounded-lg bg-gray-950/60 border border-gray-800">
-                                        <span class="text-[9px] text-gray-400 block">R:R Medio</span>
-                                        <span id="bt-pill-rr" class="text-[11px] font-bold text-blue-400 font-mono">1:2.8 Positivo</span>
+                                        <span class="text-[9px] text-gray-400 block">Average R:R</span>
+                                        <span id="bt-pill-rr" class="text-[11px] font-bold text-blue-400 font-mono">1:2.8 Positive</span>
                                     </div>
                                 </div>
                             </div>
@@ -3406,7 +3406,7 @@
                     <i class="fa-solid fa-rotate-left"></i> Simulate Again
                 </button>
                 <button onclick="closePhaseCelebrationModal(); openAuthModal('register');" class="flex-1 py-2.5 px-3 rounded-xl text-xs font-black bg-gradient-to-r from-emerald-500 via-teal-400 to-emerald-400 hover:brightness-110 text-gray-950 shadow-lg shadow-emerald-500/20 transition flex items-center justify-center gap-1.5">
-                    <i class="fa-solid fa-rocket"></i> Comenzar Gratis (7 Days)
+                    <i class="fa-solid fa-rocket"></i> Start Free (7 Days)
                 </button>
             </div>
 
@@ -4393,7 +4393,7 @@
             },
             3: {
                 title: "In-Depth Audit: March 2026",
-                badge: "+9.20% Mes Excelente",
+                badge: "+9.20% Excellent Month",
                 badgeClass: "bg-emerald-900/60 text-emerald-400 border border-emerald-700",
                 meta: "18 trades cerradas • Win Rate: <strong class=\"text-white\">72.2%</strong> • PF: <strong class=\"text-yellow-400\">2.45x</strong>",
                 bestTrade: "+3.90% (+$3,900)",
@@ -4421,7 +4421,7 @@
             },
             5: {
                 title: "In-Depth Audit: May 2026",
-                badge: "+7.60% Mes Consistente",
+                badge: "+7.60% Consistent Month",
                 badgeClass: "bg-emerald-900/60 text-emerald-400 border border-emerald-700",
                 meta: "19 trades cerradas • Win Rate: <strong class=\"text-white\">68.4%</strong> • PF: <strong class=\"text-yellow-400\">2.15x</strong>",
                 bestTrade: "+3.50% (+$3,500)",
@@ -5002,11 +5002,11 @@
                         maxConsumedPct: '-0.6%',
                         maxBarWidth: 6,
                         consistPctVal: '22.8%',
-                        consistStatus: '22.8% ≤ 30% ✓ (Aprobado)',
+                        consistStatus: '22.8% ≤ 30% ✓ (Passed)',
                         consistBarWidth: 22.8,
                         days: '5 / 5 Days ✓',
                         rr: 'R:R 1:3.2',
-                        statusBadge: '👑 FASE 1 SUPERADA',
+                        statusBadge: '👑 PHASE 1 PASSED',
                         statusBadgeClass: 'bg-amber-950 text-amber-300 border border-amber-500 animate-pulse',
                         toastDesc: '🎉 TARGET ACHIEVED! +$4,150 (+8.3%) accumulated. Certified for 90% Profit Split.',
                         toastIcon: 'fa-solid fa-trophy text-amber-400',
@@ -5104,11 +5104,11 @@
                         maxConsumedPct: '-0.5%',
                         maxBarWidth: 8.3,
                         consistPctVal: '21.2%',
-                        consistStatus: '21.2% ≤ 25% ✓ (Aprobado)',
+                        consistStatus: '21.2% ≤ 25% ✓ (Passed)',
                         consistBarWidth: 21.2,
                         days: '3 / 3 Days ✓',
                         rr: 'R:R 1:3.0',
-                        statusBadge: '👑 RETIRO HABILITADO',
+                        statusBadge: '👑 PAYOUT UNLOCKED',
                         statusBadgeClass: 'bg-amber-950 text-amber-300 border border-amber-500 animate-pulse',
                         toastDesc: '🎉 GOAL REACHED! +$2,650 withdrawable. Minimum days and consistency 100% fulfilled.',
                         toastIcon: 'fa-solid fa-trophy text-amber-400',
@@ -5182,7 +5182,7 @@
                     distEl.className = 'text-emerald-400 font-bold goal-reached';
                 } else {
                     const remaining = preset.targetAmount - data.gain;
-                    distEl.textContent = 'Falta +$' + remaining.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' (' + ((remaining / preset.initialBalance) * 100).toFixed(1) + '%)';
+                    distEl.textContent = 'Remaining: +$' + remaining.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' (' + ((remaining / preset.initialBalance) * 100).toFixed(1) + '%)';
                     distEl.className = 'text-amber-400 font-bold';
                 }
             }
@@ -5316,7 +5316,7 @@
                     </div>
                     <div class="flex items-center justify-between text-gray-300 pt-1">
                         <span class="font-sans">Minimum Trading Days:</span>
-                        <span class="text-white font-bold">${lastStepData.days} ✓</span>
+                        <span class="text-white font-bold">${lastStepData.days.endsWith("✓") ? lastStepData.days : lastStepData.days + " ✓"}</span>
                     </div>
                 `;
             }
@@ -5351,24 +5351,24 @@
                     statusBadgeClass: "bg-emerald-950 text-emerald-400 border border-emerald-700/60",
                     dailyConsumed: "-0.8% (4.2% buffer remaining)",
                     dailyBarWidth: "16%",
-                    maxConsumed: "-1.12% (8.88% restante)",
+                    maxConsumed: "-1.12% (8.88% remaining)",
                     maxBarWidth: "11.2%",
                     days: "6 / 5 days ✓",
                     consistency: "22.4% ≤ 30% ✓",
-                    rr: "1:2.8 Positivo",
+                    rr: "1:2.8 Positive",
                     withdrawable: 8450
                 },
                 phase2Data: {
                     balance: "$104,200.00 USD",
                     gain: "+$4,200.00 (+4.20%)",
-                    distance: "Falta solo $800 (0.80%)",
+                    distance: "Only $800 (0.80%) remaining",
                     progressPct: "84.0%",
                     progressWidth: "84.0%",
-                    statusBadge: "✓ FASE 2 CASI SUPERADA",
+                    statusBadge: "✓ PHASE 2 NEARLY PASSED",
                     statusBadgeClass: "bg-emerald-950 text-emerald-400 border border-emerald-700/60",
                     dailyConsumed: "-0.6% (4.4% buffer remaining)",
                     dailyBarWidth: "12%",
-                    maxConsumed: "-0.95% (9.05% restante)",
+                    maxConsumed: "-0.95% (9.05% remaining)",
                     maxBarWidth: "9.5%",
                     days: "5 / 5 days ✓",
                     consistency: "19.8% ≤ 30% ✓",
@@ -5379,17 +5379,17 @@
                     balance: "$109,250.00 USD",
                     gain: "+$9,250.00 (+9.25% gain)",
                     distance: "Payout Available",
-                    progressPct: "100% FONDEADO",
+                    progressPct: "100% FUNDED",
                     progressWidth: "100%",
                     statusBadge: "👑 ACTIVE FUNDED ACCOUNT",
                     statusBadgeClass: "bg-amber-950 text-amber-300 border border-amber-600",
-                    dailyConsumed: "-0.4% (4.6% disponible)",
+                    dailyConsumed: "-0.4% (4.6% available)",
                     dailyBarWidth: "8%",
-                    maxConsumed: "-0.80% (9.20% restante)",
+                    maxConsumed: "-0.80% (9.20% remaining)",
                     maxBarWidth: "8%",
                     days: "14 days traded ✓",
-                    consistency: "21.0% (Excelente)",
-                    rr: "1:3.0 Consistente",
+                    consistency: "21.0% (Excellent)",
+                    rr: "1:3.0 Consistent",
                     withdrawable: 9250
                 }
             },
@@ -5407,31 +5407,31 @@
                 phase1Data: {
                     balance: "$53,600.00 USD",
                     gain: "+$3,600.00 (+7.20%)",
-                    distance: "Falta solo $400 (0.80%)",
+                    distance: "Only $400 (0.80%) remaining",
                     progressPct: "90.0%",
                     progressWidth: "90%",
                     statusBadge: "✓ 100% SAFE · IN RULE",
                     statusBadgeClass: "bg-emerald-950 text-emerald-400 border border-emerald-700/60",
                     dailyConsumed: "-0.7% (4.3% buffer remaining)",
                     dailyBarWidth: "14%",
-                    maxConsumed: "-1.10% (8.90% restante)",
+                    maxConsumed: "-1.10% (8.90% remaining)",
                     maxBarWidth: "11%",
                     days: "5 / 5 days ✓",
                     consistency: "18.5% ≤ 30% ✓",
-                    rr: "1:2.9 Positivo",
+                    rr: "1:2.9 Positive",
                     withdrawable: 3600
                 },
                 phase2Data: {
                     balance: "$52,250.00 USD",
                     gain: "+$2,250.00 (+4.50%)",
-                    distance: "Falta solo $250 (0.50%)",
+                    distance: "Only $250 (0.50%) remaining",
                     progressPct: "90.0%",
                     progressWidth: "90%",
                     statusBadge: "✓ VERIFICATION NEARLY COMPLETE",
                     statusBadgeClass: "bg-emerald-950 text-emerald-400 border border-emerald-700/60",
                     dailyConsumed: "-0.5% (4.5% buffer remaining)",
                     dailyBarWidth: "10%",
-                    maxConsumed: "-0.85% (9.15% restante)",
+                    maxConsumed: "-0.85% (9.15% remaining)",
                     maxBarWidth: "8.5%",
                     days: "5 / 5 days ✓",
                     consistency: "20.1% ≤ 30% ✓",
@@ -5442,59 +5442,59 @@
                     balance: "$55,400.00 USD",
                     gain: "+$5,400.00 (+10.8% gain)",
                     distance: "Payout Available",
-                    progressPct: "100% FONDEADO (90/10)",
+                    progressPct: "100% FUNDED (90/10)",
                     progressWidth: "100%",
                     statusBadge: "👑 ACTIVE FUNDED ACCOUNT",
                     statusBadgeClass: "bg-amber-950 text-amber-300 border border-amber-600",
-                    dailyConsumed: "-0.3% (4.7% disponible)",
+                    dailyConsumed: "-0.3% (4.7% available)",
                     dailyBarWidth: "6%",
-                    maxConsumed: "-0.65% (9.35% restante)",
+                    maxConsumed: "-0.65% (9.35% remaining)",
                     maxBarWidth: "6.5%",
                     days: "12 days traded ✓",
                     consistency: "19.5% (Passed)",
-                    rr: "1:3.1 Consistente",
+                    rr: "1:3.1 Consistent",
                     withdrawable: 5400
                 }
             },
             instant: {
-                name: "Direct Funding 25K (Sin Fases)",
+                name: "Direct Funding 25K (Instant)",
                 initialBalance: "$25,000.00 USD",
                 initialNum: 25000,
                 phases: 1,
                 splitPct: "80%",
                 splitRatio: 0.80,
                 phase1Target: "0% (Direct Payouts)",
-                phase2Target: "0% (Sin Fases)",
+                phase2Target: "0% (Instant)",
                 dailyLimit: "-4.0% (-$1,000.00)",
                 maxDD: "-6.0% (Trailing)",
                 phase1Data: {
                     balance: "$26,850.00 USD",
                     gain: "+$1,850.00 (+7.40%)",
                     distance: "Payout Unlocked",
-                    progressPct: "100% DIRECTO",
+                    progressPct: "100% INSTANT",
                     progressWidth: "100%",
                     statusBadge: "✓ DIRECT FUNDING SECURED",
                     statusBadgeClass: "bg-emerald-950 text-emerald-400 border border-emerald-700/60",
                     dailyConsumed: "-0.6% (3.4% buffer remaining)",
                     dailyBarWidth: "15%",
-                    maxConsumed: "-1.25% (4.75% restante)",
+                    maxConsumed: "-1.25% (4.75% remaining)",
                     maxBarWidth: "20.8%",
                     days: "4 / 3 days ✓",
                     consistency: "23.0% ≤ 25% ✓",
-                    rr: "1:2.7 Positivo",
+                    rr: "1:2.7 Positive",
                     withdrawable: 1850
                 },
                 phase2Data: {
                     balance: "$27,400.00 USD",
                     gain: "+$2,400.00 (+9.60%)",
                     distance: "Payout Unlocked",
-                    progressPct: "100% DIRECTO",
+                    progressPct: "100% INSTANT",
                     progressWidth: "100%",
                     statusBadge: "✓ DIRECT FUNDING SECURED",
                     statusBadgeClass: "bg-emerald-950 text-emerald-400 border border-emerald-700/60",
                     dailyConsumed: "-0.5% (3.5% buffer remaining)",
                     dailyBarWidth: "12.5%",
-                    maxConsumed: "-1.10% (4.90% restante)",
+                    maxConsumed: "-1.10% (4.90% remaining)",
                     maxBarWidth: "18.3%",
                     days: "6 / 3 days ✓",
                     consistency: "21.5% ≤ 25% ✓",
@@ -5505,17 +5505,17 @@
                     balance: "$28,200.00 USD",
                     gain: "+$3,200.00 (+12.8% gain)",
                     distance: "Payout Available",
-                    progressPct: "100% RETIRABLE",
+                    progressPct: "100% WITHDRAWABLE",
                     progressWidth: "100%",
                     statusBadge: "👑 RETIRO HABILITADO",
                     statusBadgeClass: "bg-amber-950 text-amber-300 border border-amber-600",
-                    dailyConsumed: "-0.4% (3.6% disponible)",
+                    dailyConsumed: "-0.4% (3.6% available)",
                     dailyBarWidth: "10%",
-                    maxConsumed: "-0.90% (5.10% restante)",
+                    maxConsumed: "-0.90% (5.10% remaining)",
                     maxBarWidth: "15%",
                     days: "8 days traded ✓",
-                    consistency: "19.0% (Excelente)",
-                    rr: "1:3.2 Consistente",
+                    consistency: "19.0% (Excellent)",
+                    rr: "1:3.2 Consistent",
                     withdrawable: 3200
                 }
             }

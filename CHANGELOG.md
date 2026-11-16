@@ -5,6 +5,24 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.8] - 2026-11-16
+
+### 🎬 Suite de Producción Audiovisual: Pulido Visual Radical para Tutorial #1 YouTube
+- **Erradicación Absoluta de Tours y Velos Oscurecidos (`app.js`, `render_video_01_astrade.py`):**
+  - Implementación de guardas globales `window.__VIDEO_RENDER_MODE__` en `startAppTour()`, `initTourAutoTrigger()`, `showFondeoCelebration()` y `launchConfetti()`.
+  - Inyección preventiva de claves en `localStorage` (`journal_tour_never_show: 'true'`, `journal_tour_completed: 'true'`, `has_seen_onboarding: 'true'`, `trade_form_spotlight_completed: 'true'`).
+  - Anulación por monkey-patching y reglas CSS estrictas (`#tourOverlay, #tourTooltip, #tourSvgMask, #tourHighlightRing, .tour-overlay { display: none !important; opacity: 0 !important; }`) para garantizar una pantalla 100% limpia sin sombras ni ventanas superpuestas.
+- **Supresión Total de Confeti Invasivo (`studio_motion_engine.js`, `app.js`):**
+  - Eliminación completa de las partículas de confeti en `window.__triggerCelebrationConfetti()` y anulación de `showFondeoCelebration` y `launchConfetti`.
+  - Sustitución en el Bloque 3 por un Lower-Third institucional y nítido: `window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo $100,000 USD listo para auditar con reglas 5%/10%')`.
+- **Macro-UI y Tipografía Ampliada a Escala 1.25x (`render_video_01_astrade.py`, `studio_motion_engine.js`):**
+  - Viewport de filmación ajustado a `1536x864` (16:9, escala DPI 125% estándar) renderizado a 1920x1080 Full HD, logrando que botones, formularios, textos y gráficos se vean un 25% más grandes y perfectamente legibles en móviles y computadoras.
+  - Tipografía base aumentada (`html { font-size: 17px !important; }`), títulos de Lower-Third a 22px bold y Callout Badges a 22px bold con fondo oscuro `rgba(11, 15, 25, 0.98)`, bordes esmeralda y desenfoque de 18px.
+- **Sincronización Autónoma en Google Drive (`gdrive`):**
+  - Actualización directa de los paquetes `astrade_video01_bundle.zip` y `trading_saas_bundle.zip` en la cuenta de Google Drive del usuario sin necesidad de descargas ni subidas manuales.
+
+---
+
 ## [v3.7.7] - 2026-11-16
 
 ### 🎬 Suite de Producción Audiovisual V3: Rediseño de Calidad para Tutorial #1 YouTube

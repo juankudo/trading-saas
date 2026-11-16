@@ -3921,6 +3921,7 @@ const initialTrades = [];
 
         // Confeti propio sobre canvas (sin dependencias) para celebrar la fase superada.
         function launchConfetti() {
+            if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
             const canvas = document.getElementById("confettiCanvas");
             if (!canvas) return;
             stopConfetti();
@@ -5759,6 +5760,7 @@ function renderMonthlyPerformance() {
         }
 
         function showFondeoCelebration(title, message, isFunded) {
+            if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
             document.querySelectorAll(".fondeo-celebration").forEach(element => element.remove());
             const overlay = document.createElement("div");
             overlay.className = "fondeo-celebration";
@@ -7134,6 +7136,7 @@ function renderMonthlyPerformance() {
         ];
 
         function startAppTour() {
+            if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
             const overlay = document.getElementById('tourOverlay');
             if (!overlay) return;
 
@@ -7369,8 +7372,8 @@ function renderMonthlyPerformance() {
 
         function initTourAutoTrigger() {
             try {
-                if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning)) return;
-                if (localStorage.getItem('journal_tour_never_show') === 'true') return;
+                if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
+                if (localStorage.getItem('journal_tour_never_show') === 'true' || localStorage.getItem('journal_tour_completed') === 'true') return;
                 const tourDone = localStorage.getItem('journal_tour_completed');
                 if (!tourDone) {
                     setTimeout(() => {
