@@ -5,6 +5,51 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.7.2] - 2026-11-15
+
+### ⏱️ Fase 1: Control de Reproducción Inteligente del Showcase Interactivo (`index.html`)
+- **Detección Estricta de Foco Central en Pantalla con `IntersectionObserver`:**
+  - Se eliminó el arranque prematuro en la carga inicial de la página cuando el usuario aún está leyendo el titular o la cabecera superior.
+  - La maqueta interactiva ahora espera a que el usuario haga scroll y quede **completamente centrada (al menos 50% visible)** en la pantalla para iniciar.
+  - Al entrar en foco por primera vez, arranca **garantizadamente en $t = 0$ desde la Pestaña 1 (Dashboard & Métricas)**, asegurando que el visitante disfrute la presentación y los gráficos explicativos sin perderse nada.
+  - Si el usuario hace scroll hacia arriba o hacia abajo saliendo del foco visual, el tour se **pausa automáticamente de inmediato**, congelando las barras de progreso para no desperdiciar ciclos ni avanzar desatendido.
+  - Al regresar a enfocar la maqueta, la reproducción se **reanuda fluidamente** desde el punto exacto donde se congeló.
+
+### ✏️ Fase 2: Flecha Exterior Dibujada & Énfasis de Interactividad (`index.html`, `css/styles.css`)
+- **Llamado de Atención Exterior Orgánico:**
+  - Incorporada píldora flotante exterior (`#showcase-interactive-callout`) con el texto: `✏️ ¡Haz clic aquí, es 100% interactiva!`.
+  - Flecha curva SVG estilo rotulador dibujado a mano con trazo punteado (`stroke-dasharray="4 2.5"`) en verde esmeralda resplandeciente apuntando a los controles interactivos de la ventana.
+  - Animación suave de respiración y resplandor (`callout-pulse-fade`), colocada en el espacio de aire exterior sin obstruir insignias ni titulares.
+  - Al hacer clic en cualquier pestaña o control interactivo, el callout se desvanece de forma suave e irreversible (`opacity: 0, translateY`) para permitir una interacción limpia sin estorbos.
+
+### 🔄 Fase 3: Rediseño In Situ de "Registro de Trades" y "Rendimiento Mensual" (`index.html`, `css/styles.css`)
+- **Registro de Trades — Transición Deslizante In Situ:**
+  - Se eliminó la tabla vertical redundante y la lista móvil sobredimensionada que empujaban el análisis técnico y los gráficos de antes/después fuera del campo visual.
+  - Se implementó un selector de 4 fichas interactivas (`chip-trade-1` .. `chip-trade-4`) con estadísticas en vivo de cada operación (XAUUSD +2.14%, EURUSD -0.40%, GBPJPY +1.28%, US30 +1.82%).
+  - Se incorporó la fila de bitácora oficial (`#trade-active-journal-strip`) que expone los metadatos de la operación (Fecha, Activo, Sesión, Tipo de Orden, Pips, Ratio R:R, Estado y PnL).
+  - Integración de animación de deslizamiento in situ (`@keyframes trade-slide-in`, `.anim-trade-slide`): al interactuar o durante el tour automático ($t=0, 2400, 4800\text{ ms}$), la tarjeta se desliza suavemente en el mismo lugar sin que el usuario tenga que hacer scroll. Altura compactada a ~539px.
+  - **Corrección de Legibilidad en Fichas Activas (Modo Oscuro & Claro):** Se eliminó el fondo verde chillón sólido que volvía ilegible el texto rojo de pérdida (`-$400.00`, `-0.40%`). Ahora la ficha seleccionada se resalta con superficie elevada, borde esmeralda con resplandor suave y tipografía de alto contraste tanto en tema oscuro como en tema claro.
+- **Rendimiento Mensual — Despliegue de Mes Directo In Situ:**
+  - Se eliminó por completo el bloque inferior desconectado (`#showcase-month-inspector`) que hacía la vista excesivamente larga y confusa.
+  - Se integró el desglose de métricas detalladas (`.monthly-month-details`) directamente dentro de cada una de las 12 tarjetas de mes (`#month-card-1` .. `#month-card-12`), replicando con fidelidad el comportamiento nativo de la aplicación.
+  - Reglas de posicionamiento inteligente adaptativo: las filas superiores se despliegan hacia abajo, las filas inferiores se despliegan hacia arriba, y las columnas se alinean para evitar desbordamientos. Altura compactada a ~483px sin necesidad de scroll.
+  - **Corrección en Tema Claro (`html.light`):** Se corrigió la visualización del desplegable mensual en modo claro: fondo blanco pulido (`#ffffff`), borde esmeralda suave, tarjetas de métricas en slate claro (`#f8fafc`), títulos oscuros de alta legibilidad (`#0f172a`) y sombras suaves.
+
+### 🏆 Fase 4: Recorrido Completo de los 4 Trades en Auditoría de Fondeo (`index.html`)
+- **Secuencia Integral de la Auto-Reproducción de Fondeo:**
+  - Se corrigió el motor de stories (`TAB_STORY_CONFIGS.propfirm`) que anteriormente saltaba bruscamente del Paso 1 al Paso 4, omitiendo los pasos intermedios y mostrando solo 2 operaciones antes de concluir.
+  - Ahora la reproducción automática ejecuta la secuencia completa y fluida trade a trade:
+    - **Paso 0 ($t = 0\text{ ms}$):** Configuración de parámetros iniciales cargados (0/5 Días, Balance $100,000, 0.0% progreso).
+    - **Paso 1 ($t = 1,400\text{ ms}$):** **Trade 1 (Día 1):** XAUUSD Compra `+$2,400.00` (`+2.40%`), colchón diario intacto al 4.7% libre, progreso al 24.0%.
+    - **Paso 2 ($t = 4,200\text{ ms}$):** **Trade 2 (Día 2):** US30 Compra `+$2,850.00` (`+2.85%`), supera el 50% de la meta en balance `$105,250.00`.
+    - **Paso 3 ($t = 7,000\text{ ms}$):** **Trade 3 (Día 3):** Stop Loss Disciplinado `-$600.00` (`-0.60%`), demostrando en vivo la protección anti-tilt y el blindaje de capital con insignia ámbar `🛡️ PÉRDIDA CONTROLADA (SEGURO)`.
+    - **Paso 4 ($t = 9,800\text{ ms}$):** **Trade 4 (Día 4):** GBPJPY Compra `+$3,100.00` (`+3.10%`), balance `$107,750.00` (77.5% de la meta), con badge de alerta `⚡ A 1 TRADE DE LA META`.
+    - **Paso 5 ($t = 12,600\text{ ms}$):** **Meta Alcanzada (Día 5):** Salto final a 100% de la meta (`+$10,200.00` / `+10.20%`), 5/5 días cumplidos, insignia `👑 CUENTA FONDEADA APROBADA` y despliegue del modal de felicitaciones con trofeo animado, desglose cuantitativo y lluvia de confeti.
+    - **Cierre Suave ($t = 17,800\text{ ms}$):** Cierre automático del modal de celebración mediante `closePhaseCelebrationModal()`, permitiendo un ciclo fluido de 18.5 segundos antes de retornar a la Pestaña 1.
+  - Sincronización limpia entre el tour automático y la interacción manual para evitar saltos o desincronizaciones de estado.
+
+---
+
 ## [v3.7.1] - 2026-11-15
 
 ### 🎨 Sincronización Cromática de Marca en Modo Backtesting (`app.html`, `js/app.js`)

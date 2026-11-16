@@ -960,6 +960,168 @@ button, a, input, select, textarea {
         .anim-float-1 { animation: float-badge-1 4s ease-in-out infinite; }
         .anim-float-2 { animation: float-badge-2 4.5s ease-in-out infinite; }
 
+        /* Flecha exterior dibujada y anotación que resalta, aparece y desaparece */
+        @keyframes callout-pulse-fade {
+            0%, 100% {
+                opacity: 0.5;
+                transform: translateY(0) scale(0.97) rotate(-1deg);
+                filter: drop-shadow(0 2px 6px rgba(52, 211, 153, 0.25));
+            }
+            50% {
+                opacity: 1;
+                transform: translateY(-6px) scale(1.02) rotate(1deg);
+                filter: drop-shadow(0 6px 20px rgba(52, 211, 153, 0.6));
+            }
+        }
+        .anim-callout-pulse {
+            animation: callout-pulse-fade 3.2s ease-in-out infinite;
+        }
+
+        /* Fase 3: Animación deslizante in situ para el Visor de Trades */
+        @keyframes trade-slide-in {
+            0% {
+                opacity: 0.2;
+                transform: translateX(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        .anim-trade-slide {
+            animation: trade-slide-in 0.28s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        /* Fase 3: Despliegue de Mes in situ (Rendimiento Mensual Showcase) */
+        #monthly-showcase-grid .monthly-month-card {
+            position: relative;
+            overflow: visible !important;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        #monthly-showcase-grid .monthly-month-card.active-month-card {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+            z-index: 50;
+        }
+        #monthly-showcase-grid .monthly-month-details {
+            position: absolute;
+            z-index: 60;
+            width: 290px;
+            background: #0d1527;
+            border: 1.5px solid #10b981;
+            border-radius: 0.75rem;
+            padding: 0.6rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85), 0 0 20px rgba(16, 185, 129, 0.25);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateY(6px) scale(0.96);
+            transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+        }
+        /* Filas superiores abren hacia abajo */
+        #monthly-showcase-grid .monthly-month-card:nth-child(-n+4) .monthly-month-details {
+            top: calc(100% + 0.35rem);
+            bottom: auto;
+        }
+        /* Filas inferiores abren hacia arriba */
+        #monthly-showcase-grid .monthly-month-card:nth-child(n+5) .monthly-month-details {
+            bottom: calc(100% + 0.35rem);
+            top: auto;
+        }
+        /* Columnas 1 y 2 alineadas a la izquierda */
+        #monthly-showcase-grid .monthly-month-card:nth-child(4n+1) .monthly-month-details,
+        #monthly-showcase-grid .monthly-month-card:nth-child(4n+2) .monthly-month-details {
+            left: 0;
+            right: auto;
+        }
+        /* Columnas 3 y 4 alineadas a la derecha */
+        #monthly-showcase-grid .monthly-month-card:nth-child(4n+3) .monthly-month-details,
+        #monthly-showcase-grid .monthly-month-card:nth-child(4n+4) .monthly-month-details {
+            right: 0;
+            left: auto;
+        }
+        /* Despliegue al hover o clase activa */
+        #monthly-showcase-grid .monthly-month-card:hover .monthly-month-details,
+        #monthly-showcase-grid .monthly-month-card.active-month-card .monthly-month-details {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0) scale(1);
+        }
+        @media (max-width: 640px) {
+            #monthly-showcase-grid .monthly-month-details {
+                width: calc(100vw - 2.5rem);
+                max-width: 290px;
+            }
+            #monthly-showcase-grid .monthly-month-card:nth-child(2n+1) .monthly-month-details {
+                left: 0;
+                right: auto;
+            }
+            #monthly-showcase-grid .monthly-month-card:nth-child(2n) .monthly-month-details {
+                right: 0;
+                left: auto;
+            }
+            #monthly-showcase-grid .monthly-month-card:nth-child(-n+6) .monthly-month-details {
+                top: calc(100% + 0.35rem);
+                bottom: auto;
+            }
+            #monthly-showcase-grid .monthly-month-card:nth-child(n+7) .monthly-month-details {
+                bottom: calc(100% + 0.35rem);
+                top: auto;
+            }
+        }
+
+        /* Modo Claro: Despliegue de Mes in situ (Rendimiento Mensual Showcase) */
+        html.light #monthly-showcase-grid .monthly-month-card.active-month-card {
+            border-color: #10b981 !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.25) !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details {
+            background-color: #ffffff !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 16px 36px rgba(15, 23, 42, 0.16), 0 2px 10px rgba(16, 185, 129, 0.18) !important;
+            color: #1e293b !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .border-b {
+            border-color: #e2e8f0 !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .text-white {
+            color: #0f172a !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .grid > div {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .text-gray-400 {
+            color: #64748b !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .text-emerald-400 {
+            color: #047857 !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .text-indigo-300 {
+            color: #4338ca !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .text-amber-300 {
+            color: #b45309 !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .bg-emerald-900\/60,
+        html.light #monthly-showcase-grid .monthly-month-details .bg-emerald-950 {
+            background-color: #ecfdf5 !important;
+            color: #047857 !important;
+            border-color: #a7f3d0 !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .bg-blue-950 {
+            background-color: #eff6ff !important;
+            color: #1d4ed8 !important;
+            border-color: #bfdbfe !important;
+        }
+        html.light #monthly-showcase-grid .monthly-month-details .bg-rose-950 {
+            background-color: #fef2f2 !important;
+            color: #dc2626 !important;
+            border-color: #fecaca !important;
+        }
+
         /* Rotate icon on accordion open */
         .accordion-open {
             transform: rotate(180deg);
@@ -1515,36 +1677,91 @@ button, a, input, select, textarea {
         /* ==========================================================================
            VISOR DE GALERÍA Y ANÁLISIS DE TRADES (ANTES / DESPUÉS)
            ========================================================================== */
+        .trade-inspect-chip {
+            position: relative;
+            background-color: rgba(13, 21, 39, 0.7);
+            border: 1px solid rgba(51, 65, 85, 0.6);
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
         .trade-inspect-chip.active {
-            background-color: #10b981;
-            color: #0f172a;
-            font-weight: 800;
-            box-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
+            background-color: #111e33 !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 0 16px rgba(16, 185, 129, 0.3), inset 0 2px 0 #10b981 !important;
+            transform: translateY(-1px);
         }
         .trade-inspect-chip.inactive {
-            background-color: transparent;
-            color: #94a3b8;
+            background-color: rgba(10, 15, 29, 0.5) !important;
+            border-color: #1e293b !important;
+            opacity: 0.8;
         }
         .trade-inspect-chip.inactive:hover {
-            color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.05);
+            opacity: 1;
+            background-color: rgba(17, 24, 39, 0.8) !important;
+            border-color: #334155 !important;
         }
         .trade-dt-row.active {
             background-color: rgba(16, 185, 129, 0.12) !important;
             border-left: 3px solid #10b981;
         }
 
-        /* Modo Claro: Visor de Galería & Análisis */
+        /* Modo Claro: Visor de Galería & Fichas de Trades */
+        html.light .trade-inspect-chip {
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+        }
         html.light .trade-inspect-chip.active {
-            background-color: #10b981 !important;
-            color: #ffffff !important;
+            background-color: #ffffff !important;
+            border-color: #10b981 !important;
+            box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2), inset 0 2px 0 #10b981 !important;
+            transform: translateY(-1px);
         }
         html.light .trade-inspect-chip.inactive {
-            color: #64748b !important;
+            background-color: #f8fafc !important;
+            border-color: #e2e8f0 !important;
+            opacity: 0.85;
         }
         html.light .trade-inspect-chip.inactive:hover {
+            opacity: 1;
+            background-color: #f1f5f9 !important;
+            border-color: #cbd5e1 !important;
+        }
+        html.light .trade-inspect-chip .text-amber-300 {
+            color: #b45309 !important;
+        }
+        html.light .trade-inspect-chip .text-blue-300 {
+            color: #1d4ed8 !important;
+        }
+        html.light .trade-inspect-chip .text-cyan-300 {
+            color: #0369a1 !important;
+        }
+        html.light .trade-inspect-chip .text-emerald-300 {
+            color: #047857 !important;
+        }
+        html.light .trade-inspect-chip .bg-emerald-950 {
+            background-color: #ecfdf5 !important;
+            color: #047857 !important;
+            border-color: #a7f3d0 !important;
+        }
+        html.light .trade-inspect-chip .bg-rose-950 {
+            background-color: #fef2f2 !important;
+            color: #dc2626 !important;
+            border-color: #fecaca !important;
+        }
+        html.light .trade-inspect-chip .text-rose-400 {
+            color: #dc2626 !important;
+        }
+        html.light .trade-inspect-chip .text-emerald-400 {
+            color: #047857 !important;
+        }
+        html.light #trade-active-journal-strip {
+            background-color: #ffffff !important;
+            border-color: #e2e8f0 !important;
+        }
+        html.light #trade-active-journal-strip .text-white {
             color: #0f172a !important;
-            background-color: #e2e8f0 !important;
+        }
+        html.light #trade-active-journal-strip .text-gray-500 {
+            color: #64748b !important;
         }
         html.light .trade-dt-row.active {
             background-color: #ecfdf5 !important;
