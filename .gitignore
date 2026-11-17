@@ -36,7 +36,6 @@ youtube_token.json
 
 media/renders/**/*.mp4
 media/renders/posters/
-media/youtube_tutorials/**/*.mp4
-media/youtube_tutorials/*.mp4
+media/youtube_tutorials/
 __pycache__/
 *.pyc
