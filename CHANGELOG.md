@@ -5,6 +5,26 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.2] - 2026-11-17
+
+### 🎬 Tutorial #2 Completo: Registro y Auditoría de Trades en la Nube (Google Colab GPU T4)
+- **Pipeline Cloud Autónomo para Tutorial #2 (`scripts/cloud/run_colab_render_video_02.py`):**
+  - Migración completa del renderizado pesado de video y codificación FFmpeg a la nube mediante `google-colab-cli` con aceleración GPU T4.
+  - Erradicación del cuello de botella de CPU y memoria RAM en la máquina local, reduciendo el tiempo de renderizado de horas a solo **7.47 minutos** con 0% de sobrecarga local.
+  - Empaquetador liviano (`scripts/cloud/package_video_02_bundle.py`) de 6.62 MB y runner remoto (`scripts/cloud/remote_runner_video_02.py`).
+- **Arquitectura de Toma Maestra Continua V5 (`scripts/render/render_video_02_astrade.py`):**
+  - Filmación ininterrumpida de 110.40 segundos a 1920x1080 Full HD nativo sin recargas de página ni pantallas en blanco.
+  - Flujo operativo institucional: carga de cuenta FTMO 100K, registro de trade EURUSD (15 pips SL, 45 pips TP, ratio 1:3.00, 1% de riesgo / $1,000 USD y cálculo automático de 6.66 lotes).
+  - Inyección en vivo de capturas técnicas HD antes de entrar y tras alcanzar Full TP (+3.00% / +$3,000 USD).
+  - Actualización automática del panel de metas: Target al 37.5% y Drawdown 100% intacto.
+- **Cumplimiento Estricto Zero-Blur (Cero Difuminados):**
+  - Eliminación absoluta de cualquier `filter: blur` o `backdrop-filter: blur` en `scripts/render/studio_motion_engine.js`.
+  - Resaltado visual exclusivo mediante halos neón esmeralda delimitados, anillos de pulso precisos y badges tipográficos nítidos.
+- **Hoja de Ruta Oficial de la Serie (`docs/tutorials/TUTORIAL_SERIES_ROADMAP.md`):**
+  - Plan curricular completo estructurado en 6 episodios oficiales para la plataforma AsTrade.
+
+---
+
 ## [v3.8.1] - 2026-11-16
 
 ### ☁️ Suite Cloud Autónoma: Integración Oficial con Google Colab CLI (`colab`)

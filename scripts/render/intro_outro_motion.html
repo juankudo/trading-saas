@@ -232,18 +232,21 @@
 
             <!-- Title Card (Intro Mode) -->
             <div class="title-card" id="intro-title-card" style="display: none;">
-                <div class="tutorial-pill">Tutorial #1</div>
-                <h1 class="main-headline">Creación y Configuración de Cuentas de Trading</h1>
-                <p class="sub-headline">Domina la gestión de capital y auditoría de reglas de fondeo</p>
+                <div class="tutorial-pill" id="intro-tutorial-pill">Tutorial #1</div>
+                <h1 class="main-headline" id="intro-headline">Creación y Configuración de Cuentas de Trading</h1>
+                <p class="sub-headline" id="intro-subheadline">Domina la gestión de capital y auditoría de reglas de fondeo</p>
             </div>
 
             <!-- Outro Elements (Outro Mode) -->
             <div class="title-card" id="outro-title-card" style="display: none;">
-                <h1 class="main-headline" style="font-size: 40px; margin-bottom: 8px;">Comienza tu prueba gratuita de 7 días</h1>
-                <p class="sub-headline">Lleva tu operativa al estándar institucional con AsTrade</p>
+                <h1 class="main-headline" id="outro-headline" style="font-size: 40px; margin-bottom: 8px;">Comienza tu prueba gratuita de 7 días</h1>
+                <p class="sub-headline" id="outro-subheadline">Lleva tu operativa al estándar institucional con AsTrade</p>
                 <div class="outro-cta-box" id="outro-cta-box">
                     <span style="font-size: 28px;">🌐</span>
                     <span class="url-text">astrade<span>hub</span>.com</span>
+                </div>
+                <div id="outro-next-teaser" style="display: none; margin-top: 24px; font-size: 15px; font-weight: 700; color: #10b981; letter-spacing: 1.5px; text-transform: uppercase; background: rgba(16, 185, 129, 0.12); border: 1.5px solid rgba(16, 185, 129, 0.35); padding: 8px 24px; border-radius: 999px; box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);">
+                    Próximo: Tutorial #3 · Control de Drawdown y Reglas Prop Firm
                 </div>
             </div>
         </div>
@@ -252,6 +255,43 @@
     <script>
         const params = new URLSearchParams(window.location.search);
         const mode = params.get('mode') || 'intro';
+        const tutorial = params.get('tutorial') || '1';
+        const customTitle = params.get('title');
+        const customSubtitle = params.get('subtitle');
+        const customNext = params.get('next');
+
+        // Configure intro text according to tutorial parameter
+        if (mode === 'intro') {
+            const pillEl = document.getElementById('intro-tutorial-pill');
+            const headlineEl = document.getElementById('intro-headline');
+            const subheadlineEl = document.getElementById('intro-subheadline');
+
+            if (tutorial === '2') {
+                pillEl.innerText = 'Tutorial #2';
+                headlineEl.innerText = customTitle || 'Registro y Auditoría de Trades';
+                subheadlineEl.innerText = customSubtitle || 'Cálculo de riesgo, ratio R:R y capturas técnicas';
+            } else if (tutorial === '1') {
+                pillEl.innerText = 'Tutorial #1';
+                headlineEl.innerText = customTitle || 'Creación y Configuración de Cuentas de Trading';
+                subheadlineEl.innerText = customSubtitle || 'Domina la gestión de capital y auditoría de reglas de fondeo';
+            } else {
+                pillEl.innerText = `Tutorial #${tutorial}`;
+                if (customTitle) headlineEl.innerText = customTitle;
+                if (customSubtitle) subheadlineEl.innerText = customSubtitle;
+            }
+        } else if (mode === 'outro') {
+            const outroHeadlineEl = document.getElementById('outro-headline');
+            const outroSubEl = document.getElementById('outro-subheadline');
+            const teaserEl = document.getElementById('outro-next-teaser');
+
+            if (customTitle) outroHeadlineEl.innerText = customTitle;
+            if (customSubtitle) outroSubEl.innerText = customSubtitle;
+
+            if (tutorial === '2' || customNext) {
+                teaserEl.style.display = 'inline-block';
+                if (customNext) teaserEl.innerText = customNext;
+            }
+        }
 
         window.__playIntroAnimation = function() {
             const logoRow = document.getElementById('brand-logo-row');

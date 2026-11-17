@@ -48,12 +48,11 @@ window.__initStudioMotionEngine = function() {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 8, 18, 0.68);
+            background: rgba(5, 8, 18, 0.65);
             opacity: 0;
             transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
             pointer-events: none;
             z-index: 9999905;
-            backdrop-filter: blur(2px);
         }
         #studio-spotlight-overlay.active {
             opacity: 1;
@@ -126,7 +125,6 @@ window.__initStudioMotionEngine = function() {
             border-radius: 20px;
             padding: 20px 28px;
             box-shadow: 0 30px 65px rgba(0, 0, 0, 0.96), 0 0 40px rgba(16, 185, 129, 0.4);
-            backdrop-filter: blur(16px);
             display: flex;
             align-items: center;
             gap: 18px;
@@ -179,7 +177,6 @@ window.__initStudioMotionEngine = function() {
             border-radius: 22px;
             padding: 22px 32px;
             box-shadow: 0 35px 80px rgba(0, 0, 0, 0.98), 0 0 50px rgba(16, 185, 129, 0.4);
-            backdrop-filter: blur(18px);
             display: flex;
             align-items: center;
             gap: 20px;
