@@ -5,6 +5,19 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.1] - 2026-11-16
+
+### ☁️ Suite Cloud Autónoma: Integración Oficial con Google Colab CLI (`colab`)
+- **Orquestador Local Autónomo (`scripts/cloud/run_colab_render.py`):**
+  - Implementación de un pipeline integral que solicita una máquina virtual en Google Cloud vía `google-colab-cli` (`--gpu T4`), transfiere el paquete del proyecto directamente por WebSocket/CLI, ejecuta el renderizado y descarga el archivo MP4 final a `media/youtube_tutorials/`.
+  - Apagado y desaprovisionamiento automático de la VM (`colab stop`) para garantizar cero consumo residual de cuotas.
+- **Runner Remoto Headless (`scripts/cloud/remote_runner.py`):**
+  - Script autónomo ejecutado en el entorno de la nube para descomprimir el proyecto, instalar paquetes silenciosamente (`playwright`, `ffmpeg`, `libasound2`, `libgbm1`), inicializar Chromium y ejecutar la **Toma Maestra Continua V5**.
+- **Erradicación de Dependencia de Google Drive Web:**
+  - Al transferir los archivos directamente a través de `colab upload` y `colab download`, se elimina por completo la necesidad de montar `/content/drive` en el navegador y los errores de ventanas emergentes (`credential propagation was unsuccessful`).
+
+---
+
 ## [v3.8.0] - 2026-11-16
 
 ### 🎬 Suite de Producción V5: Arquitectura de Toma Maestra Continua (Zero White Flashes)
