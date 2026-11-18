@@ -64,10 +64,10 @@ BLOCKS = [
         "tag": "🎯 PASO 2 · RIESGO Y LOTAJE AUTOMÁTICO",
         "icon": "🎯",
         "text": (
-            "Definimos quince pips de Stop Loss y cuarenta y cinco de Take Profit. "
+            "Definimos veinte pips de Stop Loss y sesenta de Take Profit. "
             "La bitácora calcula al instante un ratio uno a tres punto cero. "
             "Con un riesgo del uno por ciento, AsTrade calcula automáticamente el lotaje exacto "
-            "sobre tu balance inicial, protegiendo tu cuenta de sobreapalancamiento."
+            "de cinco lotes sobre tu balance inicial, protegiendo tu cuenta de sobreapalancamiento."
         )
     },
     {
@@ -153,25 +153,25 @@ def to_phonetic_spanish(text: str) -> str:
         (r'\btrade\b', 'tréid'),
         (r'\bTrade\b', 'Tréid'),
 
-        # Take Profit y TP (Pronunciación en inglés estricta: Full Ti-Pi / Téik Prófit)
-        (r'\bFull TP\b', 'Full Ti-Pi'),
-        (r'\bfull tp\b', 'Full Ti-Pi'),
-        (r'\bTP\b', 'Ti-Pi'),
-        (r'\btp\b', 'Ti-Pi'),
+        # Take Profit y TP (Nombres en inglés técnico, Siglas en español según directiva)
+        (r'\bFull TP\b', 'Full Té Pé'),
+        (r'\bfull tp\b', 'Full Té Pé'),
+        (r'\bTP\b', 'Té Pé'),
+        (r'\btp\b', 'Té Pé'),
         (r'\bTake Profit\b', 'téik prófit'),
         (r'\btake profit\b', 'téik prófit'),
 
-        # Stop Loss y SL (Pronunciación en inglés: Stóp Los / Es-El)
+        # Stop Loss y SL (Nombres en inglés técnico, Siglas en español)
         (r'\bStop Loss\b', 'stóp los'),
         (r'\bstop loss\b', 'stóp los'),
-        (r'\bSL\b', 'es-el'),
-        (r'\bsl\b', 'es-el'),
+        (r'\bSL\b', 'Ese Ele'),
+        (r'\bsl\b', 'Ese Ele'),
 
-        # Break Even y BE (Pronunciación en inglés: Bréik Íven / Bi-I)
+        # Break Even y BE (Nombres en inglés técnico, Siglas en español)
         (r'\bBreak Even\b', 'bréik íven'),
         (r'\bbreak even\b', 'bréik íven'),
-        (r'\bBE\b', 'bi-i'),
-        (r'\bbe\b', 'bi-i'),
+        (r'\bBE\b', 'Bé E'),
+        (r'\bbe\b', 'Bé E'),
 
         # Órdenes de mercado
         (r'\bMarket Buy\b', 'Márket Bai'),

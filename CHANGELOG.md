@@ -5,6 +5,31 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.5] - 2026-11-18
+
+### 🎬 Tutorial #2 V7: Perfeccionamiento de Tendencia, Market Buy, Hora New York, Fonética Dual y Lotaje Limpio (5.00)
+- **Selección Visible de Tendencia a Favor:**
+  - Corrección del selector DOM en `#inputTendencia` asignando el valor exacto `'Favor'` correspondiente a las opciones nativas de `app.html`, garantizando que el campo muestre claramente *"Favor"* sin quedar vacío ni sin selección.
+- **Tipo de Orden Market Buy Sincronizada:**
+  - Corrección del selector al ID real `#inputOrden` (eliminando la referencia obsoleta a `#inputTipoOrden`) con valor `'Market Buy'`, logrando coincidencia visual absoluta con la narración de Jorge.
+- **Hora Realista de Sesión New York (09:30 AM):**
+  - Fijación explícita del campo `#inputHora` en `'09:30'`, representando con precisión la apertura institucional de Wall Street y erradicando la hora de madrugada (`02:46 AM`) previa.
+- **Fonética Dual Equilibrada (Siglas en Español, Términos Técnicos en Inglés):**
+  - Ajuste del motor fonético `to_phonetic_spanish()` en `generate_video_02_audio.py`:
+    - **Siglas habladas en español:** `TP` ➔ *"Té Pé"*, `Full TP` ➔ *"Full Té Pé"*, `BE` ➔ *"Bé E"*, `SL` ➔ *"Ese Ele"*.
+    - **Nombres técnicos completos en inglés:** `Take Profit` ➔ `/téik prófit/`, `Break Even` ➔ `/bréik íven/`, `Stop Loss` ➔ `/stóp los/`, `Market Buy` ➔ `/Márket Bai/`, `Drawdown` ➔ `/dróudaun/`.
+- **Lotaje Institucional Limpio (5.00 Lotes Exactos):**
+  - Sustitución de los parámetros de riesgo para eliminar cualquier cifra con carga popular o supersticiosa (como el 6.66 o el 13):
+    - Stop Loss fijado en **20 pips** y Take Profit en **60 pips** (Ratio R:R 1:3.00 exacto).
+    - Cálculo matemático transparente: \$1,000 USD de riesgo (1.0% de \$100,000 USD) entre (20 pips × \$10 USD/pip) = **5.00 lotes limpios**.
+    - Target de ganancia: 60 pips × 5.00 lotes × \$10 USD/pip = **+\$3,000 USD (+3.00%)**, impulsando la cuenta a **\$103,000.00 USD**.
+- **Calibración DOM del Selector de Lotaje:**
+  - Apuntado exacto del pulso y badge al contenedor oficial `#inputLotajeCalc` con invocación reactiva a `calculateRR()` y `calculatePositionSize()`.
+- **Renderizado 100% Cloud en Google Colab con GPU T4:**
+  - Filmación autónoma de las 3 escenas (`intro.mp4`, `app_flow_continuous.mp4`, `outro.mp4`) y ensamble cinemático completado en 10.03 minutos con 0% de sobrecarga local.
+
+---
+
 ## [v3.8.4] - 2026-11-17
 
 ### 🎬 Tutorial #2 V6: Correcciones Maestras de Intro, Navegación a Registro, Curva Ascendente (+3%) e Inglés Técnico

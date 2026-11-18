@@ -334,19 +334,22 @@ async def record_app_flow_continuous(p, manifest):
             withdrawals: []
         }};
 
-        if (typeof realAccounts !== 'undefined') {{
-            realAccounts.length = 0;
-            realAccounts.push(account);
-        }}
         if (typeof dbSet === 'function') {{
             await dbSet('trading_journal_real_accounts', [account]);
             await dbSet('trading_journal_data', []);
         }}
-        if (typeof renderGroups === 'function') {{
-            renderGroups();
+        if (typeof realAccounts !== 'undefined') {{
+            realAccounts.length = 0;
+            realAccounts.push(account);
+        }}
+        if (typeof trades !== 'undefined') {{
+            trades.length = 0;
         }}
         if (typeof loadDataForMode === 'function') {{
             await loadDataForMode();
+        }}
+        if (typeof renderGroups === 'function') {{
+            renderGroups();
         }}
     }}""")
     await asyncio.sleep(0.4)
@@ -419,6 +422,13 @@ async def record_app_flow_continuous(p, manifest):
     await asyncio.sleep(0.8)
 
     # Par EURUSD
+    await page.evaluate("""() => {
+        const elHora = document.getElementById('inputHora');
+        if (elHora) {
+            elHora.value = '09:30';
+            elHora.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }""")
     await page.evaluate("window.__glideCursorToElement('#inputPar', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
@@ -445,23 +455,23 @@ async def record_app_flow_continuous(p, manifest):
     }""")
     await asyncio.sleep(1.2)
 
-    # Tendencia a Favor
+    # Tendencia a Favor (opción 'Favor' en DOM)
     await page.evaluate("window.__glideCursorToElement('#inputTendencia', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputTendencia');
         if (el) {
-            el.value = 'A favor';
+            el.value = 'Favor';
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }""")
     await asyncio.sleep(1.0)
 
-    # Tipo de Orden: Market Buy
-    await page.evaluate("window.__glideCursorToElement('#inputTipoOrden', 450)")
+    # Tipo de Orden: Market Buy (elemento '#inputOrden' en DOM)
+    await page.evaluate("window.__glideCursorToElement('#inputOrden', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
-        const el = document.getElementById('inputTipoOrden');
+        const el = document.getElementById('inputOrden');
         if (el) {
             el.value = 'Market Buy';
             el.dispatchEvent(new Event('change', { bubbles: true }));
@@ -473,36 +483,36 @@ async def record_app_flow_continuous(p, manifest):
         await asyncio.sleep(rem2)
 
     # =========================================================================
-    # BLOQUE 3: STOP LOSS, TAKE PROFIT, R:R Y LOTAJE (26.42s — 46.10s)
+    # BLOQUE 3: STOP LOSS, TAKE PROFIT, R:R Y LOTAJE (26.42s — 46.56s)
     # =========================================================================
     b3 = blocks["block3_risk_lots"]
     print(f"\n🎯 [Bloque 3/6] {b3['title']} ({b3['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
-        window.__showLowerThird('🎯', '{b3['tag']}', 'SL 15 pips · TP 45 pips · Ratio R:R 1:3.00 · Riesgo 1.0% ($1,000 USD)');
+        window.__showLowerThird('🎯', '{b3['tag']}', 'SL 20 pips · TP 60 pips · Ratio R:R 1:3.00 · Riesgo 1.0% ($1,000 USD)');
     }}""")
     await asyncio.sleep(0.5)
 
-    # Stop Loss: 15 pips
+    # Stop Loss: 20 pips
     await page.evaluate("window.__glideCursorToElement('#inputPipsSL', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputPipsSL');
         if (el) {
-            el.value = '15';
+            el.value = '20';
             el.dispatchEvent(new Event('input', { bubbles: true }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }""")
     await asyncio.sleep(1.5)
 
-    # Take Profit: 45 pips
+    # Take Profit: 60 pips
     await page.evaluate("window.__glideCursorToElement('#inputPipsTP', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputPipsTP');
         if (el) {
-            el.value = '45';
+            el.value = '60';
             el.dispatchEvent(new Event('input', { bubbles: true }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
@@ -520,15 +530,16 @@ async def record_app_flow_continuous(p, manifest):
             el.dispatchEvent(new Event('input', { bubbles: true }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
-        if (typeof updateLotSizeRealTime === 'function') updateLotSizeRealTime();
+        if (typeof calculateRR === 'function') calculateRR();
+        if (typeof calculatePositionSize === 'function') calculatePositionSize();
     }""")
     await asyncio.sleep(2.0)
 
-    # Destacar cálculo de lotaje exacto (6.66 lotes sobre $100K)
-    lot_selector = "#lotSizeDisplay, #calculatedLotSize, #inputLotaje"
+    # Destacar cálculo de lotaje exacto (5.00 lotes sobre $100K)
+    lot_selector = "#inputLotajeCalc"
     await page.evaluate(f"""() => {{
         window.__pulseRingAround('{lot_selector}', 6);
-        window.__showCalloutBadge('{lot_selector}', '🧮', 'LOTAJE INSTITUCIONAL', '6.66 Lotes Calculados', '1.0% de Riesgo exacto ($1,000 USD) sobre Balance Inicial', 'right');
+        window.__showCalloutBadge('{lot_selector}', '🧮', 'LOTAJE INSTITUCIONAL', '5.00 Lotes Calculados', '1.0% de Riesgo exacto ($1,000 USD) sobre Balance Inicial', 'right');
     }}""")
     await asyncio.sleep(4.0)
 
