@@ -44,9 +44,9 @@ subprocess.run(['playwright', 'install-deps', 'chromium'], stdout=subprocess.DEV
 print("  -> Entorno preparado con Playwright Chromium y FFmpeg.")
 
 # 3. Ejecutar renderizado cinemático maestro
-print("\n[3/4] 🎬 Iniciando renderizado cinemático maestro (Toma Continua V5 — Tutorial #2)...")
+print("\n[3/4] 🎬 Iniciando renderizado cinemático maestro (Toma Continua V6 — Tutorial #2)...")
 render_script = os.path.join(TARGET_DIR, "scripts", "render", "render_video_02_astrade.py")
-cmd = [sys.executable, render_script]
+cmd = [sys.executable, render_script, "--force"]
 
 proc = subprocess.Popen(cmd, cwd=TARGET_DIR, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
 for line in proc.stdout:

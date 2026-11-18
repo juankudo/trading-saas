@@ -1,12 +1,12 @@
 """
-Generador de Audio Modular V2 — Tutorial #2 AsTrade
+Generador de Audio Modular V2 — Tutorial #2 AsTrade (V6)
 "Registro y Auditoría de Trades con Precisión Quirúrgica"
 
-Genera los 7 bloques de voz en off para el video de YouTube con Edge-TTS (es-MX-JorgeNeural),
-aplica el diccionario fonético de trading latinoamericano (to_phonetic_spanish),
-mide con precisión milimétrica la duración con FFprobe,
-ensambla la pista continua master (video_02_continuous_voice.mp3) y
-genera el manifest_v2.json con metadatos de sincronización temporal.
+Genera:
+1. intro.mp3 (Locución cinemática del título: "Tutorial dos: Registro y Auditoría de Trades...")
+2. Bloques 1 a 6 de la toma continua en app.html ensamblados en video_02_continuous_voice.mp3
+3. outro.mp3 (Llamado a la acción institucional en astradehub.com y teaser de Tutorial #3)
+4. manifest_v2.json con metadatos de sincronización fonética con JorgeNeural (es-MX).
 """
 
 import os
@@ -26,11 +26,17 @@ VOICE = "es-MX-JorgeNeural"
 RATE = "+0%"
 VOLUME = "+0%"
 
+INTRO_BLOCK = {
+    "id": "intro",
+    "title": "Intro Oficial — Tutorial #2",
+    "text": "Tutorial dos: Registro y Auditoría de Trades con Precisión Quirúrgica."
+}
+
 BLOCKS = [
     {
         "id": "block1_intro_continuity",
         "index": 1,
-        "title": "Introducción y Continuidad: Acceso a Cuenta Fondeo 100K FTMO",
+        "title": "Continuidad: Acceso a Cuenta Fondeo 100K FTMO",
         "tag": "⚡ CONTINUIDAD · CUENTA FONDEO 100K",
         "icon": "⚡",
         "text": (
@@ -80,14 +86,15 @@ BLOCKS = [
     {
         "id": "block5_post_trade_audit",
         "index": 5,
-        "title": "Paso 4: Auditoría Post-Trade, Captura Después y Cierre en Full TP",
+        "title": "Paso 4: Navegación a Registro de Trades, Edición de Orden y Cierre Full TP",
         "tag": "🎯 PASO 4 · AUDITORÍA POST-TRADE (FULL TP)",
         "icon": "🎯",
         "text": (
-            "Al tocar el objetivo, abrimos la edición de la orden. "
-            "Actualizamos el estado a Full TP, pegamos la captura de cierre en la columna Después "
-            "y registramos nuestras notas de gestión. Esta auditoría sistemática es el hábito definitivo "
-            "que separa a los traders rentables de la mayoría."
+            "Al tocar el objetivo, nos dirigimos a la pestaña Registro de Trades para auditar la orden. "
+            "También dispones de accesos rápidos desde la sección de cuentas. "
+            "Hacemos clic en el icono de edición, actualizamos el estado a Full TP, "
+            "pegamos la captura de cierre en la columna Después y registramos nuestras notas de gestión. "
+            "Esta auditoría sistemática es el hábito definitivo que separa a los traders rentables de la mayoría."
         )
     },
     {
@@ -102,26 +109,23 @@ BLOCKS = [
             "mientras el colchón de drawdown permanece cien por ciento intacto. "
             "En la pestaña Galería, revisas tu análisis completo lado a lado."
         )
-    },
-    {
-        "id": "block7_outro_cta",
-        "index": 7,
-        "title": "Outro Institucional, Llamado a la Acción y Teaser Tutorial #3",
-        "tag": "🚀 OUTRO · ASTRADE HUB",
-        "icon": "🚀",
-        "text": (
-            "Comienza hoy tu prueba gratuita de siete días en astradehub punto com. "
-            "En el próximo tutorial: cómo blindar tu cuenta dominando el control de drawdown."
-        )
     }
 ]
+
+OUTRO_BLOCK = {
+    "id": "outro",
+    "title": "Outro Institucional, Llamado a la Acción y Teaser Tutorial #3",
+    "text": (
+        "Comienza hoy tu prueba gratuita de siete días en astradehub punto com. "
+        "En el próximo tutorial: cómo blindar tu cuenta dominando el control de drawdown."
+    )
+}
 
 
 def to_phonetic_spanish(text: str) -> str:
     """
-    Aplica normalización fonética rigurosa al español latinoamericano para que
-    JorgeNeural pronuncie con dicción nativa y natural todos los términos
-    financieros, pares de divisas, métricas y marcas.
+    Aplica normalización fonética rigurosa con dicción nativa en español para marcas y narrativa,
+    y fonética anglosajona estricta (en inglés) para los términos técnicos de trading.
     """
     replacements = [
         # Marcas y Dominios
@@ -137,7 +141,7 @@ def to_phonetic_spanish(text: str) -> str:
         (r'\bTrading View\b', 'Tréiding Viú'),
         (r'\bCtrl\+V\b', 'Control V'),
 
-        # Terminología de Trading con Fonética Anglosajona Impecable
+        # Terminología de Trading con Fonética Anglosajona en Inglés Impecable
         (r'\btrading\b', 'tréiding'),
         (r'\bTrading\b', 'Tréiding'),
         (r'\btraders\b', 'tréiders'),
@@ -148,19 +152,34 @@ def to_phonetic_spanish(text: str) -> str:
         (r'\bTrades\b', 'Tréids'),
         (r'\btrade\b', 'tréid'),
         (r'\bTrade\b', 'Tréid'),
-        (r'\bFull TP\b', 'Ful Té Pé'),
-        (r'\bfull tp\b', 'Ful Té Pé'),
-        (r'\bStop Loss\b', 'stóp los'),
-        (r'\bstop loss\b', 'stóp los'),
+
+        # Take Profit y TP (Pronunciación en inglés estricta: Full Ti-Pi / Téik Prófit)
+        (r'\bFull TP\b', 'Full Ti-Pi'),
+        (r'\bfull tp\b', 'Full Ti-Pi'),
+        (r'\bTP\b', 'Ti-Pi'),
+        (r'\btp\b', 'Ti-Pi'),
         (r'\bTake Profit\b', 'téik prófit'),
         (r'\btake profit\b', 'téik prófit'),
+
+        # Stop Loss y SL (Pronunciación en inglés: Stóp Los / Es-El)
+        (r'\bStop Loss\b', 'stóp los'),
+        (r'\bstop loss\b', 'stóp los'),
+        (r'\bSL\b', 'es-el'),
+        (r'\bsl\b', 'es-el'),
+
+        # Break Even y BE (Pronunciación en inglés: Bréik Íven / Bi-I)
+        (r'\bBreak Even\b', 'bréik íven'),
+        (r'\bbreak even\b', 'bréik íven'),
+        (r'\bBE\b', 'bi-i'),
+        (r'\bbe\b', 'bi-i'),
+
+        # Órdenes de mercado
         (r'\bMarket Buy\b', 'Márket Bai'),
         (r'\bmarket buy\b', 'márket bai'),
         (r'\bMarket Sell\b', 'Márket Sel'),
         (r'\bmarket sell\b', 'márket sel'),
-        (r'\bBreak Even\b', 'Bréik Íven'),
-        (r'\bbreak even\b', 'bréik íven'),
-        (r'\bBE\b', 'Bé E'),
+
+        # Métricas y evaluación
         (r'\bWin Rate\b', 'uín reit'),
         (r'\bwin rate\b', 'uín reit'),
         (r'\bProfit Target\b', 'prófit tárguet'),
@@ -178,7 +197,7 @@ def to_phonetic_spanish(text: str) -> str:
         (r'\bAs Tréid\b', 'As Trade'),
         (r'\bas tréid\b', 'as trade'),
 
-        # Pares de Divisas y Cripto
+        # Pares de Divisas
         (r'\bEURUSD\b', 'Euro Dólar'),
         (r'\bXAUUSD\b', 'Oro Dólar'),
         (r'\bGBPUSD\b', 'Libra Dólar'),
@@ -229,7 +248,6 @@ def concatenate_audio_files(input_files, output_file: str):
     concat_list_path = os.path.join(AUDIO_DIR, "concat_list.txt")
     with open(concat_list_path, "w", encoding="utf-8") as f:
         for fpath in input_files:
-            # Reemplazar backslashes para FFmpeg concat demuxer
             clean_path = fpath.replace("\\", "/")
             f.write(f"file '{clean_path}'\n")
 
@@ -257,44 +275,45 @@ def concatenate_audio_files(input_files, output_file: str):
     return total_dur
 
 
-async def generate_block_audio(block: dict) -> dict:
-    mp3_name = f"{block['id']}.mp3"
-    mp3_path = os.path.join(AUDIO_DIR, mp3_name)
-    print(f"🎙️ Generando audio: {block['id']} ({block['title']})...")
-
+async def generate_single_audio(block: dict, out_name: str) -> dict:
+    mp3_path = os.path.join(AUDIO_DIR, out_name)
     spoken_text = to_phonetic_spanish(block["text"])
-    print(f"   -> Texto fonético: \"{spoken_text}\"")
+    print(f"🎙️ Generando {out_name} (\"{spoken_text}\")...")
 
     communicate = edge_tts.Communicate(spoken_text, VOICE, rate=RATE, volume=VOLUME)
     await communicate.save(mp3_path)
 
     dur = get_audio_duration(mp3_path)
-    print(f"   -> Guardado: {mp3_name} | Duración: {dur:.2f}s")
+    print(f"   -> Guardado: {out_name} | Duración: {dur:.2f}s")
 
-    block_result = dict(block)
-    block_result["text_phonetic"] = spoken_text
-    block_result["audio_file"] = mp3_name
-    block_result["audio_path"] = f"scratch/video_02/audio/{mp3_name}"
-    block_result["audio_path_abs"] = os.path.abspath(mp3_path)
-    block_result["duration_seconds"] = round(dur, 2)
-    return block_result
+    result = dict(block)
+    result["text_phonetic"] = spoken_text
+    result["audio_file"] = out_name
+    result["audio_path"] = f"scratch/video_02/audio/{out_name}"
+    result["audio_path_abs"] = os.path.abspath(mp3_path)
+    result["duration_seconds"] = round(dur, 2)
+    return result
 
 
 async def main():
     print("=" * 75)
-    print("🚀 GENERADOR DE AUDIO MODULAR V2 — TUTORIAL #2 ASTRADE")
-    print(f"🎙️ Motor: Edge-TTS | Voz: {VOICE} | Bloques: {len(BLOCKS)}")
+    print("🚀 GENERADOR DE AUDIO MODULAR V2 — TUTORIAL #2 ASTRADE (V6)")
+    print(f"🎙️ Motor: Edge-TTS | Voz: {VOICE} | Dicción: Inglés Técnico")
     print(f"📁 Directorio de salida: {AUDIO_DIR}")
     print("=" * 75)
 
+    # 1. Generar audio para Intro Cinemático (Escena 1)
+    intro_res = await generate_single_audio(INTRO_BLOCK, "intro.mp3")
+
+    # 2. Generar bloques de la toma continua (Escena 2: app.html)
     manifest_blocks = []
     blocks_by_id = {}
-    total_duration = 0.0
+    total_continuous_dur = 0.0
     generated_files = []
 
     for block in BLOCKS:
-        res = await generate_block_audio(block)
-        start_time = round(total_duration, 2)
+        res = await generate_single_audio(block, f"{block['id']}.mp3")
+        start_time = round(total_continuous_dur, 2)
         end_time = round(start_time + res["duration_seconds"], 2)
         res["cumulative_start"] = start_time
         res["cumulative_end"] = end_time
@@ -302,18 +321,23 @@ async def main():
         manifest_blocks.append(res)
         blocks_by_id[res["id"]] = res
         generated_files.append(res["audio_path_abs"])
-        total_duration = end_time
+        total_continuous_dur = end_time
 
-    # Generar pista continua
+    # 3. Concatenar pista continua de la aplicación
     continuous_mp3_path = os.path.join(AUDIO_DIR, "video_02_continuous_voice.mp3")
     continuous_dur = concatenate_audio_files(generated_files, continuous_mp3_path)
 
+    # 4. Generar audio para Outro Institucional (Escena 3)
+    outro_res = await generate_single_audio(OUTRO_BLOCK, "outro.mp3")
+
+    # 5. Generar manifest_v2.json
     manifest_data = {
         "tutorial_id": "video_02_trades_astrade",
         "voice": VOICE,
         "rate": RATE,
         "volume": VOLUME,
-        "total_duration_seconds": round(total_duration, 2),
+        "intro": intro_res,
+        "outro": outro_res,
         "continuous_duration_seconds": round(continuous_dur, 2),
         "continuous_audio_file": "video_02_continuous_voice.mp3",
         "continuous_audio_path": "scratch/video_02/audio/video_02_continuous_voice.mp3",
@@ -327,18 +351,8 @@ async def main():
 
     print("=" * 75)
     print(f"✅ MANIFEST GENERADO EXITOSAMENTE: {manifest_path}")
-    print(f"⏱️ DURACIÓN TOTAL DE LOCUCIÓN: {total_duration:.2f}s ({total_duration / 60:.2f} min)")
-    print(f"🎵 PISTA CONTINUA MAESTRA: {continuous_mp3_path}")
+    print(f"⏱️ Intro: {intro_res['duration_seconds']}s | App Continua: {continuous_dur:.2f}s | Outro: {outro_res['duration_seconds']}s")
     print("=" * 75)
-
-    # Imprimir tabla resumen
-    print("\nRESUMEN DE BLOQUES GENERADOS:")
-    print("-" * 75)
-    print(f"{'#':<3} {'ID':<28} {'DUR (s)':<8} {'INICIO':<8} {'FIN':<8}")
-    print("-" * 75)
-    for b in manifest_blocks:
-        print(f"{b['index']:<3} {b['id']:<28} {b['duration_seconds']:<8.2f} {b['cumulative_start']:<8.2f} {b['cumulative_end']:<8.2f}")
-    print("-" * 75)
 
 
 if __name__ == "__main__":

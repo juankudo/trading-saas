@@ -1,22 +1,24 @@
 """
-AsTrade Studio Master Render Pipeline — Tutorial #2 (V5)
+AsTrade Studio Master Render Pipeline — Tutorial #2 (V6)
 "Registro y Auditoría de Trades con Precisión Quirúrgica"
-Toma Maestra Continua: Single Seamless Continuous Recording for app.html.
 
-Key Architecture Features:
-- Zero-Blur Policy: Strictly no `filter: blur(...)` or `backdrop-filter: blur(...)`.
-  All elements remain 100% sharp with neon borders and solid dark backgrounds.
-- Single Continuous Take: The Chromium session NEVER reloads or jumps.
-- Full 7-block narrative synchronization anchored to manifest_v2.json:
-    1. Bloque 1: Intro cinemática (intro_outro_motion.html?mode=intro&tutorial=2) y cuenta FTMO 100K.
-    2. Bloque 2: Selección y contexto de cuenta, apertura de #tradeModal, par EURUSD, sesión New York, Market Buy.
-    3. Bloque 3: Gestión de riesgo institucional, SL 15 pips, TP 45 pips (R:R 1:3.00), Riesgo 1.0% ($1,000 USD), cálculo de 6.66 lotes.
-    4. Bloque 4: Evidencia gráfica antes de entrar (before_setup_eurusd.png), notas técnicas y estado Activa.
-    5. Bloque 5: Auditoría post-trade, edición, conmutación a Full TP (+3.00% / +$3,000 USD), captura después (after_fulltp_eurusd.png).
-    6. Bloque 6: Impacto en evaluación prop firm: balance $103,000 USD, Target al 37.5%, Drawdown 100% intacto y Galería visual.
-    7. Bloque 7: Outro oficial (intro_outro_motion.html?mode=outro&tutorial=2) con astradehub.com y teaser de Tutorial #3.
-- Master voice track (video_02_continuous_voice.mp3) + BGM ducking at volume=0.065.
-- Output: media/youtube_tutorials/AsTrade_Tutorial_02_Trades_1080p.mp4.
+Arquitectura de Producción de 3 Escenas Limpias:
+1. Escena 1 (Intro Cinemático): intro_outro_motion.html?mode=intro&tutorial=2
+   - Muxing sincronizado con Jorge leyendo el título del tutorial.
+   - Cero parpadeos ni fotogramas vacíos.
+2. Escena 2 (Toma Continua en App): app.html
+   - Cuenta FTMO 100K pre-cargada con balanceActual dinámico (null).
+   - Zero-Blur Global: Interfaz 100% nítida, sin desenfoques de fondo.
+   - Flujo operativo continuo en 6 bloques fonéticamente sincronizados:
+       * Bloque 1: Vista general de Tus Cuentas y entrada a Métricas.
+       * Bloque 2: Clic en Nueva Entrada, selección EURUSD, New York, Market Buy.
+       * Bloque 3: Stop Loss 15 pips, Take Profit 45 pips (R:R 1:3.00), Riesgo 1.0% ($1,000 USD), cálculo de 6.66 lotes.
+       * Bloque 4: Bitácora visual Antes, pegado de captura TradingView, orden Activa.
+       * Bloque 5: Navegación visual a pestaña Registro de Trades, fila activa, botón editar (fa-pen), cambio a Full TP, pegado captura Después y notas.
+       * Bloque 6: Visualización de impacto: gráfica de evolución subiendo limpiamente a $103,000 (+3.00%), Retorno Total en verde (+3.00%), balance actual en $103,000 USD, pestaña Metas (Target al 37.5% y DD 100% intacto) y pestaña Galería.
+3. Escena 3 (Outro Institucional): intro_outro_motion.html?mode=outro&tutorial=2
+   - astradehub.com y teaser del Tutorial #3.
+4. Ensamble Maestro: Disolución cruzada suave de 0.5s y música de fondo atenuada (ducking volume=0.065).
 """
 
 import os
@@ -25,6 +27,7 @@ import json
 import time
 import shutil
 import asyncio
+import base64
 import subprocess
 import threading
 import http.server
@@ -43,7 +46,6 @@ BG_MUSIC = os.path.join(BASE_DIR, "media", "video1_assets", "music", "happy-beat
 CHART_BEFORE = os.path.join(BASE_DIR, "media", "video2_assets", "charts", "before_setup_eurusd.png")
 CHART_AFTER = os.path.join(BASE_DIR, "media", "video2_assets", "charts", "after_fulltp_eurusd.png")
 MANIFEST_PATH = os.path.join(AUDIO_DIR, "manifest_v2.json")
-MASTER_VOICE = os.path.join(AUDIO_DIR, "video_02_continuous_voice.mp3")
 MOTION_ENGINE_JS = os.path.join(BASE_DIR, "scripts", "render", "studio_motion_engine.js")
 
 PORT = 8089
@@ -103,24 +105,106 @@ def load_manifest():
 
 
 # -------------------------------------------------------------
-# 3. TOMA MAESTRA CONTINUA PLAYWRIGHT (110.40s)
+# 3. ESCENA 1: INTRO CINEMÁTICO (5.40s)
 # -------------------------------------------------------------
-async def record_video_02_continuous(p, manifest):
-    total_duration = manifest.get("continuous_duration_seconds", 110.4)
-    raw_dir = os.path.join(SCENES_DIR, "raw_video_02")
-    raw_mp4 = os.path.join(SCENES_DIR, "raw_video_02.mp4")
+async def record_intro(p, manifest):
+    scene_id = "intro"
+    intro_info = manifest.get("intro", {})
+    duration = intro_info.get("duration_seconds", 5.40) + 0.8  # Margen de animación y disolución
+    scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
+    audio_path = os.path.join(AUDIO_DIR, "intro.mp3")
 
-    if not "--force" in sys.argv and os.path.exists(raw_mp4) and os.path.getsize(raw_mp4) > 1000000:
-        print(f"⏩ Checkpoint activo para grabación cruda ({raw_mp4}). Saltando Playwright...")
-        return raw_mp4
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 300000:
+        print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
+        return scene_mp4
 
+    print(f"\n🎬 [1/3] Filmando Escena Intro Cinemático ({duration:.2f}s)...")
+    raw_dir = os.path.join(SCENES_DIR, f"raw_{scene_id}")
+    shutil.rmtree(raw_dir, ignore_errors=True)
+    os.makedirs(raw_dir, exist_ok=True)
+
+    browser = await p.chromium.launch(
+        headless=True,
+        args=[
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--background-color=0b0f19",
+            "--window-size=1920,1080"
+        ]
+    )
+    context = await browser.new_context(
+        viewport={"width": 1920, "height": 1080},
+        record_video_dir=raw_dir,
+        record_video_size={"width": 1920, "height": 1080}
+    )
+
+    page = await context.new_page()
+    try:
+        cdp = await context.new_cdp_session(page)
+        await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
+            "color": {"r": 11, "g": 15, "b": 25, "a": 1}
+        })
+    except Exception:
+        pass
+
+    url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=intro&tutorial=2"
+    await page.goto(url, wait_until="domcontentloaded")
+    await asyncio.sleep(duration - 1.0)
+    try:
+        await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
+    except Exception:
+        pass
+    await asyncio.sleep(1.0)
+
+    await page.close()
+    await context.close()
+    await browser.close()
+
+    webms = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
+    if not webms:
+        raise RuntimeError("No se encontró WebM para intro")
+    raw_webm = webms[0]
+
+    # Mux with audio and pre-roll trim
+    mux_cmd = [
+        FFMPEG_EXE, "-y",
+        "-ss", "0.150",
+        "-i", raw_webm,
+        "-i", audio_path,
+        "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
+        "-map", "[v]",
+        "-map", "1:a",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "18",
+        "-c:a", "aac", "-b:a", "192k",
+        "-t", f"{duration:.3f}",
+        scene_mp4
+    ]
+    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"✅ Intro completado: {scene_mp4}")
+    return scene_mp4
+
+
+# -------------------------------------------------------------
+# 4. ESCENA 2: TOMA CONTINUA EN APP.HTML (108.62s)
+# -------------------------------------------------------------
+async def record_app_flow_continuous(p, manifest):
+    scene_id = "app_flow_continuous"
+    cont_audio = os.path.join(AUDIO_DIR, "video_02_continuous_voice.mp3")
+    duration = manifest.get("continuous_duration_seconds", 108.62)
+    scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
+
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 1000000:
+        print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
+        return scene_mp4
+
+    raw_dir = os.path.join(SCENES_DIR, f"raw_{scene_id}")
     shutil.rmtree(raw_dir, ignore_errors=True)
     os.makedirs(raw_dir, exist_ok=True)
 
     print("\n" + "=" * 75)
-    print(f"🎬 INICIANDO TOMA MAESTRA CONTINUA V5 ({total_duration:.2f}s)")
-    print("   -> Sincronización Estricta con manifest_v2.json y JorgeNeural")
-    print("   -> Cumplimiento Obligatorio: Zero-Blur Standard (Nitidez 100%)")
+    print(f"🎬 [2/3] Filmando Flujo Operativo Continuo en app.html ({duration:.2f}s)")
+    print("   -> Cero Blur Global (Zero-Blur Standard)")
+    print("   -> Sincronización Fonética con manifest_v2.json")
     print("=" * 75)
 
     browser = await p.chromium.launch(
@@ -138,7 +222,7 @@ async def record_video_02_continuous(p, manifest):
         record_video_size={"width": 1920, "height": 1080}
     )
 
-    # Inyección preventiva: sesión activa institucional, cero tours y tipografía nítida
+    # Inyección preventiva en localStorage
     await context.add_init_script("""
         localStorage.setItem('trading_saas_user_session', JSON.stringify({
             id: 'usr_astrade_pro',
@@ -173,6 +257,10 @@ async def record_video_02_continuous(p, manifest):
             html, body {
                 background-color: #0b0f19 !important;
             }
+            *, *::before, *::after {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
             #tourOverlay, .tour-overlay, #tourSvgMask, #tourTooltip, #tourHighlightRing,
             #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element,
             .fondeo-celebration, .fondeo-confetti, #confettiCanvas {
@@ -181,7 +269,11 @@ async def record_video_02_continuous(p, manifest):
                 opacity: 0 !important;
                 pointer-events: none !important;
             }
-            /* Tipografía institucional nítida para YouTube 1080p sin distorsión de coordenadas */
+            #tradeModal, #sessionModal {
+                backdrop-filter: none !important;
+                background-color: rgba(5, 8, 18, 0.6) !important;
+            }
+            /* Tipografía nítida para YouTube 1080p */
             html {
                 font-size: 17.5px !important;
             }
@@ -197,7 +289,6 @@ async def record_video_02_continuous(p, manifest):
     """)
 
     page = await context.new_page()
-    page.on("pageerror", lambda err: print(f"[Browser Error] {err}"))
     try:
         cdp = await context.new_cdp_session(page)
         await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
@@ -208,24 +299,23 @@ async def record_video_02_continuous(p, manifest):
 
     url = f"http://127.0.0.1:{PORT}/app.html"
     await page.goto(url, wait_until="domcontentloaded")
-    await asyncio.sleep(0.4)
+    await asyncio.sleep(0.3)
 
-    # Inyectar Studio Motion Engine
+    # Inyectar Motion Engine
     with open(MOTION_ENGINE_JS, "r", encoding="utf-8") as f:
         engine_code = f.read()
     await page.evaluate(engine_code)
     await page.evaluate("window.__initStudioMotionEngine()")
 
-    # Pre-cargar cuenta FTMO 100K y estructurar Overlays Intro/Outro dentro de app.html
+    # Pre-cargar cuenta FTMO 100K con balanceActual: null (para proyección dinámica de trades)
     await page.evaluate(f"""async () => {{
-        // 1. Inyectar Cuenta Institucional FTMO 100K
         const account = {{
             id: 1731800000000,
             name: "Fondeo 100K FTMO",
             pair: "",
             startDate: null,
             balance: 100000,
-            balanceActual: 100000,
+            balanceActual: null, // Dinámico para reflejar +3% automáticamente
             date: new Date().toLocaleDateString('es-ES'),
             stage: "prueba",
             goal: {{
@@ -251,12 +341,6 @@ async def record_video_02_continuous(p, manifest):
         if (typeof dbSet === 'function') {{
             await dbSet('trading_journal_real_accounts', [account]);
             await dbSet('trading_journal_data', []);
-            await dbSet('trading_journal_real_balance_history', [{{
-                id: 1,
-                accountId: account.id,
-                balance: 100000,
-                date: new Date().toISOString()
-            }}]);
         }}
         if (typeof renderGroups === 'function') {{
             renderGroups();
@@ -264,94 +348,67 @@ async def record_video_02_continuous(p, manifest):
         if (typeof loadDataForMode === 'function') {{
             await loadDataForMode();
         }}
-        if (typeof renderAll === 'function') {{
-            renderAll();
-        }}
-
-        // 2. Crear Overlays Intro y Outro Iframe de Máxima Nitidez
-        const introFrame = document.createElement('iframe');
-        introFrame.id = 'studio-intro-frame';
-        introFrame.src = 'http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=intro&tutorial=2&title=' + encodeURIComponent('Registro y Auditoría de Trades') + '&subtitle=' + encodeURIComponent('Cálculo de riesgo, ratio R:R y capturas técnicas');
-        introFrame.style.cssText = 'position: fixed; top: 0; left: 0; width: 1920px; height: 1080px; border: none; z-index: 9999980; background: #0b0f19; transition: opacity 0.75s ease; opacity: 1;';
-        document.body.appendChild(introFrame);
-
-        const outroFrame = document.createElement('iframe');
-        outroFrame.id = 'studio-outro-frame';
-        outroFrame.src = 'about:blank';
-        outroFrame.style.cssText = 'position: fixed; top: 0; left: 0; width: 1920px; height: 1080px; border: none; z-index: 9999980; background: #0b0f19; transition: opacity 0.75s ease; opacity: 0; pointer-events: none; display: none;';
-        document.body.appendChild(outroFrame);
     }}""")
+    await asyncio.sleep(0.4)
 
-    # Timestamp de inicio de la coreografía
     t_start = time.time()
     blocks = manifest["blocks_by_id"]
 
     # =========================================================================
-    # BLOQUE 1: INTRO CINEMÁTICA Y CUENTA FONDEO 100K (0.00s — 12.31s)
+    # BLOQUE 1: CONTINUIDAD & ENTRADA A CUENTA FONDEO 100K (0.00s — 12.31s)
     # =========================================================================
     b1 = blocks["block1_intro_continuity"]
-    print(f"\n⚡ [Bloque 1/7] {b1['title']} ({b1['duration_seconds']}s)...")
+    print(f"\n⚡ [Bloque 1/6] {b1['title']} ({b1['duration_seconds']}s)...")
 
-    # Dejar correr la animación del Intro Iframe durante los primeros 4.8s
-    await asyncio.sleep(4.8)
+    await page.evaluate(f"""() => {{
+        window.__showLowerThird('⚡', '{b1['tag']}', 'Acceso y Auditoría: Cuenta Fondeo 100K FTMO');
+    }}""")
+    await asyncio.sleep(1.0)
 
-    # Desvanecer Intro Iframe suavemente para revelar app.html y panel de cuentas
-    await page.evaluate("""() => {
-        const frame = document.getElementById('studio-intro-frame');
-        if (frame) {
-            frame.style.opacity = '0';
-            setTimeout(() => { frame.style.display = 'none'; }, 750);
-        }
-    }""")
-    await asyncio.sleep(0.8)
-
-    # Mostrar Lower-Third y destacar la tarjeta de la cuenta FTMO 100K
     account_card = "#sessions-grid > div:first-child"
     btn_enter_card = '#sessions-grid > div:first-child button[data-account-action="metrics"]'
 
     await page.evaluate(f"""() => {{
-        window.__showLowerThird('⚡', '{b1['tag']}', 'Acceso y Auditoría: Cuenta Fondeo 100K FTMO');
         window.__pulseRingAround('{account_card}', 8);
+        window.__showCalloutBadge('{account_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K FTMO', 'Fase 1: $100,000 USD | Target 8% | Max DD 10%', 'right');
     }}""")
-    await asyncio.sleep(1.5)
+    await asyncio.sleep(4.5)
 
-    # Deslizar cursor hacia el botón de entrada de la tarjeta
-    await page.evaluate("(sel) => window.__glideCursorToElement(sel, 750)", btn_enter_card)
-    await asyncio.sleep(0.9)
+    await page.evaluate("""() => {
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
+    }""")
+    await page.evaluate("(sel) => window.__glideCursorToElement(sel, 650)", btn_enter_card)
+    await asyncio.sleep(0.8)
 
-    # Clic con ripple para entrar a la cuenta
     await page.evaluate("window.__clickRipple()")
     await asyncio.sleep(0.3)
     await page.evaluate("""(sel) => {
-        window.__removePulseRing();
         const btn = document.querySelector(sel);
         if (btn) btn.click();
         if (typeof enterGroup === 'function') enterGroup(1731800000000);
     }""", btn_enter_card)
     await asyncio.sleep(1.0)
 
-    # Esperar hasta fin del bloque 1 según manifest (12.31s)
     rem1 = b1["cumulative_end"] - (time.time() - t_start)
     if rem1 > 0:
         await asyncio.sleep(rem1)
 
     # =========================================================================
-    # BLOQUE 2: APERTURA Y PARÁMETROS OPERATIVOS (12.31s — 26.42s)
+    # BLOQUE 2: NUEVA ENTRADA Y PARÁMETROS OPERATIVOS (12.31s — 26.42s)
     # =========================================================================
     b2 = blocks["block2_modal_setup"]
-    print(f"\n📊 [Bloque 2/7] {b2['title']} ({b2['duration_seconds']}s)...")
+    print(f"\n📊 [Bloque 2/6] {b2['title']} ({b2['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
         window.__showLowerThird('📊', '{b2['tag']}', 'Terminal Operativa: Selección EURUSD en New York');
     }}""")
     await asyncio.sleep(0.5)
 
-    # Planeo del cursor hacia "#btn-new-trade"
     btn_trade = "#btn-new-trade"
-    await page.evaluate(f"window.__glideCursorToElement('{btn_trade}', 650)")
+    await page.evaluate(f"window.__glideCursorToElement('{btn_trade}', 600)")
     await asyncio.sleep(0.8)
 
-    # Clic para abrir el modal
     await page.evaluate("window.__clickRipple()")
     await asyncio.sleep(0.3)
     await page.evaluate(f"""() => {{
@@ -361,15 +418,9 @@ async def record_video_02_continuous(p, manifest):
     }}""")
     await asyncio.sleep(0.8)
 
-    # Callout badge flotante con parámetros
-    await page.evaluate("""() => {
-        window.__showCalloutBadge('#tradeModal', '📊', 'SETUP TÉCNICO', 'Confluencias de Mercado', 'EURUSD · Sesión NY · Tendencia a Favor', 'bottom');
-    }""")
-    await asyncio.sleep(1.2)
-
-    # Selección de Par: EURUSD
-    await page.evaluate("window.__glideCursorToElement('#inputPar', 500)")
-    await asyncio.sleep(0.6)
+    # Par EURUSD
+    await page.evaluate("window.__glideCursorToElement('#inputPar', 450)")
+    await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputPar');
         if (el) {
@@ -382,9 +433,9 @@ async def record_video_02_continuous(p, manifest):
     }""")
     await asyncio.sleep(1.2)
 
-    # Selección de Sesión: New York
-    await page.evaluate("window.__glideCursorToElement('#inputSesion', 500)")
-    await asyncio.sleep(0.6)
+    # Sesión New York
+    await page.evaluate("window.__glideCursorToElement('#inputSesion', 450)")
+    await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputSesion');
         if (el) {
@@ -394,128 +445,139 @@ async def record_video_02_continuous(p, manifest):
     }""")
     await asyncio.sleep(1.2)
 
-    # Confirmar Tendencia a Favor
+    # Tendencia a Favor
     await page.evaluate("window.__glideCursorToElement('#inputTendencia', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputTendencia');
         if (el) {
-            el.value = 'Favor';
+            el.value = 'A favor';
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }""")
     await asyncio.sleep(1.0)
 
-    # Tipo de orden: Market Buy
-    await page.evaluate("window.__glideCursorToElement('#inputOrden', 450)")
+    # Tipo de Orden: Market Buy
+    await page.evaluate("window.__glideCursorToElement('#inputTipoOrden', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
-        const el = document.getElementById('inputOrden');
+        const el = document.getElementById('inputTipoOrden');
         if (el) {
             el.value = 'Market Buy';
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
     }""")
-    await asyncio.sleep(0.8)
 
-    # Esperar hasta fin del bloque 2 según manifest (26.42s)
     rem2 = b2["cumulative_end"] - (time.time() - t_start)
     if rem2 > 0:
         await asyncio.sleep(rem2)
 
     # =========================================================================
-    # BLOQUE 3: RIESGO, STOP LOSS, TAKE PROFIT Y LOTAJE AUTOMÁTICO (26.42s — 46.10s)
+    # BLOQUE 3: STOP LOSS, TAKE PROFIT, R:R Y LOTAJE (26.42s — 46.10s)
     # =========================================================================
     b3 = blocks["block3_risk_lots"]
-    print(f"\n🎯 [Bloque 3/7] {b3['title']} ({b3['duration_seconds']}s)...")
+    print(f"\n🎯 [Bloque 3/6] {b3['title']} ({b3['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
-        window.__hideCalloutBadge();
-        window.__showLowerThird('🎯', '{b3['tag']}', 'SL 15 pips, TP 45 pips (R:R 1:3.0) y 6.66 Lotes');
+        window.__showLowerThird('🎯', '{b3['tag']}', 'SL 15 pips · TP 45 pips · Ratio R:R 1:3.00 · Riesgo 1.0% ($1,000 USD)');
     }}""")
     await asyncio.sleep(0.5)
 
-    # Typewriter en Stop Loss: 15 pips
-    await page.evaluate("window.__glideCursorToElement('#inputPipsSL', 500)")
-    await asyncio.sleep(0.6)
-    await page.evaluate("window.__typeIntoInput('#inputPipsSL', '15', 50)")
+    # Stop Loss: 15 pips
+    await page.evaluate("window.__glideCursorToElement('#inputPipsSL', 450)")
+    await asyncio.sleep(0.5)
+    await page.evaluate("""() => {
+        const el = document.getElementById('inputPipsSL');
+        if (el) {
+            el.value = '15';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    }""")
     await asyncio.sleep(1.5)
 
-    # Typewriter en Take Profit: 45 pips
-    await page.evaluate("window.__glideCursorToElement('#inputPipsTP', 500)")
-    await asyncio.sleep(0.6)
-    await page.evaluate("window.__typeIntoInput('#inputPipsTP', '45', 50)")
-    await asyncio.sleep(1.5)
-
-    # Resaltar Ratio R:R (1:3.00) con anillo de pulso nítido
+    # Take Profit: 45 pips
+    await page.evaluate("window.__glideCursorToElement('#inputPipsTP', 450)")
+    await asyncio.sleep(0.5)
     await page.evaluate("""() => {
-        if (typeof calculateRR === 'function') calculateRR();
-        window.__pulseRingAround('#inputRR', 6);
-        window.__showCalloutBadge('#inputRR', '🎯', 'RATIO R:R CALCULADO', '1:3.00 Institucional', 'Objetivo de beneficio 3x sobre el riesgo', 'right');
+        const el = document.getElementById('inputPipsTP');
+        if (el) {
+            el.value = '45';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+        if (typeof calculateRiskRewardLive === 'function') calculateRiskRewardLive();
     }""")
-    await asyncio.sleep(4.5)
+    await asyncio.sleep(2.0)
 
-    # Selector de Riesgo: 1.0% ($1,000 USD sobre $100K)
-    await page.evaluate("""() => {
-        window.__removePulseRing();
-        window.__hideCalloutBadge();
-    }""")
-    await page.evaluate("window.__glideCursorToElement('#inputRiesgo', 500)")
-    await asyncio.sleep(0.6)
+    # Riesgo 1.0%
+    await page.evaluate("window.__glideCursorToElement('#inputRiesgo', 450)")
+    await asyncio.sleep(0.5)
     await page.evaluate("""() => {
         const el = document.getElementById('inputRiesgo');
         if (el) {
             el.value = '1.0';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
             el.dispatchEvent(new Event('change', { bubbles: true }));
         }
-        if (typeof calculatePositionSize === 'function') calculatePositionSize();
+        if (typeof updateLotSizeRealTime === 'function') updateLotSizeRealTime();
     }""")
-    await asyncio.sleep(1.0)
+    await asyncio.sleep(2.0)
 
-    # Spotlight y Callout sobre el cálculo automático de lotaje: 6.66 lotes
+    # Destacar cálculo de lotaje exacto (6.66 lotes sobre $100K)
+    lot_selector = "#lotSizeDisplay, #calculatedLotSize, #inputLotaje"
+    await page.evaluate(f"""() => {{
+        window.__pulseRingAround('{lot_selector}', 6);
+        window.__showCalloutBadge('{lot_selector}', '🧮', 'LOTAJE INSTITUCIONAL', '6.66 Lotes Calculados', '1.0% de Riesgo exacto ($1,000 USD) sobre Balance Inicial', 'right');
+    }}""")
+    await asyncio.sleep(4.0)
+
     await page.evaluate("""() => {
-        window.__pulseRingAround('#inputLotajeCalc', 8);
-        window.__showCalloutBadge('#inputLotajeCalc', '🛡️', 'LOTAJE INSTITUCIONAL', '6.66 Lotes Calculados', '1.0% ($1,000 USD) sobre Balance Inicial $100,000', 'right');
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
     }""")
-    await asyncio.sleep(3.5)
 
-    # Esperar hasta fin del bloque 3 según manifest (46.10s)
     rem3 = b3["cumulative_end"] - (time.time() - t_start)
     if rem3 > 0:
         await asyncio.sleep(rem3)
 
     # =========================================================================
-    # BLOQUE 4: BITÁCORA TÉCNICA (ANTES), CAPTURA Y ESTADO ACTIVA (46.10s — 63.16s)
+    # BLOQUE 4: TESIS TÉCNICA ANTES, CAPTURA Y TRADE ACTIVO (46.10s — 63.16s)
     # =========================================================================
     b4 = blocks["block4_visual_before_active"]
-    print(f"\n📸 [Bloque 4/7] {b4['title']} ({b4['duration_seconds']}s)...")
+    print(f"\n📸 [Bloque 4/6] {b4['title']} ({b4['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
-        window.__removePulseRing();
-        window.__hideCalloutBadge();
-        window.__showLowerThird('📸', '{b4['tag']}', 'Tesis Técnica Antes de Entrar y Gráfico TradingView HD');
+        window.__showLowerThird('📸', '{b4['tag']}', 'Bitácora Visual: Tesis Antes y Captura de Setup');
     }}""")
     await asyncio.sleep(0.5)
 
-    # Typewriter en Notas Antes
-    await page.evaluate("window.__glideCursorToElement('#inputNotaAntes', 500)")
-    await asyncio.sleep(0.6)
-    nota_antes = "Quiebre de estructura y sweep de liquidez en sesión NY."
-    await page.evaluate(f"window.__typeIntoInput('#inputNotaAntes', '{nota_antes}', 38)")
+    # Escribir tesis en Nota Antes
+    await page.evaluate("window.__glideCursorToElement('#inputNotaAntes', 450)")
+    await asyncio.sleep(0.5)
+    await page.evaluate("""() => {
+        const el = document.getElementById('inputNotaAntes');
+        if (el) {
+            el.value = 'Ruptura y retesteo de zona de liquidez institucional en 15M con confirmación en NY.';
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+    }""")
     await asyncio.sleep(1.2)
 
-    # Inyección de Captura Gráfica "Antes"
-    print("   -> Inyectando captura HD Antes de entrar...")
-    await page.set_input_files("#inputCapturasAntes", CHART_BEFORE)
+    # Inyección de captura ANTES (TradingView)
+    with open(CHART_BEFORE, "rb") as f:
+        b64_before = base64.b64encode(f.read()).decode("utf-8")
+    data_uri_before = f"data:image/png;base64,{b64_before}"
+
+    await page.evaluate(f"""() => {{
+        if (typeof currentUploadedImagesAntes !== 'undefined') {{
+            currentUploadedImagesAntes.push('{data_uri_before}');
+            if (typeof renderImagePreviewsAntes === 'function') renderImagePreviewsAntes();
+        }}
+    }}""")
     await asyncio.sleep(1.5)
 
-    await page.evaluate("""() => {
-        window.__showCalloutBadge('#imagesPreviewAntes', '📋', 'CAPTURA HD ADJUNTADA', 'TradingView Setup Antes', 'Estructura técnica y niveles registrados', 'right');
-    }""")
-    await asyncio.sleep(3.0)
-
-    # Marcar Estado: Activa
-    await page.evaluate("window.__hideCalloutBadge()")
+    # Estado: Activa
     await page.evaluate("window.__glideCursorToElement('#inputEstado', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
@@ -540,50 +602,66 @@ async def record_video_02_continuous(p, manifest):
     }}""")
     await asyncio.sleep(1.2)
 
-    # Destacar la fila del trade activo en la tabla
-    row_active = "#journal-table-body tr:first-child"
-    await page.evaluate(f"""() => {{
-        window.__pulseRingAround('{row_active}', 6);
-        window.__showCalloutBadge('{row_active}', '🔵', 'TRADE EN CURSO', 'Estado: Activa', 'Registrado en historial sin alterar estadísticas', 'bottom');
-    }}""")
-    await asyncio.sleep(2.0)
-
-    # Esperar hasta fin del bloque 4 según manifest (63.16s)
     rem4 = b4["cumulative_end"] - (time.time() - t_start)
     if rem4 > 0:
         await asyncio.sleep(rem4)
 
     # =========================================================================
-    # BLOQUE 5: AUDITORÍA POST-TRADE, CAPTURA DESPUÉS Y CIERRE FULL TP (63.16s — 81.71s)
+    # BLOQUE 5: NAVEGACIÓN VISUAL A REGISTRO DE TRADES Y EDICIÓN FULL TP (63.16s — 90.26s)
     # =========================================================================
     b5 = blocks["block5_post_trade_audit"]
-    print(f"\n🎯 [Bloque 5/7] {b5['title']} ({b5['duration_seconds']}s)...")
+    print(f"\n🎯 [Bloque 5/6] {b5['title']} ({b5['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
         window.__removePulseRing();
         window.__hideCalloutBadge();
-        window.__showLowerThird('🎯', '{b5['tag']}', 'Auditoría Post-Trade: Cierre en Full TP (+3.00%)');
+        window.__showLowerThird('🎯', '{b5['tag']}', 'Navegación: Pestaña Registro de Trades y Edición Full TP');
     }}""")
     await asyncio.sleep(0.5)
 
-    # Clic en el botón de edición de la fila para reabrir modal
-    btn_edit = '#journal-table-body tr:first-child button[title*="Editar"]'
-    has_edit_btn = await page.evaluate("(sel) => Boolean(document.querySelector(sel))", btn_edit)
-    if not has_edit_btn:
-        btn_edit = "#journal-table-body tr:first-child button:has(i.fa-pen-to-square)"
+    # 1. Navegación visible a la pestaña "Registro de Trades"
+    tab_journal = "#tab-btn-journal"
+    await page.evaluate(f"window.__glideCursorToElement('{tab_journal}', 600)")
+    await asyncio.sleep(0.7)
+    await page.evaluate("window.__clickRipple()")
+    await asyncio.sleep(0.2)
+    await page.evaluate(f"""() => {{
+        const btn = document.querySelector('{tab_journal}');
+        if (btn) btn.click();
+        if (typeof switchTab === 'function') switchTab('journal');
+    }}""")
+    await asyncio.sleep(1.5)
 
-    await page.evaluate("(sel) => window.__glideCursorToElement(sel, 500)", btn_edit)
+    # 2. Resaltar la fila de trade activo y el botón de edición
+    row_active = "#journal-table-body tr:first-child"
+    btn_edit = '#journal-table-body tr:first-child button[title*="Editar"], #journal-table-body tr:first-child button:has(i.fa-pen)'
+
+    await page.evaluate(f"""() => {{
+        window.__pulseRingAround('{row_active}', 6);
+        window.__showCalloutBadge('{row_active}', '📋', 'REGISTRO DE TRADES', 'Operación EURUSD en Curso', 'Disponible para auditar aquí o desde la sección Tus Cuentas', 'bottom');
+    }}""")
+    await asyncio.sleep(4.0)
+
+    await page.evaluate("""() => {
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
+    }""")
+
+    # 3. Clic en el botón de edición
+    await page.evaluate(f"(sel) => window.__glideCursorToElement(sel, 500)", btn_edit)
     await asyncio.sleep(0.6)
     await page.evaluate("window.__clickRipple()")
     await asyncio.sleep(0.2)
-    await page.evaluate("""(sel) => {
+    await page.evaluate(f"""(sel) => {{
         const btn = document.querySelector(sel);
         if (btn) btn.click();
-        if (typeof openTradeModal === 'function' && Array.isArray(trades) && trades.length > 0) openTradeModal(trades[0].id);
-    }""", btn_edit)
+        else if (typeof openTradeModal === 'function' && Array.isArray(trades) && trades.length > 0) {{
+            openTradeModal(trades[0].id);
+        }}
+    }}""", btn_edit)
     await asyncio.sleep(1.2)
 
-    # Conmutar Estado a Full TP
+    # 4. Conmutar Estado a Full TP
     await page.evaluate("window.__glideCursorToElement('#inputEstado', 450)")
     await asyncio.sleep(0.5)
     await page.evaluate("""() => {
@@ -595,27 +673,27 @@ async def record_video_02_continuous(p, manifest):
     }""")
     await asyncio.sleep(1.0)
 
-    # Typewriter en Notas Después
-    await page.evaluate("window.__glideCursorToElement('#inputNotaDespues', 500)")
-    await asyncio.sleep(0.6)
-    nota_despues = "Take Profit alcanzado en full target; plan de trading 100% respetado."
-    await page.evaluate(f"window.__typeIntoInput('#inputNotaDespues', '{nota_despues}', 38)")
-    await asyncio.sleep(1.2)
+    # 5. Inyección de captura DESPUÉS (Full TP +3.00%)
+    with open(CHART_AFTER, "rb") as f:
+        b64_after = base64.b64encode(f.read()).decode("utf-8")
+    data_uri_after = f"data:image/png;base64,{b64_after}"
 
-    # Inyección de Captura Gráfica "Después"
-    print("   -> Inyectando captura HD Después de salir (Full TP)...")
-    await page.set_input_files("#inputCapturasDespues", CHART_AFTER)
-    await asyncio.sleep(1.5)
+    await page.evaluate(f"""() => {{
+        if (typeof currentUploadedImagesDespues !== 'undefined') {{
+            currentUploadedImagesDespues.push('{data_uri_after}');
+            if (typeof renderImagePreviewsDespues === 'function') renderImagePreviewsDespues();
+        }}
+        const elNota = document.getElementById('inputNotaDespues');
+        if (elNota) {{
+            elNota.value = 'Objetivo alcanzado con ratio 1:3.00 exacto. Cierre limpio en New York.';
+            elNota.dispatchEvent(new Event('input', {{ bubbles: true }}));
+        }}
+    }}""")
+    await asyncio.sleep(2.0)
 
-    await page.evaluate("""() => {
-        window.__showCalloutBadge('#imagesPreviewDespues', '🎯', 'FULL TP AUDITADO', 'TradingView Salida HD', '+$3,000.00 USD (+3.00% de beneficio neto)', 'right');
-    }""")
-    await asyncio.sleep(3.0)
-
-    # Guardar auditoría del trade
-    await page.evaluate("window.__hideCalloutBadge()")
-    await page.evaluate(f"window.__glideCursorToElement('{btn_submit}', 500)")
-    await asyncio.sleep(0.6)
+    # 6. Guardar auditoría post-trade
+    await page.evaluate(f"window.__glideCursorToElement('{btn_submit}', 450)")
+    await asyncio.sleep(0.5)
     await page.evaluate("window.__clickRipple()")
     await asyncio.sleep(0.2)
     await page.evaluate(f"""() => {{
@@ -623,59 +701,26 @@ async def record_video_02_continuous(p, manifest):
         if (btn) btn.click();
         else if (typeof saveTrade === 'function') saveTrade(new Event('submit'));
     }}""")
-    await asyncio.sleep(1.2)
+    await asyncio.sleep(1.5)
 
-    # Destacar fila actualizada en la tabla
-    await page.evaluate(f"""() => {{
-        window.__pulseRingAround('{row_active}', 6);
-        window.__showCalloutBadge('{row_active}', '✅', 'FULL TP REGISTRADO', 'Ganancia Neta: +$3,000.00 USD', 'Balance de cuenta elevado a $103,000.00 USD', 'bottom');
-    }}""")
-    await asyncio.sleep(2.0)
-
-    # Esperar hasta fin del bloque 5 según manifest (81.71s)
     rem5 = b5["cumulative_end"] - (time.time() - t_start)
     if rem5 > 0:
         await asyncio.sleep(rem5)
 
     # =========================================================================
-    # BLOQUE 6: IMPACTO EN REGLAS DE PROP FIRM Y GALERÍA (81.71s — 100.02s)
+    # BLOQUE 6: IMPACTO EN REGLAS DE PROP FIRM Y BALANCE $103,000 (90.26s — 108.62s)
     # =========================================================================
     b6 = blocks["block6_prop_firm_impact"]
-    print(f"\n📈 [Bloque 6/7] {b6['title']} ({b6['duration_seconds']}s)...")
+    print(f"\n📈 [Bloque 6/6] {b6['title']} ({b6['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
         window.__removePulseRing();
         window.__hideCalloutBadge();
-        window.__showLowerThird('📈', '{b6['tag']}', 'Balance $103,000 USD · Target al 37.5% · Drawdown Intacto');
+        window.__showLowerThird('📈', '{b6['tag']}', 'Balance $103,000 USD · Target al 37.5% · Drawdown 100% Intacto');
     }}""")
     await asyncio.sleep(0.5)
 
-    # Clic en pestaña Metas / Goals
-    tab_goals = "#tab-btn-goals"
-    await page.evaluate(f"window.__glideCursorToElement('{tab_goals}', 500)")
-    await asyncio.sleep(0.6)
-    await page.evaluate("window.__clickRipple()")
-    await asyncio.sleep(0.2)
-    await page.evaluate(f"""() => {{
-        const btn = document.querySelector('{tab_goals}');
-        if (btn) btn.click();
-        if (typeof renderGoals === 'function') renderGoals();
-    }}""")
-    await asyncio.sleep(1.2)
-
-    # Resaltar Profit Target al 37.5%
-    goal_panel = "#account-goal-panel"
-    await page.evaluate(f"""() => {{
-        window.__pulseRingAround('{goal_panel}', 8);
-        window.__showCalloutBadge('{goal_panel}', '📈', 'PROFIT TARGET: 37.5%', '+$3,000 de $8,000 requeridos', 'Drawdown Máximo 100% intacto ($10,000 USD)', 'bottom');
-    }}""")
-    await asyncio.sleep(3.2)
-
-    # Transición breve a Dashboard para confirmar impacto en métricas
-    await page.evaluate("""() => {
-        window.__removePulseRing();
-        window.__hideCalloutBadge();
-    }""")
+    # 1. Transición a Dashboard & Métricas para validar curva de capital
     tab_dash = "#tab-btn-dashboard"
     await page.evaluate(f"window.__glideCursorToElement('{tab_dash}', 450)")
     await asyncio.sleep(0.5)
@@ -684,19 +729,56 @@ async def record_video_02_continuous(p, manifest):
     await page.evaluate(f"""() => {{
         const btn = document.querySelector('{tab_dash}');
         if (btn) btn.click();
+        if (typeof switchTab === 'function') switchTab('dashboard');
+        if (typeof updateMetricsAndCharts === 'function') updateMetricsAndCharts();
+        
+        // Sincronizar input visual de balance actual
+        const balInp = document.getElementById('dashboardBalanceActual');
+        if (balInp) balInp.value = '103000';
     }}""")
-    await asyncio.sleep(1.0)
-    await page.evaluate("""() => {
-        window.__pulseRingAround('#dashboardBalanceActual', 6);
-        window.__showCalloutBadge('#dashboardBalanceActual', '💰', 'BALANCE ACTUALIZADO', '$103,000.00 USD', 'Crecimiento de capital reflejado en tiempo real', 'bottom');
-    }""")
-    await asyncio.sleep(2.8)
+    await asyncio.sleep(1.2)
 
-    # Clic en pestaña Galería para mostrar comparativa lado a lado
+    # Resaltar Gráfica y Retorno Total en verde (+3.00%)
+    chart_elem = "#equityChart"
+    await page.evaluate(f"""() => {{
+        window.__pulseRingAround('{chart_elem}', 8);
+        window.__showCalloutBadge('{chart_elem}', '📈', 'EVOLUCIÓN DE CAPITAL', 'Retorno Total: +3.00%', 'Curva ascendente institucional de $100,000 a $103,000 USD', 'top');
+    }}""")
+    await asyncio.sleep(4.0)
+
     await page.evaluate("""() => {
         window.__removePulseRing();
         window.__hideCalloutBadge();
     }""")
+
+    # 2. Clic en pestaña Metas / Goals
+    tab_goals = "#tab-btn-goals"
+    await page.evaluate(f"window.__glideCursorToElement('{tab_goals}', 450)")
+    await asyncio.sleep(0.5)
+    await page.evaluate("window.__clickRipple()")
+    await asyncio.sleep(0.2)
+    await page.evaluate(f"""() => {{
+        const btn = document.querySelector('{tab_goals}');
+        if (btn) btn.click();
+        if (typeof switchTab === 'function') switchTab('goals');
+        if (typeof renderGoals === 'function') renderGoals();
+    }}""")
+    await asyncio.sleep(1.2)
+
+    # Resaltar Profit Target al 37.5%
+    goal_panel = "#account-goal-panel"
+    await page.evaluate(f"""() => {{
+        window.__pulseRingAround('{goal_panel}', 8);
+        window.__showCalloutBadge('{goal_panel}', '🎯', 'PROFIT TARGET: 37.5%', '+$3,000 de $8,000 USD requeridos', 'Drawdown Máximo 100% intacto ($10,000 USD de colchón)', 'bottom');
+    }}""")
+    await asyncio.sleep(4.0)
+
+    await page.evaluate("""() => {
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
+    }""")
+
+    # 3. Clic en pestaña Galería para mostrar comparativa lado a lado
     tab_gallery = "#tab-btn-gallery"
     await page.evaluate(f"window.__glideCursorToElement('{tab_gallery}', 450)")
     await asyncio.sleep(0.5)
@@ -705,137 +787,181 @@ async def record_video_02_continuous(p, manifest):
     await page.evaluate(f"""() => {{
         const btn = document.querySelector('{tab_gallery}');
         if (btn) btn.click();
+        if (typeof switchTab === 'function') switchTab('gallery');
         if (typeof renderGalleryCards === 'function') renderGalleryCards();
     }}""")
-    await asyncio.sleep(1.5)
+    await asyncio.sleep(2.0)
 
-    # Destacar tarjeta comparativa de la galería
-    gallery_card = "#gallery-cards-container > div:first-child"
-    await page.evaluate(f"""() => {{
-        window.__pulseRingAround('{gallery_card}', 8);
-        window.__showCalloutBadge('{gallery_card}', '🖼️', 'BITÁCORA COMPARATIVA', 'Antes vs Después en Alta Definición', 'Confluencias de entrada y salida registradas', 'bottom');
-    }}""")
-    await asyncio.sleep(2.8)
+    # Mantener toma final hasta completar la duración exacta
+    rem_total = duration - (time.time() - t_start)
+    if rem_total > 0:
+        print(f"   -> Manteniendo toma final ({rem_total:.2f}s restantes)...")
+        await asyncio.sleep(rem_total)
 
-    # Esperar hasta fin del bloque 6 según manifest (100.02s)
-    rem6 = b6["cumulative_end"] - (time.time() - t_start)
-    if rem6 > 0:
-        await asyncio.sleep(rem6)
-
-    # =========================================================================
-    # BLOQUE 7: OUTRO OFICIAL Y LLAMADO A LA ACCIÓN (100.02s — 110.34s)
-    # =========================================================================
-    b7 = blocks["block7_outro_cta"]
-    print(f"\n🚀 [Bloque 7/7] {b7['title']} ({b7['duration_seconds']}s)...")
-
-    # Limpiar overlays de motion engine
-    await page.evaluate("""() => {
-        window.__removePulseRing();
-        window.__hideCalloutBadge();
-        window.__hideLowerThird();
-    }""")
-
-    # Desplegar Outro Iframe con transición suave de opacidad y disparo fresco
-    await page.evaluate(f"""() => {{
-        const frame = document.getElementById('studio-outro-frame');
-        if (frame) {{
-            frame.src = 'http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=outro&tutorial=2';
-            frame.style.display = 'block';
-            frame.style.pointerEvents = 'auto';
-            requestAnimationFrame(() => {{
-                frame.style.opacity = '1';
-            }});
-        }}
-    }}""")
-
-    # Dejar reproducir la animación oficial del Outro hasta el fundido final
-    await asyncio.sleep(total_duration - (time.time() - t_start) - 1.2)
-
-    # Fundido a negro absoluto
-    await page.evaluate("""() => {
-        const frame = document.getElementById('studio-outro-frame');
-        if (frame && frame.contentWindow && typeof frame.contentWindow.__fadeOutStage === 'function') {
-            frame.contentWindow.__fadeOutStage();
-        }
-    }""")
-    await asyncio.sleep(1.2)
-
-    print("🏁 Grabación continua finalizada. Cerrando Chromium...")
     await page.close()
     await context.close()
     await browser.close()
 
     webms = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
     if not webms:
-        raise RuntimeError("No se generó el archivo WebM de la toma continua.")
+        raise RuntimeError("No se encontró WebM para el flujo continuo")
     raw_webm = webms[0]
 
-    # Mux preliminar recortando 150ms de latencia inicial de WebM
-    print(f"📦 Muxing de WebM preliminar ({raw_webm})...")
-    pre_cmd = [
+    # Muxing con la pista de voz continua
+    mux_cmd = [
+        FFMPEG_EXE, "-y",
+        "-ss", "0.200",  # Recorte preventivo de primer fotograma
+        "-i", raw_webm,
+        "-i", cont_audio,
+        "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
+        "-map", "[v]",
+        "-map", "1:a",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "18",
+        "-c:a", "aac", "-b:a", "192k",
+        "-t", f"{duration:.3f}",
+        scene_mp4
+    ]
+    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"✅ Toma continua completada: {scene_mp4}")
+    return scene_mp4
+
+
+# -------------------------------------------------------------
+# 5. ESCENA 3: OUTRO INSTITUCIONAL (10.32s)
+# -------------------------------------------------------------
+async def record_outro(p, manifest):
+    scene_id = "outro"
+    outro_info = manifest.get("outro", {})
+    duration = outro_info.get("duration_seconds", 10.32) + 0.5
+    scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
+    audio_path = os.path.join(AUDIO_DIR, "outro.mp3")
+
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 300000:
+        print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
+        return scene_mp4
+
+    print(f"\n🎬 [3/3] Filmando Escena Outro Cinemático ({duration:.2f}s)...")
+    raw_dir = os.path.join(SCENES_DIR, f"raw_{scene_id}")
+    shutil.rmtree(raw_dir, ignore_errors=True)
+    os.makedirs(raw_dir, exist_ok=True)
+
+    browser = await p.chromium.launch(
+        headless=True,
+        args=[
+            "--no-sandbox",
+            "--disable-dev-shm-usage",
+            "--background-color=0b0f19",
+            "--window-size=1920,1080"
+        ]
+    )
+    context = await browser.new_context(
+        viewport={"width": 1920, "height": 1080},
+        record_video_dir=raw_dir,
+        record_video_size={"width": 1920, "height": 1080}
+    )
+
+    page = await context.new_page()
+    try:
+        cdp = await context.new_cdp_session(page)
+        await cdp.send("Emulation.setDefaultBackgroundColorOverride", {
+            "color": {"r": 11, "g": 15, "b": 25, "a": 1}
+        })
+    except Exception:
+        pass
+
+    url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=outro&tutorial=2"
+    await page.goto(url, wait_until="domcontentloaded")
+    await asyncio.sleep(duration - 1.0)
+    try:
+        await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
+    except Exception:
+        pass
+    await asyncio.sleep(1.0)
+
+    await page.close()
+    await context.close()
+    await browser.close()
+
+    webms = [os.path.join(raw_dir, f) for f in os.listdir(raw_dir) if f.endswith(".webm")]
+    if not webms:
+        raise RuntimeError("No se encontró WebM para outro")
+    raw_webm = webms[0]
+
+    mux_cmd = [
         FFMPEG_EXE, "-y",
         "-ss", "0.150",
         "-i", raw_webm,
+        "-i", audio_path,
         "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
         "-map", "[v]",
+        "-map", "1:a",
         "-c:v", "libx264", "-preset", "fast", "-crf", "18",
-        "-t", f"{total_duration:.3f}",
-        raw_mp4
+        "-c:a", "aac", "-b:a", "192k",
+        "-t", f"{duration:.3f}",
+        scene_mp4
     ]
-    try:
-        subprocess.run(pre_cmd, check=True, capture_output=True, text=True)
-    except subprocess.CalledProcessError as e:
-        print("[FFmpeg WebM Mux Error]", e.stderr)
-        raise
-    print(f"✅ Video crudo generado: {raw_mp4} ({os.path.getsize(raw_mp4)/(1024*1024):.2f} MB)")
-    return raw_mp4
+    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    print(f"✅ Outro completado: {scene_mp4}")
+    return scene_mp4
 
 
 # -------------------------------------------------------------
-# 4. MASTER AUDIO MIX & FINAL ASSEMBLY
+# 6. FINAL MASTER ASSEMBLY (2 TRANSICIONES SUAVES + BGM DUCKING)
 # -------------------------------------------------------------
-def assemble_master_video(raw_video_mp4, manifest):
-    total_len = manifest.get("continuous_duration_seconds", 110.4)
-    print("\n" + "=" * 75)
-    print("🎞️ ENSAMBLANDO VIDEO MAESTRO FINAL CON FFmpeg")
-    print(f"🎙️ Voz Maestra: {MASTER_VOICE}")
-    print(f"🎵 Música BGM: {BG_MUSIC} (Ducking volume=0.065)")
-    print(f"🎬 Video Final: {FINAL_MP4}")
-    print("=" * 75)
+def assemble_final_video(intro_mp4, app_mp4, outro_mp4, manifest):
+    print("\n" + "=" * 70)
+    print("🎞️ ENSAMBLANDO VIDEO MAESTRO (ARQUITECTURA MASTER TAKE V6)")
+    print("=" * 70)
 
-    if not os.path.exists(MASTER_VOICE):
-        raise FileNotFoundError(f"Falta archivo de locución maestra: {MASTER_VOICE}")
+    intro_dur = manifest.get("intro", {}).get("duration_seconds", 5.40) + 0.8
+    app_dur = manifest.get("continuous_duration_seconds", 108.62)
+    outro_dur = manifest.get("outro", {}).get("duration_seconds", 10.32) + 0.5
+    trans_dur = 0.5
 
-    cmd = [
-        FFMPEG_EXE, "-y",
-        "-i", raw_video_mp4,
-        "-i", MASTER_VOICE
-    ]
+    off1 = intro_dur - trans_dur
+    off2 = off1 + app_dur - trans_dur
+    total_len = off2 + outro_dur
 
     has_music = os.path.exists(BG_MUSIC)
-    if has_music:
-        cmd.extend(["-i", BG_MUSIC])
-        music_idx = 2
-    else:
-        music_idx = None
+    music_idx = 3 if has_music else None
 
-    filter_complex = []
+    filter_complex = [
+        f"[0:v][1:v]xfade=transition=fade:duration={trans_dur}:offset={off1:.3f}[v01]",
+        f"[v01][2:v]xfade=transition=fade:duration={trans_dur}:offset={off2:.3f}[v_master]",
+        f"[0:a][1:a]acrossfade=d={trans_dur}:c1=tri:c2=tri[a01]",
+        f"[a01][2:a]acrossfade=d={trans_dur}:c1=tri:c2=tri[a_scenes]"
+    ]
+
     if has_music:
         fade_out_start = max(0, total_len - 2.5)
         filter_complex.append(
-            f"[{music_idx}:a]volume=0.065,afade=t=out:st={fade_out_start:.2f}:d=2.5[bgm];"
-            f"[1:a][bgm]amix=inputs=2:duration=first:dropout_transition=2[a_final]"
+            f"[{music_idx}:a]volume=0.065,afade=t=out:st={fade_out_start:.2f}:d=2.5[bgm]"
+        )
+        filter_complex.append(
+            f"[a_scenes][bgm]amix=inputs=2:duration=first:dropout_transition=2[a_final]"
         )
         final_audio_map = "[a_final]"
     else:
-        final_audio_map = "1:a"
+        final_audio_map = "[a_scenes]"
+
+    cmd = [
+        FFMPEG_EXE, "-y",
+        "-i", intro_mp4,
+        "-i", app_mp4,
+        "-i", outro_mp4
+    ]
+    if has_music:
+        cmd.extend(["-i", BG_MUSIC])
 
     cmd.extend([
         "-filter_complex", ";".join(filter_complex),
-        "-map", "0:v",
+        "-map", "[v_master]",
         "-map", final_audio_map,
-        "-c:v", "libx264", "-preset", "slow", "-crf", "17",
-        "-c:a", "aac", "-b:a", "192k",
+        "-c:v", "libx264",
+        "-preset", "slow",
+        "-crf", "17",
+        "-c:a", "aac",
+        "-b:a", "192k",
         "-t", f"{total_len:.3f}",
         "-movflags", "+faststart",
         FINAL_MP4
@@ -853,17 +979,16 @@ def assemble_master_video(raw_video_mp4, manifest):
     print(f"📍 Archivo MP4: {FINAL_MP4}")
     print(f"📦 Tamaño: {size_mb:.2f} MB")
     print(f"⏱️ Duración efectiva: {total_len:.2f}s ({total_len/60:.2f} min)")
-    print("🎯 Cero desenfoques: Cumplimiento 100% de la directiva de nitidez")
     print("=" * 75)
     return FINAL_MP4
 
 
 # -------------------------------------------------------------
-# 5. MAIN ENTRY POINT
+# 7. MAIN PIPELINE
 # -------------------------------------------------------------
 async def main():
     print("=" * 75)
-    print("🚀 PIPELINE DE PRODUCCIÓN AUDIOVISUAL ASTRADE — TUTORIAL #2")
+    print("🚀 PIPELINE DE PRODUCCIÓN AUDIOVISUAL ASTRADE — TUTORIAL #2 (V6)")
     print("   'Registro y Auditoría de Trades con Precisión Quirúrgica'")
     print("=" * 75)
 
@@ -871,9 +996,11 @@ async def main():
     manifest = load_manifest()
 
     async with async_playwright() as p:
-        raw_video = await record_video_02_continuous(p, manifest)
+        intro_mp4 = await record_intro(p, manifest)
+        app_mp4 = await record_app_flow_continuous(p, manifest)
+        outro_mp4 = await record_outro(p, manifest)
 
-    assemble_master_video(raw_video, manifest)
+    assemble_final_video(intro_mp4, app_mp4, outro_mp4, manifest)
 
 
 if __name__ == "__main__":

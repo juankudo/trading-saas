@@ -5,6 +5,33 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.4] - 2026-11-17
+
+### 🎬 Tutorial #2 V6: Correcciones Maestras de Intro, Navegación a Registro, Curva Ascendente (+3%) e Inglés Técnico
+- **Intro Cinemático Oficial y Lectura del Título (Estándar de la Serie):**
+  - Implementación de la arquitectura de 3 escenas limpias (`record_intro` ➔ `record_app_flow_continuous` ➔ `record_outro`), erradicando cualquier fotograma vacío o pantalla desprovista de cuentas antes de iniciar.
+  - Generación de `intro.mp3` con locución institucional de Jorge (*"Tutorial dos: Registro y Auditoría de Trades con Precisión Quirúrgica"*).
+  - Ensamblado mediante disolución cruzada (*cross-dissolve* de 0.5s) con atenuación de música de fondo (ducking a 0.065).
+- **Navegación Visual a la Edición de la Orden:**
+  - Guion de Jorge actualizado para instruir al usuario hacia la pestaña **Registro de Trades** y mencionar los accesos rápidos de la sección de cuentas.
+  - El cursor navega visiblemente a `#tab-btn-journal`, abre el diario de trading, resalta la fila del trade activo con un callout badge informativo y hace clic en el botón de edición (`fa-pen`) para abrir `#tradeModal`.
+- **Corrección Matemática y Visual de la Curva de Capital (+3%):**
+  - Inicialización de la cuenta FTMO 100K con `balanceActual: null` para permitir el cálculo dinámico automático de las operaciones.
+  - Al cerrar la orden en *Full TP*, la gráfica `equityChart` asciende de forma continua y limpia de $100,000 a $103,000 USD (eliminando por completo la caída o parábola invertida a 100k).
+  - La tarjeta KPI de *Retorno Total* se ilumina en **+3.00%** en verde esmeralda institucional.
+  - El campo *Actual (Opcional)* se sincroniza a **$103,000.00 USD**.
+  - En la pestaña *Metas*, la barra de *Profit Target* se sitúa en **37.5%** ($3,000 / $8,000 USD) y el *Drawdown* en **100% intacto** ($10,000 USD de colchón).
+- **Normalización Fonética en Inglés Estricta:**
+  - Sustitución de acrónimos literales en español por su pronunciación en inglés técnico:
+    - *Full TP* pronunciado como `/Full Ti-Pi/` (erradicando *"Ful Té Pé"*).
+    - *Break Even / BE* pronunciado como `/bréik íven/` y `/bi-i/` (erradicando *"Bé E"*).
+    - *Stop Loss / SL* pronunciado como `/stóp los/` y `/es-el/`.
+    - Preservación de la denominación natural en español de *"Entradas"* y *"Nueva Entrada"*.
+- **Renderizado 100% Cloud en Google Colab con GPU T4:**
+  - Filmación y codificación completadas en 9.93 minutos en la nube con 0% de uso de CPU/RAM local en la PC del usuario.
+
+---
+
 ## [v3.8.3] - 2026-11-17
 
 ### 🎬 Tutorial #1 V6: Correcciones Maestras de Nitidez, Calibración DOM y Menú de Edición/Borrado
