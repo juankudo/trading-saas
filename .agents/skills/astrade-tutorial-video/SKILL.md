@@ -110,7 +110,15 @@ flowchart TD
    - `07_goals.png`: Target al 37.5%, Drawdown 100% intacto.
 2. Inspeccionar visualmente cada fotograma con la herramienta `read_file`.
 
-### Paso 7: Documentación y Control de Versiones
+### Paso 7: Empaquetado de YouTube (Miniatura 1080p, Metadatos SEO y Capítulos)
+1. **Generación de Carátula Minimalista Técnica:**
+   - Ejecutar `python scripts/render/generate_youtube_thumbnails.py` para compilar la miniatura en 1920x1080 Full HD con mockup nítido de la interfaz y branding oficial.
+2. **Generación de Metadatos y Capítulos:**
+   - Crear `media/youtube_tutorials/packages/tutorial_XX/metadata.md` con título optimizado para CTR, descripción estructurada con marcas de tiempo, enlaces oficiales a `astradehub.com` y etiquetas.
+3. **Validación Previa con Dry-Run:**
+   - Ejecutar `python scripts/social/upload_youtube.py --tutorial XX --dry-run` para validar que el video, la miniatura y los textos están listos.
+
+### Paso 8: Documentación, Control de Versiones y Publicación
 1. Crear el artefacto `WALKTHROUGH_VIDEO_XX.md` con la evidencia fotograma por fotograma.
 2. Actualizar `CHANGELOG.md` con la versión semántica correspondiente.
 3. Crear el commit local:
@@ -119,6 +127,7 @@ flowchart TD
    git commit -m "feat(tutorial-XX): ..."
    ```
 4. **Preguntar al usuario:** *¿Deseas que suba y despliegue estos cambios a producción (`git push origin main`)?*
+5. Tras aprobación, ejecutar la subida a YouTube mediante `python scripts/social/upload_youtube.py --tutorial XX --privacy public` (o `--privacy unlisted`).
 
 ---
 

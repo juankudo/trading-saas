@@ -5,6 +5,28 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.6] - 2026-11-18
+
+### 🎬 Kit de Publicación y Automatización Oficial de YouTube
+- **Generador de Miniaturas Minimalistas Técnicas (`scripts/render/generate_youtube_thumbnails.py`):**
+  - Creación programática de carátulas en 1920x1080 Full HD siguiendo el estándar visual institucional de AsTrade (Zero-Blur).
+  - Mockups de interfaz nítidos de alta definición con resplandores esmeralda (#10b981), branding oficial `AsTrade PRO DASHBOARD`, badge sobrio `TUTORIAL #X` y titulares técnicos limpios.
+  - Generadas carátulas oficiales para **Tutorial #1** (`thumbnail_tutorial_01.png`) y **Tutorial #2** (`thumbnail_tutorial_02.png`).
+- **Paquetes Oficiales de Metadatos y Copywriting SEO:**
+  - `media/youtube_tutorials/packages/tutorial_01/metadata.md`: Título optimizado para CTR, descripción completa con marcas de tiempo (capítulos exactos de 0:00 a 1:43), enlaces inmutables a `https://astradehub.com` y etiquetas para YouTube Studio.
+  - `media/youtube_tutorials/packages/tutorial_02/metadata.md`: Metadatos optimizados con capítulos exactos (0:00 a 2:05), resumen técnico de sizing institucional (5.00 lotes), curva de equidad (+3.00%) y tags.
+- **Uploader Autónomo de YouTube (`scripts/social/upload_youtube.py`):**
+  - Conexión oficial a **YouTube Data API v3** con autenticación segura OAuth 2.0.
+  - Soporte de subida reanudable (*Resumable Upload*) para videos de alta definición con reporte de porcentaje en tiempo real.
+  - Asignación automática de título, descripción, tags, categoría Educación (27), idioma español y subida de miniatura personalizada PNG.
+  - Modo `--dry-run` para validación e inspección local sin necesidad de credenciales previas.
+- **Guía Rápida de Configuración de Credenciales (`docs/GUIA_CONFIGURACION_YOUTUBE_API.md`):**
+  - Tutorial paso a paso de 3 minutos para obtener `client_secrets.json` desde Google Cloud Console.
+- **Integración en la Skill `astrade-tutorial-video`:**
+  - Incorporada la fase de empaquetado y publicación dentro del runbook maestro de producción de tutoriales.
+
+---
+
 ## [v3.8.5] - 2026-11-18
 
 ### 🎬 Tutorial #2 V7: Perfeccionamiento de Tendencia, Market Buy, Hora New York, Fonética Dual y Lotaje Limpio (5.00)
