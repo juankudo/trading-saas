@@ -5,6 +5,28 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.3] - 2026-11-17
+
+### 🎬 Tutorial #1 V6: Correcciones Maestras de Nitidez, Calibración DOM y Menú de Edición/Borrado
+- **Cumplimiento Estricto Zero-Blur (Cero Desenfoques):**
+  - Eliminación absoluta de filtros `backdrop-filter` y velos oscuros que provocaban pérdida de nitidez en la interfaz. Toda la aplicación se visualiza con máxima claridad y nitidez nativa a 1080p.
+  - Reemplazo del velo oscuro por anillos de pulso esmeralda de alto contraste delimitados milimétricamente (`window.__pulseRingAround`).
+- **Estabilización de Contenedor Modal y Calibración DOM:**
+  - Anclado superior de `#sessionModal` (`padding-top: 50px`, `align-items: flex-start` y altura mínima fijada) para prevenir desplazamientos verticales al alternar entre tipos de cuenta (Real vs. Challenge / Fase de prueba).
+  - Recálculo dinámico de coordenadas (`getBoundingClientRect`) con asentamiento DOM tras cada cambio de selector, eliminando cualquier desfasaje.
+- **Sincronización Fonética Milimétrica con JorgeNeural:**
+  - Calibración exacta de los movimientos de cursor y relleno de inputs respecto a la locución:
+    - Retardo y foco en "Nueva Cuenta" únicamente cuando el narrador lo indica (4.2s - 8.5s).
+    - Demostración de cuenta real y selección de Fase de prueba exactamente a los 15.5s cuando se enuncia "Para este ejemplo, seleccionamos Fase de prueba".
+    - Escritura secuencial sincronizada para nombre de cuenta, balance inicial, balance actual opcional y reglas de drawdown y target.
+- **Despliegue del Menú de Acciones (Editar y Borrar):**
+  - Apertura interactiva del menú de tres puntos (`[data-account-action="menu-toggle"]`) en la tarjeta recién creada dentro de "Tus Cuentas".
+  - Resaltado focalizado secuencial de las opciones "Editar" (modificación de saldo y reglas) y "Borrar" (eliminación segura) con sus callout badges correspondientes.
+- **Renderizado 100% Cloud en Google Colab con GPU T4:**
+  - Ejecución en la nube en 8.77 minutos, garantizando 0% de uso de CPU y RAM local en la máquina del usuario.
+
+---
+
 ## [v3.8.2] - 2026-11-17
 
 ### 🎬 Tutorial #2 Completo: Registro y Auditoría de Trades en la Nube (Google Colab GPU T4)

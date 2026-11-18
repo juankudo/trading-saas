@@ -256,6 +256,10 @@ async def record_app_flow_continuous(p, cont_audio_path):
             html, body {
                 background-color: #0b0f19 !important;
             }
+            *, *::before, *::after {
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+            }
             #tourOverlay, .tour-overlay, #tourSvgMask, #tourTooltip, #tourHighlightRing,
             #lifecycleGuideOverlay, #lifecycleGuideModal, .shepherd-element,
             .fondeo-celebration, .fondeo-confetti, #confettiCanvas {
@@ -263,6 +267,16 @@ async def record_app_flow_continuous(p, cont_audio_path):
                 visibility: hidden !important;
                 opacity: 0 !important;
                 pointer-events: none !important;
+            }
+            #sessionModal {
+                backdrop-filter: none !important;
+                background-color: rgba(5, 8, 18, 0.5) !important;
+                align-items: flex-start !important;
+                padding-top: 50px !important;
+            }
+            #sessionModal > div {
+                min-height: 720px !important;
+                transition: none !important;
             }
             /* Tipografía institucional nítida para YouTube 1080p sin alterar coordenadas (Cero Zoom) */
             html {
@@ -307,23 +321,25 @@ async def record_app_flow_continuous(p, cont_audio_path):
     await page.evaluate("""
         window.__showLowerThird('⚡', 'PASO 1: GESTIÓN DE CUENTAS', 'Panel Tus Cuentas: Centro de Mando de Capital');
     """)
-    await asyncio.sleep(1.2)
+    # Vista general del panel mientras Jorge habla de "Tus Cuentas" (0.0s - 4.2s)
+    await asyncio.sleep(4.2)
 
+    # Cuando Jorge dice "Para comenzar, hacemos clic en el botón Nueva Cuenta..." (4.2s - 8.5s)
     btn_selector = "#btn-new-session"
     await page.evaluate(f"""
-        window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{btn_selector}', -0.25, 750);
+        window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{btn_selector}', -0.25, 650);
         window.__pulseRingAround('{btn_selector}', 6);
-        window.__showCalloutBadge('{btn_selector}', '⚡', 'GESTIÓN', 'Crear Nueva Cuenta', 'Auditoría institucional en 1 o 2 fases', 'bottom');
+        window.__showCalloutBadge('{btn_selector}', '⚡', 'GESTIÓN', 'Crear Nueva Cuenta', 'Gestor institucional de cuentas', 'bottom');
     """)
-    await asyncio.sleep(5.0)
+    await asyncio.sleep(3.2)
 
     await page.evaluate("""
         window.__clearMotionArrows();
         window.__hideCalloutBadge();
         window.__removePulseRing();
     """)
-    await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 600)")
-    await asyncio.sleep(0.8)
+    await page.evaluate(f"window.__glideCursorToElement('{btn_selector}', 500)")
+    await asyncio.sleep(0.6)
 
     # Click ripple y abrir modal
     await page.evaluate("window.__clickRipple()")
@@ -351,44 +367,54 @@ async def record_app_flow_continuous(p, cont_audio_path):
     await page.evaluate("""
         window.__showLowerThird('📋', 'PASO 2: MODALIDADES', 'Cuentas Reales, Challenges, Fondeadas e Instant');
     """)
-    await asyncio.sleep(1.0)
-
     stage_sel = "#inputAccountStage"
     await page.evaluate(f"""
         window.__glideCursorToElement('{stage_sel}', 600);
         window.__pulseRingAround('{stage_sel}', 6);
         window.__showCalloutBadge('{stage_sel}', '📋', 'MODALIDAD', 'Tipos de Cuenta Soportados', 'Real, Challenge, Fondeada e Instant', 'right');
     """)
-    await asyncio.sleep(4.5)
+    await asyncio.sleep(4.0)
 
-    # Demostrar cambio visual a Cuenta Real
+    # 4.0s: Jorge menciona "Cuentas Reales con capital propio"
     await page.evaluate("""
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
         const el = document.querySelector('#inputAccountStage');
         if (el) {
             el.value = 'real';
             if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
         }
-        window.__showCalloutBadge('#inputAccountStage', '💼', 'CAPITAL PROPIO', 'Cuenta Real', 'Auditoría de tu capital personal', 'right');
     """)
-    await asyncio.sleep(4.0)
+    await asyncio.sleep(0.2)  # Asentamiento DOM
+    await page.evaluate(f"""
+        window.__pulseRingAround('{stage_sel}', 6);
+        window.__showCalloutBadge('{stage_sel}', '💼', 'CAPITAL PROPIO', 'Cuenta Real', 'Auditoría de tu capital personal', 'right');
+    """)
+    # Jorge continúa explicando fondeadas, challenges e instant hasta ~15.5s
+    await asyncio.sleep(7.5)
 
-    # Fijar Fase de prueba (Challenge) y desplegar reglas
+    # 15.5s: Jorge dice "Para este ejemplo, seleccionamos Fase de prueba"
     await page.evaluate("""
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
         const el = document.querySelector('#inputAccountStage');
         if (el) {
             el.value = 'prueba';
             if (typeof toggleAccountStageFields === 'function') toggleAccountStageFields();
         }
-        window.__showCalloutBadge('#inputAccountStage', '🎯', 'SELECCIÓN: FASE DE PRUEBA', 'Evaluación / Challenge', 'Auditoría estricta de metas y límites de pérdida', 'right');
     """)
-    await asyncio.sleep(5.0)
+    await asyncio.sleep(0.2)  # Asentamiento DOM
+    await page.evaluate(f"""
+        window.__pulseRingAround('{stage_sel}', 6);
+        window.__showCalloutBadge('{stage_sel}', '🎯', 'SELECCIÓN: FASE DE PRUEBA', 'Evaluación / Challenge', 'Auditoría estricta de metas y límites de pérdida', 'right');
+    """)
+    await asyncio.sleep(2.8)
 
     await page.evaluate("""
         window.__removePulseRing();
         window.__hideCalloutBadge();
     """)
 
-    # Mantener hasta el segundo 30.58
     rem2 = 30.58 - (time.time() - t_start)
     if rem2 > 0:
         await asyncio.sleep(rem2)
@@ -401,66 +427,64 @@ async def record_app_flow_continuous(p, cont_audio_path):
     await page.evaluate("""
         window.__showLowerThird('💰', 'PASO 3: BALANCES & REGLAS', 'Balance Inicial $100K vs Saldo Actual & Reglas');
     """)
-    await asyncio.sleep(1.0)
-
-    # 1. Escribir nombre: 'Fondeo 100K FTMO'
-    await page.evaluate("window.__glideCursorToElement('#inputSessionName', 500)")
+    # 1. Escribir nombre: 'Fondeo 100K FTMO' (0.0s - 4.5s)
+    await page.evaluate("window.__glideCursorToElement('#inputSessionName', 450)")
+    await asyncio.sleep(0.4)
+    await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 40)")
     await asyncio.sleep(0.5)
-    await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Fondeo 100K FTMO', 45)")
-    await asyncio.sleep(1.2)
 
-    # 2. Spotlight Balance Inicial: $100,000 USD
+    # 2. Balance Inicial: $100,000 USD (4.5s - 11.5s)
     bal_el = "#inputSessionBalance"
     await page.evaluate(f"""
-        window.__glideCursorToElement('{bal_el}', 500);
-        window.__spotlightElement('{bal_el}', 8);
+        window.__glideCursorToElement('{bal_el}', 450);
+        window.__pulseRingAround('{bal_el}', 6);
         window.__showCalloutBadge('{bal_el}', '💰', 'CAPITAL AUDITADO', 'Balance Inicial: $100,000 USD', 'Base estricta para el cálculo de riesgo % por trade', 'right');
     """)
     await asyncio.sleep(6.5)
 
-    # 3. Spotlight Balance Actual (Opcional)
+    # 3. Balance Actual Opcional (11.5s - 22.5s)
     bal_act_el = "#inputSessionBalanceActual"
     await page.evaluate(f"""
-        window.__hideSpotlight();
-        window.__glideCursorToElement('{bal_act_el}', 500);
-        window.__spotlightElement('{bal_act_el}', 8);
+        window.__removePulseRing();
+        window.__glideCursorToElement('{bal_act_el}', 450);
+        window.__pulseRingAround('{bal_act_el}', 6);
         window.__showCalloutBadge('{bal_act_el}', '📊', 'BALANCE ACTUAL (OPCIONAL)', 'Saldo de Corte / Cierre', 'Vacío si es nueva. O tu saldo actual si venías operando.', 'right');
     """)
-    await asyncio.sleep(7.5)
+    await asyncio.sleep(10.5)
 
-    # 4. Profit Target: 8%
+    # 4. Profit Target: 8% (22.5s - 27.5s)
     target_el = "#inputAccountGoalTargetPct"
     await page.evaluate(f"""
-        window.__hideSpotlight();
-        window.__glideCursorToElement('{target_el}', 500);
-        window.__spotlightElement('{target_el}', 8);
+        window.__removePulseRing();
+        window.__glideCursorToElement('{target_el}', 450);
+        window.__pulseRingAround('{target_el}', 6);
         const tInput = document.querySelector('{target_el}');
         if (tInput) tInput.value = '8';
         window.__showCalloutBadge('{target_el}', '🎯', 'OBJETIVO', 'Profit Target: 8%', 'Meta institucional de $8,000 USD', 'right');
     """)
-    await asyncio.sleep(5.5)
+    await asyncio.sleep(4.8)
 
-    # 5. Drawdown Máximo: 10%
+    # 5. Drawdown Máximo: 10% (27.5s - 32.5s)
     dd_el = "#inputAccountGoalMaxDD"
     await page.evaluate(f"""
-        window.__hideSpotlight();
-        window.__glideCursorToElement('{dd_el}', 500);
-        window.__spotlightElement('{dd_el}', 8);
+        window.__removePulseRing();
+        window.__glideCursorToElement('{dd_el}', 450);
+        window.__pulseRingAround('{dd_el}', 6);
         const dInput = document.querySelector('{dd_el}');
         if (dInput) dInput.value = '10';
         window.__showCalloutBadge('{dd_el}', '🛡️', 'LÍMITES', 'Drawdown Máximo: 10%', 'Protección de capital estricta ($10,000 USD)', 'right');
     """)
-    await asyncio.sleep(5.5)
+    await asyncio.sleep(4.8)
 
-    # 6. Click en "Crear" / Submit para guardar en vivo
+    # 6. Click en "Crear" / Submit (32.5s - 36.74s)
     btn_submit = "#btn-submit-session"
     await page.evaluate(f"""
-        window.__hideSpotlight();
+        window.__removePulseRing();
         window.__hideCalloutBadge();
-        window.__glideCursorToElement('{btn_submit}', 600);
+        window.__glideCursorToElement('{btn_submit}', 500);
         window.__pulseRingAround('{btn_submit}', 6);
     """)
-    await asyncio.sleep(1.2)
+    await asyncio.sleep(1.0)
     await page.evaluate("window.__clickRipple()")
     await asyncio.sleep(0.3)
     await page.evaluate(f"""
@@ -468,14 +492,13 @@ async def record_app_flow_continuous(p, cont_audio_path):
         if (btn) btn.click();
         else if (typeof saveSession === 'function') saveSession(new Event('submit'));
     """)
-    await asyncio.sleep(0.6)
+    await asyncio.sleep(0.5)
     await page.evaluate("""
         window.__removePulseRing();
         if (typeof closeSessionModal === 'function') closeSessionModal();
         window.__showLowerThird('✅', 'CUENTA ACTIVADA', 'Fondeo 100K FTMO creada con éxito');
     """)
 
-    # Mantener hasta el segundo 67.32
     rem3 = 67.32 - (time.time() - t_start)
     if rem3 > 0:
         await asyncio.sleep(rem3)
@@ -485,7 +508,6 @@ async def record_app_flow_continuous(p, cont_audio_path):
     # MODAL YA ESTÁ CERRADO Y LA TARJETA YA ESTÁ EN EL GRID
     # -------------------------------------------------------------
     print("   -> [Parte 4/4] Tarjeta de Cuenta Creada en el Grid...")
-    # Asegurar que el estado de realAccounts contenga la cuenta y renderizar si es necesario
     await page.evaluate("""
         if (typeof realAccounts !== 'undefined' && realAccounts.length === 0) {
             realAccounts.push({
@@ -508,35 +530,63 @@ async def record_app_flow_continuous(p, cont_audio_path):
         }
         window.__showLowerThird('🗂️', 'PASO 4: CUENTA HABILITADA', 'Tarjeta Institucional Creada y Lista en el Grid');
     """)
-    await asyncio.sleep(1.5)
+    await asyncio.sleep(1.0)
 
     first_card = "#sessions-grid > div:first-child"
     await page.evaluate(f"""
-        window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{first_card}', -0.25, 750);
-        window.__pulseRingAround('{first_card}', 10);
+        window.__drawAnimatedArrow({{ offsetX: 220, offsetY: 70 }}, '{first_card}', -0.25, 650);
+        window.__pulseRingAround('{first_card}', 8);
         window.__showCalloutBadge('{first_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K FTMO', 'Saldo $100,000 USD | Target 8% | Max DD 10%', 'right');
     """)
-    await asyncio.sleep(6.5)
+    await asyncio.sleep(4.0)
 
-    # Cursor sobre botón "Entrar"
-    enter_btn = "#sessions-grid > div:first-child button"
+    # Desplegar Menú de Tres Puntos (Editar y Borrar) (71.32s - 78.0s)
+    menu_toggle = '#sessions-grid > div:first-child [data-account-action="menu-toggle"]'
     await page.evaluate(f"""
         window.__clearMotionArrows();
         window.__hideCalloutBadge();
         window.__removePulseRing();
-        window.__glideCursorToElement('{enter_btn}', 650);
-        window.__pulseRingAround('{enter_btn}', 4);
+        window.__glideCursorToElement('{menu_toggle}', 500);
     """)
-    await asyncio.sleep(3.5)
+    await asyncio.sleep(0.6)
+    await page.evaluate("window.__clickRipple()")
+    await page.evaluate(f"""
+        const btn = document.querySelector('{menu_toggle}');
+        if (btn) btn.click();
+    """)
+    await asyncio.sleep(0.4)
 
-    # Cursor sobre botón "Editar"
-    edit_btn = '#sessions-grid > div:first-child [data-account-action="edit"], #sessions-grid > div:first-child .fa-pen-to-square'
+    # Resaltar "Editar"
+    edit_btn = '#sessions-grid > div:first-child [data-account-action="edit"]'
+    await page.evaluate(f"""
+        window.__pulseRingAround('{edit_btn}', 4);
+        window.__showCalloutBadge('{edit_btn}', '✏️', 'CONFIGURACIÓN', 'Editar Cuenta', 'Modifica saldo, nombre o reglas de evaluación', 'right');
+    """)
+    await asyncio.sleep(2.4)
+
+    # Resaltar "Borrar"
+    del_btn = '#sessions-grid > div:first-child [data-account-action="delete"]'
     await page.evaluate(f"""
         window.__removePulseRing();
-        window.__glideCursorToElement('{edit_btn}', 550);
-        window.__pulseRingAround('{edit_btn}', 4);
+        window.__pulseRingAround('{del_btn}', 4);
+        window.__showCalloutBadge('{del_btn}', '🗑️', 'GESTIÓN', 'Borrar Cuenta', 'Elimina de forma segura la cuenta y sus datos', 'right');
     """)
-    await asyncio.sleep(2.5)
+    await asyncio.sleep(2.2)
+
+    # Cerrar menú y volver a los botones de acción rápida
+    await page.evaluate("""
+        window.__removePulseRing();
+        window.__hideCalloutBadge();
+        document.body.click();
+    """)
+    await asyncio.sleep(0.4)
+
+    quick_btn = '#sessions-grid > div:first-child [data-account-action="quick"]'
+    await page.evaluate(f"""
+        window.__glideCursorToElement('{quick_btn}', 500);
+        window.__pulseRingAround('{quick_btn}', 4);
+    """)
+    await asyncio.sleep(1.8)
 
     # Teaser Tutorial #2
     await page.evaluate(f"""
