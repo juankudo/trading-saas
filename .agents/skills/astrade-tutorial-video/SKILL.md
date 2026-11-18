@@ -41,6 +41,9 @@ Esta habilidad encapsula todo el conocimiento técnico, estándares audiovisuale
    - **NUNCA** ejecutar `git push` de forma autónoma.
    - Registrar la versión en `CHANGELOG.md` siguiendo el formato *Keep a Changelog*.
    - Realizar commit local, documentar qué se cambió, cómo probarlo y preguntar explícitamente: *¿Deseas que suba y despliegue estos cambios a producción?*
+8. **Política Estricta de Marca Blanca (Cero Marcas de Terceros)**:
+   - **PROHIBIDO** mencionar, mostrar o etiquetar marcas registradas de empresas de terceros (Prop Firms o brokers comerciales como FTMO, FundedNext, MyForexFunds, etc.) en locución, textos en pantalla, nombres de cuentas simuladas, carátulas, metadatos o etiquetas.
+   - Utilizar exclusivamente terminología genérica e institucional: *"Cuentas de Evaluación"*, *"Fase de Challenge"*, *"Firma de Fondeo"*, *"Reglas de Evaluación"*, *"Prop Firms"*.
 
 ---
 

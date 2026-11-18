@@ -36,7 +36,7 @@ BLOCKS = [
     {
         "id": "block1_intro_continuity",
         "index": 1,
-        "title": "Continuidad: Acceso a Cuenta Fondeo 100K FTMO",
+        "title": "Continuidad: Acceso a Cuenta Fondeo 100K",
         "tag": "⚡ CONTINUIDAD · CUENTA FONDEO 100K",
         "icon": "⚡",
         "text": (
@@ -134,7 +134,6 @@ def to_phonetic_spanish(text: str) -> str:
         (r'\bastradehub\.com\b', 'As Trade jób punto com'),
         (r'\bastradehub\b', 'As Trade jób'),
         (r'\bastrade\b', 'as trade'),
-        (r'\bFTMO\b', 'Efe Te Eme O'),
 
         # Terminología de Plataformas y Acciones
         (r'\bTradingView\b', 'Tréiding Viú'),

@@ -29,7 +29,7 @@ Esta guía define las reglas cuantitativas, horarios de mercado y configuracione
 > **Prohibición de Cifras con Carga Popular o Supersticiosa:**
 > Nunca presentar en pantalla lotajes o saldos que contengan números asociados al mal o a la mala fortuna (como **6.66** o **13**). Todos los ejemplos deben reflejar números limpios, redondos y profesionales.
 
-### Modelo Matemático Estándar (Cuenta 100K FTMO / EURUSD):
+### Modelo Matemático Estándar (Cuenta de Evaluación 100K / EURUSD):
 - **Balance de Cuenta**: $100,000 USD
 - **Riesgo por Operación**: 1.0% ($1,000 USD)
 - **Stop Loss (SL)**: 20 pips
@@ -53,7 +53,7 @@ Para evitar el error común donde la gráfica de capital dibuja un arqueo descen
    ```javascript
    const account = {
        id: 1731800000000,
-       name: "Fondeo 100K FTMO",
+       name: "Fondeo 100K Challenge",
        balance: 100000,
        balanceActual: null, // Permite que AsTrade sume automáticamente el +3% de los trades
        stage: "prueba",
@@ -65,3 +65,13 @@ Para evitar el error común donde la gráfica de capital dibuja un arqueo descen
    - Tarjeta KPI Retorno Total (`#kpi-return`): Muestra **+3.00%** en verde esmeralda.
    - Input Balance Actual (`#dashboardBalanceActual`): Refleja **103000**.
    - Pestaña Metas (`#tab-btn-goals`): Muestra **37.5% de Profit Target** ($3,000 / $8,000 USD) y **Drawdown Máximo 100% Intacto** ($10,000 USD de colchón).
+
+---
+
+## 5. Política Estricta de Marca Blanca (Zero Marcas de Terceros)
+
+- **Prohibición Total:** Nunca hacer referencia a marcas registradas de Prop Firms comerciales (FTMO, FundedNext, MyForexFunds, etc.) en locución, textos en pantalla, carátulas, metadatos, tags o nombres de cuentas.
+- **Terminología Institucional Obligatoria:**
+  - *"Cuenta de Evaluación"* / *"Fase de Challenge"*
+  - *"Reglas de Evaluación"* / *"Límites de Drawdown y Target"*
+  - *"Firma de Fondeo"* / *"Prop Firms"* (en sentido genérico de industria).

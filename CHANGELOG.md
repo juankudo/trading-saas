@@ -5,6 +5,23 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.7] - 2026-11-18
+
+### 🛡️ Política Estricta de Marca Blanca (Zero Marcas de Terceros)
+- **Incorporación de la Regla de Oro #8 a la Skill Oficial (`astrade-tutorial-video`):**
+  - Prohibición explícita e inquebrantable de utilizar marcas comerciales o nombres de empresas externas (como FTMO, FundedNext, MyForexFunds, etc.) en locución, textos en pantalla, carátulas, metadatos, tags o nombres de cuentas simuladas.
+  - Estandarización de terminología genérica e institucional: *"Cuentas de Evaluación"*, *"Fase de Challenge"*, *"Firma de Fondeo"*, *"Reglas de Evaluación"*.
+- **Saneamiento y Regeneración de Carátulas (Thumbnails 1080p):**
+  - Actualización de `scripts/render/generate_youtube_thumbnails.py` reemplazando cualquier mención a marcas externas por *"Evaluación 100K & Prop Firms"* y *"REGLAS: 8% TARGET · 10% MAX DRAWDOWN"*.
+  - Regeneradas y verificadas las miniaturas PNG de alta definición para Tutorial #1 y Tutorial #2.
+- **Limpieza de Metadatos y Copywriting SEO:**
+  - `packages/tutorial_01/metadata.md` y `packages/tutorial_02/metadata.md` 100% libres de referencias a marcas comerciales en descripciones, títulos, marcas de tiempo y etiquetas de YouTube Studio.
+- **Saneamiento de Scripts de Producción:**
+  - `render_video_02_astrade.py` y `generate_video_02_audio.py` actualizados con el identificador institucional de cuenta *"Fondeo 100K Challenge"*.
+  - `app.html` actualizado con placeholder genérico `placeholder="Ej: Fondeo 100k Challenge"`.
+
+---
+
 ## [v3.8.6] - 2026-11-18
 
 ### 🎬 Kit de Publicación y Automatización Oficial de YouTube

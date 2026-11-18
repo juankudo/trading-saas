@@ -205,7 +205,7 @@ def render_thumbnail_tutorial_01(out_path):
     
     # 4. Checkpoints Técnicos
     font_check = get_font(FONT_BOLD, 23)
-    draw_check_item(draw, 90, 570, "Challenge FTMO 100K & Prop Firms", font_check)
+    draw_check_item(draw, 90, 570, "Evaluación 100K & Prop Firms", font_check)
     draw_check_item(draw, 90, 640, "Control Estricto de Drawdown 10%", font_check)
     draw_check_item(draw, 90, 710, "Menú de Acciones: Editar y Borrar", font_check)
     draw_check_item(draw, 90, 780, "Auditoría Automática sin Fricción", font_check)
@@ -217,7 +217,7 @@ def render_thumbnail_tutorial_01(out_path):
     # 6. Mockup Screenshot a la derecha
     shot_path = os.path.join(BASE_DIR, "scratch", "video_01", "audit_frames", "frame_45.0.png")
     target_box = (780, 160, 1860, 920) # 1080 x 760
-    add_mockup_frame(canvas, shot_path, target_box, floating_badge_text="REGLAS FTMO: 8% TARGET · 10% MAX DD")
+    add_mockup_frame(canvas, shot_path, target_box, floating_badge_text="REGLAS: 8% TARGET · 10% MAX DRAWDOWN")
     
     canvas.save(out_path, "PNG", quality=98)
     print(f"✅ Carátula Tutorial #1 guardada: {out_path}")

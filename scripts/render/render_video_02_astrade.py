@@ -7,7 +7,7 @@ Arquitectura de Producción de 3 Escenas Limpias:
    - Muxing sincronizado con Jorge leyendo el título del tutorial.
    - Cero parpadeos ni fotogramas vacíos.
 2. Escena 2 (Toma Continua en App): app.html
-   - Cuenta FTMO 100K pre-cargada con balanceActual dinámico (null).
+   - Cuenta 100K Challenge pre-cargada con balanceActual dinámico (null).
    - Zero-Blur Global: Interfaz 100% nítida, sin desenfoques de fondo.
    - Flujo operativo continuo en 6 bloques fonéticamente sincronizados:
        * Bloque 1: Vista general de Tus Cuentas y entrada a Métricas.
@@ -307,11 +307,11 @@ async def record_app_flow_continuous(p, manifest):
     await page.evaluate(engine_code)
     await page.evaluate("window.__initStudioMotionEngine()")
 
-    # Pre-cargar cuenta FTMO 100K con balanceActual: null (para proyección dinámica de trades)
+    # Pre-cargar cuenta 100K Challenge con balanceActual: null (para proyección dinámica de trades)
     await page.evaluate(f"""async () => {{
         const account = {{
             id: 1731800000000,
-            name: "Fondeo 100K FTMO",
+            name: "Fondeo 100K Challenge",
             pair: "",
             startDate: null,
             balance: 100000,
@@ -364,7 +364,7 @@ async def record_app_flow_continuous(p, manifest):
     print(f"\n⚡ [Bloque 1/6] {b1['title']} ({b1['duration_seconds']}s)...")
 
     await page.evaluate(f"""() => {{
-        window.__showLowerThird('⚡', '{b1['tag']}', 'Acceso y Auditoría: Cuenta Fondeo 100K FTMO');
+        window.__showLowerThird('⚡', '{b1['tag']}', 'Acceso y Auditoría: Cuenta Fondeo 100K');
     }}""")
     await asyncio.sleep(1.0)
 
@@ -373,7 +373,7 @@ async def record_app_flow_continuous(p, manifest):
 
     await page.evaluate(f"""() => {{
         window.__pulseRingAround('{account_card}', 8);
-        window.__showCalloutBadge('{account_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K FTMO', 'Fase 1: $100,000 USD | Target 8% | Max DD 10%', 'right');
+        window.__showCalloutBadge('{account_card}', '⚡', 'CUENTA ACTIVA', 'Fondeo 100K Challenge', 'Fase 1: $100,000 USD | Target 8% | Max DD 10%', 'right');
     }}""")
     await asyncio.sleep(4.5)
 

@@ -45,7 +45,7 @@ def parse_metadata_file(meta_path):
         tags_raw = tags_match.group(1).strip()
         tags = [t.strip() for t in tags_raw.split(",") if t.strip()]
     else:
-        tags = ["AsTrade", "Trading Journal", "Prop Firms", "FTMO", "Forex"]
+        tags = ["AsTrade", "Trading Journal", "Prop Firms", "Cuentas de Fondeo", "Forex"]
 
     return {
         "title": title,
