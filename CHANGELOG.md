@@ -27,6 +27,8 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
   - Apuntado exacto del pulso y badge al contenedor oficial `#inputLotajeCalc` con invocación reactiva a `calculateRR()` y `calculatePositionSize()`.
 - **Renderizado 100% Cloud en Google Colab con GPU T4:**
   - Filmación autónoma de las 3 escenas (`intro.mp4`, `app_flow_continuous.mp4`, `outro.mp4`) y ensamble cinemático completado en 10.03 minutos con 0% de sobrecarga local.
+- **Creación de la Skill Oficial de Producción Audiovisual (`astrade-tutorial-video`):**
+  - Empaquetado de todo el estándar de producción, runbooks y guías técnicas en `.agents/skills/astrade-tutorial-video/` (`SKILL.md` + 4 manuales de referencia) para automatizar con máxima consistencia la generación de cualquier futuro video tutorial de AsTrade.
 
 ---
 
