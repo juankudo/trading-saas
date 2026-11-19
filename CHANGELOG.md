@@ -5,6 +5,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.9] - 2026-11-18
+
+### 🎬 Producción y Master Final del Tutorial #3 ("Laboratorio de Backtesting Profesional")
+- **Video Maestro 1080p 60 FPS Renderizado 100% Cloud:**
+  - Generación de `AsTrade_Tutorial_03_Backtesting_1080p.mp4` en GPU NVIDIA T4 vía Google Colab CLI.
+  - Sincronización fonética estricta con `JorgeNeural` (es-MX) en 5 bloques operativos: Conmutación a Backtesting, Creación de Sesión (`EURUSD` · $100K · Reglas de Fondeo), Registro Ágil de Trade Simulado, Curva de Equidad y Métricas de Robustez, y Verificación de Aislamiento Total.
+  - Parámetros operativos institucionales impecables: **20 pips de Stop Loss**, **60 pips de Take Profit**, **5.00 lotes exactos** (con riesgo 1.0% sobre $100,000) y cierre en **Full TP** proyectando beneficio a $103,000 USD (+3.00%, R:R 1:3.00).
+  - Cumplimiento estricto de la política de Marca Blanca (Zero menciones a firmas o marcas de terceros).
+- **Kit de Publicación y Empaquetado Oficial (`packages/tutorial_03`):**
+  - Carátula minimalista técnica en 1920x1080 Full HD (`thumbnail_tutorial_03.png`).
+  - Metadatos SEO completos (`metadata.md`) con capítulos exactos (0:00 a 1:53), descripción institucional y tags.
+- **Auditoría Visual de Fotogramas (Zero-Blur Standard):**
+  - Verificación de 7 fotogramas clave confirmando el cierre limpio del modal de trade, visualización nítida del gráfico de equidad y datos de Cuentas Reales 100% aislados e intactos.
+
+---
+
 ## [v3.8.8] - 2026-11-18
 
 ### 🚀 Optimización del Publicador Autónomo de YouTube (`upload_youtube.py`)

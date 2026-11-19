@@ -336,8 +336,8 @@ window.__clearMotionArrows = function() {
 // -------------------------------------------------------------
 window.__pulseRingAround = function(selector, padding = 8) {
     window.__removePulseRing();
-    const el = document.querySelector(selector);
-    if (!el) return;
+    const el = (typeof selector === 'string') ? document.querySelector(selector) : selector;
+    if (!el || !el.getBoundingClientRect) return;
 
     const rect = el.getBoundingClientRect();
     const ring = document.createElement('div');
@@ -496,8 +496,8 @@ window.__glideCursorTo = function(targetX, targetY, durationMs = 650) {
 };
 
 window.__glideCursorToElement = function(selector, durationMs = 650, offsetX = 0.5, offsetY = 0.5) {
-    const el = document.querySelector(selector);
-    if (!el) return Promise.resolve();
+    const el = (typeof selector === 'string') ? document.querySelector(selector) : selector;
+    if (!el || !el.getBoundingClientRect) return Promise.resolve();
     const rect = el.getBoundingClientRect();
     const targetX = rect.left + rect.width * offsetX;
     const targetY = rect.top + rect.height * offsetY;

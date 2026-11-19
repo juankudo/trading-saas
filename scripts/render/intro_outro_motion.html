@@ -266,7 +266,11 @@
             const headlineEl = document.getElementById('intro-headline');
             const subheadlineEl = document.getElementById('intro-subheadline');
 
-            if (tutorial === '2') {
+            if (tutorial === '3') {
+                pillEl.innerText = 'Tutorial #3';
+                headlineEl.innerText = customTitle || 'Laboratorio de Backtesting Profesional';
+                subheadlineEl.innerText = customSubtitle || 'Valida tu ventaja estadística sin arriesgar capital';
+            } else if (tutorial === '2') {
                 pillEl.innerText = 'Tutorial #2';
                 headlineEl.innerText = customTitle || 'Registro y Auditoría de Trades';
                 subheadlineEl.innerText = customSubtitle || 'Cálculo de riesgo, ratio R:R y capturas técnicas';
@@ -287,7 +291,10 @@
             if (customTitle) outroHeadlineEl.innerText = customTitle;
             if (customSubtitle) outroSubEl.innerText = customSubtitle;
 
-            if (tutorial === '2' || customNext) {
+            if (tutorial === '3') {
+                teaserEl.style.display = 'inline-block';
+                teaserEl.innerText = 'Próximo: Tutorial #4 · Dashboard Cuantitativo y Calendario';
+            } else if (tutorial === '2' || customNext) {
                 teaserEl.style.display = 'inline-block';
                 if (customNext) teaserEl.innerText = customNext;
             }

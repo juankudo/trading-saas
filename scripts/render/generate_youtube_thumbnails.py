@@ -12,8 +12,10 @@ W, H = 1920, 1080
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 OUT_DIR_T1 = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01")
 OUT_DIR_T2 = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02")
+OUT_DIR_T3 = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_03")
 os.makedirs(OUT_DIR_T1, exist_ok=True)
 os.makedirs(OUT_DIR_T2, exist_ok=True)
+os.makedirs(OUT_DIR_T3, exist_ok=True)
 
 # Tipografías oficiales
 FONT_BOLD = r"C:\Windows\Fonts\segoeuib.ttf"
@@ -276,9 +278,61 @@ def render_thumbnail_tutorial_02(out_path):
     
     canvas.save(out_path, "PNG", quality=98)
     print(f"✅ Carátula Tutorial #2 guardada: {out_path}")
+
+def render_thumbnail_tutorial_03(out_path):
+    print("🎨 Generando carátula Tutorial #3 (Minimalista Técnico)...")
+    canvas = create_base_canvas(glow_color=(16, 185, 129))
+    draw = ImageDraw.Draw(canvas)
+    
+    # 1. Branding AsTrade
+    draw.rounded_rectangle([90, 80, 142, 132], radius=12, fill=(16, 185, 129), outline=(52, 211, 153), width=2)
+    font_a = get_font(FONT_BOLD, 36)
+    draw.text((104, 85), "A", font=font_a, fill=(11, 15, 25))
+    
+    font_brand = get_font(FONT_BOLD, 38)
+    draw.text((158, 86), "AsTrade", font=font_brand, fill=(255, 255, 255))
+    
+    font_tag = get_font(FONT_BOLD, 14)
+    draw_pill(draw, 320, 92, "PRO BACKTESTING", font_tag, (16, 185, 129, 30), (16, 185, 129, 160), (52, 211, 153), pad_x=12, pad_y=5)
+    
+    # 2. Pill Serie
+    font_pill = get_font(FONT_BOLD, 22)
+    draw_pill(draw, 90, 180, "TUTORIAL #3 · LABORATORIO CUANTITATIVO", font_pill, (24, 34, 52, 230), (16, 185, 129, 210), (241, 245, 249), dot_color=(16, 185, 129))
+    
+    # 3. Titulares
+    font_h1 = get_font(FONT_BOLD, 74)
+    font_h1_accent = get_font(FONT_BOLD, 88)
+    font_sub = get_font(FONT_BOLD, 28)
+    
+    draw.text((92, 277), "VALIDACIÓN Y", font=font_h1, fill=(0, 0, 0, 180))
+    draw.text((90, 275), "VALIDACIÓN Y", font=font_h1, fill=(255, 255, 255))
+    
+    draw.text((92, 362), "BACKTESTING", font=font_h1_accent, fill=(0, 0, 0, 200))
+    draw.text((90, 360), "BACKTESTING", font=font_h1_accent, fill=(16, 185, 129)) # Emerald accent
+    
+    draw.text((90, 475), "Prueba tus Estrategias sin Arriesgar Capital", font=font_sub, fill=(203, 213, 225))
+    
+    draw.line([(90, 525), (480, 525)], fill=(51, 65, 85), width=2)
+    draw.line([(90, 525), (240, 525)], fill=(16, 185, 129), width=3)
+    
+    # 4. Checkpoints Técnicos
+    font_check = get_font(FONT_BOLD, 23)
+    draw_check_item(draw, 90, 570, "Simulación Cuantitativa Aislada", font_check)
+    draw_check_item(draw, 90, 640, "Evaluación Fondeo: 8% Target · 10% DD", font_check)
+    draw_check_item(draw, 90, 710, "Win Rate & Curva de Equidad Proyectada", font_check)
+    draw_check_item(draw, 90, 780, "Cuentas Reales 100% Protegidas", font_check)
+    
+    # 5. Footer con Dominio Oficial
+    font_domain = get_font(FONT_BOLD, 18)
+    draw_pill(draw, 90, 880, "astradehub.com · Plataforma Oficial", font_domain, (15, 23, 42, 235), (51, 65, 85), (56, 189, 248), dot_color=(56, 189, 248), pad_x=20, pad_y=10)
+    
+    # 6. Mockup Screenshot Dashboard +3% a la derecha
+    shot_path = os.path.join(BASE_DIR, "scratch", "video_02", "v7_audit_frames", "frame_103.0.png")
+    target_box = (780, 160, 1860, 920) # 1080 x 760
+    add_mockup_frame(canvas, shot_path, target_box, floating_badge_text="LABORATORIO BACKTESTING · EURUSD · SIMULACIÓN FONDEO")
     
     canvas.save(out_path, "PNG", quality=98)
-    print(f"✅ Carátula Tutorial #2 guardada: {out_path}")
+    print(f"✅ Carátula Tutorial #3 guardada: {out_path}")
 
 def main():
     print("=" * 70)
@@ -287,9 +341,11 @@ def main():
     
     out_t1 = os.path.join(OUT_DIR_T1, "thumbnail_tutorial_01.png")
     out_t2 = os.path.join(OUT_DIR_T2, "thumbnail_tutorial_02.png")
+    out_t3 = os.path.join(OUT_DIR_T3, "thumbnail_tutorial_03.png")
     
     render_thumbnail_tutorial_01(out_t1)
     render_thumbnail_tutorial_02(out_t2)
+    render_thumbnail_tutorial_03(out_t3)
     
     print("=" * 70)
     print("🎉 MINIATURAS GENERADAS CON ÉXITO A 1920x1080 FULL HD.")
