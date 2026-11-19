@@ -1,8 +1,8 @@
 """
 YouTube Autonomous Uploader — AsTrade Tutorials
 Sube videos y miniaturas automáticamente al canal de YouTube usando YouTube Data API v3
-con soporte para autenticación OAuth 2.0, subida reanudable (Resumable Upload)
-y validación en seco (--dry-run).
+con soporte para autenticación OAuth 2.0, subida reanudable (Resumable Upload),
+procesamiento por lotes (--tutorial all) y registro persistente de publicaciones.
 """
 
 import os
@@ -10,10 +10,13 @@ import sys
 import re
 import json
 import argparse
+from datetime import datetime
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
 CLIENT_SECRETS_FILE = os.path.join(BASE_DIR, "client_secrets.json")
 OAUTH_TOKEN_FILE = os.path.join(BASE_DIR, "youtube_token.json")
+AUTH_URL_FILE = os.path.join(BASE_DIR, "scripts", "social", "auth_url.txt")
+PUBLISHED_LOG_FILE = os.path.join(BASE_DIR, "media", "youtube_tutorials", "published_videos.json")
 
 # Scopes requeridos para subir videos y asignar miniaturas
 SCOPES = [
@@ -56,22 +59,30 @@ def parse_metadata_file(meta_path):
 def get_authenticated_service():
     """
     Obtiene o renueva la sesión autenticada de YouTube Data API v3.
+    Si es la primera vez, inicia un servidor local y abre el enlace de autorización.
     """
     from google.oauth2.credentials import Credentials
-    from google_auth_oauthlib.flow import InstalledAppFlow
+    from google_auth_oauthlib.flow import (
+        InstalledAppFlow,
+        _ExclusiveWSGIServer,
+        _WSGIRequestHandler,
+        _RedirectWSGIApp
+    )
     from google.auth.transport.requests import Request
     from googleapiclient.discovery import build
+    import wsgiref.simple_server
 
     creds = None
     if os.path.exists(OAUTH_TOKEN_FILE):
         try:
             creds = Credentials.from_authorized_user_file(OAUTH_TOKEN_FILE, SCOPES)
-        except Exception:
+        except Exception as e:
+            print(f"⚠️ Error al leer {OAUTH_TOKEN_FILE}: {e}. Se solicitará nueva autorización.", flush=True)
             creds = None
 
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
-            print("🔄 Renovando token de acceso de YouTube API...")
+            print("🔄 Renovando token de acceso de YouTube API con refresh_token...", flush=True)
             creds.refresh(Request())
         else:
             if not os.path.exists(CLIENT_SECRETS_FILE):
@@ -79,13 +90,53 @@ def get_authenticated_service():
                     f"Falta el archivo de credenciales de Google: {CLIENT_SECRETS_FILE}\n"
                     "Consulta la guía en docs/GUIA_CONFIGURACION_YOUTUBE_API.md para generarlo en 3 minutos."
                 )
-            print("🌐 Iniciando flujo de autorización en el navegador...")
+
+            # Iniciar servidor WSGI en puerto efímero libre
+            wsgi_app = _RedirectWSGIApp(
+                "¡Autorización completada con éxito! Puedes cerrar esta pestaña y volver a la consola."
+            )
+            local_server = wsgiref.simple_server.make_server(
+                "localhost",
+                0,
+                wsgi_app,
+                server_class=_ExclusiveWSGIServer,
+                handler_class=_WSGIRequestHandler
+            )
+
             flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRETS_FILE, SCOPES)
-            creds = flow.run_local_server(port=0)
+            flow.redirect_uri = f"http://localhost:{local_server.server_port}/"
+            auth_url, _ = flow.authorization_url(prompt="consent", access_type="offline")
+
+            # Guardar enlace en archivo accesible
+            with open(AUTH_URL_FILE, "w", encoding="utf-8") as f:
+                f.write(auth_url)
+
+            print("\n" + "=" * 70, flush=True)
+            print("🔐 AUTORIZACIÓN GOOGLE OAUTH 2.0 (Paso Único)", flush=True)
+            print("=" * 70, flush=True)
+            print("Se ha generado el enlace de autorización para tu canal de YouTube:", flush=True)
+            print(f"\n👉 {auth_url}\n", flush=True)
+            print("=" * 70, flush=True)
+            print(f"📁 Enlace guardado en: {AUTH_URL_FILE}", flush=True)
+            print("⏳ Esperando autorización en el navegador...", flush=True)
+
+            # Intentar abrir el navegador en Windows de forma nativa
+            try:
+                os.startfile(auth_url)
+            except Exception:
+                pass
+
+            try:
+                local_server.handle_request()
+                auth_resp = wsgi_app.last_request_uri.replace("http://", "https://")
+                flow.fetch_token(authorization_response=auth_resp)
+                creds = flow.credentials
+            finally:
+                local_server.server_close()
 
         with open(OAUTH_TOKEN_FILE, "w", encoding="utf-8") as token_file:
             token_file.write(creds.to_json())
-        print(f"🔐 Credenciales guardadas en: {OAUTH_TOKEN_FILE}")
+        print(f"🔐 Credenciales guardadas con éxito en: {OAUTH_TOKEN_FILE}", flush=True)
 
     return build("youtube", "v3", credentials=creds)
 
@@ -94,14 +145,13 @@ def upload_video_to_youtube(youtube, video_path, thumb_path, meta, privacy="publ
     Ejecuta la subida reanudable del video y asigna su miniatura personalizada.
     """
     from googleapiclient.http import MediaFileUpload
-    import googleapiclient.errors
 
     body = {
         "snippet": {
-            "title": meta["title"][:100], # Límite de 100 caracteres de YouTube
+            "title": meta["title"][:100],  # Límite de 100 caracteres de YouTube
             "description": meta["description"][:5000],
             "tags": meta["tags"][:50],
-            "categoryId": "27", # Educación
+            "categoryId": "27",  # Educación
             "defaultLanguage": "es",
             "defaultAudioLanguage": "es"
         },
@@ -113,9 +163,9 @@ def upload_video_to_youtube(youtube, video_path, thumb_path, meta, privacy="publ
 
     media_body = MediaFileUpload(video_path, chunksize=1024 * 1024 * 4, resumable=True)
 
-    print(f"\n🚀 Subiendo video a YouTube (Visibilidad: {privacy.upper()})...")
-    print(f"   📍 Archivo: {video_path}")
-    print(f"   📦 Tamaño: {os.path.getsize(video_path) / (1024*1024):.2f} MB")
+    print(f"\n🚀 Subiendo video a YouTube (Visibilidad: {privacy.upper()})...", flush=True)
+    print(f"   📍 Archivo: {video_path}", flush=True)
+    print(f"   📦 Tamaño: {os.path.getsize(video_path) / (1024*1024):.2f} MB", flush=True)
 
     insert_request = youtube.videos().insert(
         part="snippet,status",
@@ -133,30 +183,73 @@ def upload_video_to_youtube(youtube, video_path, thumb_path, meta, privacy="publ
                 print(f"   -> Progreso de subida: {pct}%", end="\r", flush=True)
                 last_progress = pct
 
-    print("\n✅ ¡Video subido con éxito a YouTube!")
+    print("\n✅ ¡Video subido con éxito a YouTube!", flush=True)
     video_id = response.get("id")
     video_url = f"https://youtu.be/{video_id}"
-    print(f"   🔗 Enlace del Video: {video_url}")
+    print(f"   🔗 Enlace del Video: {video_url}", flush=True)
 
     # Subida de Miniatura Personalizada
+    thumbnail_status = "no_file"
     if thumb_path and os.path.exists(thumb_path):
-        print(f"\n🖼️ Asignando carátula / miniatura personalizada...")
+        print(f"🖼️ Asignando carátula / miniatura personalizada...", flush=True)
         try:
             thumb_media = MediaFileUpload(thumb_path)
             youtube.thumbnails().set(
                 videoId=video_id,
                 media_body=thumb_media
             ).execute()
-            print("✅ ¡Miniatura personalizada asignada correctamente!")
+            print("✅ ¡Miniatura personalizada asignada correctamente!", flush=True)
+            thumbnail_status = "success"
         except Exception as e:
-            print(f"⚠️ No se pudo asignar la miniatura automáticamente: {e}")
-            print(f"   Puedes subirla manualmente desde: {thumb_path}")
+            print(f"⚠️ Nota sobre miniatura: {e}", flush=True)
+            print(f"   (Si tu canal de YouTube aún no tiene activada la verificación telefónica para miniaturas,")
+            print(f"    puedes asignarla manualmente desde YouTube Studio con: {thumb_path})", flush=True)
+            thumbnail_status = "manual_required"
 
-    return video_id, video_url
+    return {
+        "id": video_id,
+        "url": video_url,
+        "privacy": privacy,
+        "title": meta["title"],
+        "thumbnail_status": thumbnail_status,
+        "timestamp": datetime.now().isoformat()
+    }
+
+def record_publication(tutorial_key, data):
+    """
+    Registra el historial de subida en un archivo JSON local.
+    """
+    history = {}
+    if os.path.exists(PUBLISHED_LOG_FILE):
+        try:
+            with open(PUBLISHED_LOG_FILE, "r", encoding="utf-8") as f:
+                history = json.load(f)
+        except Exception:
+            history = {}
+
+    history[tutorial_key] = data
+
+    os.makedirs(os.path.dirname(PUBLISHED_LOG_FILE), exist_ok=True)
+    with open(PUBLISHED_LOG_FILE, "w", encoding="utf-8") as f:
+        json.dump(history, f, indent=2, ensure_ascii=False)
+
+def get_tutorial_paths(t_num):
+    """
+    Retorna rutas de video, metadatos y miniatura para un tutorial dado.
+    """
+    if str(t_num) == "1":
+        video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_01_Cuentas_1080p.mp4")
+        meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01", "metadata.md")
+        thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01", "thumbnail_tutorial_01.png")
+    else:
+        video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_02_Trades_1080p.mp4")
+        meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02", "metadata.md")
+        thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02", "thumbnail_tutorial_02.png")
+    return video, meta, thumb
 
 def main():
     parser = argparse.ArgumentParser(description="YouTube Autonomous Uploader — AsTrade")
-    parser.add_argument("--tutorial", choices=["1", "2"], default="2", help="Seleccionar Tutorial (1 o 2)")
+    parser.add_argument("--tutorial", choices=["1", "2", "all"], default="all", help="Seleccionar Tutorial (1, 2 o all)")
     parser.add_argument("--video", default=None, help="Ruta personalizada del video MP4")
     parser.add_argument("--meta", default=None, help="Ruta personalizada del archivo metadata.md")
     parser.add_argument("--thumb", default=None, help="Ruta personalizada de la miniatura PNG")
@@ -164,76 +257,100 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Validar metadatos y simular subida sin conectar a la API")
     args = parser.parse_args()
 
-    # Asignar rutas por defecto según el tutorial seleccionado
-    if args.tutorial == "1":
-        default_video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_01_Cuentas_1080p.mp4")
-        default_meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01", "metadata.md")
-        default_thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01", "thumbnail_tutorial_01.png")
-    else:
-        default_video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_02_Trades_1080p.mp4")
-        default_meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02", "metadata.md")
-        default_thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02", "thumbnail_tutorial_02.png")
+    tutorials_to_process = ["1", "2"] if args.tutorial == "all" else [args.tutorial]
 
-    video_path = args.video if args.video else default_video
-    meta_path = args.meta if args.meta else default_meta
-    thumb_path = args.thumb if args.thumb else default_thumb
+    print("=" * 70, flush=True)
+    print("🎬 ASTRADE YOUTUBE PUBLISHER", flush=True)
+    print("=" * 70, flush=True)
+    print(f"🎯 Modo: {'SIMULACIÓN DRY-RUN' if args.dry_run else 'SUBIDA REAL API'}", flush=True)
+    print(f"📚 Tutoriales a procesar: {tutorials_to_process}", flush=True)
+    print(f"🔒 Visibilidad: {args.privacy.upper()}", flush=True)
+    print("=" * 70, flush=True)
 
-    print("=" * 70)
-    print("🎬 ASTRADE YOUTUBE PUBLISHER")
-    print("=" * 70)
-    print(f"🎯 Modo: {'SIMULACIÓN DRY-RUN' if args.dry_run else 'SUBIDA REAL API'}")
-    print(f"📚 Tutorial: #{args.tutorial}")
-    print(f"📍 Video MP4: {video_path} (Existe: {os.path.exists(video_path)})")
-    print(f"📝 Metadatos: {meta_path} (Existe: {os.path.exists(meta_path)})")
-    print(f"🖼️ Miniatura: {thumb_path} (Existe: {os.path.exists(thumb_path)})")
-    print(f"🔒 Visibilidad: {args.privacy.upper()}")
+    # Validar existencia previa de archivos
+    tasks = []
+    for t in tutorials_to_process:
+        if args.video and len(tutorials_to_process) == 1:
+            v, m, th = args.video, args.meta, args.thumb
+        else:
+            v, m, th = get_tutorial_paths(t)
 
-    # Validar archivos
-    if not os.path.exists(video_path):
-        print(f"❌ Error: Archivo de video no encontrado en: {video_path}")
-        return 1
-    if not os.path.exists(meta_path):
-        print(f"❌ Error: Archivo de metadatos no encontrado en: {meta_path}")
-        return 1
+        if not os.path.exists(v):
+            print(f"❌ Error: Archivo de video no encontrado para Tutorial #{t}: {v}", flush=True)
+            return 1
+        if not os.path.exists(m):
+            print(f"❌ Error: Archivo de metadatos no encontrado para Tutorial #{t}: {m}", flush=True)
+            return 1
 
-    # Parsear metadatos
-    meta = parse_metadata_file(meta_path)
-    print("\n" + "─" * 70)
-    print(f"📌 TÍTULO: {meta['title']}")
-    print(f"🏷️ TAGS ({len(meta['tags'])}): {', '.join(meta['tags'][:8])}...")
-    print(f"📝 DESCRIPCIÓN ({len(meta['description'])} caracteres):")
-    print(meta['description'][:350] + "...\n[Ver metadata.md para texto completo]")
-    print("─" * 70)
+        meta = parse_metadata_file(m)
+        tasks.append({
+            "key": f"tutorial_{t}",
+            "tutorial": t,
+            "video": v,
+            "meta": meta,
+            "meta_path": m,
+            "thumb": th
+        })
 
-    # Modo Dry-Run o falta de credenciales
+    # Mostrar resumen de las tareas preparadas
+    for task in tasks:
+        print(f"\n📦 [Tutorial #{task['tutorial']}] {task['meta']['title']}", flush=True)
+        print(f"   📍 Video: {task['video']} ({os.path.getsize(task['video'])/(1024*1024):.2f} MB)", flush=True)
+        print(f"   🖼️ Miniatura: {task['thumb']} ({'Existe' if os.path.exists(task['thumb']) else 'Falta'})", flush=True)
+        print(f"   🏷️ Tags: {len(task['meta']['tags'])} etiquetas institucionales", flush=True)
+
     if args.dry_run:
-        print("\n✅ [DRY-RUN EXITOSO] El paquete de publicación está 100% calibrado y listo.")
-        print(f"   -> Video: {os.path.getsize(video_path)/(1024*1024):.2f} MB")
-        if os.path.exists(thumb_path):
-            print(f"   -> Miniatura: {os.path.getsize(thumb_path)/(1024):.2f} KB")
+        print("\n" + "=" * 70, flush=True)
+        print("✅ [DRY-RUN EXITOSO] Todos los paquetes están validados y listos para subida.", flush=True)
+        print("=" * 70, flush=True)
         return 0
 
     if not os.path.exists(CLIENT_SECRETS_FILE):
-        print("\n" + "=" * 70)
-        print("⚠️ AVISO DE CONFIGURACIÓN DE YOUTUBE DATA API")
-        print("=" * 70)
-        print("Para realizar la subida automática directa a tu canal de YouTube:")
-        print("1. Sigue la guía de 3 minutos en: docs/GUIA_CONFIGURACION_YOUTUBE_API.md")
-        print("2. Descarga tu 'client_secrets.json' desde Google Cloud Console.")
-        print(f"3. Colócalo en la raíz del proyecto: {CLIENT_SECRETS_FILE}")
-        print("4. Vuelve a ejecutar este comando para subir en piloto automático.")
-        print("\n💡 Mientras tanto, tus archivos locales están listos para subida manual:")
-        print(f"   📁 Carpeta Tutorial #{args.tutorial}: {os.path.dirname(meta_path)}")
-        print("=" * 70)
-        return 0
+        print("\n" + "=" * 70, flush=True)
+        print("⚠️ ARCHIVO 'client_secrets.json' NO ENCONTRADO", flush=True)
+        print("=" * 70, flush=True)
+        print(f"Ruta esperada: {CLIENT_SECRETS_FILE}", flush=True)
+        print("Consulta docs/GUIA_CONFIGURACION_YOUTUBE_API.md para descargarlo en 3 minutos.", flush=True)
+        return 1
 
-    # Subida real mediante la API
+    # Obtener servicio autenticado
     try:
         youtube = get_authenticated_service()
-        upload_video_to_youtube(youtube, video_path, thumb_path, meta, privacy=args.privacy)
     except Exception as e:
-        print(f"\n❌ Error durante la comunicación con YouTube API: {e}")
+        print(f"\n❌ Error al autenticar con Google OAuth: {e}", flush=True)
         return 1
+
+    # Ejecutar subida de cada tutorial
+    results = []
+    for task in tasks:
+        print("\n" + "─" * 70, flush=True)
+        print(f"📤 Procesando Tutorial #{task['tutorial']}...", flush=True)
+        print("─" * 70, flush=True)
+        try:
+            res = upload_video_to_youtube(
+                youtube=youtube,
+                video_path=task["video"],
+                thumb_path=task["thumb"],
+                meta=task["meta"],
+                privacy=args.privacy
+            )
+            record_publication(task["key"], res)
+            results.append((task["tutorial"], res))
+        except Exception as e:
+            print(f"❌ Error al subir Tutorial #{task['tutorial']}: {e}", flush=True)
+
+    # Resumen final
+    print("\n" + "=" * 70, flush=True)
+    print("🎉 RESUMEN DE PUBLICACIÓN EN YOUTUBE", flush=True)
+    print("=" * 70, flush=True)
+    for t_num, res in results:
+        print(f"✅ Tutorial #{t_num}:", flush=True)
+        print(f"   📌 Título: {res['title']}", flush=True)
+        print(f"   🔗 URL: {res['url']}", flush=True)
+        print(f"   🔒 Visibilidad: {res['privacy'].upper()}", flush=True)
+        print(f"   🖼️ Miniatura: {res['thumbnail_status']}", flush=True)
+    print(f"\n📁 Registro guardado en: {PUBLISHED_LOG_FILE}", flush=True)
+    print("=" * 70, flush=True)
 
     return 0
 

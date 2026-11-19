@@ -5,6 +5,19 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.8.8] - 2026-11-18
+
+### 🚀 Optimización del Publicador Autónomo de YouTube (`upload_youtube.py`)
+- **Procesamiento por Lotes (`--tutorial all`):**
+  - Soporte para subir la serie completa de tutoriales en una sola llamada secuencial reutilizando la sesión autenticada.
+- **Apertura de Navegador y Diagnóstico Unbuffered:**
+  - Integración de apertura nativa del navegador en Windows con `os.startfile` para el flujo de autorización OAuth 2.0.
+  - Generación de mensajes sin búfer (`flush=True`) con enlaces directos para facilitar la autenticación.
+- **Registro Persistente de Publicaciones (`published_videos.json`):**
+  - Registro automático del historial de subidas con ID de video, URL de YouTube, fecha/hora, visibilidad y estado de la miniatura.
+
+---
+
 ## [v3.8.7] - 2026-11-18
 
 ### 🛡️ Política Estricta de Marca Blanca (Zero Marcas de Terceros)
