@@ -5,6 +5,24 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.3] - 2026-11-20
+
+### 🎨 Corrección de Enfoque y Adaptabilidad en Modales de Autenticación
+- **Solución al Desbordamiento Vertical y Recorte Superior:**
+  - Sustitución de `items-center` por `overflow-y-auto` en el contenedor `#auth-modal-backdrop` y `my-auto` en la tarjeta `#auth-modal-card`, eliminando el problema de coordenadas negativas de flexbox que empujaba la parte superior fuera del viewport.
+  - El botón de cierre (`X`) y el icono superior (cohete / flecha) permanecen 100% visibles y con márgenes superiores limpios en cualquier resolución de pantalla.
+- **Scroll Vertical Suave y Completo:**
+  - Habilitado scroll vertical libre en el contenedor modal cuando el contenido excede la altura de la ventana (pantallas de portátiles o zoom activo).
+  - Adición de `backdrop.scrollTop = 0;` en `openAuthModal()` para garantizar que el modal siempre abra desde la parte superior.
+- **Optimización de Proporciones y Altura:**
+  - Compactación armónica de paddings (`p-5 sm:p-6`), espaciados de formulario (`space-y-3`), dimensiones de iconos (`w-10 h-10`) y checklist de contraseñas (`text-[10px]`), reduciendo la altura total en más de 85px para caber holgadamente en pantallas de 700-800px.
+- **Soporte de Contraste en Modo Claro:**
+  - Estilización dedicada de la clase `.auth-close-btn` en modo claro (`color: #64748b` con hover `#0f172a`), garantizando visibilidad nítida sobre la tarjeta blanca.
+- **Sincronización Bilingüe:**
+  - Aplicado idénticamente en [index.html](file:///c:/Users/Juan/Desktop/trading-saas/index.html) y [en.html](file:///c:/Users/Juan/Desktop/trading-saas/en.html).
+
+---
+
 ## [v3.9.2] - 2026-11-19
 
 ### 🤖 Nueva Skill de Automatización de Contenido Social: `ai-content-automation`

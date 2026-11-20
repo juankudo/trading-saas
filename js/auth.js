@@ -236,6 +236,7 @@ function openAuthModal(modalType = 'login') {
     if (modalType === 'register' && modalRegister) modalRegister.classList.remove('hidden');
     if (modalType === 'forgot' && modalForgot) modalForgot.classList.remove('hidden');
 
+    backdrop.scrollTop = 0;
     backdrop.classList.remove('hidden');
     backdrop.classList.add('flex');
     document.body.classList.add('overflow-hidden');

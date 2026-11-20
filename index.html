@@ -3414,50 +3414,50 @@
     </div>
 
     <!-- AUTH MODALS CONTAINER (BACKDROP) -->
-    <div id="auth-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center p-4 overscroll-contain">
+    <div id="auth-modal-backdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden overflow-y-auto p-4 sm:p-6 overscroll-contain justify-center">
         
         <!-- Modal Card -->
-        <div class="bg-[#111625] border border-gray-700/80 rounded-2xl w-full max-w-md p-6 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150">
+        <div id="auth-modal-card" class="bg-[#111625] border border-gray-700/80 rounded-2xl w-full max-w-md p-5 sm:p-6 shadow-2xl relative my-auto animate-in fade-in zoom-in-95 duration-150">
             <!-- Close Button -->
-            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg p-2 transition" aria-label="Cerrar ventana modal">
+            <button onclick="closeAuthModal()" class="auth-close-btn absolute top-3.5 right-3.5 w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-white hover:bg-gray-800/60 text-base transition z-20" aria-label="Cerrar ventana modal">
                 <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
 
             <!-- VIEW: LOGIN -->
             <div id="auth-view-login">
-                <div class="text-center mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                <div class="text-center mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-2 text-lg">
                         <i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Iniciar Sesión</h3>
-                    <p class="text-xs text-gray-400 mt-1">Ingresa a tu Bitácora Pro en la nube</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Ingresa a tu Bitácora Pro en la nube</p>
                 </div>
 
                 <div id="login-alert" class="hidden"></div>
 
-                <form onsubmit="handleLoginForm(event)" class="space-y-4">
+                <form onsubmit="handleLoginForm(event)" class="space-y-3">
                     <div>
-                        <label for="login-email" class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
-                        <input type="email" id="login-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="login-email" class="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico</label>
+                        <input type="email" id="login-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
-                        <div class="flex justify-between items-center mb-1.5">
+                        <div class="flex justify-between items-center mb-1">
                             <label for="login-password" class="block text-xs font-semibold text-gray-300">Contraseña</label>
                             <button type="button" onclick="openAuthModal('forgot')" class="text-xs text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
                         </div>
                         <div class="relative">
-                            <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition font-mono">
-                            <button type="button" onclick="togglePasswordVisibility('login-password', 'login-password-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 transition" title="Mostrar u ocultar contraseña" tabindex="-1">
+                            <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-3.5 pr-10 py-2 text-sm text-white placeholder-gray-500 outline-none transition font-mono">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', 'login-password-eye')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 transition" title="Mostrar u ocultar contraseña" tabindex="-1">
                                 <i id="login-password-eye" class="fa-regular fa-eye text-xs"></i>
                             </button>
                         </div>
                     </div>
-                    <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2">
+                    <button type="submit" class="w-full py-2.5 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-1">
                         Ingresar a la Bitácora
                     </button>
                 </form>
 
-                <div class="mt-6 pt-5 border-t border-gray-800 text-center text-xs text-gray-400">
+                <div class="mt-4 pt-3.5 border-t border-gray-800 text-center text-xs text-gray-400">
                     ¿No tienes una cuenta aún?
                     <button onclick="openAuthModal('register')" class="text-emerald-400 hover:underline font-bold ml-1">Comenzar 7 días gratis</button>
                 </div>
@@ -3465,38 +3465,38 @@
 
             <!-- VIEW: REGISTER -->
             <div id="auth-view-register" class="hidden">
-                <div class="text-center mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                <div class="text-center mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-2 text-lg">
                         <i class="fa-solid fa-rocket" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Prueba Gratis de 7 Días</h3>
-                    <p class="text-xs text-gray-400 mt-1">Activa tus 7 días gratis ($0 cobrados hoy). Cancela cuando quieras.</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Activa tus 7 días gratis ($0 cobrados hoy). Cancela cuando quieras.</p>
                 </div>
 
                 <div id="register-alert" class="hidden"></div>
 
-                <form onsubmit="handleRegisterForm(event)" class="space-y-4">
+                <form onsubmit="handleRegisterForm(event)" class="space-y-3">
                     <div>
-                        <label for="reg-name" class="block text-xs font-semibold text-gray-300 mb-1.5">Nombre Completo o Alias</label>
-                        <input type="text" id="reg-name" name="name" autocomplete="name" required placeholder="Juan Trader" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="reg-name" class="block text-xs font-semibold text-gray-300 mb-1">Nombre Completo o Alias</label>
+                        <input type="text" id="reg-name" name="name" autocomplete="name" required placeholder="Juan Trader" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
-                        <label for="reg-email" class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico</label>
-                        <input type="email" id="reg-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="reg-email" class="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico</label>
+                        <input type="email" id="reg-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
-                        <div class="flex justify-between items-center mb-1.5">
+                        <div class="flex justify-between items-center mb-1">
                             <label for="reg-password" class="block text-xs font-semibold text-gray-300">Contraseña segura (mínimo 10 caracteres)</label>
                         </div>
                         <div class="relative">
-                            <input type="password" id="reg-password" name="new-password" autocomplete="new-password" minlength="10" required placeholder="••••••••••••" oninput="handlePasswordInput(this.value, 'es')" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition font-mono">
-                            <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-password-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 transition" title="Mostrar u ocultar contraseña" tabindex="-1">
+                            <input type="password" id="reg-password" name="new-password" autocomplete="new-password" minlength="10" required placeholder="••••••••••••" oninput="handlePasswordInput(this.value, 'es')" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-3.5 pr-10 py-2 text-sm text-white placeholder-gray-500 outline-none transition font-mono">
+                            <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-password-eye')" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 transition" title="Mostrar u ocultar contraseña" tabindex="-1">
                                 <i id="reg-password-eye" class="fa-regular fa-eye text-xs"></i>
                             </button>
                         </div>
 
                         <!-- Barra de Fortaleza -->
-                        <div class="mt-2 space-y-1.5">
+                        <div class="mt-1.5 space-y-1">
                             <div class="flex items-center justify-between text-[10px] font-mono">
                                 <span class="text-gray-400">Nivel de seguridad:</span>
                                 <span id="reg-strength-text" class="font-bold text-gray-500 uppercase">Sin ingresar</span>
@@ -3507,39 +3507,39 @@
                         </div>
 
                         <!-- Checklist de 5 Criterios en Tiempo Real -->
-                        <div id="reg-password-checklist" class="grid grid-cols-2 gap-x-2 gap-y-1 mt-2.5 p-2.5 rounded-xl bg-gray-950/80 border border-gray-800 text-[10.5px] font-mono text-gray-400">
+                        <div id="reg-password-checklist" class="grid grid-cols-2 gap-x-2 gap-y-1 mt-2 p-2 rounded-xl bg-gray-950/80 border border-gray-800 text-[10px] font-mono text-gray-400">
                             <div id="chk-len" class="flex items-center gap-1.5 transition-colors">
-                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <i class="fa-solid fa-circle text-[6px] text-gray-600"></i>
                                 <span>10+ caracteres</span>
                             </div>
                             <div id="chk-upper" class="flex items-center gap-1.5 transition-colors">
-                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <i class="fa-solid fa-circle text-[6px] text-gray-600"></i>
                                 <span>1 mayúscula (A-Z)</span>
                             </div>
                             <div id="chk-lower" class="flex items-center gap-1.5 transition-colors">
-                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <i class="fa-solid fa-circle text-[6px] text-gray-600"></i>
                                 <span>1 minúscula (a-z)</span>
                             </div>
                             <div id="chk-num" class="flex items-center gap-1.5 transition-colors">
-                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <i class="fa-solid fa-circle text-[6px] text-gray-600"></i>
                                 <span>1 número (0-9)</span>
                             </div>
                             <div id="chk-sym" class="col-span-2 flex items-center gap-1.5 transition-colors">
-                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <i class="fa-solid fa-circle text-[6px] text-gray-600"></i>
                                 <span>1 símbolo especial (!@#$%...)</span>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2 flex items-center justify-center gap-2">
+                    <button type="submit" class="w-full py-2.5 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-1.5 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-credit-card" aria-hidden="true"></i> Activar 7 Días Gratis ($0 hoy)
                     </button>
-                    <span class="block text-[11px] text-gray-500 text-center mt-2 flex items-center justify-center gap-1.5">
+                    <span class="block text-[10.5px] text-gray-500 text-center mt-1.5 flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-lock text-emerald-400" aria-hidden="true"></i>
                         <span>Procesado de forma 100% segura por Stripe y NOWPayments. Cancela cuando quieras.</span>
                     </span>
                 </form>
 
-                <div class="mt-6 pt-5 border-t border-gray-800 text-center text-xs text-gray-400">
+                <div class="mt-4 pt-3.5 border-t border-gray-800 text-center text-xs text-gray-400">
                     ¿Ya tienes cuenta?
                     <button onclick="openAuthModal('login')" class="text-emerald-400 hover:underline font-bold ml-1">Iniciar sesión</button>
                 </div>
@@ -3547,27 +3547,27 @@
 
             <!-- VIEW: FORGOT PASSWORD -->
             <div id="auth-view-forgot" class="hidden">
-                <div class="text-center mb-6">
-                    <div class="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                <div class="text-center mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto mb-2 text-lg">
                         <i class="fa-solid fa-key" aria-hidden="true"></i>
                     </div>
                     <h3 class="text-xl font-black text-white">Recuperar Contraseña</h3>
-                    <p class="text-xs text-gray-400 mt-1">Te enviaremos un enlace seguro para restablecerla</p>
+                    <p class="text-xs text-gray-400 mt-0.5">Te enviaremos un enlace seguro para restablecerla</p>
                 </div>
 
                 <div id="forgot-alert" class="hidden"></div>
 
-                <form onsubmit="handleForgotForm(event)" class="space-y-4">
+                <form onsubmit="handleForgotForm(event)" class="space-y-3">
                     <div>
-                        <label for="forgot-email" class="block text-xs font-semibold text-gray-300 mb-1.5">Correo Electrónico Registrado</label>
-                        <input type="email" id="forgot-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <label for="forgot-email" class="block text-xs font-semibold text-gray-300 mb-1">Correo Electrónico Registrado</label>
+                        <input type="email" id="forgot-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-3.5 py-2 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
-                    <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg transition">
+                    <button type="submit" class="w-full py-2.5 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg transition">
                         Enviar Enlace de Recuperación
                     </button>
                 </form>
 
-                <div class="mt-6 pt-5 border-t border-gray-800 text-center text-xs text-gray-400">
+                <div class="mt-4 pt-3.5 border-t border-gray-800 text-center text-xs text-gray-400">
                     <button onclick="openAuthModal('login')" class="text-emerald-400 hover:underline font-bold">&larr; Volver a Iniciar Sesión</button>
                 </div>
             </div>

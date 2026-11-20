@@ -274,6 +274,19 @@ button, a, input, select, textarea {
         html.light .text-gray-300 { color: #374151; }
         html.light .text-gray-400 { color: #4b5563; }
         html.light .text-gray-500 { color: #6b7280; }
+
+/* Auth Modal: Adaptabilidad y Tema Claro */
+html.light .auth-close-btn {
+    color: #64748b !important;
+}
+html.light .auth-close-btn:hover {
+    color: #0f172a !important;
+    background-color: #f1f5f9 !important;
+}
+html.light #auth-modal-card {
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05) !important;
+}
         html.light .text-gray-600 { color: #9ca3af; }
         html.light .hover\:text-white:hover { color: #111827; }
         html.light .hover\:text-gray-300:hover { color: #374151; }
