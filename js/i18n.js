@@ -4175,6 +4175,8 @@
 
 
 
+            "calc.brand_title": "Calculator",
+            "calc.badge_position_pro": "Position & Risk Pro",
             "calc.back_to_journal": "Volver a Bitácora",
 
 
@@ -6814,7 +6816,7 @@
             "metrics.by_month": "Por Mes",
             "metrics.by_week": "Por Semana",
             "daily.modal_title": "Análisis de Operaciones",
-            "daily.modal_summary": "Operaciones registradas",,
+            "daily.modal_summary": "Operaciones registradas",
 
 
 
@@ -10800,6 +10802,8 @@
 
 
 
+            "calc.brand_title": "Calculator",
+            "calc.badge_position_pro": "Position & Risk Pro",
             "calc.back_to_journal": "Back to Journal",
 
 
@@ -13439,7 +13443,7 @@
             "metrics.by_month": "By Month",
             "metrics.by_week": "By Week",
             "daily.modal_title": "Trade Analysis",
-            "daily.modal_summary": "Logged Trades",,
+            "daily.modal_summary": "Logged Trades",
 
 
 
@@ -14096,37 +14100,10 @@
 
 
         document.querySelectorAll('[data-i18n]').forEach(el => {
-
-
-
-
-
-
-
             const key = el.getAttribute('data-i18n');
-
-
-
-
-
-
-
-            const translation = t(key);
-
-
-
-
-
-
-
-            if (translation) el.textContent = translation;
-
-
-
-
-
-
-
+            const fallback = el.getAttribute('data-i18n-fallback') || el.textContent;
+            const translation = t(key, fallback);
+            if (translation && translation !== key) el.textContent = translation;
         });
 
 

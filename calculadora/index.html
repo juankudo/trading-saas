@@ -60,8 +60,8 @@
             <!-- Selector de Idioma Bilingüe (ES / EN) -->
             <div class="lang-toggle-pill flex items-center bg-gray-900/90 border border-main rounded-lg p-0.5 text-xs select-none shadow-sm" title="Cambiar idioma (Español / English)" data-i18n-title="lang.toggle_title">
                 <span class="px-1.5 text-gray-400 text-xs flex items-center"><i class="fa-solid fa-globe text-[11px]"></i></span>
-                <button type="button" onclick="setLanguage('es')" class="lang-btn-es px-2 py-0.5 rounded text-xs font-black bg-emerald-500 text-gray-950 shadow-sm transition-all">ES</button>
-                <button type="button" onclick="setLanguage('en')" class="lang-btn-en px-2 py-0.5 rounded text-xs font-semibold text-gray-400 hover:text-white transition-all">EN</button>
+                <button type="button" id="lang-btn-es" onclick="setLanguage('es')" class="lang-btn-es px-2 py-0.5 rounded text-xs font-black bg-emerald-500 text-gray-950 shadow-sm transition-all">ES</button>
+                <button type="button" id="lang-btn-en" onclick="setLanguage('en')" class="lang-btn-en px-2 py-0.5 rounded text-xs font-semibold text-gray-400 hover:text-white transition-all">EN</button>
             </div>
             <a href="../app.html" class="bg-card border border-main text-xs px-3 py-1.5 rounded-lg flex items-center gap-2 text-gray-300 hover:text-white hover:border-emerald-500/50 transition shadow-sm" title="Volver a la Bitácora" data-i18n-title="calc.back_to_journal">
                 <i class="fa-solid fa-arrow-left text-emerald-400"></i> <span data-i18n="calc.back_to_journal">Volver a Bitácora</span>

@@ -25,6 +25,11 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
   - Pill selector interactivo de idioma `🌐 ES | EN` integrado en la barra de navegación superior.
   - Traducción de todos los paneles de cálculo, tipos de instrumentos (Forex, Metales, Criptos, Índices), presets de riesgo, modales de guardado y tabla de setups.
   - Cadenas dinámicas de riesgo y copiado rápido traducidas reactivamente en tiempo real.
+- **Correcciones Críticas de Estabilidad, Sintaxis y Tema Claro:**
+  - **Tema Claro en AsTrade Calculator:** Incorporadas reglas dedicadas en `calculadora/css/styles.css` para `html.light`, garantizando contraste y legibilidad impecables en el título `Calculator` (`#334155`), el badge `POSITION & RISK PRO` (fondo verde menta `#ecfdf5` y texto esmeralda profundo `#047857`) y la píldora selectora de idioma.
+  - **Restauración de Sintaxis en i18n (`js/i18n.js`):** Subsanadas comas dobles accidentales que causaban `SyntaxError`, asegurando la carga limpia de `window.i18n` y `window.toggleLanguage()`, con fallback defensivo al texto original del DOM ante claves inexistentes.
+  - **Restauración de Ámbito en Bitácora (`js/app.js`):** Eliminada la re-declaración duplicada de `const titleBadge` en `setMode()`, restaurando el ciclo de inicialización completo de la bitácora (cuentas, trades, tours y navegación libre hacia Dashboard y Métricas).
+  - **Sincronización Reactiva de Títulos:** Dinamizado el título de cuentas/sesiones en `renderRealAccounts()` para responder de inmediato al selector de idioma.
 
 ---
 

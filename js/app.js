@@ -443,7 +443,6 @@ const initialTrades = [];
 
             const btnReal = document.getElementById('btn-mode-real');
             const btnBack = document.getElementById('btn-mode-backtesting');
-            const titleBadge = document.getElementById('title-mode-badge');
             const mainIcon = document.getElementById('main-header-icon');
             const btnNewTrade = document.getElementById('btn-new-trade');
             const btnSubmitTrade = document.getElementById('btn-submit-trade');
@@ -1270,7 +1269,7 @@ const initialTrades = [];
                 return;
             }
 
-            document.getElementById("sessions-title").textContent = "Cuentas Reales";
+            document.getElementById("sessions-title").textContent = (typeof window.t === 'function') ? window.t('nav.mode_real_title', 'Cuentas Reales') : "Cuentas Reales";
             backButton.classList.add("hidden");
             editActiveGroupButton.classList.add("hidden");
             const sortedGroups = [...accountGroups].sort((a, b) => Number(b.id) - Number(a.id));
