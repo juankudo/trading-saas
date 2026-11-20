@@ -105,14 +105,63 @@ function logout() {
 }
 
 /**
+ * Validador de fortaleza y seguridad de contraseña
+ * Requiere: >= 10 caracteres, >= 1 mayúscula, >= 1 minúscula, >= 1 número, >= 1 símbolo
+ */
+function validatePasswordStrength(password) {
+    const pass = typeof password === 'string' ? password : '';
+    const checks = {
+        minLength: pass.length >= 10,
+        hasUpper: /[A-Z]/.test(pass),
+        hasLower: /[a-z]/.test(pass),
+        hasNumber: /[0-9]/.test(pass),
+        hasSpecial: /[^A-Za-z0-9]/.test(pass)
+    };
+
+    let passedCount = 0;
+    if (checks.minLength) passedCount++;
+    if (checks.hasUpper) passedCount++;
+    if (checks.hasLower) passedCount++;
+    if (checks.hasNumber) passedCount++;
+    if (checks.hasSpecial) passedCount++;
+
+    const isValid = passedCount === 5;
+    
+    let level = 'weak';
+    const score = Math.round((passedCount / 5) * 100);
+    if (passedCount >= 5) {
+        level = 'strong';
+    } else if (passedCount >= 3) {
+        level = 'moderate';
+    }
+
+    const errors = [];
+    if (!checks.minLength) errors.push('Mínimo 10 caracteres');
+    if (!checks.hasUpper) errors.push('Al menos 1 letra mayúscula (A-Z)');
+    if (!checks.hasLower) errors.push('Al menos 1 letra minúscula (a-z)');
+    if (!checks.hasNumber) errors.push('Al menos 1 número (0-9)');
+    if (!checks.hasSpecial) errors.push('Al menos 1 símbolo especial (!@#$%...)');
+
+    return {
+        isValid,
+        passedCount,
+        score,
+        level,
+        checks,
+        errors
+    };
+}
+
+/**
  * Registro de nuevo usuario (activa 7 días gratis)
  */
 async function registerUser(name, email, password) {
     if (!name || !email || !password) {
         throw new Error("Por favor completa todos los campos requeridos.");
     }
-    if (password.length < 6) {
-        throw new Error("La contraseña debe tener al menos 6 caracteres.");
+    const strength = validatePasswordStrength(password);
+    if (!strength.isValid) {
+        throw new Error("Contraseña insegura: debe incluir " + strength.errors.join(", ") + ".");
     }
 
     // Fecha fin de prueba: 7 días desde ahora

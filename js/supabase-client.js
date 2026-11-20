@@ -27,6 +27,16 @@ function getSupabase() {
  * Registro de nuevo usuario en Supabase Auth
  */
 async function apiSignUp(email, password, fullName) {
+    // Validación estricta de seguridad de contraseña
+    if (typeof validatePasswordStrength === 'function') {
+        const strength = validatePasswordStrength(password);
+        if (!strength.isValid) {
+            throw new Error("Contraseña insegura: debe incluir " + strength.errors.join(", ") + ".");
+        }
+    } else if (!password || password.length < 10) {
+        throw new Error("La contraseña debe tener al menos 10 caracteres.");
+    }
+
     const client = getSupabase();
     if (!client || SUPABASE_CONFIG.url.includes("tu-proyecto")) {
         console.warn("Supabase no configurado, usando modo local.");

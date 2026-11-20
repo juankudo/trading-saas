@@ -3445,7 +3445,12 @@
                             <label for="login-password" class="block text-xs font-semibold text-gray-300">Contraseña</label>
                             <button type="button" onclick="openAuthModal('forgot')" class="text-xs text-emerald-400 hover:underline">¿Olvidaste tu contraseña?</button>
                         </div>
-                        <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <div class="relative">
+                            <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition font-mono">
+                            <button type="button" onclick="togglePasswordVisibility('login-password', 'login-password-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 transition" title="Mostrar u ocultar contraseña" tabindex="-1">
+                                <i id="login-password-eye" class="fa-regular fa-eye text-xs"></i>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2">
                         Ingresar a la Bitácora
@@ -3480,8 +3485,50 @@
                         <input type="email" id="reg-email" name="email" autocomplete="email" spellcheck="false" required placeholder="tu@email.com" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
                     </div>
                     <div>
-                        <label for="reg-password" class="block text-xs font-semibold text-gray-300 mb-1.5">Contraseña (mínimo 6 caracteres)</label>
-                        <input type="password" id="reg-password" name="new-password" autocomplete="new-password" minlength="6" required placeholder="••••••••" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition">
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="reg-password" class="block text-xs font-semibold text-gray-300">Contraseña segura (mínimo 10 caracteres)</label>
+                        </div>
+                        <div class="relative">
+                            <input type="password" id="reg-password" name="new-password" autocomplete="new-password" minlength="10" required placeholder="••••••••••••" oninput="handlePasswordInput(this.value, 'es')" class="w-full bg-gray-900 border border-gray-700 focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 rounded-xl pl-4 pr-10 py-2.5 text-sm text-white placeholder-gray-500 outline-none transition font-mono">
+                            <button type="button" onclick="togglePasswordVisibility('reg-password', 'reg-password-eye')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white p-1 transition" title="Mostrar u ocultar contraseña" tabindex="-1">
+                                <i id="reg-password-eye" class="fa-regular fa-eye text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Barra de Fortaleza -->
+                        <div class="mt-2 space-y-1.5">
+                            <div class="flex items-center justify-between text-[10px] font-mono">
+                                <span class="text-gray-400">Nivel de seguridad:</span>
+                                <span id="reg-strength-text" class="font-bold text-gray-500 uppercase">Sin ingresar</span>
+                            </div>
+                            <div class="h-1.5 w-full bg-gray-800 rounded-full overflow-hidden">
+                                <div id="reg-strength-bar" class="h-full bg-gray-700 rounded-full transition-all duration-300 w-0"></div>
+                            </div>
+                        </div>
+
+                        <!-- Checklist de 5 Criterios en Tiempo Real -->
+                        <div id="reg-password-checklist" class="grid grid-cols-2 gap-x-2 gap-y-1 mt-2.5 p-2.5 rounded-xl bg-gray-950/80 border border-gray-800 text-[10.5px] font-mono text-gray-400">
+                            <div id="chk-len" class="flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <span>10+ caracteres</span>
+                            </div>
+                            <div id="chk-upper" class="flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <span>1 mayúscula (A-Z)</span>
+                            </div>
+                            <div id="chk-lower" class="flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <span>1 minúscula (a-z)</span>
+                            </div>
+                            <div id="chk-num" class="flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <span>1 número (0-9)</span>
+                            </div>
+                            <div id="chk-sym" class="col-span-2 flex items-center gap-1.5 transition-colors">
+                                <i class="fa-solid fa-circle text-[7px] text-gray-600"></i>
+                                <span>1 símbolo especial (!@#$%...)</span>
+                            </div>
+                        </div>
                     </div>
                     <button type="submit" class="w-full py-3 rounded-xl text-sm font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow-lg shadow-emerald-500/20 transition mt-2 flex items-center justify-center gap-2">
                         <i class="fa-solid fa-credit-card" aria-hidden="true"></i> Activar 7 Días Gratis ($0 hoy)
@@ -5672,6 +5719,74 @@
             }
         }
 
+        function togglePasswordVisibility(inputId, eyeId) {
+            const input = document.getElementById(inputId);
+            const eye = document.getElementById(eyeId);
+            if (!input) return;
+            if (input.type === 'password') {
+                input.type = 'text';
+                if (eye) {
+                    eye.classList.remove('fa-eye');
+                    eye.classList.add('fa-eye-slash', 'text-emerald-400');
+                }
+            } else {
+                input.type = 'password';
+                if (eye) {
+                    eye.classList.remove('fa-eye-slash', 'text-emerald-400');
+                    eye.classList.add('fa-eye');
+                }
+            }
+        }
+
+        function handlePasswordInput(pass, lang = 'es') {
+            const checks = {
+                len: pass.length >= 10,
+                upper: /[A-Z]/.test(pass),
+                lower: /[a-z]/.test(pass),
+                num: /[0-9]/.test(pass),
+                sym: /[^A-Za-z0-9]/.test(pass)
+            };
+
+            const updateItem = (id, valid) => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                const icon = el.querySelector('i');
+                if (valid) {
+                    el.className = 'flex items-center gap-1.5 text-emerald-400 font-semibold transition-colors';
+                    if (icon) icon.className = 'fa-solid fa-circle-check text-emerald-400 text-[11px]';
+                } else {
+                    el.className = 'flex items-center gap-1.5 text-gray-400 font-normal transition-colors';
+                    if (icon) icon.className = 'fa-solid fa-circle text-gray-600 text-[7px]';
+                }
+            };
+
+            updateItem('chk-len', checks.len);
+            updateItem('chk-upper', checks.upper);
+            updateItem('chk-lower', checks.lower);
+            updateItem('chk-num', checks.num);
+            updateItem('chk-sym', checks.sym);
+
+            let passed = 0;
+            Object.values(checks).forEach(v => { if (v) passed++; });
+
+            const bar = document.getElementById('reg-strength-bar');
+            const txt = document.getElementById('reg-strength-text');
+
+            if (!pass || pass.length === 0) {
+                if (bar) { bar.style.width = '0%'; bar.className = 'h-full bg-gray-700 rounded-full transition-all duration-300'; }
+                if (txt) { txt.textContent = lang === 'es' ? 'Sin ingresar' : 'Empty'; txt.className = 'font-bold text-gray-500 uppercase'; }
+            } else if (passed <= 2) {
+                if (bar) { bar.style.width = '33%'; bar.className = 'h-full bg-rose-500 rounded-full transition-all duration-300'; }
+                if (txt) { txt.textContent = lang === 'es' ? 'Débil (insegura)' : 'Weak (insecure)'; txt.className = 'font-bold text-rose-400 uppercase'; }
+            } else if (passed <= 4) {
+                if (bar) { bar.style.width = '66%'; bar.className = 'h-full bg-amber-400 rounded-full transition-all duration-300'; }
+                if (txt) { txt.textContent = lang === 'es' ? 'Moderada' : 'Moderate'; txt.className = 'font-bold text-amber-400 uppercase'; }
+            } else {
+                if (bar) { bar.style.width = '100%'; bar.className = 'h-full bg-emerald-400 rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(52,211,153,0.7)]'; }
+                if (txt) { txt.textContent = lang === 'es' ? 'Fuerte y Segura ✓' : 'Strong & Secure ✓'; txt.className = 'font-bold text-emerald-400 uppercase'; }
+            }
+        }
+
         // Form Handlers
         async function handleLoginForm(e) {
             e.preventDefault();
@@ -5692,6 +5807,19 @@
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const pass = document.getElementById('reg-password').value;
+
+            // Validación estricta antes de invocar registro
+            if (typeof validatePasswordStrength === 'function') {
+                const strength = validatePasswordStrength(pass);
+                if (!strength.isValid) {
+                    showAuthAlert('register-alert', "Contraseña insegura: debe incluir " + strength.errors.join(", ") + ".");
+                    return;
+                }
+            } else if (!pass || pass.length < 10) {
+                showAuthAlert('register-alert', "La contraseña debe tener al menos 10 caracteres.");
+                return;
+            }
+
             try {
                 const res = await apiSignUp(email, pass, name);
                 if (res && res.session) {
@@ -5700,6 +5828,7 @@
                     showAuthAlert('register-alert', "¡Cuenta creada con éxito! Hemos enviado un correo de confirmación. Revisa tu bandeja de entrada para ingresar.", false);
                     document.getElementById('reg-email').value = '';
                     document.getElementById('reg-password').value = '';
+                    handlePasswordInput('', 'es');
                 }
             } catch (err) {
                 showAuthAlert('register-alert', err.message || "Error al registrarse");

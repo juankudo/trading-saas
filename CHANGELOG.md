@@ -5,6 +5,43 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.2] - 2026-11-19
+
+### 🤖 Nueva Skill de Automatización de Contenido Social: `ai-content-automation`
+- **Integración del Modelo "AI Content Automation Engine":**
+  - Implementación de la skill completa en `.agents/skills/ai-content-automation/SKILL.md` aprendida a partir de la arquitectura de código abierto de generación de Shorts/Reels/TikToks autónomos.
+  - Arquitectura modular desacoplada: patrón **Tools & Pipelines** (herramientas atómicas vs flujos de orquestación resilientes).
+  - Pipeline de 7 pasos: Generación de guion en 3 actos (Hook, Desarrollo, CTA), consistencia visual mediante *Style Reference Chaining*, síntesis de voz en lote con Gemini TTS / Edge-TTS, alineación milimétrica con Whisper, movimiento dinámico y sincronización de velocidad con FFmpeg (`setpts` / Ken Burns), subtítulos quemados de alta retención y mezcla de música con ducking de audio.
+- **Recursos Técnicos y Esquemas Incluidos:**
+  - `references/schemas.py`: Modelos Pydantic para `VideoScript`, `Scene`, `ImagePrompt`, `VideoPrompt` y `AudioAlignment`.
+  - `references/prompts.py`: Prompts maestros para redacción cinemática, voz y alineación, junto con presets de nicho y estilo visual optimizados para AsTrade (`trading_dark_glow`).
+  - `scripts/pipeline_orchestrator.py`: Plantilla en Python para orquestar FFmpeg, Whisper y TTS.
+- **Regla de Pivote de 3 Elementos:**
+  - Guía para adaptar el generador a cualquier nicho continuo modificando únicamente referencias visuales, música de fondo y prompts maestros.
+
+---
+
+## [v3.9.1] - 2026-11-19
+
+### 🛡️ Política Estricta de Contraseñas Seguras y Checklist Interactivo en Tiempo Real
+- **Criterios de Seguridad Reforzados (5 Reglas Obligatorias):**
+  - Mínimo de **10 caracteres** (ampliado desde el mínimo básico anterior de 6).
+  - Al menos **1 letra mayúscula** (`A-Z`).
+  - Al menos **1 letra minúscula** (`a-z`).
+  - Al menos **1 número** (`0-9`).
+  - Al menos **1 carácter especial o símbolo** (`!@#$%^&*()_+-=[]{};':"|,.<>/?~`).
+- **Validador Centralizado de Robustez (`js/auth.js` y `js/supabase-client.js`):**
+  - Implementación de `validatePasswordStrength(password)` que evalúa los 5 criterios, computa puntaje de seguridad (0 a 100%) y genera el listado de requisitos pendientes.
+  - Bloqueo en cliente y en `apiSignUp()` antes de enviar peticiones a Supabase Auth si la contraseña no cumple el 100% de los criterios.
+- **Experiencia de Usuario Interactiva en Modales de Registro (`index.html` y `en.html`):**
+  - **Checklist en tiempo real:** 5 micro-badges que pasan instantáneamente de gris inactivo a verde esmeralda con icono `fa-circle-check` a medida que el trader escribe su contraseña.
+  - **Barra de fortaleza dinámica:** Indicador visual de 3 niveles con animación suave (Rojo para Débil, Amarillo/Ámbar para Moderada, Verde Esmeralda brillante para Fuerte y Segura).
+  - **Alternador de visibilidad (Eye Toggle):** Botón interactivo con iconos `fa-eye` / `fa-eye-slash` en los campos de contraseña de Login y Registro para mostrar u ocultar la clave en texto plano.
+- **Auditoría Automatizada con Playwright (`scratch/test_password_policy.py`):**
+  - 100% de tests superados validando detección de contraseñas débiles, estados moderados, claves fuertes y alternador de visibilidad tanto en español (`index.html`) como en inglés nativo (`en.html`).
+
+---
+
 ## [v3.9.0] - 2026-11-19
 
 ### 🛡️ Reestructuración y Master Final del Tutorial #3 ("Control de Drawdown y Reglas Prop")
