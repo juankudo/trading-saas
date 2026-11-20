@@ -29,6 +29,7 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
   - **Tema Claro en AsTrade Calculator:** Incorporadas reglas dedicadas en `calculadora/css/styles.css` para `html.light`, garantizando contraste y legibilidad impecables en el título `Calculator` (`#334155`), el badge `POSITION & RISK PRO` (fondo verde menta `#ecfdf5` y texto esmeralda profundo `#047857`) y la píldora selectora de idioma.
   - **Restauración de Sintaxis en i18n (`js/i18n.js`):** Subsanadas comas dobles accidentales que causaban `SyntaxError`, asegurando la carga limpia de `window.i18n` y `window.toggleLanguage()`, con fallback defensivo al texto original del DOM ante claves inexistentes.
   - **Restauración de Ámbito en Bitácora (`js/app.js`):** Eliminada la re-declaración duplicada de `const titleBadge` en `setMode()`, restaurando el ciclo de inicialización completo de la bitácora (cuentas, trades, tours y navegación libre hacia Dashboard y Métricas).
+  - **Erradicación del Logo Gigante e Icono Antiguo (`js/app.js` & `app.html`):** Subsanada la sobreescritura de clases en `setMode()` que eliminaba el contenedor `w-8 h-8` e inyectaba el icono antiguo de FontAwesome `fa-chart-line`. El isotipo SVG oficial de AsTrade permanece estrictamente acotado (32x32px) con transiciones de color dinámicas (esmeralda en Real y azul cobalto en Backtesting).
   - **Sincronización Reactiva de Títulos:** Dinamizado el título de cuentas/sesiones en `renderRealAccounts()` para responder de inmediato al selector de idioma.
 
 ---

@@ -454,10 +454,24 @@ const initialTrades = [];
             if (mode === 'real') {
                 btnReal.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-green-900/60 text-green-400 shadow-sm transition-all";
                 btnBack.className = "px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all";
-                titleBadge.textContent = "PRO DASHBOARD";
-                titleBadge.className = "text-xs bg-green-900/50 text-green-400 border border-green-700 px-2 py-0.5 rounded ml-2";
+                if (titleBadge) {
+                    titleBadge.textContent = "PRO DASHBOARD";
+                    titleBadge.className = "text-xs bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 font-bold px-2 py-0.5 rounded ml-2";
+                }
                 document.getElementById('reset-mode-text').textContent = "Real";
-                mainIcon.className = "fa-solid fa-chart-line text-2xl text-green-500";
+                if (mainIcon) {
+                    if (mainIcon.tagName === 'I') {
+                        mainIcon.className = "fa-solid fa-chart-line text-2xl text-green-500";
+                    } else {
+                        mainIcon.className = "w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-emerald-500/30 flex items-center justify-center p-1.5 shadow-sm shrink-0 transition-colors";
+                    }
+                    const appGradStops = document.querySelectorAll('#app_astrade_grad stop');
+                    if (appGradStops && appGradStops.length >= 3) {
+                        appGradStops[0].setAttribute('stop-color', '#059669');
+                        appGradStops[1].setAttribute('stop-color', '#10b981');
+                        appGradStops[2].setAttribute('stop-color', '#34d399');
+                    }
+                }
                 
                 btnNewTrade.className = "compact-expand-btn group bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold text-white transition";
@@ -473,10 +487,24 @@ const initialTrades = [];
             } else {
                 btnBack.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-blue-900/60 text-blue-400 shadow-sm transition-all";
                 btnReal.className = "px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all";
-                titleBadge.textContent = "BACKTESTING";
-                titleBadge.className = "text-xs bg-blue-900/50 text-blue-400 border border-blue-700 px-2 py-0.5 rounded ml-2";
+                if (titleBadge) {
+                    titleBadge.textContent = "BACKTESTING";
+                    titleBadge.className = "text-xs bg-blue-900/50 text-blue-400 border border-blue-700 font-bold px-2 py-0.5 rounded ml-2";
+                }
                 document.getElementById('reset-mode-text').textContent = "Backtesting";
-                mainIcon.className = "fa-solid fa-chart-line text-2xl text-blue-500";
+                if (mainIcon) {
+                    if (mainIcon.tagName === 'I') {
+                        mainIcon.className = "fa-solid fa-chart-line text-2xl text-blue-500";
+                    } else {
+                        mainIcon.className = "w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-blue-500/40 flex items-center justify-center p-1.5 shadow-sm shrink-0 transition-colors";
+                    }
+                    const appGradStops = document.querySelectorAll('#app_astrade_grad stop');
+                    if (appGradStops && appGradStops.length >= 3) {
+                        appGradStops[0].setAttribute('stop-color', '#1d4ed8');
+                        appGradStops[1].setAttribute('stop-color', '#3b82f6');
+                        appGradStops[2].setAttribute('stop-color', '#60a5fa');
+                    }
+                }
                 
                 btnNewTrade.className = "compact-expand-btn group bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded font-semibold text-white transition";
