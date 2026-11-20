@@ -21,7 +21,7 @@ SESSION_NAME = "astrade-render-v3"
 BUNDLE_ZIP = os.path.join(BASE_DIR, "astrade_video03_bundle.zip")
 REMOTE_RUNNER = os.path.join(BASE_DIR, "scripts", "cloud", "remote_runner_video_03.py")
 OUTPUT_DIR = os.path.join(BASE_DIR, "media", "youtube_tutorials")
-FINAL_LOCAL_MP4 = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_03_Backtesting_1080p.mp4")
+FINAL_LOCAL_MP4 = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_03_Drawdown_1080p.mp4")
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
@@ -63,7 +63,7 @@ def main():
         run_cmd([COLAB_EXE, "exec", "-s", SESSION_NAME, "-f", REMOTE_RUNNER, "--timeout", "0"], "Ejecutando filmación y renderizado cinemático en la nube")
 
         # 6. Descargar video final
-        remote_video = "/content/trading-saas/media/youtube_tutorials/AsTrade_Tutorial_03_Backtesting_1080p.mp4"
+        remote_video = "/content/trading-saas/media/youtube_tutorials/AsTrade_Tutorial_03_Drawdown_1080p.mp4"
         run_cmd([COLAB_EXE, "download", "-s", SESSION_NAME, remote_video, FINAL_LOCAL_MP4], "Descargando video final MP4 a tu computadora")
 
         if os.path.exists(FINAL_LOCAL_MP4):

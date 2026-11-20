@@ -241,15 +241,23 @@ def get_tutorial_paths(t_num):
         video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_01_Cuentas_1080p.mp4")
         meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01", "metadata.md")
         thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_01", "thumbnail_tutorial_01.png")
-    else:
+    elif str(t_num) == "2":
         video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_02_Trades_1080p.mp4")
         meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02", "metadata.md")
         thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_02", "thumbnail_tutorial_02.png")
+    elif str(t_num) == "3":
+        video = os.path.join(BASE_DIR, "media", "youtube_tutorials", "AsTrade_Tutorial_03_Drawdown_1080p.mp4")
+        meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_03", "metadata.md")
+        thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", "tutorial_03", "thumbnail_tutorial_03.png")
+    else:
+        video = os.path.join(BASE_DIR, "media", "youtube_tutorials", f"AsTrade_Tutorial_{t_num}_1080p.mp4")
+        meta = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", f"tutorial_{t_num}", "metadata.md")
+        thumb = os.path.join(BASE_DIR, "media", "youtube_tutorials", "packages", f"tutorial_{t_num}", f"thumbnail_tutorial_{t_num}.png")
     return video, meta, thumb
 
 def main():
     parser = argparse.ArgumentParser(description="YouTube Autonomous Uploader — AsTrade")
-    parser.add_argument("--tutorial", choices=["1", "2", "all"], default="all", help="Seleccionar Tutorial (1, 2 o all)")
+    parser.add_argument("--tutorial", choices=["1", "2", "3", "all"], default="all", help="Seleccionar Tutorial (1, 2, 3 o all)")
     parser.add_argument("--video", default=None, help="Ruta personalizada del video MP4")
     parser.add_argument("--meta", default=None, help="Ruta personalizada del archivo metadata.md")
     parser.add_argument("--thumb", default=None, help="Ruta personalizada de la miniatura PNG")
@@ -257,7 +265,7 @@ def main():
     parser.add_argument("--dry-run", action="store_true", help="Validar metadatos y simular subida sin conectar a la API")
     args = parser.parse_args()
 
-    tutorials_to_process = ["1", "2"] if args.tutorial == "all" else [args.tutorial]
+    tutorials_to_process = ["1", "2", "3"] if args.tutorial == "all" else [args.tutorial]
 
     print("=" * 70, flush=True)
     print("🎬 ASTRADE YOUTUBE PUBLISHER", flush=True)

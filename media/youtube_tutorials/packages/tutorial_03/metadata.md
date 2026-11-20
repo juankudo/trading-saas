@@ -2,7 +2,7 @@
 
 ## 📌 Título Oficial del Video (Optimizado para Búsqueda y CTR)
 ```text
-Cómo Validar tu Estrategia en el Laboratorio de Backtesting sin Arriesgar Capital | AsTrade Tutorial #3
+Cómo Blindar tu Cuenta Dominando el Control de Drawdown | AsTrade Tutorial #3
 ```
 
 ---
@@ -10,43 +10,43 @@ Cómo Validar tu Estrategia en el Laboratorio de Backtesting sin Arriesgar Capit
 ## 📝 Descripción Oficial del Video (Copy, SEO y Capítulos)
 
 ```text
-¿Pagarías una evaluación de fondeo o arriesgarías tu propio capital sin saber si tu estrategia tiene una ventaja matemática comprobada?
+¿Sabías que más del 90% de los traders reprueban sus evaluaciones de fondeo no por falta de aciertos, sino por violar las reglas de drawdown?
 
-En este tercer tutorial oficial de AsTrade descubrirás el Laboratorio de Backtesting Profesional: un entorno de simulación cuantitativa totalmente aislado de tus cuentas reales donde podrás recrear sesiones pasadas, testear tus reglas operativas en pares como EURUSD y verificar con certeza matemática tus métricas de robustez (Win Rate, Profit Factor y Drawdown proyectado) antes de poner un solo dólar en juego.
+En este tercer tutorial oficial de AsTrade aprenderás a blindar tu capital utilizando el Radar de Metas y Gestión de Riesgo en tiempo real. Continuando con nuestra cuenta de $100K y los $3,000 USD de ganancia acumulados en el tutorial anterior, descubrirás cómo auditar tu Colchón de Seguridad Restante, monitorear el límite de pérdida diaria máxima (5%) y asegurar que tu cuenta opere siempre bajo semáforo verde institucional.
 
 👉 Comienza hoy tu prueba gratuita de 7 días en AsTrade:
 https://astradehub.com
 
 ───────────────────────────────────────
 ⏱️ MARCAS DE TIEMPO / CAPÍTULOS DEL VIDEO:
-0:00 — Introducción y Título Oficial
-0:06 — Paso 1: Activación del Modo Backtesting (Laboratorio Cuantitativo)
-0:26 — Paso 2: Creación de Sesión de Prueba: EURUSD, $100K y Simulación de Fondeo
-0:48 — Paso 3: Registro Ágil de Operación Histórica: Sesión New York 09:30 AM, 5.00 Lotes y Full TP
-1:15 — Paso 4: Curva Proyectada a $103,000 USD, Win Rate 100% y Robustez Cuantitativa
-1:36 — Paso 5: Aislamiento Total: Cuentas Reales 100% Protegidas e Intactas
-1:53 — Conclusión, Acceso Oficial y Próximo Tutorial #4
+0:00 — Introducción: Control de Drawdown y Reglas de Financiación Prop
+0:05 — Paso 1: Por qué el Drawdown destruye cuentas (La regla de oro del riesgo)
+0:26 — Paso 2: Radar de Metas, Balance Efectivo ($103,000 USD) y Progreso al 37.5%
+0:46 — Paso 3: Colchón de Seguridad Restante ($10,000 intactos de margen)
+1:07 — Paso 4: Monitoreo de Pérdida Diaria Máxima (5%) y Semáforo Verde
+1:26 — Paso 5: Disciplina Matemática y Camino Seguro hacia la Cuenta Fondeada
+1:40 — Conclusión, Acceso Oficial y Próximo Tutorial #4
 
 ───────────────────────────────────────
-🛡️ CARACTERÍSTICAS DEL LABORATORIO DE BACKTESTING:
-• Aislamiento absoluto de bases de datos: tus pruebas nunca alteran tus cuentas activas de fondeo.
-• Simulación de reglas de evaluación (Target %, Drawdown diario y máximo).
-• Cálculo instantáneo de expectativas matemáticas, factor de recuperación y ratios R:R.
-• Documentación visual de setups históricos con capturas antes y después.
+🛡️ PILARES DEL SISTEMA ANTI-QUIEBRE DE ASTRADE:
+• Medidor dinámico de Colchón de Seguridad Restante antes de cada sesión operativa.
+• Control estricto de Drawdown Máximo (estático o trailing) y Pérdida Diaria Máxima.
+• Seguimiento transparente de fases de evaluación (Fase 1 al 8%, Fase 2 al 5%).
+• Semáforos preventivos de riesgo para erradicar el overtrading y el tilt emocional.
 
 ───────────────────────────────────────
 🔔 SIGUIENTE TUTORIAL DE LA SERIE:
 Suscríbete al canal y activa la campanita para el Video #4:
-"Dashboard Analítico Institucional, Mapa de Calor y Calendario de Rentabilidad | AsTrade Tutorial #4"
+"Dashboard Analítico Cuantitativo, Curva de Capital y Calendario de Consistencia | AsTrade Tutorial #4"
 
-#Backtesting #Trading #TradingJournal #PropFirms #CuentasDeFondeo #GestionDeRiesgo #AsTrade #ForexTrading
+#Drawdown #GestionDeRiesgo #Trading #TradingJournal #PropFirms #CuentasDeFondeo #AsTrade #ForexTrading
 ```
 
 ---
 
 ## 🏷️ Etiquetas / Tags (Copiar y Pegar en YouTube Studio)
 ```text
-AsTrade, backtesting, como hacer backtesting, laboratorio de backtesting, simulacion de trading, cuentas de fondeo, prop firm challenge, evaluacion de fondeo, gestion de riesgo trading, win rate trading, profit factor, ratio riesgo beneficio, trading cuantitativo, bitacora de trading, astradehub
+AsTrade, control de drawdown, como evitar el drawdown, colchon de seguridad trading, gestion de riesgo trading, cuentas de fondeo, evaluacion de fondeo, prop firm challenge, regla de perdida diaria, drawdown maximo, bitacora de trading, trading cuantitativo, astradehub
 ```
 
 ---

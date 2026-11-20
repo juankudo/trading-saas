@@ -1,18 +1,19 @@
 """
 AsTrade Studio Master Render Pipeline — Tutorial #3
-"Laboratorio de Backtesting Profesional y Simulación de Estrategias"
+"Control de Drawdown y Reglas de Financiación Prop"
 
 Arquitectura de Producción de 3 Escenas Limpias:
-1. Escena 1 (Intro Cinemático): intro_outro_motion.html?mode=intro&tutorial=3 (~6.2s)
-2. Escena 2 (Toma Continua en App): app.html (~104.5s)
+1. Escena 1 (Intro Cinemático): intro_outro_motion.html?mode=intro&tutorial=3 (~5.0s)
+2. Escena 2 (Toma Continua en App): app.html (~94.5s)
    - Zero-Blur Global: Interfaz 100% nítida, sin desenfoques de fondo.
+   - Continuidad con Tutorial #2: Cuenta "Fondeo 100K Challenge" con balance $103,000 USD (+3.00%).
    - Sincronización fonética estricta con manifest.json (5 bloques):
-       * Bloque 1: Cambio a Modo Backtesting desde el selector central.
-       * Bloque 2: Creación de Sesión de Backtesting (Estrategia Liquidez NY · EURUSD · $100K).
-       * Bloque 3: Registro Ágil de Trade Simulado (NY 09:30 AM, Market Buy, SL 15, TP 45, Full TP).
-       * Bloque 4: Curva Histórica Proyectada, Win Rate y Métricas de Robustez.
-       * Bloque 5: Aislamiento Total: Conmutación a Cuenta Real demostrando datos 100% intactos.
-3. Escena 3 (Outro Institucional): intro_outro_motion.html?mode=outro&tutorial=3 (~12.0s)
+       * Bloque 1: Peligro del Drawdown y Presentación del Dashboard.
+       * Bloque 2: Navegación al Radar de Metas y Balance Efectivo ($103,000 USD).
+       * Bloque 3: Auditoría del Colchón de Seguridad y Drawdown Máximo ($10,000 de margen intacto).
+       * Bloque 4: Monitoreo de Pérdida Diaria Máxima (5%) y Reglas Institucionales en Semáforo Verde.
+       * Bloque 5: Disciplina Matemática y Camino Hacia la Cuenta Fondeada.
+3. Escena 3 (Outro Institucional): intro_outro_motion.html?mode=outro&tutorial=3 (~13.0s)
 4. Ensamble Maestro: Disolución cruzada suave de 0.5s y música de fondo atenuada (ducking volume=0.065).
 """
 
@@ -35,11 +36,9 @@ SCRATCH_DIR = os.path.join(BASE_DIR, "scratch", "video_03")
 AUDIO_DIR = os.path.join(SCRATCH_DIR, "audio")
 SCENES_DIR = os.path.join(SCRATCH_DIR, "scenes")
 OUTPUT_DIR = os.path.join(BASE_DIR, "media", "youtube_tutorials")
-FINAL_MP4 = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_03_Backtesting_1080p.mp4")
+FINAL_MP4 = os.path.join(OUTPUT_DIR, "AsTrade_Tutorial_03_Drawdown_1080p.mp4")
 BG_MUSIC = os.path.join(BASE_DIR, "media", "video1_assets", "music", "happy-beats-business-moves-vol-1-by-ende-dot-app.mp3")
 
-CHART_BEFORE = os.path.join(BASE_DIR, "media", "video3_assets", "charts", "before_setup_eurusd.png")
-CHART_AFTER = os.path.join(BASE_DIR, "media", "video3_assets", "charts", "after_fulltp_eurusd.png")
 MANIFEST_PATH = os.path.join(AUDIO_DIR, "manifest.json")
 MOTION_ENGINE_JS = os.path.join(BASE_DIR, "scripts", "render", "studio_motion_engine.js")
 
@@ -99,12 +98,12 @@ def load_manifest():
 
 
 # -------------------------------------------------------------
-# 3. ESCENA 1: INTRO CINEMÁTICO (6.2s)
+# 3. ESCENA 1: INTRO CINEMÁTICO (~5.0s)
 # -------------------------------------------------------------
 async def record_intro(p, manifest):
     scene_id = "intro_scene"
     audio_path = os.path.join(AUDIO_DIR, "intro.mp3")
-    duration = 6.20
+    duration = manifest["intro"].get("duration", 4.90) + 0.3
     scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
 
     if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 100000:
@@ -116,7 +115,7 @@ async def record_intro(p, manifest):
     os.makedirs(raw_dir, exist_ok=True)
 
     print("\n" + "=" * 75)
-    print(f"🎬 [1/3] Filmando Escena 1: Intro Cinemático ({duration}s)")
+    print(f"🎬 [1/3] Filmando Escena 1: Intro Cinemático ({duration:.2f}s)")
     print("=" * 75)
 
     browser = await p.chromium.launch(
@@ -132,12 +131,12 @@ async def record_intro(p, manifest):
 
     url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=intro&tutorial=3"
     await page.goto(url, wait_until="domcontentloaded")
-    await asyncio.sleep(duration - 1.0)
+    await asyncio.sleep(duration - 0.8)
     try:
         await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
     except Exception:
         pass
-    await asyncio.sleep(1.0)
+    await asyncio.sleep(0.8)
 
     await page.close()
     await context.close()
@@ -159,25 +158,26 @@ async def record_intro(p, manifest):
         "-map", "1:a",
         "-c:v", "libx264", "-preset", "fast", "-crf", "18",
         "-c:a", "aac", "-b:a", "192k",
-        "-t", f"{duration:.3f}",
+        "-shortest",
         scene_mp4
     ]
-    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(mux_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    shutil.rmtree(raw_dir, ignore_errors=True)
     print(f"✅ Intro completado: {scene_mp4}")
     return scene_mp4
 
 
 # -------------------------------------------------------------
-# 4. ESCENA 2: TOMA CONTINUA EN APP.HTML (~104.5s)
+# 4. ESCENA 2: TOMA CONTINUA EN APP.HTML (~94.5s)
 # -------------------------------------------------------------
-async def record_app_flow_continuous(p, manifest):
+async def record_app_master_take(p, manifest):
     scene_id = "app_flow_continuous"
     cont_audio = os.path.join(AUDIO_DIR, "video_03_continuous_voice.mp3")
-    total_voice_dur = manifest["continuous_voice"].get("total_duration", 104.21)
+    total_voice_dur = manifest["continuous_voice"].get("total_duration", 94.15)
     duration = total_voice_dur + 0.5  # Buffer ligero
     scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
 
-    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 1000000:
+    if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 100000:
         print(f"⏩ Checkpoint activo para {scene_id}. Saltando grabación...")
         return scene_mp4
 
@@ -188,7 +188,7 @@ async def record_app_flow_continuous(p, manifest):
     print("\n" + "=" * 75)
     print(f"🎬 [2/3] Filmando Flujo Operativo Continuo en app.html ({duration:.2f}s)")
     print("   -> Zero-Blur Global Standard")
-    print("   -> Sincronización Fonética con manifest.json (5 Bloques)")
+    print("   -> Sincronización Fonética con manifest.json (5 Bloques Drawdown)")
     print("=" * 75)
 
     browser = await p.chromium.launch(
@@ -258,7 +258,7 @@ async def record_app_flow_continuous(p, manifest):
 
     page = await context.new_page()
 
-    # Pre-cargar cuenta real inicial
+    # Pre-cargar cuenta de evaluación de fondeo con $103,000 USD y trade ganado en EURUSD (+3.00%)
     await context.add_init_script("""
         window.__ASTRADE_V3_INIT__ = async function() {
             const realAccount = {
@@ -271,13 +271,45 @@ async def record_app_flow_continuous(p, manifest):
                 pipsTarget: 8,
                 plataforma: "MetaTrader 5",
                 fechaInicio: "2026-11-18",
-                activo: true
+                activo: true,
+                stage: "prueba",
+                goal: {
+                    prueba: {
+                        targetPct: 8,
+                        maxDDPct: 10,
+                        phases: 2,
+                        target2Pct: 5,
+                        phase: 1
+                    },
+                    rules: {
+                        maxDailyLossPct: 5,
+                        consistencyPct: 30,
+                        minTradingDays: 4
+                    }
+                }
+            };
+
+            const tradeNY = {
+                id: 1731800100000,
+                accountId: 1731800000000,
+                fecha: "2026-11-18",
+                hora: "09:30",
+                par: "EURUSD",
+                sesion: "New York",
+                tendencia: "Favor",
+                orden: "Market Buy",
+                pipsSL: 20,
+                pipsTP: 60,
+                rr: 3.0,
+                riesgo: 1.0,
+                estado: "Full TP",
+                lotaje: 5.0
             };
 
             if (typeof dbSet === 'function') {
                 await dbSet('trading_journal_real_accounts', [realAccount]);
                 await dbSet('trading_journal_sessions', []);
-                await dbSet('trading_journal_data', []);
+                await dbSet('trading_journal_data', [tradeNY]);
             }
 
             if (typeof realAccounts !== 'undefined') {
@@ -289,10 +321,12 @@ async def record_app_flow_continuous(p, manifest):
             }
             if (typeof trades !== 'undefined') {
                 trades.length = 0;
+                trades.push(tradeNY);
             }
 
             if (typeof setMode === 'function') await setMode('real');
-            if (typeof renderGroups === 'function') renderGroups();
+            if (typeof enterGroup === 'function') enterGroup(realAccount.id);
+            if (typeof renderAll === 'function') renderAll();
         };
     """)
 
@@ -311,44 +345,39 @@ async def record_app_flow_continuous(p, manifest):
     await asyncio.sleep(0.4)
 
     blocks = manifest["continuous_voice"]["blocks"]
-    b1 = blocks[0]  # 0.0s -> 19.99s (Switch to Backtesting)
-    b2 = blocks[1]  # 19.99s -> 42.29s (New Session Modal)
-    b3 = blocks[2]  # 42.29s -> 66.51s (Simulated Trade)
-    b4 = blocks[3]  # 66.51s -> 87.75s (Metrics & Equity Curve)
-    b5 = blocks[4]  # 87.75s -> 104.5s (Total Isolation / Back to Real)
+    b1 = blocks[0]  # 0.0s -> 21.7s (Drawdown Danger & Continuity)
+    b2 = blocks[1]  # 21.7s -> 40.54s (Goals Tab & Effective Balance)
+    b3 = blocks[2]  # 40.54s -> 61.45s (Drawdown Cushion & Max DD)
+    b4 = blocks[3]  # 61.45s -> 79.6s (Daily Loss & Rules Status)
+    b5 = blocks[4]  # 79.6s -> 94.46s (Math Discipline & Path to Funded)
 
-    print(f"🎬 [Master Take] Timeline calibrado:")
-    print(f"   B1 (Switch Mode): {b1['start_seconds']}s - {b1['cumulative_end']}s")
-    print(f"   B2 (New Session): {b2['start_seconds']}s - {b2['cumulative_end']}s")
-    print(f"   B3 (Simulated Trade): {b3['start_seconds']}s - {b3['cumulative_end']}s")
-    print(f"   B4 (Metrics Robustness): {b4['start_seconds']}s - {b4['cumulative_end']}s")
-    print(f"   B5 (Total Isolation): {b5['start_seconds']}s - {b5['cumulative_end']}s")
+    print(f"🎬 [Master Take] Timeline calibrado (Drawdown & Goals):")
+    print(f"   B1 (Drawdown Danger): {b1['start_seconds']}s - {b1['cumulative_end']}s")
+    print(f"   B2 (Goals Tab Nav): {b2['start_seconds']}s - {b2['cumulative_end']}s")
+    print(f"   B3 (Drawdown Cushion): {b3['start_seconds']}s - {b3['cumulative_end']}s")
+    print(f"   B4 (Daily Loss & Rules): {b4['start_seconds']}s - {b4['cumulative_end']}s")
+    print(f"   B5 (Math Discipline): {b5['start_seconds']}s - {b5['cumulative_end']}s")
 
     # ---------------------------------------------------------
-    # BLOQUE 1: CAMBIO A MODO BACKTESTING (0.0s -> 19.99s)
+    # BLOQUE 1: PELIGRO DEL DRAWDOWN Y CONTINUIDAD (0.0s -> 21.7s)
     # ---------------------------------------------------------
     print(f"\n▶️ Ejecutando Bloque 1: {b1['title']}")
     await page.evaluate("""() => {
-        window.__showLowerThird('🧪', 'PASO 1 · MODO BACKTESTING PROFESIONAL', 'Laboratorio de simulación cuantitativa totalmente aislado');
+        window.__showLowerThird('🛡️', 'PASO 1 · CONTROL DE RIESGO INSTITUCIONAL', 'La causa #1 de reprobación: violaciones de Drawdown');
     }""")
+    await asyncio.sleep(2.5)
+
+    # Mover cursor sobre el balance y la curva acumulada
+    await page.evaluate("window.__glideCursorToElement('#kpi-balance', 800)")
+    await asyncio.sleep(1.0)
+    await page.evaluate("window.__pulseRingAround('#kpi-balance', 6)")
     await asyncio.sleep(3.0)
 
-    # Mover cursor al selector central `#btn-mode-backtesting`
-    await page.evaluate("window.__glideCursorToElement('#btn-mode-backtesting', 650)")
-    await asyncio.sleep(0.8)
-
-    # Pulso esmeralda y clic en Backtesting
-    await page.evaluate("window.__pulseRingAround('#btn-mode-backtesting', 6)")
-    await asyncio.sleep(0.5)
-    await page.evaluate("window.__clickRipple()")
-    await asyncio.sleep(0.2)
-    await page.evaluate("""() => {
-        window.__removePulseRing();
-        const btn = document.getElementById('btn-mode-backtesting');
-        if (btn) btn.click();
-        if (typeof setMode === 'function') setMode('backtesting');
-    }""")
-    print("   -> Conmutado a Modo Backtesting")
+    # Desplazar a la curva de capital ascendente
+    await page.evaluate("window.__removePulseRing();")
+    await page.evaluate("window.__glideCursorToElement('#equityChart', 900)")
+    await asyncio.sleep(1.0)
+    await page.evaluate("window.__pulseRingAround('#equityChart', 6)")
 
     # Esperar hasta Bloque 2
     rem1 = b1["cumulative_end"] - (time.time() - t_start)
@@ -356,230 +385,148 @@ async def record_app_flow_continuous(p, manifest):
         await asyncio.sleep(rem1)
 
     # ---------------------------------------------------------
-    # BLOQUE 2: CREACIÓN DE SESIÓN DE BACKTESTING (19.99s -> 42.29s)
+    # BLOQUE 2: RADAR DE METAS Y BALANCE EFECTIVO (21.7s -> 40.54s)
     # ---------------------------------------------------------
     print(f"\n▶️ Ejecutando Bloque 2: {b2['title']}")
+    await page.evaluate("window.__removePulseRing();")
     await page.evaluate("""() => {
-        window.__showLowerThird('📊', 'PASO 2 · ESTRUCTURA DE LA SESIÓN', 'Estrategia Liquidez NY · EURUSD · $100K Simulación Fondeo');
+        window.__showLowerThird('🎯', 'PASO 2 · RADAR DE METAS Y PROGRESO', 'Radar de Fondeo · Balance $103,000 USD · Target Fase 1: 37.5%');
     }""")
     await asyncio.sleep(1.0)
 
-    # Mover cursor al botón `#btn-new-session`
-    await page.evaluate("window.__glideCursorToElement('#btn-new-session', 600)")
+    # Mover cursor al botón de Metas en la barra de navegación (#tab-btn-goals)
+    await page.evaluate("window.__glideCursorToElement('#tab-btn-goals', 700)")
     await asyncio.sleep(0.8)
 
-    # Pulso y clic para abrir modal de nueva sesión
-    await page.evaluate("window.__pulseRingAround('#btn-new-session', 6)")
+    # Pulso y clic para cambiar a pestaña Metas
+    await page.evaluate("window.__pulseRingAround('#tab-btn-goals', 6)")
     await asyncio.sleep(0.4)
     await page.evaluate("window.__clickRipple()")
     await asyncio.sleep(0.2)
     await page.evaluate("""() => {
         window.__removePulseRing();
-        const btn = document.getElementById('btn-new-session');
-        if (btn) btn.click();
-        if (typeof openSessionModal === 'function') openSessionModal();
+        const btnGoals = document.getElementById('tab-btn-goals');
+        if (btnGoals) btnGoals.click();
+        if (typeof switchTab === 'function') switchTab('goals');
     }""")
-    print("   -> Modal Nueva Sesión abierto")
-    await asyncio.sleep(1.0)
-
-    # Rellenar nombre
-    await page.evaluate("window.__typeIntoInput('#inputSessionName', 'Estrategia Liquidez NY', 45)")
-    await asyncio.sleep(0.8)
-
-    # Seleccionar activo EURUSD
-    await page.evaluate("window.__glideCursorToElement('#inputSessionPair', 400)")
-    await asyncio.sleep(0.4)
-    await page.evaluate("""() => {
-        const pairSelect = document.getElementById('inputSessionPair');
-        if (pairSelect) {
-            if (!Array.from(pairSelect.options).some(o => o.value === 'EURUSD')) {
-                pairSelect.innerHTML += '<option value="EURUSD">EURUSD</option>';
-            }
-            pairSelect.value = 'EURUSD';
-            pairSelect.dispatchEvent(new Event('change', { bubbles: true }));
-        }
-    }""")
-    await asyncio.sleep(0.8)
-
-    # Seleccionar radio Simulación de Fondeo
-    await page.evaluate("""() => {
-        const radioFondeo = document.querySelector('input[name="sessionMode"][value="fondeo"]');
-        if (radioFondeo) {
-            radioFondeo.checked = true;
-            radioFondeo.dispatchEvent(new Event('change', { bubbles: true }));
-            if (typeof toggleFondeoRules === 'function') toggleFondeoRules();
-        }
-    }""")
+    print("   -> Pestaña Metas activa y panel renderizado")
     await asyncio.sleep(1.2)
 
-    # Mover al botón Guardar Sesión
-    await page.evaluate("window.__glideCursorToElement('#btn-submit-session', 600)")
-    await asyncio.sleep(0.8)
-    await page.evaluate("window.__clickRipple()")
-    await asyncio.sleep(0.2)
+    # Resaltar la tarjeta de Balance Efectivo y Objetivo de Beneficio
     await page.evaluate("""() => {
-        const form = document.getElementById('sessionForm');
-        if (form) form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-        if (typeof saveSession === 'function') {
-            const fakeEvent = { preventDefault: () => {} };
-            saveSession(fakeEvent);
+        const goalPanel = document.getElementById('account-goal-panel');
+        if (goalPanel) {
+            const firstCard = goalPanel.querySelector('.grid > div:nth-child(1)');
+            if (firstCard) window.__pulseRingAround(firstCard, 8);
         }
     }""")
-    print("   -> Sesión de Backtesting guardada")
+    await asyncio.sleep(3.5)
+
+    # Desplazar el cursor hacia la tarjeta de Objetivo de Beneficio (Fase 1: 37.5%)
+    await page.evaluate("""() => {
+        window.__removePulseRing();
+        const goalPanel = document.getElementById('account-goal-panel');
+        if (goalPanel) {
+            const targetCard = goalPanel.querySelector('.grid > div:nth-child(2)');
+            if (targetCard) {
+                window.__pulseRingAround(targetCard, 8);
+                window.__glideCursorToElement(targetCard, 800);
+            }
+        }
+    }""")
 
     rem2 = b2["cumulative_end"] - (time.time() - t_start)
     if rem2 > 0:
         await asyncio.sleep(rem2)
 
     # ---------------------------------------------------------
-    # BLOQUE 3: REGISTRO ÁGIL DE TRADE SIMULADO (42.29s -> 68.88s)
+    # BLOQUE 3: AUDITORÍA DEL COLCHÓN DE SEGURIDAD (40.54s -> 61.45s)
     # ---------------------------------------------------------
     print(f"\n▶️ Ejecutando Bloque 3: {b3['title']}")
+    await page.evaluate("window.__removePulseRing();")
     await page.evaluate("""() => {
-        window.__showLowerThird('🎯', 'PASO 3 · REGISTRO Y SIZING HISTÓRICO', 'EURUSD · NY 09:30 AM · Market Buy · SL 20 · TP 60 · 5.00 Lotes · Full TP');
+        window.__showLowerThird('📊', 'PASO 3 · COLCHÓN DE SEGURIDAD RESTANTE', 'Drawdown consumido: $0 · Colchón restante: $10,000 (10% límite)');
     }""")
     await asyncio.sleep(1.0)
 
-    # Seleccionar sesión e ingresar formalmente al dashboard con enterGroup
+    # Mover cursor a la tarjeta de Drawdown Máximo (#account-goal-panel .grid > div:nth-child(3))
     await page.evaluate("""() => {
-        const startBtn = document.querySelector('button[data-account-action="start"]');
-        if (startBtn) startBtn.click();
-        if (typeof backtestSessions !== 'undefined' && backtestSessions.length > 0) {
-            if (typeof enterGroup === 'function') enterGroup(backtestSessions[0].id);
+        const goalPanel = document.getElementById('account-goal-panel');
+        if (goalPanel) {
+            const ddCard = goalPanel.querySelector('.grid > div:nth-child(3)');
+            if (ddCard) {
+                window.__glideCursorToElement(ddCard, 750);
+                window.__pulseRingAround(ddCard, 10);
+            }
         }
     }""")
-    print("   -> Sesión iniciada con enterGroup() y Dashboard activo")
-    await asyncio.sleep(1.2)
+    print("   -> Tarjeta de Drawdown Máximo y Colchón de Seguridad resaltada")
+    await asyncio.sleep(5.0)
 
-    # Mover cursor al botón Nueva Entrada
-    await page.evaluate("window.__glideCursorToElement('#btn-new-trade', 600)")
-    await asyncio.sleep(0.8)
-    await page.evaluate("window.__clickRipple()")
-    await asyncio.sleep(0.2)
+    # Inspeccionar con micro-movimiento el texto del colchón restante
     await page.evaluate("""() => {
-        const btnNew = document.getElementById('btn-new-trade');
-        if (btnNew) btnNew.click();
-        if (typeof openTradeModal === 'function') openTradeModal();
-    }""")
-    print("   -> Modal Nueva Entrada abierto")
-    await asyncio.sleep(1.0)
-
-    # Rellenar parámetros del trade simulado
-    await page.evaluate("""() => {
-        const parInput = document.getElementById('inputPar');
-        if (parInput) { parInput.value = 'EURUSD'; parInput.dispatchEvent(new Event('change', { bubbles: true })); }
-
-        const sessInput = document.getElementById('inputSesion');
-        if (sessInput) { sessInput.value = 'New York'; sessInput.dispatchEvent(new Event('change', { bubbles: true })); }
-
-        const horaInput = document.getElementById('inputHora');
-        if (horaInput) { horaInput.value = '09:30'; horaInput.dispatchEvent(new Event('input', { bubbles: true })); }
-
-        const dirInput = document.getElementById('inputTendencia');
-        if (dirInput) { dirInput.value = 'Favor'; dirInput.dispatchEvent(new Event('change', { bubbles: true })); }
-
-        const ordenInput = document.getElementById('inputOrden');
-        if (ordenInput) { ordenInput.value = 'Market Buy'; ordenInput.dispatchEvent(new Event('change', { bubbles: true })); }
-
-        const slInput = document.getElementById('inputPipsSL');
-        if (slInput) { slInput.value = '20'; slInput.dispatchEvent(new Event('input', { bubbles: true })); }
-
-        const tpInput = document.getElementById('inputPipsTP');
-        if (tpInput) { tpInput.value = '60'; tpInput.dispatchEvent(new Event('input', { bubbles: true })); }
-
-        if (typeof calculateRR === 'function') calculateRR();
-
-        const estadoInput = document.getElementById('inputEstado');
-        if (estadoInput) { estadoInput.value = 'Full TP'; estadoInput.dispatchEvent(new Event('change', { bubbles: true })); }
-    }""")
-    await asyncio.sleep(2.5)
-
-    # Mover al botón Guardar Operación
-    await page.evaluate("window.__glideCursorToElement('#btn-submit-trade', 600)")
-    await asyncio.sleep(0.8)
-    await page.evaluate("window.__clickRipple()")
-    await asyncio.sleep(0.2)
-    await page.evaluate("""() => {
-        const submitBtn = document.getElementById('btn-submit-trade');
-        if (submitBtn) submitBtn.click();
-        const form = document.getElementById('tradeForm');
-        if (form) form.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-        if (typeof saveTrade === 'function') {
-            const fakeEvent = { preventDefault: () => {} };
-            saveTrade(fakeEvent);
-        }
-        if (typeof closeTradeModal === 'function') {
-            closeTradeModal();
+        const goalPanel = document.getElementById('account-goal-panel');
+        if (goalPanel) {
+            const ddCard = goalPanel.querySelector('.grid > div:nth-child(3)');
+            if (ddCard) {
+                const subText = ddCard.querySelector('p.text-gray-500') || ddCard;
+                window.__glideCursorToElement(subText, 500);
+            }
         }
     }""")
-    print("   -> Trade simulado guardado exitosamente y modal cerrado")
 
     rem3 = b3["cumulative_end"] - (time.time() - t_start)
     if rem3 > 0:
         await asyncio.sleep(rem3)
 
     # ---------------------------------------------------------
-    # BLOQUE 4: CURVA HISTÓRICA Y MÉTRICAS (66.51s -> 87.75s)
+    # BLOQUE 4: LÍMITE DE PÉRDIDA DIARIA Y REGLAS (61.45s -> 79.6s)
     # ---------------------------------------------------------
     print(f"\n▶️ Ejecutando Bloque 4: {b4['title']}")
+    await page.evaluate("window.__removePulseRing();")
     await page.evaluate("""() => {
-        window.__showLowerThird('📈', 'PASO 4 · AUDITORÍA DE ROBUSTEZ MATEMÁTICA', 'Curva ascendente a $103,000 USD · Win Rate 100% · DD 0.0%');
+        window.__showLowerThird('⚡', 'PASO 4 · PÉRDIDA DIARIA Y PROTECCIÓN', 'Pérdida diaria máx: 5% · Días operados: 1/4 · Semáforo Verde Seguro');
     }""")
     await asyncio.sleep(1.0)
 
-    # Resaltar la curva de equidad
+    # Mover cursor a la sección de reglas opcionales e institucionales
     await page.evaluate("""() => {
-        const sel = document.getElementById('equityChart') ? '#equityChart' : 'canvas';
-        window.__pulseRingAround(sel, 10);
-        window.__glideCursorToElement(sel, 1000);
+        const rulesWrap = document.querySelector('#account-goal-panel .border-t') || document.querySelector('#account-goal-panel');
+        if (rulesWrap) {
+            window.__glideCursorToElement(rulesWrap, 800);
+            window.__pulseRingAround(rulesWrap, 8);
+        }
     }""")
+    print("   -> Reglas de protección y semáforo verde auditados")
     await asyncio.sleep(4.0)
 
-    # Resaltar métricas cuantitativas
+    # Micro-enfoque en el chip de pérdida diaria
     await page.evaluate("""() => {
-        window.__removePulseRing();
-        const sel = document.querySelector('.grid-cols-2') ? '.grid-cols-2' : '.grid';
-        window.__pulseRingAround(sel, 8);
+        const chip = document.querySelector('[title*="diaria"]') || document.querySelector('#account-goal-panel .border-t');
+        if (chip) window.__glideCursorToElement(chip, 600);
     }""")
-    await asyncio.sleep(4.0)
-    await page.evaluate("window.__removePulseRing();")
 
     rem4 = b4["cumulative_end"] - (time.time() - t_start)
     if rem4 > 0:
         await asyncio.sleep(rem4)
 
     # ---------------------------------------------------------
-    # BLOQUE 5: AISLAMIENTO TOTAL Y SEGURIDAD (87.75s -> 104.5s)
+    # BLOQUE 5: DISCIPLINA MATEMÁTICA Y META (79.6s -> 94.46s)
     # ---------------------------------------------------------
     print(f"\n▶️ Ejecutando Bloque 5: {b5['title']}")
+    await page.evaluate("window.__removePulseRing();")
     await page.evaluate("""() => {
-        window.__showLowerThird('🛡️', 'PASO 5 · AISLAMIENTO Y SEGURIDAD', 'Bases de datos independientes: Cuentas Reales 100% Intactas');
+        window.__showLowerThird('🏆', 'PASO 5 · DISCIPLINA HACIA LA META', 'Certeza matemática sin estrés · Camino claro hacia la Cuenta Fondeada');
     }""")
     await asyncio.sleep(1.0)
 
-    # Mover cursor de regreso a `#btn-mode-real`
-    await page.evaluate("window.__glideCursorToElement('#btn-mode-real', 700)")
-    await asyncio.sleep(0.8)
-
-    # Pulso esmeralda y clic en Cuenta Real
-    await page.evaluate("window.__pulseRingAround('#btn-mode-real', 6)")
-    await asyncio.sleep(0.4)
-    await page.evaluate("window.__clickRipple()")
-    await asyncio.sleep(0.2)
+    # Enfoque final en el progreso de la Fase 1
     await page.evaluate("""() => {
-        window.__removePulseRing();
-        const btnReal = document.getElementById('btn-mode-real');
-        if (btnReal) btnReal.click();
-        if (typeof setMode === 'function') setMode('real');
-    }""")
-    print("   -> Conmutado de vuelta a Cuenta Real (Aislamiento Verificado)")
-    await asyncio.sleep(1.5)
-
-    # Resaltar la tarjeta de cuenta real limpia e intacta
-    await page.evaluate("""() => {
-        const sel = document.querySelector('#sessions-grid > div') ? '#sessions-grid > div' : '.cursor-pointer';
-        window.__pulseRingAround(sel, 8);
-        window.__glideCursorToElement(sel, 800);
+        const targetBar = document.querySelector('#account-goal-panel .grid > div:nth-child(2)');
+        if (targetBar) {
+            window.__pulseRingAround(targetBar, 8);
+            window.__glideCursorToElement(targetBar, 750);
+        }
     }""")
 
     # Esperar hasta el final de la toma continua
@@ -609,7 +556,7 @@ async def record_app_flow_continuous(p, manifest):
     # Mux con audio continuo de Jorge
     mux_cmd = [
         FFMPEG_EXE, "-y",
-        "-ss", "0.200",
+        "-ss", "0.150",
         "-i", raw_webm,
         "-i", cont_audio,
         "-filter_complex", "[0:v]fps=30,scale=1920:1080,format=yuv420p[v]",
@@ -617,21 +564,22 @@ async def record_app_flow_continuous(p, manifest):
         "-map", "1:a",
         "-c:v", "libx264", "-preset", "fast", "-crf", "18",
         "-c:a", "aac", "-b:a", "192k",
-        "-t", f"{duration:.3f}",
+        "-shortest",
         scene_mp4
     ]
-    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(mux_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    shutil.rmtree(raw_dir, ignore_errors=True)
     print(f"✅ Toma continua completada: {scene_mp4}")
     return scene_mp4
 
 
 # -------------------------------------------------------------
-# 5. ESCENA 3: OUTRO INSTITUCIONAL (12.0s)
+# 5. ESCENA 3: OUTRO INSTITUCIONAL (~13.0s)
 # -------------------------------------------------------------
 async def record_outro(p, manifest):
     scene_id = "outro_scene"
     audio_path = os.path.join(AUDIO_DIR, "outro.mp3")
-    duration = 12.0
+    duration = manifest["outro"].get("duration", 13.06) + 0.3
     scene_mp4 = os.path.join(SCENES_DIR, f"{scene_id}.mp4")
 
     if not "--force" in sys.argv and os.path.exists(scene_mp4) and os.path.getsize(scene_mp4) > 100000:
@@ -643,7 +591,7 @@ async def record_outro(p, manifest):
     os.makedirs(raw_dir, exist_ok=True)
 
     print("\n" + "=" * 75)
-    print(f"🎬 [3/3] Filmando Escena 3: Outro Institucional ({duration}s)")
+    print(f"🎬 [3/3] Filmando Escena 3: Outro Institucional ({duration:.2f}s)")
     print("=" * 75)
 
     browser = await p.chromium.launch(
@@ -659,12 +607,12 @@ async def record_outro(p, manifest):
 
     url = f"http://127.0.0.1:{PORT}/scripts/render/intro_outro_motion.html?mode=outro&tutorial=3"
     await page.goto(url, wait_until="domcontentloaded")
-    await asyncio.sleep(duration - 1.0)
+    await asyncio.sleep(duration - 0.8)
     try:
         await page.evaluate("if (typeof window.__fadeOutStage === 'function') window.__fadeOutStage();")
     except Exception:
         pass
-    await asyncio.sleep(1.0)
+    await asyncio.sleep(0.8)
 
     await page.close()
     await context.close()
@@ -675,7 +623,6 @@ async def record_outro(p, manifest):
         raise RuntimeError("No se encontró WebM para outro")
     raw_webm = webms[0]
 
-    # Mux con audio del outro
     mux_cmd = [
         FFMPEG_EXE, "-y",
         "-ss", "0.150",
@@ -686,53 +633,54 @@ async def record_outro(p, manifest):
         "-map", "1:a",
         "-c:v", "libx264", "-preset", "fast", "-crf", "18",
         "-c:a", "aac", "-b:a", "192k",
-        "-t", f"{duration:.3f}",
+        "-shortest",
         scene_mp4
     ]
-    subprocess.run(mux_cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(mux_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    shutil.rmtree(raw_dir, ignore_errors=True)
     print(f"✅ Outro completado: {scene_mp4}")
     return scene_mp4
 
 
 # -------------------------------------------------------------
-# 6. ENSAMBLE MAESTRO FFmpeg (Crossfade + Music Ducking)
+# 6. ENSAMBLE MAESTRO CON FFMPEG (Crossfade 0.5s + Ducking Music)
 # -------------------------------------------------------------
-def assemble_master_video(intro_mp4, app_mp4, outro_mp4, output_mp4):
+def assemble_master_video(intro_mp4, app_mp4, outro_mp4, manifest):
     print("\n" + "=" * 75)
     print("🎞️ ENSAMBLE MAESTRO FINAL DE TUTORIAL #3 CON FFMPEG")
     print("   -> Transición Crossfade de 0.5s")
     print("   -> Música atenuada de fondo (Ducking a 0.065)")
     print("=" * 75)
 
-    def get_duration(mp4_path):
-        cmd = [FFMPEG_EXE, "-i", mp4_path, "-hide_banner"]
-        p = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        for line in p.stderr.splitlines():
+    def get_duration(fpath):
+        cmd = [FFMPEG_EXE, "-i", fpath, "-hide_banner"]
+        res = subprocess.run(cmd, stderr=subprocess.PIPE, stdout=subprocess.PIPE, text=True)
+        for line in res.stderr.splitlines():
             if "Duration:" in line:
-                parts = line.split("Duration:")[1].split(",")[0].strip()
-                h, m, s = parts.split(":")
+                part = line.split("Duration:")[1].split(",")[0].strip()
+                h, m, s = part.split(":")
                 return float(h) * 3600 + float(m) * 60 + float(s)
-        return 10.0
+        return 0.0
 
     d_intro = get_duration(intro_mp4)
     d_app = get_duration(app_mp4)
     d_outro = get_duration(outro_mp4)
 
-    offset1 = d_intro - 0.5
-    offset2 = offset1 + d_app - 0.5
-    total_expected = offset2 + d_outro
+    offset1 = max(0.1, d_intro - 0.50)
+    offset2 = max(0.1, offset1 + d_app - 0.50)
+    total_dur = offset2 + d_outro
 
     print(f"   Duraciones: Intro={d_intro:.2f}s, App={d_app:.2f}s, Outro={d_outro:.2f}s")
     print(f"   Offsets de transición: Offset1={offset1:.2f}s, Offset2={offset2:.2f}s")
-    print(f"   Duración total ensamblada: ~{total_expected:.2f}s")
+    print(f"   Duración total ensamblada: ~{total_dur:.2f}s")
 
     filter_complex = (
-        f"[0:v][1:v]xfade=transition=fade:duration=0.5:offset={offset1:.3f}[v01]; "
-        f"[v01][2:v]xfade=transition=fade:duration=0.5:offset={offset2:.3f},format=yuv420p[vout]; "
-        f"[0:a][1:a]acrossfade=d=0.5[a01]; "
-        f"[a01][2:a]acrossfade=d=0.5[voice]; "
-        f"[3:a]volume=0.065[bgm]; "
-        f"[voice][bgm]amix=inputs=2:duration=first:dropout_transition=2[aout]"
+        f"[0:v][1:v]xfade=transition=fade:duration=0.50:offset={offset1:.2f}[v01];"
+        f"[v01][2:v]xfade=transition=fade:duration=0.50:offset={offset2:.2f},format=yuv420p[v_final];"
+        f"[0:a][1:a]acrossfade=d=0.50:c1=tri:c2=tri[a01];"
+        f"[a01][2:a]acrossfade=d=0.50:c1=tri:c2=tri[a_voice];"
+        f"[3:a]volume=0.065,atrim=0:{total_dur:.2f},afade=t=out:st={total_dur - 2.5:.2f}:d=2.5[a_bg];"
+        f"[a_voice][a_bg]amix=inputs=2:duration=first:dropout_transition=2[a_final]"
     )
 
     cmd = [
@@ -740,38 +688,44 @@ def assemble_master_video(intro_mp4, app_mp4, outro_mp4, output_mp4):
         "-i", intro_mp4,
         "-i", app_mp4,
         "-i", outro_mp4,
-        "-stream_loop", "-1", "-i", BG_MUSIC,
+        "-i", BG_MUSIC,
         "-filter_complex", filter_complex,
-        "-map", "[vout]",
-        "-map", "[aout]",
+        "-map", "[v_final]",
+        "-map", "[a_final]",
         "-c:v", "libx264", "-preset", "medium", "-crf", "18",
         "-c:a", "aac", "-b:a", "192k",
-        "-movflags", "+faststart",
-        output_mp4
+        FINAL_MP4
     ]
 
-    subprocess.run(cmd, check=True)
-    sz_mb = os.path.getsize(output_mp4) / (1024 * 1024)
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+    size_mb = os.path.getsize(FINAL_MP4) / (1024 * 1024)
     print("\n" + "=" * 75)
-    print(f"🎉 ¡VIDEO MASTER TUTORIAL #3 ENSAMBLADO CON ÉXITO!")
-    print(f"📍 Archivo Final: {output_mp4}")
-    print(f"📦 Tamaño: {sz_mb:.2f} MB")
+    print("🎉 ¡VIDEO MASTER TUTORIAL #3 ENSAMBLADO CON ÉXITO!")
+    print(f"📍 Archivo Final: {FINAL_MP4}")
+    print(f"📦 Tamaño: {size_mb:.2f} MB")
+    print("=" * 75)
+    return FINAL_MP4
+
+
+# -------------------------------------------------------------
+# 7. MAIN ORCHESTRATOR
+# -------------------------------------------------------------
+async def main():
+    print("=" * 75)
+    print("🎬 ASTRADE STUDIO — PIPELINE MAESTRO DE PRODUCCIÓN (TUTORIAL #3)")
+    print("   Tema: Control de Drawdown y Reglas de Financiación Prop")
     print("=" * 75)
 
-
-async def main_async():
     server = start_http_server()
     manifest = load_manifest()
 
     async with async_playwright() as p:
         intro_mp4 = await record_intro(p, manifest)
-        app_mp4 = await record_app_flow_continuous(p, manifest)
+        app_mp4 = await record_app_master_take(p, manifest)
         outro_mp4 = await record_outro(p, manifest)
 
-    assemble_master_video(intro_mp4, app_mp4, outro_mp4, FINAL_MP4)
+    assemble_master_video(intro_mp4, app_mp4, outro_mp4, manifest)
 
-def main():
-    asyncio.run(main_async())
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

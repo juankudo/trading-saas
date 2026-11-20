@@ -5,6 +5,25 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.0] - 2026-11-19
+
+### 🛡️ Reestructuración y Master Final del Tutorial #3 ("Control de Drawdown y Reglas Prop")
+- **Sincronización con la Hoja de Ruta y Teaser del Tutorial #2:**
+  - Alineación pedagógica total con el roadmap oficial (`TUTORIAL_SERIES_ROADMAP.md`) y la promesa narrativa al cierre del Tutorial #2: *"cómo blindar tu cuenta dominando el control de drawdown"*.
+  - El material previo de *Laboratorio de Backtesting* fue archivado de forma segura en `scripts/render/archive_backtesting/` para su lanzamiento como **Tutorial #5**.
+- **Master Final 1080p 60 FPS Renderizado en Google Colab (GPU NVIDIA T4):**
+  - Generación de `AsTrade_Tutorial_03_Drawdown_1080p.mp4` (111.48s, 6.57 MB).
+  - Continuidad directa con la cuenta *"Fondeo 100K Challenge"* con balance inicial $100,000 USD y actual de $103,000 USD (+3.00%).
+  - Locución fonética con `es-MX-JorgeNeural` cubriendo: Por qué el Drawdown destruye cuentas, Radar de Metas (`#section-goals`), Colchón de Seguridad Restante ($10,000 USD intactos), Pérdida Diaria Máxima (5%) y Disciplina Matemática hacia la meta del 8%.
+- **Kit de Publicación YouTube Actualizado (`packages/tutorial_03`):**
+  - Nueva carátula minimalista técnica 1080p (`thumbnail_tutorial_03.png`) centrada en *"Blindaje y Drawdown"*.
+  - Metadatos SEO (`metadata.md`) con capítulos exactos (0:00 a 1:40), descripción estructurada y etiquetas de gestión de riesgo.
+  - Soporte integrado en el uploader autónomo `upload_youtube.py --tutorial 3`.
+- **Auditoría Visual de Fotogramas Clave (Zero-Blur Standard):**
+  - 7 fotogramas extraídos y verificados confirmando legibilidad 100% nítida de todas las tarjetas de metas y colchón de drawdown.
+
+---
+
 ## [v3.8.9] - 2026-11-18
 
 ### 🎬 Producción y Master Final del Tutorial #3 ("Laboratorio de Backtesting Profesional")

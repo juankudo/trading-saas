@@ -1,9 +1,9 @@
 """
 Generador de Audio Modular — Tutorial #3 AsTrade
-"Laboratorio de Backtesting Profesional y Simulación de Estrategias"
+"Control de Drawdown y Reglas de Financiación Prop"
 
 Genera:
-1. intro.mp3 (Locución cinemática del título: "Tutorial tres: Laboratorio de Backtesting...")
+1. intro.mp3 (Locución cinemática del título: "Tutorial tres: Control de Drawdown...")
 2. Bloques 1 a 5 de la toma continua en app.html ensamblados en video_03_continuous_voice.mp3
 3. outro.mp3 (Llamado a la acción institucional en astradehub.com y teaser de Tutorial #4)
 4. manifest.json con metadatos de sincronización fonética con JorgeNeural (es-MX).
@@ -29,72 +29,69 @@ VOLUME = "+0%"
 INTRO_BLOCK = {
     "id": "intro",
     "title": "Intro Oficial — Tutorial #3",
-    "text": "Tutorial tres: Laboratorio de Backtesting Profesional y Simulación de Estrategias."
+    "text": "Tutorial tres: Control de Drawdown y Reglas de Financiación Prop."
 }
 
 BLOCKS = [
     {
-        "id": "block1_mode_switch",
+        "id": "block1_drawdown_danger",
         "index": 1,
-        "title": "Paso 1: Peligro de operar a ciegas y Cambio a Modo Backtesting",
-        "tag": "🧪 PASO 1 · MODO BACKTESTING PROFESIONAL",
-        "icon": "🧪",
-        "text": (
-            "Arriesgar dinero real o pagar una evaluación de fondeo sin comprobar si tu estrategia "
-            "tiene ventaja estadística es apostar a ciegas. En el centro superior de AsTrade, "
-            "cambiamos de Cuenta Real a Backtesting con un solo clic, ingresando a un laboratorio "
-            "de simulación cuantitativa totalmente aislado."
-        )
-    },
-    {
-        "id": "block2_create_session",
-        "index": 2,
-        "title": "Paso 2: Creación de Sesión de Backtesting",
-        "tag": "📊 PASO 2 · ESTRUCTURA DE LA SESIÓN",
-        "icon": "📊",
-        "text": (
-            "Hacemos clic en Nueva Sesión para estructurar nuestro entorno de prueba. "
-            "Nombramos la sesión Estrategia Liquidez New York, seleccionamos el activo Euro Dólar, "
-            "establecemos un capital simulado de cien mil dólares y configuramos las reglas "
-            "idénticas a una cuenta de evaluación. Guardamos la sesión para iniciar el testeo histórico."
-        )
-    },
-    {
-        "id": "block3_simulated_trade",
-        "index": 3,
-        "title": "Paso 3: Registro Ágil de Operación Simulada",
-        "tag": "🎯 PASO 3 · REGISTRO Y SIZING HISTÓRICO",
-        "icon": "🎯",
-        "text": (
-            "Dentro de la sesión, abrimos Nueva Entrada para registrar una operación histórica. "
-            "En sesión New York a las nueve y media de la mañana, ejecutamos una orden de compra Market Buy "
-            "a favor de la tendencia. Con veinte pips de Stop Loss y sesenta de Take Profit, "
-            "la bitácora calcula un lotaje institucional de cinco lotes exactos y proyecta un cierre quirúrgico en Full TP sin presiones emocionales."
-        )
-    },
-    {
-        "id": "block4_metrics_robustness",
-        "index": 4,
-        "title": "Paso 4: Curva Histórica y Métricas Cuantitativas",
-        "tag": "📈 PASO 4 · AUDITORÍA DE ROBUSTEZ MATEMÁTICA",
-        "icon": "📈",
-        "text": (
-            "Al registrar nuestras operaciones, AsTrade genera instantáneamente la curva de capital proyectada "
-            "y calcula tus métricas fundamentales: tasa de acierto Win Rate, Profit Factor "
-            "y el máximo Drawdown histórico. Estos datos te otorgan la certeza matemática "
-            "para saber si tu sistema resistirá las fases de prueba."
-        )
-    },
-    {
-        "id": "block5_total_isolation",
-        "index": 5,
-        "title": "Paso 5: Aislamiento Total y Seguridad de Datos",
-        "tag": "🛡️ PASO 5 · AISLAMIENTO Y SEGURIDAD",
+        "title": "Paso 1: Por qué el Drawdown destruye cuentas y Continuidad",
+        "tag": "🛡️ PASO 1 · CONTROL DE RIESGO INSTITUCIONAL",
         "icon": "🛡️",
         "text": (
-            "Y lo más importante: regresamos al modo Cuenta Real y verificamos que nuestras cuentas activas "
-            "permanecen cien por ciento intactas. Tu laboratorio de pruebas nunca contamina tus registros "
-            "oficiales de fondeo, garantizando una contabilidad limpia y profesional."
+            "Más del noventa por ciento de los traders reprueban sus evaluaciones de fondeo no por falta de aciertos, "
+            "sino por violar el límite de Drawdown. Continuando con nuestra cuenta de cien mil dólares del tutorial anterior, "
+            "tras asegurar tres mil dólares de beneficio en Euro Dólar, aprenderemos a blindar nuestro capital contra rachas negativas."
+        )
+    },
+    {
+        "id": "block2_goals_radar",
+        "index": 2,
+        "title": "Paso 2: Radar de Metas y Balance Efectivo",
+        "tag": "🎯 PASO 2 · RADAR DE METAS Y PROGRESO",
+        "icon": "🎯",
+        "text": (
+            "En la barra de navegación superior, ingresamos a la pestaña Metas. "
+            "AsTrade despliega de inmediato el radar de evaluación de tu cuenta: "
+            "confirmamos nuestro balance efectivo en ciento tres mil dólares "
+            "y un progreso del treinta y siete punto cinco por ciento hacia el objetivo de la Fase Uno."
+        )
+    },
+    {
+        "id": "block3_drawdown_cushion",
+        "index": 3,
+        "title": "Paso 3: Auditoría del Colchón de Seguridad y Drawdown Máximo",
+        "tag": "📊 PASO 3 · COLCHÓN DE SEGURIDAD RESTANTE",
+        "icon": "📊",
+        "text": (
+            "En la tarjeta de Drawdown Máximo, observamos el indicador más importante para tu supervivencia: "
+            "el colchón de seguridad restante. Con cero dólares de Drawdown consumido, disponemos de diez mil dólares "
+            "intactos de margen frente al límite estático, y trece mil dólares de protección desde nuestro pico de capital."
+        )
+    },
+    {
+        "id": "block4_daily_loss_rules",
+        "index": 4,
+        "title": "Paso 4: Límite de Pérdida Diaria y Reglas Institucionales",
+        "tag": "⚡ PASO 4 · PÉRDIDA DIARIA Y PROTECCIÓN",
+        "icon": "⚡",
+        "text": (
+            "En la sección inferior auditamos las reglas de consistencia y la pérdida diaria máxima, "
+            "configurada en cinco por ciento. El semáforo verde confirma que nuestra cuenta opera en zona totalmente segura, "
+            "sin riesgo de quema accidental ni penalizaciones de la firma de fondeo."
+        )
+    },
+    {
+        "id": "block5_math_discipline",
+        "index": 5,
+        "title": "Paso 5: Disciplina Matemática y Camino a la Fondeada",
+        "tag": "🏆 PASO 5 · DISCIPLINA HACIA LA META",
+        "icon": "🏆",
+        "text": (
+            "Al conocer tu colchón exacto antes de cada jornada, eliminas la ansiedad operativa. "
+            "Con cinco mil dólares restantes para alcanzar la meta del ocho por ciento, "
+            "avanzamos con certeza matemática hacia la cuenta fondeada real."
         )
     }
 ]
@@ -104,7 +101,7 @@ OUTRO_BLOCK = {
     "title": "Outro Institucional, Llamado a la Acción y Teaser Tutorial #4",
     "text": (
         "Comienza hoy tu prueba gratuita de siete días en astradehub punto com. "
-        "En el próximo tutorial: análisis cuantitativo avanzado en el Dashboard y Calendario de Rentabilidad."
+        "En el próximo tutorial: análisis cuantitativo avanzado en el Dashboard, Curva de Capital y Calendario de Consistencia."
     )
 }
 

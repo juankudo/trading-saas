@@ -17,7 +17,7 @@ import subprocess
 
 TARGET_DIR = "/content/trading-saas"
 BUNDLE_ZIP = "/content/astrade_video03_bundle.zip"
-FINAL_VIDEO = "/content/trading-saas/media/youtube_tutorials/AsTrade_Tutorial_03_Backtesting_1080p.mp4"
+FINAL_VIDEO = "/content/trading-saas/media/youtube_tutorials/AsTrade_Tutorial_03_Drawdown_1080p.mp4"
 
 print("=" * 70)
 print("🚀 EJECUTANDO RUNNER REMOTO EN GOOGLE COLAB — TUTORIAL #3 (BACKTESTING PRO)")
