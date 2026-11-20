@@ -147,3 +147,73 @@ async function apiFetchSubscription(userId) {
         return data;
     } catch (e) { return null; }
 }
+
+/**
+ * Iniciar sesión o registro con Google OAuth
+ */
+async function apiSignInWithGoogle() {
+    const client = getSupabase();
+    if (!client || SUPABASE_CONFIG.url.includes("tu-proyecto")) {
+        throw new Error("El servicio de autenticación con Google no está disponible.");
+    }
+
+    // Calcula dinámicamente la URL absoluta hacia app.html en el mismo host/origen
+    const origin = window.location.origin;
+    const pathname = window.location.pathname.replace(/(\/index\.html|\/en\.html|\/)$/, '');
+    const redirectUrl = `${origin}${pathname}/app.html`;
+
+    const { data, error } = await client.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+            redirectTo: redirectUrl,
+            queryParams: {
+                access_type: 'offline',
+                prompt: 'select_account',
+            }
+        }
+    });
+
+    if (error) throw error;
+    return data;
+}
+
+/**
+ * Procesa la sesión entrante tras redirección OAuth (Google)
+ */
+async function apiHandleOAuthCallback() {
+    const client = getSupabase();
+    if (!client) return null;
+
+    const { data: { session }, error } = await client.auth.getSession();
+    if (error || !session || !session.user) return null;
+
+    let profile = null;
+    let sub = null;
+    try {
+        profile = await apiFetchProfile(session.user.id);
+        sub = await apiFetchSubscription(session.user.id);
+    } catch (e) {
+        console.warn("No se pudo cargar perfil/suscripción adicional:", e);
+    }
+
+    const userSession = {
+        id: session.user.id,
+        email: session.user.email,
+        name: (profile && profile.full_name) || 
+              (session.user.user_metadata && (session.user.user_metadata.full_name || session.user.user_metadata.name)) || 
+              session.user.email.split('@')[0],
+        avatar_url: session.user.user_metadata && session.user.user_metadata.avatar_url,
+        provider: 'google',
+        trial_ends_at: (sub && sub.trial_ends_at) || new Date(Date.now() + 7 * 86400000).toISOString(),
+        subscription: sub || { status: 'trialing', plan: 'Pro Trial (7 días)' }
+    };
+
+    saveUserSession(userSession);
+
+    // Limpia la URL de los tokens de OAuth sin recargar la página
+    if (window.location.hash || window.location.search.includes('code=')) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    return userSession;
+}

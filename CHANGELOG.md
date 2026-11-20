@@ -5,6 +5,25 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.4] - 2026-11-20
+
+### 🚀 Integración de Inicio de Sesión y Registro con Google (OAuth 2.0)
+- **Activación en Supabase Auth Backend:**
+  - Habilitado proveedor externo de Google con credenciales de cliente OAuth (ID y Secreto).
+  - Configurada lista de URIs autorizadas (`uri_allow_list`) para `tradingjournalpro.pages.dev`, `astradehub.com` y desarrollo local.
+  - Sincronización automática de usuarios Google con el trigger `handle_new_user` de Postgres (creación de perfil y activación automática de 7 días de prueba gratis).
+- **Botón Google Adaptativo Bilingüe (`index.html` & `en.html`):**
+  - Incorporado en modales de Iniciar Sesión ("Continuar con Google" / "Continue with Google") y Registro ("Registrarse con Google" / "Sign up with Google").
+  - Logotipo oficial vectorizado de 4 colores de Google (SVG).
+  - Línea divisoria elegante ("o con tu correo" / "or with email").
+  - Estilos adaptativos de alta calidad (`.btn-google-auth`): fondo slate oscuro con borde sutil en Modo Oscuro, y fondo blanco puro con borde neutro `#d1d5db` y sombra suave en Modo Claro.
+- **Manejador de Sesión y Callback (`app.html` & `js/supabase-client.js`):**
+  - Implementación de `apiSignInWithGoogle()` y `apiHandleOAuthCallback()`.
+  - Guardián inteligente en `app.html` que detecta redirecciones OAuth (`#access_token` o `?code`) sin expulsar al usuario al index.
+  - Recuperación de perfil y suscripción tras la autenticación de Google, guardado en `localStorage` y limpieza estética de la URL sin recargas.
+
+---
+
 ## [v3.9.3] - 2026-11-20
 
 ### 🎨 Corrección de Enfoque y Adaptabilidad en Modales de Autenticación
