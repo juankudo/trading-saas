@@ -736,6 +736,8 @@
 
 
             "toolbar.backup_folder": "Carpeta JSON",
+            "toolbar.folder_prefix": "Carpeta:",
+            "toolbar.folder_tooltip": "Selecciona la carpeta donde se guardarán los JSON automáticos",
 
 
 
@@ -960,14 +962,13 @@
 
 
             "tabs.global_trade": "Entrada múltiple",
-
-
-
-
-
-
-
             "tabs.global_metrics": "Métricas globales",
+            "btn.global_trade": "Entrada múltiple",
+            "btn.global_metrics": "Métricas globales",
+            "btn.hide_balances": "Ocultar balances",
+            "chart.start": "Inicio",
+            "chart.effective_balance": "Balance efectivo",
+            "metrics.bt_pair_desc": "Las métricas corresponden a este único activo; no se compara un “mejor par”.",
 
 
 
@@ -7363,6 +7364,8 @@
 
 
             "toolbar.backup_folder": "JSON Folder",
+            "toolbar.folder_prefix": "Folder:",
+            "toolbar.folder_tooltip": "Select folder for automatic JSON backups",
 
 
 
@@ -7546,7 +7549,7 @@
 
 
 
-            "tabs.journal": "Trade Journal",
+            "tabs.journal": "Trade Log",
 
 
 
@@ -7586,23 +7589,16 @@
 
 
 
-            "tabs.global_trade": "Multi Entry",
-
-
-
-
-
-
-
+            "tabs.global_trade": "Bulk Entry",
             "tabs.global_metrics": "Global Metrics",
-
-
-
-
-
-
-
-            "btn.edit_last_multi": "Edit last multi entry",
+            "btn.global_trade": "Bulk Entry",
+            "btn.global_metrics": "Global Metrics",
+            "btn.edit_last_multi": "Edit Latest Bulk Entry",
+            "btn.hide_balances": "Hide Balances",
+            "btn.view_balances": "View Balances",
+            "chart.start": "Start",
+            "chart.effective_balance": "Effective Balance",
+            "metrics.bt_pair_desc": "Metrics apply to this single asset; no best pair comparison.",
 
 
 

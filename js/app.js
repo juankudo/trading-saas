@@ -226,6 +226,8 @@ const initialTrades = [];
         // Sincronización reactiva del sistema bilingüe (ES / EN)
         window.addEventListener('languageChanged', () => {
             monthNames = (typeof window.i18n !== 'undefined') ? window.i18n.getI18nMonthNames() : monthNames;
+            updateFolderButtonLabel();
+            updateGroupBalancesToggleButton();
             const tabSessionsText = document.getElementById('tab-text-sessions');
             if (tabSessionsText) {
                 tabSessionsText.textContent = currentMode === 'real'
@@ -243,6 +245,9 @@ const initialTrades = [];
                 btnNewSession.innerHTML = currentMode === 'real'
                     ? `${(typeof window.t === 'function') ? window.t('btn.new_account', 'Nueva Cuenta') : 'Nueva Cuenta'} <i class="fa-solid fa-plus ml-2"></i>`
                     : `${(typeof window.t === 'function') ? window.t('btn.new_session', 'Nueva Sesión') : 'Nueva Sesión'} <i class="fa-solid fa-plus ml-2"></i>`;
+            }
+            if (currentTabName === 'sessions' && typeof renderGroups === 'function') {
+                renderGroups();
             }
             if (typeof renderAll === 'function') {
                 renderAll();
@@ -337,8 +342,11 @@ const initialTrades = [];
 
         function updateFolderButtonLabel() {
             const label = document.getElementById("folder-btn-label");
-            if (directoryHandle) label.textContent = `Carpeta: ${directoryHandle.name}`;
-            else label.textContent = "Carpeta JSON";
+            if (!label) return;
+            const prefix = (typeof window.t === 'function') ? window.t('toolbar.folder_prefix', 'Carpeta:') : 'Carpeta:';
+            const defaultLabel = (typeof window.t === 'function') ? window.t('toolbar.backup_folder', 'Carpeta JSON') : 'Carpeta JSON';
+            if (directoryHandle) label.textContent = `${prefix} ${directoryHandle.name}`;
+            else label.textContent = defaultLabel;
         }
 
         async function autoSaveJSONToFolder(forceFullRealBackup = false) {
@@ -1011,7 +1019,11 @@ const initialTrades = [];
         function updateGroupBalancesToggleButton() {
             const text = document.getElementById("btn-group-toggle-balances-text");
             const icon = document.getElementById("btn-group-toggle-balances-icon");
-            if (text) text.textContent = groupBalancesVisible ? "Ocultar balances" : "Ver balances";
+            if (text) {
+                text.textContent = groupBalancesVisible
+                    ? ((typeof window.t === 'function') ? window.t('btn.hide_balances', 'Ocultar balances') : 'Ocultar balances')
+                    : ((typeof window.t === 'function') ? window.t('btn.view_balances', 'Ver balances') : 'Ver balances');
+            }
             if (icon) icon.className = groupBalancesVisible ? "fa-solid fa-eye-slash" : "fa-solid fa-eye";
         }
 
@@ -4198,20 +4210,20 @@ const initialTrades = [];
                 headerHintLabel = getBalanceHintLabel(status);
                 const profitTone = status.profit > 0 ? "ok" : (status.profit < 0 ? "bad" : "muted");
                 cards.push(card(
-                    "Balance efectivo",
+                    isEn ? "Effective Balance" : "Balance efectivo",
                     formatBalanceHistoryMoney(status.balance),
-                    `Inicial ${formatBalanceHistoryMoney(status.initial)} · ${status.profit >= 0 ? "+" : ""}${formatBalanceHistoryMoney(status.profit)} (${status.profitPct >= 0 ? "+" : ""}${status.profitPct.toFixed(2)}%)${getBalanceBaseLabel(status)}`,
+                    `${isEn ? "Initial" : "Inicial"} ${formatBalanceHistoryMoney(status.initial)} · ${status.profit >= 0 ? "+" : ""}${formatBalanceHistoryMoney(status.profit)} (${status.profitPct >= 0 ? "+" : ""}${status.profitPct.toFixed(2)}%)${getBalanceBaseLabel(status)}`,
                     null,
                     profitTone
                 ));
                 if (status.targetAmount > 0) {
-                    const progressText = status.targetReached ? "¡Alcanzado!" : `${Math.min(100, status.targetProgress).toFixed(0)}%`;
+                    const progressText = status.targetReached ? (isEn ? "Reached!" : "¡Alcanzado!") : `${Math.min(100, status.targetProgress).toFixed(0)}%`;
                     const reachedProfit = Math.max(status.profit, status.bestBalance - status.initial);
                     const subText = status.targetReached
-                        ? `+${formatBalanceHistoryMoney(reachedProfit)} sobre el objetivo de ${formatBalanceHistoryMoney(status.targetAmount)} (${status.currentTargetPct}%)`
-                        : `Faltan ${formatBalanceHistoryMoney(status.targetRemaining)} para ${formatBalanceHistoryMoney(status.targetAmount)} (${status.currentTargetPct}% del inicial)`;
-                    const phaseTitle = status.phases === 2 ? ` · Fase ${status.phase} de ${status.phases}` : "";
-                    cards.push(card(`Objetivo de beneficio${phaseTitle}`, progressText, subText, status.targetProgress, status.targetReached ? "ok" : "info"));
+                        ? (isEn ? `+${formatBalanceHistoryMoney(reachedProfit)} above target of ${formatBalanceHistoryMoney(status.targetAmount)} (${status.currentTargetPct}%)` : `+${formatBalanceHistoryMoney(reachedProfit)} sobre el objetivo de ${formatBalanceHistoryMoney(status.targetAmount)} (${status.currentTargetPct}%)`)
+                        : (isEn ? `${formatBalanceHistoryMoney(status.targetRemaining)} remaining to ${formatBalanceHistoryMoney(status.targetAmount)} (${status.currentTargetPct}% of initial)` : `Faltan ${formatBalanceHistoryMoney(status.targetRemaining)} para ${formatBalanceHistoryMoney(status.targetAmount)} (${status.currentTargetPct}% del inicial)`);
+                    const phaseTitle = status.phases === 2 ? (isEn ? ` · Phase ${status.phase} of ${status.phases}` : ` · Fase ${status.phase} de ${status.phases}`) : "";
+                    cards.push(card(`${isEn ? "Profit Target" : "Objetivo de beneficio"}${phaseTitle}`, progressText, subText, status.targetProgress, status.targetReached ? "ok" : "info"));
                 }
                 if (status.nextAction) {
                     const advanceLabel = status.nextAction === "fase2" ? (isEn ? "Advance to Phase 2" : "Pasar a fase 2") : (isEn ? "Advance to Funded" : "Convertir a Fondeada");
@@ -4220,60 +4232,60 @@ const initialTrades = [];
                 if (status.ddLimit !== null) {
                     const tone = usageTone(status.ddUsedPct);
                     const subText = status.ddBusted
-                        ? `Drawdown agotado (límite ${status.config.maxDDPct}%)`
-                        : `Colchón restante ${formatBalanceHistoryMoney(status.ddRemaining)} · límite ${status.config.maxDDPct}%`;
-                    cards.push(card("Drawdown máximo", `${formatBalanceHistoryMoney(status.ddUsed)} / ${formatBalanceHistoryMoney(status.ddLimit)}`, subText, status.ddUsedPct, status.ddBusted ? "bad" : tone));
+                        ? (isEn ? `Drawdown breached (limit ${status.config.maxDDPct}%)` : `Drawdown agotado (límite ${status.config.maxDDPct}%)`)
+                        : (isEn ? `Remaining cushion ${formatBalanceHistoryMoney(status.ddRemaining)} · limit ${status.config.maxDDPct}%` : `Colchón restante ${formatBalanceHistoryMoney(status.ddRemaining)} · límite ${status.config.maxDDPct}%`);
+                    cards.push(card(isEn ? "Max Drawdown" : "Drawdown máximo", `${formatBalanceHistoryMoney(status.ddUsed)} / ${formatBalanceHistoryMoney(status.ddLimit)}`, subText, status.ddUsedPct, status.ddBusted ? "bad" : tone));
                 }
                 if (status.targetAmount === 0 && status.ddLimit === null) {
-                    cards.push(emptyHint("Configura el objetivo de tu challenge para seguir el avance"));
+                    cards.push(emptyHint(isEn ? "Set up your challenge target to track progress" : "Configura el objetivo de tu challenge para seguir el avance"));
                 }
             } else if (stage === "real") {
                 const status = getRealGoalStatus(account);
                 headerHint = getBalanceProjectionHint(status);
                 headerHintLabel = getBalanceHintLabel(status);
                 cards.push(card(
-                    "Balance efectivo",
+                    isEn ? "Effective Balance" : "Balance efectivo",
                     formatBalanceHistoryMoney(status.balance),
-                    `Inicial ${formatBalanceHistoryMoney(status.initial)} · ${status.profit >= 0 ? "+" : ""}${formatBalanceHistoryMoney(status.profit)}${getBalanceBaseLabel(status)}`,
+                    `${isEn ? "Initial" : "Inicial"} ${formatBalanceHistoryMoney(status.initial)} · ${status.profit >= 0 ? "+" : ""}${formatBalanceHistoryMoney(status.profit)}${getBalanceBaseLabel(status)}`,
                     null,
                     status.profit > 0 ? "ok" : (status.profit < 0 ? "bad" : "muted")
                 ));
                 if (status.hasMeta) {
                     const subText = status.reached
-                        ? `¡Meta alcanzada! ${formatBalanceHistoryMoney(status.balance)} de ${formatBalanceHistoryMoney(status.target)}`
-                        : `Faltan ${formatBalanceHistoryMoney(status.remaining)} para ${formatBalanceHistoryMoney(status.target)}${status.targetPct !== null ? ` (+${status.targetPct.toFixed(2)}% del inicial)` : ""}`;
-                    cards.push(card("Meta personal", status.reached ? "¡Cumplida!" : `${Math.round(status.progress)}%`, subText, status.progress, status.reached ? "ok" : "info"));
+                        ? (isEn ? `Goal reached! ${formatBalanceHistoryMoney(status.balance)} of ${formatBalanceHistoryMoney(status.target)}` : `¡Meta alcanzada! ${formatBalanceHistoryMoney(status.balance)} de ${formatBalanceHistoryMoney(status.target)}`)
+                        : (isEn ? `${formatBalanceHistoryMoney(status.remaining)} remaining to ${formatBalanceHistoryMoney(status.target)}${status.targetPct !== null ? ` (+${status.targetPct.toFixed(2)}% of initial)` : ""}` : `Faltan ${formatBalanceHistoryMoney(status.remaining)} para ${formatBalanceHistoryMoney(status.target)}${status.targetPct !== null ? ` (+${status.targetPct.toFixed(2)}% del inicial)` : ""}`);
+                    cards.push(card(isEn ? "Personal Goal" : "Meta personal", status.reached ? (isEn ? "Achieved!" : "¡Cumplida!") : `${Math.round(status.progress)}%`, subText, status.progress, status.reached ? "ok" : "info"));
                 } else {
-                    cards.push(emptyHint("Fija una meta personal para esta cuenta"));
+                    cards.push(emptyHint(isEn ? "Set a personal goal for this account" : "Fija una meta personal para esta cuenta"));
                 }
             } else if (stage === "fondeada") {
                 const status = getFondeadaGoalStatus(account);
                 headerHint = getBalanceProjectionHint(status);
                 headerHintLabel = getBalanceHintLabel(status);
                 cards.push(card(
-                    "Balance efectivo",
+                    isEn ? "Effective Balance" : "Balance efectivo",
                     formatBalanceHistoryMoney(status.balance),
-                    `Inicial ${formatBalanceHistoryMoney(status.initial)}${getBalanceBaseLabel(status)}`,
+                    `${isEn ? "Initial" : "Inicial"} ${formatBalanceHistoryMoney(status.initial)}${getBalanceBaseLabel(status)}`,
                     null,
                     status.balance >= status.initial ? "ok" : "muted"
                 ));
                 cards.push(card(
                     isEn ? "Withdrawable share" : "Tu parte retirable",
                     formatBalanceHistoryMoney(status.yourShare),
-                    `Beneficio retirable ${formatBalanceHistoryMoney(status.availableProfit)} · Split ${status.config.splitPct}% · Colchón ${formatBalanceHistoryMoney(status.buffer)}`,
+                    `${isEn ? "Withdrawable profit" : "Beneficio retirable"} ${formatBalanceHistoryMoney(status.availableProfit)} · Split ${status.config.splitPct}% · ${isEn ? "Buffer" : "Colchón"} ${formatBalanceHistoryMoney(status.buffer)}`,
                     null,
                     status.yourShare > 0 ? "ok" : "muted"
                 ));
                 if (status.minWithdrawal > 0) {
                     const subText = status.readyToWithdraw
-                        ? `Listo: tu parte ${formatBalanceHistoryMoney(status.yourShare)} supera el mínimo de ${formatBalanceHistoryMoney(status.minWithdrawal)}`
-                        : `Faltan ${formatBalanceHistoryMoney(status.missingForMin)} para el mínimo de ${formatBalanceHistoryMoney(status.minWithdrawal)}`;
-                    cards.push(card("Próximo retiro", status.readyToWithdraw ? "Listo para retirar" : `${Math.round(status.progress)}%`, subText, status.progress, status.readyToWithdraw ? "ok" : "info"));
+                        ? (isEn ? `Ready: your share ${formatBalanceHistoryMoney(status.yourShare)} exceeds minimum of ${formatBalanceHistoryMoney(status.minWithdrawal)}` : `Listo: tu parte ${formatBalanceHistoryMoney(status.yourShare)} supera el mínimo de ${formatBalanceHistoryMoney(status.minWithdrawal)}`)
+                        : (isEn ? `${formatBalanceHistoryMoney(status.missingForMin)} remaining for minimum of ${formatBalanceHistoryMoney(status.minWithdrawal)}` : `Faltan ${formatBalanceHistoryMoney(status.missingForMin)} para el mínimo de ${formatBalanceHistoryMoney(status.minWithdrawal)}`);
+                    cards.push(card(isEn ? "Next Withdrawal" : "Próximo retiro", status.readyToWithdraw ? (isEn ? "Ready to withdraw" : "Listo para retirar") : `${Math.round(status.progress)}%`, subText, status.progress, status.readyToWithdraw ? "ok" : "info"));
                 }
                 cards.push(card(
                     isEn ? "Total withdrawn" : "Total retirado",
                     formatBalanceHistoryMoney(status.totalWithdrawn),
-                    `${status.withdrawals.length} ${status.withdrawals.length === 1 ? "retiro registrado" : "retiros registrados"}`,
+                    `${status.withdrawals.length} ${status.withdrawals.length === 1 ? (isEn ? "withdrawal logged" : "retiro registrado") : (isEn ? "withdrawals logged" : "retiros registrados")}`,
                     null,
                     status.totalWithdrawn > 0 ? "ok" : "muted"
                 ));
@@ -4287,7 +4299,7 @@ const initialTrades = [];
                                 <button type="button" data-goal-action="delete-withdrawal" data-withdrawal-id="${escapeGalleryHtml(item.id)}" class="text-gray-500 transition hover:text-red-400" title="Eliminar retiro"><i class="fa-solid fa-trash"></i></button>
                             </div>`).join("");
                     extraHtml = `<div class="border-t border-main pt-3">
-                        <p class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Retiros registrados</p>
+                        <p class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">${isEn ? "Logged Withdrawals" : "Retiros registrados"}</p>
                         <div class="max-h-40 space-y-1 overflow-y-auto pr-1">${rows}</div>
                     </div>`;
                 }
@@ -4296,40 +4308,40 @@ const initialTrades = [];
                 headerHint = getBalanceProjectionHint(status);
                 headerHintLabel = getBalanceHintLabel(status);
                 cards.push(card(
-                    "Balance efectivo",
+                    isEn ? "Effective Balance" : "Balance efectivo",
                     formatBalanceHistoryMoney(status.balance),
-                    `Inicial ${formatBalanceHistoryMoney(status.initial)}${getBalanceBaseLabel(status)}`,
+                    `${isEn ? "Initial" : "Inicial"} ${formatBalanceHistoryMoney(status.initial)}${getBalanceBaseLabel(status)}`,
                     null,
                     status.balance >= status.initial ? "ok" : "muted"
                 ));
                 cards.push(card(
-                    "Tu parte retirable",
+                    isEn ? "Withdrawable share" : "Tu parte retirable",
                     formatBalanceHistoryMoney(status.yourShare),
-                    `Beneficio retirable ${formatBalanceHistoryMoney(status.availableProfit)} · Split ${status.config.splitPct}% · Colchón ${formatBalanceHistoryMoney(status.buffer)}`,
+                    `${isEn ? "Withdrawable profit" : "Beneficio retirable"} ${formatBalanceHistoryMoney(status.availableProfit)} · Split ${status.config.splitPct}% · ${isEn ? "Buffer" : "Colchón"} ${formatBalanceHistoryMoney(status.buffer)}`,
                     null,
                     status.yourShare > 0 ? "ok" : "muted"
                 ));
                 if (status.minWithdrawal > 0) {
                     const minLabel = status.minWithdrawalPctMode
-                        ? `${status.config.minWithdrawal}% del inicial (${formatBalanceHistoryMoney(status.minWithdrawal)})`
+                        ? `${status.config.minWithdrawal}% ${isEn ? "of initial" : "del inicial"} (${formatBalanceHistoryMoney(status.minWithdrawal)})`
                         : formatBalanceHistoryMoney(status.minWithdrawal);
                     const subText = status.readyToWithdraw
-                        ? `Listo: tu parte ${formatBalanceHistoryMoney(status.yourShare)} supera el mínimo de ${minLabel}`
-                        : `Faltan ${formatBalanceHistoryMoney(status.missingForMin)} para el mínimo de ${minLabel}`;
-                    cards.push(card("Próximo retiro", status.readyToWithdraw ? "Listo para retirar" : `${Math.round(status.progress)}%`, subText, status.progress, status.readyToWithdraw ? "ok" : "info"));
+                        ? (isEn ? `Ready: your share ${formatBalanceHistoryMoney(status.yourShare)} exceeds minimum of ${minLabel}` : `Listo: tu parte ${formatBalanceHistoryMoney(status.yourShare)} supera el mínimo de ${minLabel}`)
+                        : (isEn ? `${formatBalanceHistoryMoney(status.missingForMin)} remaining for minimum of ${minLabel}` : `Faltan ${formatBalanceHistoryMoney(status.missingForMin)} para el mínimo de ${minLabel}`);
+                    cards.push(card(isEn ? "Next Withdrawal" : "Próximo retiro", status.readyToWithdraw ? (isEn ? "Ready to withdraw" : "Listo para retirar") : `${Math.round(status.progress)}%`, subText, status.progress, status.readyToWithdraw ? "ok" : "info"));
                 }
                 if (status.ddLimit !== null) {
                     const tone = usageTone(status.ddUsedPct);
-                    const ddTypeLabel = status.trailing ? "trailing sobre el pico" : "fijo sobre el inicial";
+                    const ddTypeLabel = status.trailing ? (isEn ? "trailing from peak" : "trailing sobre el pico") : (isEn ? "fixed from initial" : "fijo sobre el inicial");
                     const subText = status.ddBusted
-                        ? `Drawdown agotado (${ddTypeLabel}, límite ${status.config.maxDDPct}%)`
-                        : `Colchón restante ${formatBalanceHistoryMoney(status.ddRemaining)} · ${ddTypeLabel} · límite ${status.config.maxDDPct}%`;
-                    cards.push(card("Drawdown máximo", `${formatBalanceHistoryMoney(status.ddUsed)} / ${formatBalanceHistoryMoney(status.ddLimit)}`, subText, status.ddUsedPct, status.ddBusted ? "bad" : tone));
+                        ? (isEn ? `Drawdown breached (${ddTypeLabel}, limit ${status.config.maxDDPct}%)` : `Drawdown agotado (${ddTypeLabel}, límite ${status.config.maxDDPct}%)`)
+                        : (isEn ? `Remaining cushion ${formatBalanceHistoryMoney(status.ddRemaining)} · ${ddTypeLabel} · limit ${status.config.maxDDPct}%` : `Colchón restante ${formatBalanceHistoryMoney(status.ddRemaining)} · ${ddTypeLabel} · límite ${status.config.maxDDPct}%`);
+                    cards.push(card(isEn ? "Max Drawdown" : "Drawdown máximo", `${formatBalanceHistoryMoney(status.ddUsed)} / ${formatBalanceHistoryMoney(status.ddLimit)}`, subText, status.ddUsedPct, status.ddBusted ? "bad" : tone));
                 }
                 cards.push(card(
-                    "Total retirado",
+                    isEn ? "Total withdrawn" : "Total retirado",
                     formatBalanceHistoryMoney(status.totalWithdrawn),
-                    `${status.withdrawals.length} ${status.withdrawals.length === 1 ? "retiro registrado" : "retiros registrados"}`,
+                    `${status.withdrawals.length} ${status.withdrawals.length === 1 ? (isEn ? "withdrawal logged" : "retiro registrado") : (isEn ? "withdrawals logged" : "retiros registrados")}`,
                     null,
                     status.totalWithdrawn > 0 ? "ok" : "muted"
                 ));
@@ -4343,7 +4355,7 @@ const initialTrades = [];
                                 <button type="button" data-goal-action="delete-withdrawal" data-withdrawal-id="${escapeGalleryHtml(item.id)}" class="text-gray-500 transition hover:text-red-400" title="Eliminar retiro"><i class="fa-solid fa-trash"></i></button>
                             </div>`).join("");
                     extraHtml = `<div class="border-t border-main pt-3">
-                        <p class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">Retiros registrados</p>
+                        <p class="mb-2 text-[11px] font-semibold uppercase tracking-wide text-gray-400">${isEn ? "Logged Withdrawals" : "Retiros registrados"}</p>
                         <div class="max-h-40 space-y-1 overflow-y-auto pr-1">${rows}</div>
                     </div>`;
                 }
@@ -4357,28 +4369,28 @@ const initialTrades = [];
                     let subText = "";
                     let tone = "muted";
                     if (rules.consistency.state === "sin-operaciones") {
-                        subText = "Sin datos suficientes para comprobar ahora: la cuenta todavía no tiene operaciones registradas.";
+                        subText = isEn ? "Insufficient data to verify yet: account has no trades logged." : "Sin datos suficientes para comprobar ahora: la cuenta todavía no tiene operaciones registradas.";
                     } else if (rules.consistency.state === "en-perdidas") {
-                        subText = "La cuenta está en pérdidas: la consistencia se evalúa cuando haya beneficio.";
+                        subText = isEn ? "Account is in drawdown: consistency is evaluated when profitable." : "La cuenta está en pérdidas: la consistencia se evalúa cuando haya beneficio.";
                     } else if (rules.consistency.state === "sin-base") {
-                        subText = "Sin datos suficientes: las operaciones suman menos del 1% del inicial, el ratio no es representativo todavía.";
+                        subText = isEn ? "Insufficient data: trades total less than 1% of initial balance, ratio not yet representative." : "Sin datos suficientes: las operaciones suman menos del 1% del inicial, el ratio no es representativo todavía.";
                     } else {
-                        subText = `El mejor día representa ${rules.consistency.ratio.toFixed(0)}% del beneficio total · límite ${rules.consistency.limit}%`;
+                        subText = isEn ? `Best day represents ${rules.consistency.ratio.toFixed(0)}% of total profit · limit ${rules.consistency.limit}%` : `El mejor día representa ${rules.consistency.ratio.toFixed(0)}% del beneficio total · límite ${rules.consistency.limit}%`;
                         tone = rules.consistency.ok ? "ok" : "bad";
                     }
-                    cards.push(card("Consistencia", `${ratioText} / ${rules.consistency.limit}%`, subText, null, tone));
+                    cards.push(card(isEn ? "Consistency" : "Consistencia", `${ratioText} / ${rules.consistency.limit}%`, subText, null, tone));
                 }
                 if (rules.tradingDays.enabled) {
                     const pct = Math.min(100, (rules.tradingDays.count / rules.tradingDays.min) * 100);
-                    cards.push(card("Días de trading", `${rules.tradingDays.count} / ${rules.tradingDays.min}`, "Días con operaciones cargadas en la cuenta", pct, rules.tradingDays.ok ? "ok" : "warn"));
+                    cards.push(card(isEn ? "Trading Days" : "Días de trading", `${rules.tradingDays.count} / ${rules.tradingDays.min}`, isEn ? "Days with trades logged on the account" : "Días con operaciones cargadas en la cuenta", pct, rules.tradingDays.ok ? "ok" : "warn"));
                 }
                 if (rules.profitableDays.enabled) {
                     const pct = Math.min(100, (rules.profitableDays.count / rules.profitableDays.min) * 100);
-                    cards.push(card("Días rentables", `${rules.profitableDays.count} / ${rules.profitableDays.min}`, "Días con resultado neto positivo", pct, rules.profitableDays.ok ? "ok" : "warn"));
+                    cards.push(card(isEn ? "Profitable Days" : "Días rentables", `${rules.profitableDays.count} / ${rules.profitableDays.min}`, isEn ? "Days with positive net outcome" : "Días con resultado neto positivo", pct, rules.profitableDays.ok ? "ok" : "warn"));
                 }
                 if (rules.dailyLoss.enabled) {
                     const pct = rules.dailyLoss.limit > 0 ? Math.min(100, (rules.dailyLoss.usedPct / rules.dailyLoss.limit) * 100) : 0;
-                    cards.push(card("Límite de pérdida diaria", `${rules.dailyLoss.usedPct.toFixed(2)}% / ${rules.dailyLoss.limit}%`, "Peor día registrado en la cuenta", null, rules.dailyLoss.ok ? (pct >= 60 ? "warn" : "ok") : "bad"));
+                    cards.push(card(isEn ? "Daily Loss Limit" : "Límite de pérdida diaria", `${rules.dailyLoss.usedPct.toFixed(2)}% / ${rules.dailyLoss.limit}%`, isEn ? "Worst day recorded on the account" : "Peor día registrado en la cuenta", null, rules.dailyLoss.ok ? (pct >= 60 ? "warn" : "ok") : "bad"));
                 }
             }
 
@@ -5122,7 +5134,7 @@ const initialTrades = [];
             let totalRR = 0, countRR = 0;
             
             let equityData = [initialBalance];
-            let equityLabels = ["Inicio"];
+            let equityLabels = [(typeof window.t === "function") ? window.t("chart.start", "Inicio") : "Inicio"];
             
             let pairsData = {}, daysData = {}, sessionsData = {}, trendsData = {};
             // Efectividad: ganadoras / operaciones cerradas, incluyendo los BE en el denominador.
@@ -5188,7 +5200,7 @@ const initialTrades = [];
             // El balance efectivo se añade como último punto de la gráfica.
             if (useEffectiveBalance && Math.abs(effectiveStatus.balance - calculatedCurrentBalance) > 0.01) {
                 equityData.push(effectiveStatus.balance);
-                equityLabels.push("Balance efectivo");
+                equityLabels.push((typeof window.t === "function") ? window.t("chart.effective_balance", "Balance efectivo") : "Balance efectivo");
             }
 
             let maxDrawdownPct = isGlobal ? maxDrawdownGlobalPct : (peak > 0 ? (maxDrawdownDollar / peak) * 100 : 0);
@@ -5320,15 +5332,15 @@ const initialTrades = [];
             if (currentMode === "backtesting" && !isGlobal) {
                 const activeSession = backtestSessions.find(session => String(session.id) === String(activeSessionId));
                 const fixedPair = String(activeSession?.pair || "Sin definir").toUpperCase();
-                pairMetricsTitle.innerHTML = '<i class="fa-solid fa-lock text-blue-400"></i> Activo fijo de la sesión';
+                pairMetricsTitle.innerHTML = '<i class="fa-solid fa-lock text-blue-400"></i> ' + ((typeof window.t === "function") ? window.t("metrics.fixed_session_pair", "Activo fijo de la sesión") : "Activo fijo de la sesión");
                 pairMetricsList.innerHTML = `
                     <div class="rounded-lg border border-blue-900/50 bg-blue-950/20 px-3 py-2">
-                        <div class="text-[10px] uppercase tracking-wide text-blue-300">Par de backtesting</div>
+                        <div class="text-[10px] uppercase tracking-wide text-blue-300">${(typeof window.t === "function") ? window.t("metrics.bt_pair", "Par de backtesting") : "Par de backtesting"}</div>
                         <div class="mt-1 text-base font-bold text-white">${escapeGalleryHtml(fixedPair)}</div>
                     </div>
-                    <p class="text-xs leading-relaxed text-gray-500">Las métricas corresponden a este único activo; no se compara un “mejor par”.</p>`;
+                    <p class="text-xs leading-relaxed text-gray-500">${(typeof window.t === "function") ? window.t("metrics.bt_pair_desc", "Las métricas corresponden a este único activo; no se compara un “mejor par”.") : "Las métricas corresponden a este único activo; no se compara un “mejor par”."}</p>`;
             } else {
-                pairMetricsTitle.innerHTML = '<i class="fa-solid fa-coins text-yellow-400"></i> Efectividad por Activo / Par';
+                pairMetricsTitle.innerHTML = '<i class="fa-solid fa-coins text-yellow-400"></i> ' + ((typeof window.t === "function") ? window.t("metrics.effectiveness_by_pair", "Efectividad por Activo / Par") : "Efectividad por Activo / Par");
                 renderList(pairsData, "metrics-pair-list");
             }
             renderList(daysData, "metrics-day-list");

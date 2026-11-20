@@ -118,24 +118,24 @@
                 <span class="text-gray-600">/</span>
                 <i class="fa-solid fa-moon theme-toggle-icon theme-icon-moon"></i>
             </button>
-            <button onclick="changeBackupFolder()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Selecciona la carpeta donde se guardarán los JSON automáticos">
+            <button onclick="changeBackupFolder()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Selecciona la carpeta donde se guardarán los JSON automáticos" data-i18n-title="toolbar.folder_tooltip">
                 <i class="fa-solid fa-folder-gear text-amber-400"></i> <span id="folder-btn-label" data-i18n="toolbar.backup_folder">Carpeta JSON</span>
             </button>
             <div class="relative inline-block text-left">
                 <button onclick="toggleExportMenu()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition">
-                    <i class="fa-solid fa-download"></i> Exportar <i class="fa-solid fa-chevron-down text-xs"></i>
+                    <i class="fa-solid fa-download"></i> <span data-i18n="toolbar.export">Exportar</span> <i class="fa-solid fa-chevron-down text-xs"></i>
                 </button>
                 <div id="exportMenu" class="hidden absolute right-0 mt-2 w-44 bg-card border border-main rounded-lg shadow-xl z-50 overflow-hidden">
                     <button onclick="exportData('json')" class="w-full text-left px-4 py-2.5 text-xs text-gray-300 hover:bg-gray-800 flex items-center gap-2 border-b border-main">
-                        <i class="fa-solid fa-code text-amber-400"></i> Respaldar (JSON)
+                        <i class="fa-solid fa-code text-amber-400"></i> <span data-i18n="toolbar.export_json">Respaldar (JSON)</span>
                     </button>
                     <button onclick="exportData('csv')" class="w-full text-left px-4 py-2.5 text-xs text-gray-300 hover:bg-gray-800 flex items-center gap-2">
-                        <i class="fa-solid fa-file-excel text-emerald-400"></i> Data Excel (CSV)
+                        <i class="fa-solid fa-file-excel text-emerald-400"></i> <span data-i18n="toolbar.export_csv">Data Excel (CSV)</span>
                     </button>
                 </div>
             </div>
             <button onclick="importDataTrigger()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition">
-                <i class="fa-solid fa-upload"></i> Importar
+                <i class="fa-solid fa-upload"></i> <span data-i18n="toolbar.import">Importar</span>
             </button>
             <div class="relative inline-block text-left" id="guideDropdownContainer">
                 <button id="btn-tour-guide" onclick="toggleGuideMenu()" class="bg-gray-800 hover:bg-emerald-900/40 hover:border-emerald-700/60 border border-main text-gray-300 hover:text-emerald-300 text-sm px-3 py-2 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Guías y ayuda interactiva">
@@ -191,7 +191,7 @@
         <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
         <span id="readonly-banner-msg" data-i18n-html="banner.readonly">Tu prueba de 7 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
         <button onclick="openCheckoutModal()" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-black shadow-md transition ml-1">
-            <i class="fa-solid fa-credit-card mr-1"></i> Renovar Acceso Pro
+            <i class="fa-solid fa-credit-card mr-1"></i> <span data-i18n="banner.renew">Renovar Acceso Pro</span>
         </button>
     </div>
 
@@ -202,25 +202,25 @@
                     <i id="tab-icon-sessions" class="fa-solid fa-wallet"></i> <span id="tab-text-sessions" data-i18n="tabs.sessions">Tus Cuentas</span>
                 </button>
                 <button onclick="switchTab('balance-history')" id="tab-btn-balance-history" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-money-bill-trend-up"></i> Seguimiento de balances
+                    <i class="fa-solid fa-money-bill-trend-up"></i> <span data-i18n="tabs.balance_history">Seguimiento de balances</span>
                 </button>
                 <button onclick="switchTab('dashboard')" id="tab-btn-dashboard" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-gauge-high"></i> Dashboard & Métricas
+                    <i class="fa-solid fa-gauge-high"></i> <span data-i18n="tabs.dashboard">Dashboard & Métricas</span>
                 </button>
                 <button onclick="switchTab('goals')" id="tab-btn-goals" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-bullseye"></i> Metas
+                    <i class="fa-solid fa-bullseye"></i> <span data-i18n="tabs.goals">Metas</span>
                 </button>
                 <button onclick="switchTab('journal')" id="tab-btn-journal" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-table-list"></i> Registro de Trades
+                    <i class="fa-solid fa-table-list"></i> <span data-i18n="tabs.journal">Registro de Trades</span>
                 </button>
                 <button onclick="switchTab('monthly')" id="tab-btn-monthly" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-calendar-check"></i> Rendimiento por mes
+                    <i class="fa-solid fa-calendar-check"></i> <span data-i18n="tabs.monthly">Rendimiento por mes</span>
                 </button>
                 <button onclick="switchTab('calendar')" id="tab-btn-calendar" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-calendar-days"></i> Calendario Diario
+                    <i class="fa-solid fa-calendar-days"></i> <span data-i18n="tabs.calendar">Calendario Diario</span>
                 </button>
                 <button onclick="switchTab('gallery')" id="tab-btn-gallery" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
-                    <i class="fa-solid fa-images"></i> Galería & Análisis
+                    <i class="fa-solid fa-images"></i> <span data-i18n="tabs.gallery">Galería & Análisis</span>
                 </button>
             </div>
             <div class="flex-shrink-0 flex items-end gap-2.5">
@@ -247,31 +247,31 @@
                 <h2 id="sessions-title" class="text-xl font-bold text-white tracking-wide" data-i18n="nav.mode_real_title">Cuentas Reales</h2>
                 <div class="flex flex-wrap items-center gap-3">
                     <button id="btn-global-trade" onclick="openGlobalTradeModal()" class="bg-purple-600 hover:bg-purple-700 text-white border border-purple-900/50 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm">
-                        Entrada múltiple <i class="fa-solid fa-layer-group ml-2"></i>
+                        <span data-i18n="tabs.global_trade">Entrada múltiple</span> <i class="fa-solid fa-layer-group ml-2"></i>
                     </button>
                     <button id="btn-global-metrics" onclick="openGlobalMetrics()" class="order-first bg-teal-700/70 hover:bg-teal-600 text-white border border-teal-900/50 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm">
-                        <i class="fa-solid fa-chart-pie mr-2"></i>M&eacute;tricas globales
+                        <i class="fa-solid fa-chart-pie mr-2"></i><span data-i18n="tabs.global_metrics">Métricas globales</span>
                     </button>
                     <button id="btn-edit-latest-multi" onclick="editLatestMultiEntry()" class="hidden bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-800 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-pen-to-square"></i> Editar última entrada múltiple
+                        <i class="fa-solid fa-pen-to-square"></i> <span data-i18n="btn.edit_last_multi">Editar última entrada múltiple</span>
                     </button>
                     <button id="btn-back-account-groups" onclick="returnToAccountGroups()" class="hidden bg-gray-800 hover:bg-gray-700 text-gray-200 border border-main px-3 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-arrow-left"></i> Grupos
+                        <i class="fa-solid fa-arrow-left"></i> <span data-i18n="btn.account_groups">Grupos</span>
                     </button>
                     <button id="btn-edit-active-account-group" onclick="editActiveAccountGroup()" class="hidden bg-gray-800 hover:bg-gray-700 text-indigo-200 border border-indigo-900/60 px-3 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-pen"></i> Editar grupo
+                        <i class="fa-solid fa-pen"></i> <span data-i18n="btn.edit_group">Editar grupo</span>
                     </button>
                     <button id="btn-group-load-balances" onclick="openActiveGroupBalancesModal()" class="hidden bg-emerald-900/40 hover:bg-emerald-800/60 text-emerald-300 border border-emerald-900/60 px-3 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
-                        <i class="fa-solid fa-money-bill-transfer"></i> Cargar balances
+                        <i class="fa-solid fa-money-bill-transfer"></i> <span data-i18n="btn.load_balances">Cargar balances</span>
                     </button>
                     <button id="btn-group-toggle-balances" onclick="toggleGroupBalancesPanel()" class="hidden bg-gray-800 hover:bg-gray-700 text-indigo-200 border border-indigo-900/60 px-3 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
                         <i id="btn-group-toggle-balances-icon" class="fa-solid fa-eye"></i> <span id="btn-group-toggle-balances-text" data-i18n="btn.view_balances">Ver balances</span>
                     </button>
                     <button id="btn-new-account-group" onclick="openAccountGroupModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-800 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
-                        <i class="fa-solid fa-layer-group"></i> Nuevo grupo
+                        <i class="fa-solid fa-layer-group"></i> <span data-i18n="btn.new_group">Nuevo grupo</span>
                     </button>
                     <button onclick="openSessionModal()" id="btn-new-session" class="bg-gray-800 hover:bg-green-900/30 text-green-400 border border-green-900/50 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm">
-                        Nueva Cuenta <i class="fa-solid fa-plus ml-2"></i>
+                        <span data-i18n="btn.new_account">Nueva Cuenta</span> <i class="fa-solid fa-plus ml-2"></i>
                     </button>
                 </div>
             </div>
@@ -283,12 +283,12 @@
             <div class="flex flex-wrap justify-between items-center gap-4 border-b border-main pb-4">
                 <div>
                     <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-money-bill-trend-up text-emerald-400"></i> Seguimiento de balances reales
+                        <i class="fa-solid fa-money-bill-trend-up text-emerald-400"></i> <span data-i18n="balance.title">Seguimiento de balances reales</span>
                     </h2>
                     <p class="mt-1 text-xs text-gray-400" data-i18n="balance.description">Cada registro guarda una captura de los balances y su variación frente al balance inicial. El balance efectivo suma al último cierre las operaciones posteriores; no incluye comisiones.</p>
                 </div>
                 <button type="button" onclick="openRealBalanceEntryModal()" id="btn-record-balance-snapshot" class="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
-                    <i class="fa-solid fa-pen-to-square"></i> Cargar balances
+                    <i class="fa-solid fa-pen-to-square"></i> <span data-i18n="btn.load_balances">Cargar balances</span>
                 </button>
             </div>
             <div id="balance-history-table-container" class="bg-card border border-main rounded-xl overflow-auto max-h-[70vh] shadow-xl"></div>
@@ -363,7 +363,7 @@
                 <div class="lg:col-span-2 bg-card p-5 rounded-xl border border-main shadow flex flex-col justify-between">
                     <div>
                         <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                            <i id="dashboard-chart-icon" class="fa-solid fa-chart-area text-green-500"></i> Evolución de la Cuenta ($)
+                            <i id="dashboard-chart-icon" class="fa-solid fa-chart-area text-green-500"></i> <span data-i18n="metrics.account_growth">Evolución de la Cuenta ($)</span>
                         </h2>
                         <div class="h-80"><canvas id="equityChart"></canvas></div>
                     </div>
@@ -373,7 +373,7 @@
                 <div class="lg:col-span-1 bg-card p-5 rounded-xl border border-main shadow flex flex-col justify-between">
                     <div>
                         <h3 class="text-sm font-bold text-gray-200 mb-4 flex items-center gap-2">
-                            <i class="fa-solid fa-bullseye text-teal-400"></i> Objetivos & Distribución
+                            <i class="fa-solid fa-bullseye text-teal-400"></i> <span data-i18n="metrics.goals_distribution">Objetivos & Distribución</span>
                         </h3>
                         
                         <!-- 3 Mini KPIs -->
@@ -401,9 +401,9 @@
                                 <div id="target-bar-loss" style="width: 0%" class="bg-red-500 h-full transition-all"></div>
                             </div>
                             <div class="flex items-center justify-between text-xs font-medium text-gray-300 px-0.5">
-                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block mr-1.5"></span>Ganadas <strong id="target-count-win" class="ml-1 text-white">0</strong></span>
+                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 inline-block mr-1.5"></span><span data-i18n="metrics.wins">Ganadas</span> <strong id="target-count-win" class="ml-1 text-white">0</strong></span>
                                 <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-indigo-400 inline-block mr-1.5"></span>BE <strong id="target-count-be" class="ml-1 text-white">0</strong></span>
-                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block mr-1.5"></span>Perdidas <strong id="target-count-loss" class="ml-1 text-white">0</strong></span>
+                                <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-red-400 inline-block mr-1.5"></span><span data-i18n="metrics.losses">Perdidas</span> <strong id="target-count-loss" class="ml-1 text-white">0</strong></span>
                             </div>
                         </div>
 
@@ -448,19 +448,19 @@
             <!-- FILA COMPLETA DE 4 EFECTIVIDADES -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <div id="metrics-pair-card" class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 id="metrics-pair-title" class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-400"></i> Efectividad por Activo / Par</h3>
+                    <h3 id="metrics-pair-title" class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-coins text-yellow-400"></i> <span data-i18n="metrics.effectiveness_by_pair">Efectividad por Activo / Par</span></h3>
                     <div id="metrics-pair-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
                 </div>
                 <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> Efectividad por Sesión</h3>
+                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-clock text-amber-400"></i> <span data-i18n="metrics.effectiveness_by_session">Efectividad por Sesión</span></h3>
                     <div id="metrics-session-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
                 </div>
                 <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-compass text-teal-400"></i> Efectividad por Tendencia</h3>
+                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-compass text-teal-400"></i> <span data-i18n="metrics.effectiveness_by_bias">Efectividad por Tendencia</span></h3>
                     <div id="metrics-trend-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
                 </div>
                 <div class="bg-card p-5 rounded-xl border border-main shadow">
-                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-day text-purple-400"></i> Efectividad por Día de Semana</h3>
+                    <h3 class="text-sm font-bold text-gray-200 mb-3 flex items-center gap-2"><i class="fa-solid fa-calendar-day text-purple-400"></i> <span data-i18n="metrics.trades_by_day">Efectividad por Día de Semana</span></h3>
                     <div id="metrics-day-list" class="space-y-2 text-sm max-h-60 overflow-y-auto pr-1"></div>
                 </div>
             </div>
@@ -549,7 +549,7 @@
         <div id="section-gallery" class="hidden space-y-6">
             <div class="flex justify-between items-center border-b border-main pb-4">
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-photo-film text-indigo-400"></i> Bitácora Visual & Análisis Técnico
+                    <i class="fa-solid fa-photo-film text-indigo-400"></i> <span data-i18n="gallery.title">Bitácora Visual & Análisis Técnico</span>
                 </h2>
                 <div class="text-xs text-gray-400" data-i18n="gallery.click_hint">Haz clic en cualquier imagen para verla en pantalla completa</div>
             </div>

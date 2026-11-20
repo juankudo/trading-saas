@@ -196,12 +196,22 @@ function applyReadOnlyMode(isReadOnly, message = "") {
         if (banner) {
             banner.classList.remove('hidden');
             const msgEl = document.getElementById('readonly-banner-msg');
-            if (msgEl && message) msgEl.innerHTML = message;
+            if (msgEl) {
+                if (typeof window.t === 'function' && (message.includes('7') || message.includes('prueba') || message.includes('trial'))) {
+                    msgEl.innerHTML = window.t('banner.readonly', message);
+                } else if (typeof window.t === 'function' && (message.includes('vencido') || message.includes('expired'))) {
+                    msgEl.innerHTML = window.t('banner.pro_expired', message);
+                } else if (message) {
+                    msgEl.innerHTML = message;
+                }
+            }
         }
         if (newTradeBtn) {
             newTradeBtn.disabled = true;
             newTradeBtn.classList.add('opacity-40', 'cursor-not-allowed');
-            newTradeBtn.title = "Modo Solo Lectura: Activa tu membresía Pro para registrar nuevas entradas";
+            newTradeBtn.title = (typeof window.t === 'function')
+                ? window.t('banner.readonly_tooltip', "Modo Solo Lectura: Activa tu membresía Pro para registrar nuevas entradas")
+                : "Modo Solo Lectura: Activa tu membresía Pro para registrar nuevas entradas";
         }
     } else {
         if (banner) banner.classList.add('hidden');
@@ -212,6 +222,16 @@ function applyReadOnlyMode(isReadOnly, message = "") {
         }
     }
 }
+
+window.addEventListener('languageChanged', () => {
+    const banner = document.getElementById('readonly-warning-banner');
+    if (banner && !banner.classList.contains('hidden')) {
+        const msgEl = document.getElementById('readonly-banner-msg');
+        if (msgEl && typeof window.t === 'function') {
+            msgEl.innerHTML = window.t('banner.readonly', msgEl.innerHTML);
+        }
+    }
+});
 
 /**
  * Control del Modal de Checkout
