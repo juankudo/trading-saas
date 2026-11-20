@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/theme.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/auth.js"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -39,7 +40,7 @@
 
     <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white border border-green-500 px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-3 opacity-0 pointer-events-none transform translate-y-4">
         <i id="toastIcon" class="fa-solid fa-circle-check text-green-400 text-lg"></i>
-        <span id="toastMsg" class="text-xs font-medium">Operación realizada con éxito</span>
+        <span id="toastMsg" class="text-xs font-medium" data-i18n="toast.success">Operación realizada con éxito</span>
     </div>
 
         <header class="bg-card border-b border-main px-6 py-3.5 flex flex-col gap-3 sticky top-0 z-40">
@@ -84,6 +85,11 @@
 
             <!-- Derecha: Registro de Usuario / Badge / Cerrar Sesión -->
             <div class="flex items-center justify-end">
+                <!-- Language Toggle Button (ES / EN) -->
+                <button id="lang-toggle-btn" translate="no" onclick="toggleLanguage()" class="notranslate px-2.5 py-1.5 rounded-lg bg-gray-900/90 hover:bg-gray-800 border border-gray-700/80 text-gray-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 shadow-sm shrink-0 mr-1.5" title="Cambiar idioma / Change language" aria-label="Cambiar idioma entre español e inglés">
+                    <i class="fa-solid fa-globe text-emerald-400 text-xs"></i>
+                    <span id="lang-toggle-label" translate="no" class="notranslate">EN</span>
+                </button>
                 <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2 py-1 rounded-lg text-xs shrink-0 shadow-sm" title="Usuario conectado">
                     <!-- Pastilla de Usuario / Email (Icono 👤, despliega email al hover) -->
                     <div id="app-user-pill" class="nav-pill-expandable bg-gray-800/80 hover:bg-gray-700/80 border border-main/80 text-gray-300 cursor-default select-none" title="Usuario conectado">
@@ -94,7 +100,7 @@
                     <!-- Pastilla de Tiempo / Plan (Icono 🕒, despliega días/plan al hover) -->
                     <span id="app-user-badge" class="nav-pill-expandable bg-emerald-950/90 border border-emerald-800 text-emerald-400 cursor-default select-none" title="Prueba activa">
                         <i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>
-                        <span class="nav-pill-label text-xs font-bold text-emerald-400 whitespace-nowrap overflow-hidden">Prueba 7 días</span>
+                        <span class="nav-pill-label text-xs font-bold text-emerald-400 whitespace-nowrap overflow-hidden" data-i18n="nav.trial_days">Prueba 7 días</span>
                     </span>
 
                     <!-- Botón Cerrar Sesión -->
@@ -107,13 +113,13 @@
 
         <!-- FILA 2: Barra de Herramientas y Acciones Rápidas -->
         <div class="flex items-center justify-start gap-1.5 sm:gap-2 flex-wrap w-full border-t border-gray-800/60 pt-2.5">
-            <button id="theme-toggle-btn" onclick="toggleTheme()" class="bg-gray-800 hover:bg-gray-700 border border-main text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema">
+            <button id="theme-toggle-btn" onclick="toggleTheme()" class="bg-gray-800 hover:bg-gray-700 border border-main text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Cambiar entre tema claro y oscuro" aria-label="Cambiar tema" data-i18n-title="toolbar.theme_toggle">
                 <i class="fa-solid fa-sun theme-toggle-icon theme-icon-sun"></i>
                 <span class="text-gray-600">/</span>
                 <i class="fa-solid fa-moon theme-toggle-icon theme-icon-moon"></i>
             </button>
             <button onclick="changeBackupFolder()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Selecciona la carpeta donde se guardarán los JSON automáticos">
-                <i class="fa-solid fa-folder-gear text-amber-400"></i> <span id="folder-btn-label">Carpeta JSON</span>
+                <i class="fa-solid fa-folder-gear text-amber-400"></i> <span id="folder-btn-label" data-i18n="toolbar.backup_folder">Carpeta JSON</span>
             </button>
             <div class="relative inline-block text-left">
                 <button onclick="toggleExportMenu()" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition">
@@ -133,34 +139,34 @@
             </button>
             <div class="relative inline-block text-left" id="guideDropdownContainer">
                 <button id="btn-tour-guide" onclick="toggleGuideMenu()" class="bg-gray-800 hover:bg-emerald-900/40 hover:border-emerald-700/60 border border-main text-gray-300 hover:text-emerald-300 text-sm px-3 py-2 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Guías y ayuda interactiva">
-                    <i class="fa-solid fa-compass text-emerald-400"></i> <span class="hidden md:inline">Guía</span> <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-70"></i>
+                    <i class="fa-solid fa-compass text-emerald-400"></i> <span class="hidden md:inline" data-i18n="toolbar.guide">Guía</span> <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-70"></i>
                 </button>
                 <div id="guideMenu" class="hidden absolute right-0 mt-2 w-64 bg-card border border-main rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-md">
                     <button onclick="toggleGuideMenu(); startAppTour();" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-gray-800 flex items-center gap-2.5 border-b border-main/50 transition">
                         <i class="fa-solid fa-compass text-emerald-400 text-sm"></i>
                         <div>
-                            <div class="font-bold text-white">Tour General</div>
-                            <div class="text-[10px] text-gray-400">Recorrido por las pestañas del dashboard</div>
+                            <div class="font-bold text-white" data-i18n="toolbar.tour_general">Tour General</div>
+                            <div class="text-[10px] text-gray-400" data-i18n="toolbar.tour_general_desc">Recorrido por las pestañas del dashboard</div>
                         </div>
                     </button>
                     <button onclick="toggleGuideMenu(); openTradeLifecycleGuide();" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-gray-800 flex items-center gap-2.5 border-b border-main/50 transition">
                         <i class="fa-solid fa-graduation-cap text-blue-400 text-sm"></i>
                         <div>
-                            <div class="font-bold text-white">Entrada y Post-Análisis</div>
-                            <div class="text-[10px] text-gray-400">Cómo registrar la entrada y editar al salir</div>
+                            <div class="font-bold text-white" data-i18n="toolbar.trade_lifecycle">Entrada y Post-Análisis</div>
+                            <div class="text-[10px] text-gray-400" data-i18n="toolbar.trade_lifecycle_desc">Cómo registrar la entrada y editar al salir</div>
                         </div>
                     </button>
                     <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" onclick="toggleGuideMenu()" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-rose-950/40 hover:text-rose-300 flex items-center gap-2.5 transition" title="Ver videos tutoriales en nuestro canal oficial">
                         <i class="fa-brands fa-youtube text-rose-500 text-sm"></i>
                         <div>
                             <div class="font-bold text-white flex items-center gap-1.5">Tutoriales en Video <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-gray-400"></i></div>
-                            <div class="text-[10px] text-gray-400">Canal oficial de YouTube (@tradingjournalpro)</div>
+                            <div class="text-[10px] text-gray-400" data-i18n="toolbar.video_tutorials_desc">Canal oficial de YouTube (@tradingjournalpro)</div>
                         </div>
                     </a>
                 </div>
             </div>
             <a href="calculadora/index.html" target="_blank" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Abrir Calculadora de Lotaje en nueva pestaña">
-                <i class="fa-solid fa-calculator text-blue-400"></i> <span class="hidden md:inline">Calculadora</span>
+                <i class="fa-solid fa-calculator text-blue-400"></i> <span class="hidden md:inline" data-i18n="toolbar.calculator">Calculadora</span>
             </a>
             <button onclick="openResetModal()" title="Reiniciar Entorno" class="bg-gray-800 hover:bg-red-900/40 border border-main text-gray-400 hover:text-red-400 text-sm p-2 rounded-lg transition">
                 <i class="fa-solid fa-rotate-left"></i>
@@ -169,13 +175,13 @@
             <!-- Cloud Sync Indicator (Comprimido a check, despliega al hover sin romper la línea) -->
             <div id="cloud-sync-status" class="nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main text-emerald-400 cursor-default select-none" title="Sincronizado con la nube">
                 <i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>
-                <span class="nav-pill-label text-xs font-medium text-emerald-400">Sincronizado</span>
+                <span class="nav-pill-label text-xs font-medium text-emerald-400" data-i18n="toolbar.sync_status">Sincronizado</span>
             </div>
 
             <!-- Botón Suscripción (Comprimido a diamante, despliega al hover sin romper la línea) -->
             <button onclick="openCheckoutModal()" class="nav-pill-expandable font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 shadow cursor-pointer" title="Ver planes y suscripción">
                 <i class="fa-solid fa-gem text-xs shrink-0"></i>
-                <span class="nav-pill-label text-xs">Suscripción</span>
+                <span class="nav-pill-label text-xs" data-i18n="toolbar.subscription">Suscripción</span>
             </button>
         </div>
     </header>
@@ -183,7 +189,7 @@
     <!-- Banner de Modo Solo Lectura (Oculto por defecto) -->
     <div id="readonly-warning-banner" class="hidden bg-amber-950/90 border-b border-amber-600/70 px-4 py-2.5 text-center text-xs text-amber-200 font-semibold flex items-center justify-center gap-3 sticky top-[73px] z-30 backdrop-blur-md">
         <i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm"></i>
-        <span id="readonly-banner-msg">Tu prueba de 7 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
+        <span id="readonly-banner-msg" data-i18n-html="banner.readonly">Tu prueba de 7 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
         <button onclick="openCheckoutModal()" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-black shadow-md transition ml-1">
             <i class="fa-solid fa-credit-card mr-1"></i> Renovar Acceso Pro
         </button>
@@ -193,7 +199,7 @@
         <div class="border-b border-main flex flex-wrap sm:flex-nowrap justify-between items-end text-sm font-semibold relative gap-2 sm:gap-4">
             <div class="flex flex-1 min-w-0 space-x-4 sm:space-x-6 overflow-x-auto no-scrollbar w-full sm:w-auto">
                 <button onclick="switchTab('sessions')" id="tab-btn-sessions" class="pb-3 border-b-2 border-green-500 text-green-400 flex items-center gap-2 whitespace-nowrap">
-                    <i id="tab-icon-sessions" class="fa-solid fa-wallet"></i> <span id="tab-text-sessions">Tus Cuentas</span>
+                    <i id="tab-icon-sessions" class="fa-solid fa-wallet"></i> <span id="tab-text-sessions" data-i18n="tabs.sessions">Tus Cuentas</span>
                 </button>
                 <button onclick="switchTab('balance-history')" id="tab-btn-balance-history" class="hidden pb-3 border-b-2 border-transparent text-gray-400 hover:text-white flex items-center gap-2 whitespace-nowrap">
                     <i class="fa-solid fa-money-bill-trend-up"></i> Seguimiento de balances
@@ -219,9 +225,9 @@
             </div>
             <div class="flex-shrink-0 flex items-end gap-2.5">
                 <div class="btn-new-trade-wrapper" id="btn-new-trade-wrap" style="display:none;">
-                    <button id="btn-new-trade" onclick="openTradeModal()" style="display:none;" class="compact-expand-btn group bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg transition-all" title="Nueva Entrada">
+                    <button id="btn-new-trade" onclick="openTradeModal()" style="display:none;" class="compact-expand-btn group bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg transition-all" title="Nueva Entrada" data-i18n-title="tabs.new_trade">
                         <i class="fa-solid fa-plus text-xs"></i>
-                        <span class="btn-text-expand">Nueva Entrada</span>
+                        <span class="btn-text-expand" data-i18n="tabs.new_trade">Nueva Entrada</span>
                     </button>
                 </div>
                 <div id="active-account-badge" class="hidden text-amber-400 text-xs font-bold bg-amber-900/20 px-2.5 py-2 rounded-t-lg border-t border-l border-r border-amber-900/50 flex items-center gap-1.5 active-account-badge-fixed" title="">
@@ -238,7 +244,7 @@
 
         <div id="section-sessions" class="space-y-6">
             <div class="flex flex-wrap justify-between items-center gap-4 border-b border-main pb-4">
-                <h2 id="sessions-title" class="text-xl font-bold text-white tracking-wide">Cuentas Reales</h2>
+                <h2 id="sessions-title" class="text-xl font-bold text-white tracking-wide" data-i18n="nav.mode_real_title">Cuentas Reales</h2>
                 <div class="flex flex-wrap items-center gap-3">
                     <button id="btn-global-trade" onclick="openGlobalTradeModal()" class="bg-purple-600 hover:bg-purple-700 text-white border border-purple-900/50 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm">
                         Entrada múltiple <i class="fa-solid fa-layer-group ml-2"></i>
@@ -259,7 +265,7 @@
                         <i class="fa-solid fa-money-bill-transfer"></i> Cargar balances
                     </button>
                     <button id="btn-group-toggle-balances" onclick="toggleGroupBalancesPanel()" class="hidden bg-gray-800 hover:bg-gray-700 text-indigo-200 border border-indigo-900/60 px-3 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2">
-                        <i id="btn-group-toggle-balances-icon" class="fa-solid fa-eye"></i> <span id="btn-group-toggle-balances-text">Ver balances</span>
+                        <i id="btn-group-toggle-balances-icon" class="fa-solid fa-eye"></i> <span id="btn-group-toggle-balances-text" data-i18n="btn.view_balances">Ver balances</span>
                     </button>
                     <button id="btn-new-account-group" onclick="openAccountGroupModal()" class="bg-indigo-600 hover:bg-indigo-500 text-white border border-indigo-800 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-layer-group"></i> Nuevo grupo
@@ -279,7 +285,7 @@
                     <h2 class="text-lg font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-money-bill-trend-up text-emerald-400"></i> Seguimiento de balances reales
                     </h2>
-                    <p class="mt-1 text-xs text-gray-400">Cada registro guarda una captura de los balances y su variación frente al balance inicial. El balance efectivo suma al último cierre las operaciones posteriores; no incluye comisiones.</p>
+                    <p class="mt-1 text-xs text-gray-400" data-i18n="balance.description">Cada registro guarda una captura de los balances y su variación frente al balance inicial. El balance efectivo suma al último cierre las operaciones posteriores; no incluye comisiones.</p>
                 </div>
                 <button type="button" onclick="openRealBalanceEntryModal()" id="btn-record-balance-snapshot" class="bg-emerald-700 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center gap-2 shadow-sm">
                     <i class="fa-solid fa-pen-to-square"></i> Cargar balances
@@ -297,14 +303,14 @@
                     <div id="dashboard-balance-controls" class="flex flex-wrap items-center gap-2 bg-gray-900/50 p-2 rounded-lg border border-main">
                         <div class="flex items-center gap-2">
                             <i id="dashboard-balance-icon" class="fa-solid fa-sack-dollar text-green-500 text-base"></i>
-                            <span class="text-sm font-bold text-white">Bal. Inicial:</span>
+                            <span class="text-sm font-bold text-white" data-i18n="metrics.initial_balance">Bal. Inicial:</span>
                             <div class="relative">
                                 <span class="absolute left-2.5 top-1.5 text-gray-400 font-bold">$</span>
                                 <input type="number" step="0.01" id="dashboardBalance" onchange="updateInitialBalance()" class="bg-gray-900 border border-main rounded pl-6 pr-2 py-1 text-xs font-bold text-white focus:outline-none focus:border-gray-400 w-24">
                             </div>
                         </div>
                         <div id="dashboardActualBalanceGroup" class="flex items-center gap-2 ml-0 sm:ml-2">
-                            <span class="text-sm font-bold text-gray-400">Actual (Opcional):</span>
+                            <span class="text-sm font-bold text-gray-400" data-i18n="metrics.actual_balance">Actual (Opcional):</span>
                             <div class="relative" title="Último cierre informado; las operaciones posteriores se suman al cálculo. No incluye comisiones.">
                                 <span class="absolute left-2.5 top-1.5 text-gray-400 font-bold">$</span>
                                 <input type="number" step="0.01" id="dashboardBalanceActual" onchange="updateActualBalance()" placeholder="Auto" class="bg-gray-900 border border-main rounded pl-6 pr-2 py-1 text-xs font-bold text-blue-300 focus:outline-none focus:border-blue-400 w-24 placeholder-gray-600">
@@ -314,14 +320,14 @@
                     
                     <div class="flex items-center gap-2">
                         <i id="dashboard-calendar-icon" class="fa-solid fa-calendar-days text-green-500 text-base ml-2"></i>
-                        <span class="text-sm font-bold text-white">Filtro Periodo:</span>
+                        <span class="text-sm font-bold text-white" data-i18n="metrics.filter_period">Filtro Periodo:</span>
                     </div>
                     <div class="flex items-center gap-2">
                                                 <select id="dashboardPeriodType" onchange="onDashboardPeriodTypeChange()" class="bg-gray-900 border border-main rounded-lg px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-gray-500">
-                                                    <option value="ALL">Todas (Histórico Completo)</option>
-                                                    <option value="YEAR">Por Año</option>
-                                                    <option value="MONTH">Por Mes</option>
-                                                    <option value="WEEK">Por Semana</option>
+                                                    <option value="ALL" data-i18n="metrics.period_all">Todas (Histórico Completo)</option>
+                                                    <option value="YEAR" data-i18n="metrics.period_year">Por Año</option>
+                                                    <option value="MONTH" data-i18n="metrics.period_month">Por Mes</option>
+                                                    <option value="WEEK" data-i18n="metrics.period_week">Por Semana</option>
                                                 </select>
                                                 <select id="dashboardPeriodYear" onchange="onDashboardYearOrMonthChange()" class="bg-gray-900 border border-main rounded-lg px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-gray-500 hidden"></select>
                                                 <select id="dashboardPeriodMonth" onchange="onDashboardYearOrMonthChange()" class="bg-gray-900 border border-main rounded-lg px-3 py-2 text-xs font-semibold text-white focus:outline-none focus:border-gray-500 hidden"></select>
@@ -332,21 +338,21 @@
 
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-card p-4 rounded-xl border border-main shadow">
-                    <p class="text-xs text-gray-400 uppercase font-medium">Retorno Total</p>
+                    <p class="text-xs text-gray-400 uppercase font-medium" data-i18n="metrics.total_return">Retorno Total</p>
                     <h3 id="kpi-return" class="text-2xl font-bold mt-1 text-white">0.00%</h3>
                 </div>
                 <div class="bg-card p-4 rounded-xl border border-main shadow">
-                    <p class="text-xs text-gray-400 uppercase font-medium">Efectividad Global</p>
+                    <p class="text-xs text-gray-400 uppercase font-medium" data-i18n="metrics.win_rate">Efectividad Global</p>
                     <h3 id="kpi-winrate" class="text-2xl font-bold mt-1 text-gray-200">0%</h3>
                     <p class="text-xs text-gray-500 mt-1" id="kpi-trades-count">0 Trades</p>
                 </div>
                 <div class="bg-card p-4 rounded-xl border border-main shadow">
-                    <p class="text-xs text-gray-400 uppercase font-medium">Max Drawdown</p>
+                    <p class="text-xs text-gray-400 uppercase font-medium" data-i18n="metrics.max_drawdown">Max Drawdown</p>
                     <h3 id="kpi-drawdown" class="text-2xl font-bold mt-1 text-red-400">0.00%</h3>
                     <p class="text-xs text-gray-500 mt-1" id="kpi-drawdown-dollar"></p>
                 </div>
                 <div class="bg-card p-4 rounded-xl border border-main shadow">
-                    <p class="text-xs text-gray-400 uppercase font-medium">Mejor / Peor Trade</p>
+                    <p class="text-xs text-gray-400 uppercase font-medium" data-i18n="metrics.best_worst_trade">Mejor / Peor Trade</p>
                     <h3 id="kpi-best-trade" class="text-xl font-bold mt-1 text-emerald-400">+0.00%</h3>
                     <p class="text-xs text-red-400 font-semibold mt-0.5" id="kpi-worst-trade">Peor: -0.00%</p>
                 </div>
@@ -373,22 +379,22 @@
                         <!-- 3 Mini KPIs -->
                         <div class="grid grid-cols-3 gap-2.5 mb-5">
                             <div class="target-mini-card rounded-xl bg-[#0d1117] border border-gray-800 p-2.5 text-center">
-                                <p class="text-[11px] text-gray-400 font-medium">Operaciones</p>
+                                <p class="text-[11px] text-gray-400 font-medium" data-i18n="metrics.operations">Operaciones</p>
                                 <p id="target-stat-ops" class="text-lg font-bold text-white mt-1">0</p>
                             </div>
                             <div class="target-mini-card rounded-xl bg-[#0d1117] border border-gray-800 p-2.5 text-center">
-                                <p class="text-[11px] text-gray-400 font-medium">Profit factor</p>
+                                <p class="text-[11px] text-gray-400 font-medium" data-i18n="metrics.profit_factor">Profit factor</p>
                                 <p id="target-stat-pf" class="text-lg font-bold text-sky-400 mt-1">—</p>
                             </div>
                             <div class="target-mini-card rounded-xl bg-[#0d1117] border border-gray-800 p-2.5 text-center">
-                                <p class="text-[11px] text-gray-400 font-medium">R:R medio</p>
+                                <p class="text-[11px] text-gray-400 font-medium" data-i18n="metrics.avg_rr">R:R medio</p>
                                 <p id="target-stat-rr" class="text-lg font-bold text-yellow-400 mt-1">1:0.0</p>
                             </div>
                         </div>
 
                         <!-- Distribución -->
                         <div class="mb-5">
-                            <p class="text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2">Distribución</p>
+                            <p class="text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2" data-i18n="metrics.distribution">Distribución</p>
                             <div id="target-dist-bar" class="h-2.5 w-full rounded-full bg-gray-800 flex overflow-hidden mb-2.5">
                                 <div id="target-bar-win" style="width: 0%" class="bg-emerald-500 h-full transition-all"></div>
                                 <div id="target-bar-be" style="width: 0%" class="bg-indigo-500 h-full transition-all"></div>
@@ -403,7 +409,7 @@
 
                         <!-- Objetivos alcanzados -->
                         <div>
-                            <p class="text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2.5">Objetivos alcanzados</p>
+                            <p class="text-[11px] font-bold tracking-wider uppercase text-gray-400 mb-2.5" data-i18n="metrics.goals_reached">Objetivos alcanzados</p>
                             <div class="space-y-2.5">
                                 <div class="flex items-center gap-3">
                                     <span class="w-10 text-xs font-bold text-teal-400">TP1</span>
@@ -469,47 +475,47 @@
         <div id="section-journal" class="hidden space-y-4">
             <div class="bg-card border border-main rounded-xl p-4 flex flex-wrap gap-3 items-center justify-between text-xs shadow">
                 <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-                    <div class="flex items-center gap-2"><i class="fa-solid fa-filter text-gray-400"></i><span class="font-medium text-gray-300">Filtros:</span></div>
+                    <div class="flex items-center gap-2"><i class="fa-solid fa-filter text-gray-400"></i><span class="font-medium text-gray-300" data-i18n="table.filters">Filtros:</span></div>
                                         <div class="flex items-center gap-2">
                                             <select id="filterPeriodoType" onchange="onJournalPeriodTypeChange()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white">
-                                                <option value="ALL">Todo el Tiempo</option>
-                                                <option value="YEAR">Por Año</option>
-                                                <option value="MONTH">Por Mes</option>
-                                                <option value="WEEK">Por Semana</option>
+                                                <option value="ALL" data-i18n="table.filter_all_time">Todo el Tiempo</option>
+                                                <option value="YEAR" data-i18n="metrics.period_year">Por Año</option>
+                                                <option value="MONTH" data-i18n="metrics.period_month">Por Mes</option>
+                                                <option value="WEEK" data-i18n="metrics.period_week">Por Semana</option>
                                             </select>
                                             <select id="filterPeriodoYear" onchange="onJournalYearOrMonthChange()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white hidden"></select>
                                             <select id="filterPeriodoMonth" onchange="onJournalYearOrMonthChange()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white hidden"></select>
                                             <select id="filterPeriodoSub" onchange="applyFilters()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white hidden"></select>
                                         </div>
                     <select id="filterEstado" onchange="applyFilters()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white">
-                        <option value="ALL">Todos los Estados</option>
-                        <option value="Full TP">Full TP</option>
+                        <option value="ALL" data-i18n="table.filter_all_states">Todos los Estados</option>
+                        <option value="Full TP" data-i18n="app_auto.full_tp">Full TP</option>
                         <option value="SL">SL</option>
                         <option value="BE">BE</option>
-                        <option value="Parcial">Parcial</option>
-                        <option value="Activa">Activa</option>
-                        <option value="Cierre manual">Cierre manual</option>
-                        <option value="Pendiente">Pendiente</option>
-                        <option value="Sin Activar">Sin Activar</option>
+                        <option value="Parcial" data-i18n="app_auto.parcial">Parcial</option>
+                        <option value="Activa" data-i18n="app_auto.activa">Activa</option>
+                        <option value="Cierre manual" data-i18n="app_auto.cierre_manual">Cierre manual</option>
+                        <option value="Pendiente" data-i18n="app_auto.pendiente">Pendiente</option>
+                        <option value="Sin Activar" data-i18n="app_auto.sin_activar">Sin Activar</option>
                     </select>
                                         <select id="filterSesion" onchange="applyFilters()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white">
-                        <option value="ALL">Todas las Sesiones</option>
-                        <option value="Pre Londres">Pre Londres</option>
-                        <option value="Londres">Londres</option>
-                        <option value="Pre New York">Pre New York</option>
-                        <option value="New York">New York</option>
-                        <option value="Asia">Asia</option>
+                        <option value="ALL" data-i18n="table.filter_all_sessions">Todas las Sesiones</option>
+                        <option value="Pre Londres" data-i18n="app_auto.pre_londres">Pre Londres</option>
+                        <option value="Londres" data-i18n="app_auto.londres">Londres</option>
+                        <option value="Pre New York" data-i18n="app_auto.pre_new_york">Pre New York</option>
+                        <option value="New York" data-i18n="app_auto.new_york">New York</option>
+                        <option value="Asia" data-i18n="app_auto.asia">Asia</option>
                     </select>
                     <div id="filterParContainer">
                         <select id="filterPar" onchange="applyFilters()" class="bg-gray-900 border border-main rounded px-3 py-1.5 text-white">
-                            <option value="ALL">Todos los Activos</option>
+                            <option value="ALL" data-i18n="table.filter_all_pairs">Todos los Activos</option>
                         </select>
                     </div>
                 </div>
                 <div class="w-full md:w-64">
                     <div class="relative">
                         <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-500"></i>
-                        <input type="text" id="filterSearch" oninput="applyFilters()" placeholder="Buscar en notas o par..." class="w-full bg-gray-900 border border-main rounded pl-8 pr-3 py-1.5 text-white">
+                        <input type="text" id="filterSearch" oninput="applyFilters()" placeholder="Buscar en notas o par..." class="w-full bg-gray-900 border border-main rounded pl-8 pr-3 py-1.5 text-white" data-i18n-placeholder="table.search_placeholder">
                     </div>
                 </div>
             </div>
@@ -518,21 +524,21 @@
                 <table class="journal-table w-full text-left text-xs text-gray-300">
                     <thead class="bg-gray-900/90 uppercase text-[10px] text-gray-400 border-b border-main font-semibold sticky top-0">
                         <tr>
-                            <th class="px-2 py-2">Fecha / Hora</th>
-                            <th class="px-2 py-2">Día</th>
-                            <th id="journal-head-pair" class="px-2 py-2">Activo</th>
-                            <th class="px-2 py-2">Sesión</th>
-                            <th class="px-2 py-2">Tendencia</th>
-                            <th class="px-2 py-2">Pips SL / TP</th>
-                            <th class="px-2 py-2">Tipo Orden</th>
-                            <th class="px-2 py-2">Ratio RR</th>
-                            <th class="px-2 py-2">Riesgo</th>
-                            <th class="px-2 py-2">Estado</th>
-                            <th class="px-2 py-2">Resultado (%)</th>
-                            <th class="px-2 py-2">Acumulado</th>
-                            <th id="journal-head-balance" class="px-2 py-2">Balance (P/L)</th>
-                            <th class="px-2 py-2 text-center">Ver Galería</th>
-                            <th class="px-2 py-2 text-center">Acciones</th>
+                            <th class="px-2 py-2" data-i18n="table.col_date_time">Fecha / Hora</th>
+                            <th class="px-2 py-2" data-i18n="table.col_day">Día</th>
+                            <th id="journal-head-pair" class="px-2 py-2" data-i18n="table.col_pair">Activo</th>
+                            <th class="px-2 py-2" data-i18n="table.col_session">Sesión</th>
+                            <th class="px-2 py-2" data-i18n="table.col_trend">Tendencia</th>
+                            <th class="px-2 py-2" data-i18n="table.col_sl_tp">Pips SL / TP</th>
+                            <th class="px-2 py-2" data-i18n="table.col_order">Tipo Orden</th>
+                            <th class="px-2 py-2" data-i18n="table.col_rr">Ratio RR</th>
+                            <th class="px-2 py-2" data-i18n="table.col_risk">Riesgo</th>
+                            <th class="px-2 py-2" data-i18n="table.col_status">Estado</th>
+                            <th class="px-2 py-2" data-i18n="table.col_result">Resultado (%)</th>
+                            <th class="px-2 py-2" data-i18n="table.col_acum">Acumulado</th>
+                            <th id="journal-head-balance" class="px-2 py-2" data-i18n="table.col_balance">Balance (P/L)</th>
+                            <th class="px-2 py-2 text-center" data-i18n="table.col_view_gallery">Ver Galería</th>
+                            <th class="px-2 py-2 text-center" data-i18n="table.col_actions">Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="journal-table-body" class="divide-y divide-main"></tbody>
@@ -545,7 +551,7 @@
                 <h2 class="text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-photo-film text-indigo-400"></i> Bitácora Visual & Análisis Técnico
                 </h2>
-                <div class="text-xs text-gray-400">Haz clic en cualquier imagen para verla en pantalla completa</div>
+                <div class="text-xs text-gray-400" data-i18n="gallery.click_hint">Haz clic en cualquier imagen para verla en pantalla completa</div>
             </div>
             <div id="gallery-cards-container" class="grid grid-cols-1 gap-8"></div>
         </div>
@@ -553,7 +559,7 @@
         <div id="section-monthly" class="hidden monthly-calendar-section mx-auto w-full">
             <div class="monthly-calendar-layout">
                 <aside class="monthly-year-panel bg-card border border-main rounded-xl p-3 shadow-sm">
-                    <label for="monthlyYear" class="text-sm font-semibold text-gray-300">Año</label>
+                    <label for="monthlyYear" class="text-sm font-semibold text-gray-300" data-i18n="calendar.year">Año</label>
                     <select id="monthlyYear" onchange="renderMonthlyPerformance()" class="bg-gray-900 border border-main rounded-lg px-3 py-2 text-white focus:outline-none focus:border-gray-500"></select>
                 </aside>
                 <div id="monthly-grid" class="grid grid-cols-1 min-[520px]:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4"></div>
@@ -572,11 +578,11 @@
                             </span>
                         </div>
                         <div>
-                            <label for="dailyCalendarMonth" class="text-xs font-semibold text-gray-400 block mb-1">Mes</label>
+                            <label for="dailyCalendarMonth" class="text-xs font-semibold text-gray-400 block mb-1" data-i18n="calendar.month">Mes</label>
                             <select id="dailyCalendarMonth" onchange="renderDailyCalendar()" class="w-full bg-gray-900 border border-main rounded-lg px-2.5 py-1.5 text-white text-xs font-medium focus:outline-none focus:border-gray-500"></select>
                         </div>
                         <div>
-                            <label for="dailyCalendarYear" class="text-xs font-semibold text-gray-400 block mb-1">Año</label>
+                            <label for="dailyCalendarYear" class="text-xs font-semibold text-gray-400 block mb-1" data-i18n="calendar.year">Año</label>
                             <select id="dailyCalendarYear" onchange="renderDailyCalendar()" class="w-full bg-gray-900 border border-main rounded-lg px-2.5 py-1.5 text-white text-xs font-medium focus:outline-none focus:border-gray-500"></select>
                         </div>
                     </div>
@@ -604,14 +610,14 @@
 
                         <!-- Cabecera de columnas: Semanas + 7 días (Lunes a Domingo) -->
                         <div class="daily-calendar-header-row grid grid-cols-[100px_repeat(7,1fr)] sm:grid-cols-[115px_repeat(7,1fr)] gap-2 mb-2 text-center text-xs font-bold text-gray-400 uppercase tracking-wider">
-                            <div class="text-left pl-2 text-gray-500">Semanas</div>
-                            <div>Lunes</div>
-                            <div>Martes</div>
-                            <div>Miércoles</div>
-                            <div>Jueves</div>
-                            <div>Viernes</div>
-                            <div class="text-gray-500">Sábado</div>
-                            <div class="text-gray-500">Domingo</div>
+                            <div class="text-left pl-2 text-gray-500" data-i18n="calendar.weeks">Semanas</div>
+                            <div data-i18n="day.monday">Lunes</div>
+                            <div data-i18n="day.tuesday">Martes</div>
+                            <div data-i18n="day.wednesday">Miércoles</div>
+                            <div data-i18n="day.thursday">Jueves</div>
+                            <div data-i18n="day.friday">Viernes</div>
+                            <div class="text-gray-500" data-i18n="day.saturday">Sábado</div>
+                            <div class="text-gray-500" data-i18n="day.sunday">Domingo</div>
                         </div>
 
                         <!-- Filas del calendario -->
@@ -625,145 +631,145 @@
     <div id="sessionModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-[#11151c] border border-main rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
             <button onclick="closeSessionModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg transition"><i class="fa-solid fa-xmark"></i></button>
-            <h3 id="modalSessionTitle" class="text-lg font-bold text-white mb-6">Nueva Cuenta / Sesión</h3>
+            <h3 id="modalSessionTitle" class="text-lg font-bold text-white mb-6" data-i18n="modal_session.title_new_real">Nueva Cuenta / Sesión</h3>
             <form id="sessionForm" onsubmit="saveSession(event)" class="space-y-4">
                 <input type="hidden" id="inputIdSession">
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Nombre (Identificador)</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.name">Nombre (Identificador)</label>
                     <input type="text" id="inputSessionName" required placeholder="Ej: Fondeo 100k Challenge" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-green-500 focus:outline-none transition">
                 </div>
                 <div id="sessionPairContainer">
                     <div class="flex items-center justify-between mb-1.5">
-                        <label class="block text-xs font-semibold text-gray-300">Activo / Par de la sesión</label>
+                        <label class="block text-xs font-semibold text-gray-300" data-i18n="modal_session.pair">Activo / Par de la sesión</label>
                         <button type="button" onclick="openPairManager()" class="text-xs text-gray-400 hover:text-white transition" title="Gestionar pares de backtesting"><i class="fa-solid fa-gear"></i></button>
                     </div>
                     <select id="inputSessionPair" required class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white uppercase focus:border-blue-500 focus:outline-none transition"></select>
-                    <p class="text-[10px] text-gray-500 mt-1">Este activo queda fijo para todas las operaciones de la sesión.</p>
+                    <p class="text-[10px] text-gray-500 mt-1" data-i18n="modal_session.pair_hint">Este activo queda fijo para todas las operaciones de la sesión.</p>
                 </div>
                 <div id="sessionStartDateContainer">
-                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Fecha de inicio</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.start_date">Fecha de inicio</label>
                     <input type="date" id="inputSessionStartDate" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none transition">
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Balance Inicial ($)</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.initial_balance">Balance Inicial ($)</label>
                     <input type="number" step="0.01" id="inputSessionBalance" value="100000" required class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-green-500 focus:outline-none transition">
                 </div>
                 <div id="sessionActualBalanceContainer">
-                    <label class="block text-xs font-semibold text-gray-300 mb-1.5">Balance Actual / Cierre (Opcional)</label>
+                    <label class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.actual_balance">Balance Actual / Cierre (Opcional)</label>
                     <input type="number" step="0.01" id="inputSessionBalanceActual" placeholder="Ej: 102500" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-green-500 focus:outline-none transition">
-                    <p class="mt-1 text-[10px] leading-relaxed text-gray-500">Si lo dejas vacío, se usa el Balance Inicial como base y se suman las operaciones registradas. El riesgo por operación siempre usa el Balance Inicial. La proyección no incluye comisiones.</p>
-                    <p class="text-[10px] text-gray-500 mt-1">Es el último cierre informado: al guardar se registra una captura en Seguimiento de balances.</p>
+                    <p class="mt-1 text-[10px] leading-relaxed text-gray-500" data-i18n="modal_session.help_initial">Si lo dejas vacío, se usa el Balance Inicial como base y se suman las operaciones registradas. El riesgo por operación siempre usa el Balance Inicial. La proyección no incluye comisiones.</p>
+                    <p class="text-[10px] text-gray-500 mt-1" data-i18n="modal_session.help_current">Es el último cierre informado: al guardar se registra una captura en Seguimiento de balances.</p>
                 </div>
                 <!-- Solo cuentas reales: etapa y metas de seguimiento -->
                 <div id="accountStageContainer" class="hidden space-y-3">
                     <div>
-                        <label for="inputAccountStage" class="block text-xs font-semibold text-gray-300 mb-1.5">Tipo de cuenta</label>
+                        <label for="inputAccountStage" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.account_type">Tipo de cuenta</label>
                         <select id="inputAccountStage" onchange="toggleAccountStageFields()" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-green-500 focus:outline-none">
-                            <option value="real">Cuenta real (capital propio)</option>
-                            <option value="prueba">Fase de prueba (Challenge)</option>
-                            <option value="fondeada">Fondeada</option>
-                            <option value="instant">Instant (fondeo directo)</option>
+                            <option value="real" data-i18n="modal_session.type_real">Cuenta real (capital propio)</option>
+                            <option value="prueba" data-i18n="modal_session.type_challenge">Fase de prueba (Challenge)</option>
+                            <option value="fondeada" data-i18n="modal_session.type_funded">Fondeada</option>
+                            <option value="instant" data-i18n="modal_session.type_instant">Instant (fondeo directo)</option>
                         </select>
                     </div>
                     <div id="accountMt5LoginContainer">
-                        <label for="inputAccountMt5Login" class="block text-xs font-semibold text-gray-300 mb-1.5">Login MT5 (opcional)</label>
+                        <label for="inputAccountMt5Login" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.login_mt5_opcional">Login MT5 (opcional)</label>
                         <input type="text" id="inputAccountMt5Login" inputmode="numeric" placeholder="Ej: 5012345" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none transition">
-                        <p class="mt-1 text-[10px] leading-relaxed text-gray-500">Número de cuenta que aparece en MT5. Si lo dejas vacío, el puente no sincronizará operaciones de esta cuenta.</p>
+                        <p class="mt-1 text-[10px] leading-relaxed text-gray-500" data-i18n="app_auto.n_mero_de_cuenta_que_aparece_en_mt5_si_l">Número de cuenta que aparece en MT5. Si lo dejas vacío, el puente no sincronizará operaciones de esta cuenta.</p>
                     </div>
                     <div id="accountGoalFieldsPrueba" class="hidden space-y-3 rounded-lg border border-blue-900/60 bg-blue-900/15 p-3">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="inputAccountGoalTargetPct" class="block text-xs font-semibold text-gray-300 mb-1.5">Objetivo de beneficio (%)</label>
+                                <label for="inputAccountGoalTargetPct" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.objetivo_de_beneficio">Objetivo de beneficio (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputAccountGoalTargetPct" placeholder="Ej: 8" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
                             </div>
                             <div>
-                                <label for="inputAccountGoalMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5">Drawdown máximo (%)</label>
+                                <label for="inputAccountGoalMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputAccountGoalMaxDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="inputPruebaPhases" class="block text-xs font-semibold text-gray-300 mb-1.5">Fases del challenge</label>
+                                <label for="inputPruebaPhases" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.fases_del_challenge">Fases del challenge</label>
                                 <select id="inputPruebaPhases" onchange="togglePruebaPhaseFields()" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
-                                    <option value="1">1 fase (al superarla pasa a Fondeada)</option>
-                                    <option value="2">2 fases</option>
+                                    <option value="1" data-i18n="app_auto.1_fase_al_superarla_pasa_a_fondeada">1 fase (al superarla pasa a Fondeada)</option>
+                                    <option value="2" data-i18n="modal_session.phase_2">2 fases</option>
                                 </select>
                             </div>
                             <div id="pruebaPhase2Field" class="hidden">
-                                <label for="inputPruebaTarget2" class="block text-xs font-semibold text-gray-300 mb-1.5">Objetivo fase 2 (%)</label>
+                                <label for="inputPruebaTarget2" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.objetivo_fase_2">Objetivo fase 2 (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputPruebaTarget2" placeholder="Ej: 5" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
                             </div>
                         </div>
-                        <p class="text-[10px] text-gray-500">Verás el avance hacia el objetivo y el colchón de drawdown restante en las métricas. Al superar una fase: confeti y felicitación al abrir las métricas, con la opción de reiniciar el balance y pasar a la fase 2 o a Fondeada.</p>
+                        <p class="text-[10px] text-gray-500" data-i18n="modal_session.goal_help">Verás el avance hacia el objetivo y el colchón de drawdown restante en las métricas. Al superar una fase: confeti y felicitación al abrir las métricas, con la opción de reiniciar el balance y pasar a la fase 2 o a Fondeada.</p>
                     </div>
                     <div id="accountGoalFieldsReal" class="hidden space-y-3 rounded-lg border border-teal-900/60 bg-teal-900/15 p-3">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="inputAccountGoalMode" class="block text-xs font-semibold text-gray-300 mb-1.5">Tipo de meta</label>
+                                <label for="inputAccountGoalMode" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.tipo_de_meta">Tipo de meta</label>
                                 <select id="inputAccountGoalMode" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-teal-500 focus:outline-none">
-                                    <option value="amount">Balance objetivo ($)</option>
-                                    <option value="percent">Retorno objetivo (%)</option>
+                                    <option value="amount" data-i18n="app_auto.balance_objetivo">Balance objetivo ($)</option>
+                                    <option value="percent" data-i18n="app_auto.retorno_objetivo">Retorno objetivo (%)</option>
                                 </select>
                             </div>
                             <div>
-                                <label for="inputAccountGoalValue" class="block text-xs font-semibold text-gray-300 mb-1.5">Valor de la meta</label>
+                                <label for="inputAccountGoalValue" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.valor_de_la_meta">Valor de la meta</label>
                                 <input type="number" step="0.01" min="0" id="inputAccountGoalValue" placeholder="Ej: 150000" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-teal-500 focus:outline-none">
                             </div>
                         </div>
-                        <p class="text-[10px] text-gray-500">Una meta propia: se mostrará el avance y cuánto falta para alcanzarla.</p>
+                        <p class="text-[10px] text-gray-500" data-i18n="modal_session.custom_goal_help">Una meta propia: se mostrará el avance y cuánto falta para alcanzarla.</p>
                     </div>
                     <div id="accountGoalFieldsFondeada" class="hidden space-y-3 rounded-lg border border-emerald-900/60 bg-emerald-900/15 p-3">
                         <div class="grid grid-cols-3 gap-3">
                             <div>
-                                <label for="inputAccountSplitPct" class="block text-xs font-semibold text-gray-300 mb-1.5">Tu parte (%)</label>
+                                <label for="inputAccountSplitPct" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.tu_parte">Tu parte (%)</label>
                                 <input type="number" step="1" min="0" max="100" id="inputAccountSplitPct" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                             </div>
                             <div>
-                                <label for="inputAccountBufferPct" class="block text-xs font-semibold text-gray-300 mb-1.5">Colchón (% inicial)</label>
+                                <label for="inputAccountBufferPct" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.colch_n_inicial">Colchón (% inicial)</label>
                                 <input type="number" step="0.1" min="0" id="inputAccountBufferPct" placeholder="0" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                             </div>
                             <div>
-                                <label for="inputAccountMinWithdrawal" class="block text-xs font-semibold text-gray-300 mb-1.5">Mínimo a retirar ($)</label>
+                                <label for="inputAccountMinWithdrawal" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.m_nimo_a_retirar">Mínimo a retirar ($)</label>
                                 <input type="number" step="0.01" min="0" id="inputAccountMinWithdrawal" placeholder="Sin mínimo" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
-                        <p class="text-[10px] text-gray-500">Reglas de retiro: la app calcula tu parte retirable y avisa cuánto falta para el próximo retiro.</p>
+                        <p class="text-[10px] text-gray-500" data-i18n="modal_session.withdraw_rules_help">Reglas de retiro: la app calcula tu parte retirable y avisa cuánto falta para el próximo retiro.</p>
                     </div>
                     <div id="accountGoalFieldsInstant" class="hidden space-y-3 rounded-lg border border-purple-900/60 bg-purple-900/15 p-3">
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="inputAccountInstantSplitPct" class="block text-xs font-semibold text-gray-300 mb-1.5">Tu parte (%)</label>
+                                <label for="inputAccountInstantSplitPct" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.tu_parte">Tu parte (%)</label>
                                 <input type="number" step="1" min="0" max="100" id="inputAccountInstantSplitPct" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                             </div>
                             <div>
-                                <label for="inputAccountInstantBufferPct" class="block text-xs font-semibold text-gray-300 mb-1.5">Colchón (% inicial)</label>
+                                <label for="inputAccountInstantBufferPct" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.colch_n_inicial">Colchón (% inicial)</label>
                                 <input type="number" step="0.1" min="0" id="inputAccountInstantBufferPct" placeholder="0" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                             </div>
                         </div>
                         <div>
-                            <label for="inputAccountInstantMinWithdrawal" class="block text-xs font-semibold text-gray-300 mb-1.5">Mínimo a retirar</label>
+                            <label for="inputAccountInstantMinWithdrawal" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.m_nimo_a_retirar">Mínimo a retirar</label>
                             <div class="flex gap-2">
                                 <select id="inputAccountInstantMinWithdrawalMode" class="w-24 bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                                     <option value="amount">$</option>
-                                    <option value="percent">% del balance</option>
+                                    <option value="percent" data-i18n="app_auto.del_balance">% del balance</option>
                                 </select>
                                 <input type="number" step="0.01" min="0" id="inputAccountInstantMinWithdrawal" placeholder="Sin mínimo" class="min-w-0 flex-1 bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label for="inputAccountInstantMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5">Drawdown máximo (%)</label>
+                                <label for="inputAccountInstantMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputAccountInstantMaxDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                             </div>
                             <div>
-                                <label for="inputAccountInstantDDType" class="block text-xs font-semibold text-gray-300 mb-1.5">Tipo de drawdown</label>
+                                <label for="inputAccountInstantDDType" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.tipo_de_drawdown">Tipo de drawdown</label>
                                 <select id="inputAccountInstantDDType" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
-                                    <option value="static">Fijo sobre el balance inicial</option>
-                                    <option value="trailing">Trailing sobre el pico</option>
+                                    <option value="static" data-i18n="app_auto.fijo_sobre_el_balance_inicial">Fijo sobre el balance inicial</option>
+                                    <option value="trailing" data-i18n="app_auto.trailing_sobre_el_pico">Trailing sobre el pico</option>
                                 </select>
                             </div>
                         </div>
-                        <p class="text-[10px] text-gray-500">Fondeo directo: la app calcula tu parte retirable, el mínimo de retiro y el drawdown restante (fijo o trailing).</p>
+                        <p class="text-[10px] text-gray-500" data-i18n="modal_session.instant_funding_help">Fondeo directo: la app calcula tu parte retirable, el mínimo de retiro y el drawdown restante (fijo o trailing).</p>
                     </div>
                     <div id="accountRulesSection" class="hidden space-y-3 rounded-lg border border-amber-900/60 bg-amber-900/15 p-3">
                         <label class="flex cursor-pointer items-center gap-2.5 text-xs font-bold text-amber-300">
@@ -775,40 +781,40 @@
                                 <div class="flex flex-col rounded-lg border border-main bg-[#161b22] p-2.5">
                                     <div class="flex items-start gap-2.5">
                                         <input type="checkbox" id="inputRuleConsistency" onchange="toggleAccountRuleInputs()" class="mt-0.5 h-4 w-4 accent-amber-500">
-                                        <label for="inputRuleConsistency" class="cursor-pointer font-semibold text-gray-300">Consistencia: % máximo por día</label>
+                                        <label for="inputRuleConsistency" class="cursor-pointer font-semibold text-gray-300" data-i18n="app_auto.consistencia_m_ximo_por_d_a">Consistencia: % máximo por día</label>
                                     </div>
                                     <input type="number" step="1" min="0" max="100" id="inputRuleConsistencyPct" placeholder="30" aria-label="Consistencia (% máximo por día)" class="mt-auto w-full bg-gray-900 border border-main rounded-lg p-1.5 text-right text-white focus:border-amber-500 focus:outline-none">
                                 </div>
                                 <div class="flex flex-col rounded-lg border border-main bg-[#161b22] p-2.5">
                                     <div class="flex items-start gap-2.5">
                                         <input type="checkbox" id="inputRuleMinTradingDays" onchange="toggleAccountRuleInputs()" class="mt-0.5 h-4 w-4 accent-amber-500">
-                                        <label for="inputRuleMinTradingDays" class="cursor-pointer font-semibold text-gray-300">Días mínimos de trading</label>
+                                        <label for="inputRuleMinTradingDays" class="cursor-pointer font-semibold text-gray-300" data-i18n="app_auto.d_as_m_nimos_de_trading">Días mínimos de trading</label>
                                     </div>
                                     <input type="number" step="1" min="0" max="365" id="inputRuleMinTradingDaysValue" placeholder="5" aria-label="Días mínimos de trading" class="mt-auto w-full bg-gray-900 border border-main rounded-lg p-1.5 text-right text-white focus:border-amber-500 focus:outline-none">
                                 </div>
                                 <div class="flex flex-col rounded-lg border border-main bg-[#161b22] p-2.5">
                                     <div class="flex items-start gap-2.5">
                                         <input type="checkbox" id="inputRuleMinProfitableDays" onchange="toggleAccountRuleInputs()" class="mt-0.5 h-4 w-4 accent-amber-500">
-                                        <label for="inputRuleMinProfitableDays" class="cursor-pointer font-semibold text-gray-300">Días rentables mínimos</label>
+                                        <label for="inputRuleMinProfitableDays" class="cursor-pointer font-semibold text-gray-300" data-i18n="app_auto.d_as_rentables_m_nimos">Días rentables mínimos</label>
                                     </div>
                                     <input type="number" step="1" min="0" max="365" id="inputRuleMinProfitableDaysValue" placeholder="3" aria-label="Días rentables mínimos" class="mt-auto w-full bg-gray-900 border border-main rounded-lg p-1.5 text-right text-white focus:border-amber-500 focus:outline-none">
                                 </div>
                                 <div class="flex flex-col rounded-lg border border-main bg-[#161b22] p-2.5">
                                     <div class="flex items-start gap-2.5">
                                         <input type="checkbox" id="inputRuleDailyLoss" onchange="toggleAccountRuleInputs()" class="mt-0.5 h-4 w-4 accent-amber-500">
-                                        <label for="inputRuleDailyLoss" class="cursor-pointer font-semibold text-gray-300">Límite de pérdida diaria (%)</label>
+                                        <label for="inputRuleDailyLoss" class="cursor-pointer font-semibold text-gray-300" data-i18n="app_auto.l_mite_de_p_rdida_diaria">Límite de pérdida diaria (%)</label>
                                     </div>
                                     <input type="number" step="0.1" min="0" max="100" id="inputRuleDailyLossPct" placeholder="5" aria-label="Límite de pérdida diaria" class="mt-auto w-full bg-gray-900 border border-main rounded-lg p-1.5 text-right text-white focus:border-amber-500 focus:outline-none">
                                 </div>
                             </div>
-                            <p class="text-[10px] text-gray-500">Se muestran como tarjetas de progreso en las métricas de la cuenta. Las reglas desmarcadas no se evalúan.</p>
+                            <p class="text-[10px] text-gray-500" data-i18n="modal_session.rules_help">Se muestran como tarjetas de progreso en las métricas de la cuenta. Las reglas desmarcadas no se evalúan.</p>
                         </div>
                     </div>
                 </div>
                 <!-- Solo backtesting: tipo de sesión y reglas de la simulación de fondeo -->
                 <div id="sessionModeContainer" class="hidden space-y-3">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-300 mb-1.5">Tipo de sesión</label>
+                        <label class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.session_type">Tipo de sesión</label>
                         <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
                             <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-main bg-[#161b22] p-2.5 text-gray-300 transition has-[:checked]:border-blue-500 has-[:checked]:text-white">
                                 <input type="radio" name="sessionMode" value="libre" checked onchange="toggleFondeoRules()" class="accent-blue-500"> <i class="fa-solid fa-chart-line text-blue-400"></i> Trading libre
@@ -822,53 +828,53 @@
                         <p class="text-xs font-bold text-amber-300"><i class="fa-solid fa-scale-balanced mr-1"></i> Reglas del desafío</p>
                         <div class="grid grid-cols-2 gap-3 text-xs">
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Fases</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.phases">Fases</label>
                                 <select id="inputFondeoPhases" onchange="toggleFondeoRules()" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
-                                    <option value="1">1 fase</option>
-                                    <option value="2">2 fases</option>
+                                    <option value="1" data-i18n="modal_session.phase_1">1 fase</option>
+                                    <option value="2" data-i18n="modal_session.phase_2">2 fases</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Profit split fondeada (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.profit_split">Profit split fondeada (%)</label>
                                 <input type="number" step="1" min="0" max="100" id="inputFondeoSplit" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Objetivo Fase 1 (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.target_f1">Objetivo Fase 1 (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputFondeoTarget1" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div id="fondeoTarget2Container">
-                                <label class="block font-semibold text-gray-300 mb-1">Objetivo Fase 2 (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.target_f2">Objetivo Fase 2 (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputFondeoTarget2" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Drawdown diario (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.daily_dd">Drawdown diario (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputFondeoDailyDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Drawdown mensual (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.monthly_dd">Drawdown mensual (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputFondeoMonthlyDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Drawdown máximo (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
                                 <input type="number" step="0.1" min="0" id="inputFondeoMaxDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Límite de riesgo por trade (%)</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.risk_per_trade">Límite de riesgo por trade (%)</label>
                                 <input type="number" step="0.01" min="0" id="inputFondeoRiskPerTrade" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Tipo de drawdown máx.</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.dd_type">Tipo de drawdown máx.</label>
                                 <select id="inputFondeoDDType" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
-                                    <option value="static">Estático</option>
-                                    <option value="trailing">Trailing</option>
+                                    <option value="static" data-i18n="modal_session.dd_static">Estático</option>
+                                    <option value="trailing" data-i18n="modal_session.dd_trailing">Trailing</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Días mínimos de trading</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="app_auto.d_as_m_nimos_de_trading">Días mínimos de trading</label>
                                 <input type="number" step="1" min="0" id="inputFondeoMinDays" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
-                                <label class="block font-semibold text-gray-300 mb-1">Días mínimos rentables</label>
+                                <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.min_profitable_days">Días mínimos rentables</label>
                                 <input type="number" step="1" min="0" id="inputFondeoMinProfitDays" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                         </div>
@@ -877,16 +883,16 @@
                                 <input type="checkbox" id="inputFondeoConsistency" onchange="toggleFondeoRules()" class="h-4 w-4 accent-amber-500"> Regla de consistencia
                             </label>
                             <div class="flex items-center gap-1.5 text-gray-400">
-                                <span>el mejor día ≤</span>
+                                <span data-i18n="modal_session.consistency_hint">el mejor día ≤</span>
                                 <input type="number" step="1" min="1" max="100" id="inputFondeoConsistencyPct" class="w-16 bg-[#161b22] border border-main rounded-lg p-1.5 text-white focus:border-amber-500 focus:outline-none disabled:opacity-40">
-                                <span>% del beneficio</span>
+                                <span data-i18n="modal_session.consistency_sub">% del beneficio</span>
                             </div>
                         </div>
-                        <p class="text-[10px] leading-relaxed text-gray-500">Los drawdowns se calculan sobre el balance inicial. Deja un drawdown vacío para no aplicarlo. Al superar una fase, el balance vuelve al saldo base.</p>
+                        <p class="text-[10px] leading-relaxed text-gray-500" data-i18n="modal_session.bt_dd_help">Los drawdowns se calculan sobre el balance inicial. Deja un drawdown vacío para no aplicarlo. Al superar una fase, el balance vuelve al saldo base.</p>
                     </div>
                 </div>
                 <div class="sticky bottom-2 flex justify-end pt-2">
-                    <button type="submit" id="btn-submit-session" class="bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-lg">Crear</button>
+                    <button type="submit" id="btn-submit-session" class="bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-lg" data-i18n="modal_session.btn_create">Crear</button>
                 </div>
             </form>
         </div>
@@ -896,10 +902,10 @@
         <div class="bg-[#11151c] border border-emerald-500/40 rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
             <button type="button" onclick="closeRealBalanceEntryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
             <h3 id="realBalanceEntryTitle" class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-money-bill-transfer text-emerald-400 mr-2"></i>Cargar balances reales</h3>
-            <p id="realBalanceEntryHint" class="text-xs text-gray-400 mb-5">Actualiza aquí el balance actual de cada cuenta. Al guardar, se actualizarán las cuentas y se registrará una captura histórica.</p>
+            <p id="realBalanceEntryHint" class="text-xs text-gray-400 mb-5" data-i18n="modal_balance.hint">Actualiza aquí el balance actual de cada cuenta. Al guardar, se actualizarán las cuentas y se registrará una captura histórica.</p>
             <form id="realBalanceEntryForm" onsubmit="saveRealBalanceEntry(event)" class="space-y-4">
                 <div id="realBalanceEntryDateRow" class="hidden">
-                    <label for="realBalanceEntryDate" class="mb-1.5 block text-xs font-semibold text-gray-300">Fecha del registro</label>
+                    <label for="realBalanceEntryDate" class="mb-1.5 block text-xs font-semibold text-gray-300" data-i18n="modal_balance.date">Fecha del registro</label>
                     <input type="date" id="realBalanceEntryDate" class="w-full rounded-lg border border-main bg-[#161b22] p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                 </div>
                 <div id="realBalanceEntryList" class="space-y-3"></div>
@@ -908,8 +914,8 @@
                     <span>Aplicar también estos balances al <b class="text-white">Balance Actual</b> de las cuentas</span>
                 </label>
                 <div class="sticky bottom-2 flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeRealBalanceEntryModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300">Cancelar</button>
-                    <button type="submit" id="btn-submit-real-balances" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold">Guardar y registrar</button>
+                    <button type="button" onclick="closeRealBalanceEntryModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300" data-i18n="btn.cancel">Cancelar</button>
+                    <button type="submit" id="btn-submit-real-balances" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold" data-i18n="modal_balance.save_and_log">Guardar y registrar</button>
                 </div>
             </form>
         </div>
@@ -924,21 +930,21 @@
                 <input type="hidden" id="inputWithdrawalAccountId">
                 <div class="grid grid-cols-2 gap-3">
                     <div>
-                        <label for="inputWithdrawalDate" class="block text-xs font-semibold text-gray-300 mb-1.5">Fecha</label>
+                        <label for="inputWithdrawalDate" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.fecha">Fecha</label>
                         <input type="date" id="inputWithdrawalDate" required class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                     </div>
                     <div>
-                        <label for="inputWithdrawalAmount" class="block text-xs font-semibold text-gray-300 mb-1.5">Monto ($)</label>
+                        <label for="inputWithdrawalAmount" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.monto">Monto ($)</label>
                         <input type="number" step="0.01" min="0.01" required id="inputWithdrawalAmount" placeholder="0.00" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                     </div>
                 </div>
                 <label class="flex items-start gap-2 text-xs text-gray-300">
                     <input type="checkbox" id="inputWithdrawalDeduct" checked class="mt-0.5 h-4 w-4 accent-emerald-500">
-                    <span>Descontar del Balance Actual de la cuenta<br><span class="text-[10px] text-gray-500">Desmarca si solo quieres anotarlo en el histórico de retiros.</span></span>
+                    <span>Descontar del Balance Actual de la cuenta<br><span class="text-[10px] text-gray-500" data-i18n="app_auto.desmarca_si_solo_quieres_anotarlo_en_el_">Desmarca si solo quieres anotarlo en el histórico de retiros.</span></span>
                 </label>
                 <div class="flex justify-end gap-3 border-t border-main pt-4">
-                    <button type="button" onclick="closeWithdrawalModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold">Registrar retiro</button>
+                    <button type="button" onclick="closeWithdrawalModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300" data-i18n="btn.cancel">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold" data-i18n="app_auto.registrar_retiro">Registrar retiro</button>
                 </div>
             </form>
         </div>
@@ -950,8 +956,8 @@
             <p class="text-xs text-gray-400 mb-4">Cuenta: <span id="phaseCelebrationAccount" class="font-semibold text-gray-200"></span></p>
             <p id="phaseCelebrationSummary" class="text-sm text-gray-300 text-left leading-relaxed mb-5"></p>
             <div class="flex flex-col sm:flex-row justify-end gap-3 border-t border-main pt-4">
-                <button type="button" onclick="resolvePhaseCelebration(false)" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300">Más tarde</button>
-                <button type="button" id="btn-phase-celebration-continue" onclick="resolvePhaseCelebration(true)" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold">Continuar</button>
+                <button type="button" onclick="resolvePhaseCelebration(false)" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300" data-i18n="app_auto.m_s_tarde">Más tarde</button>
+                <button type="button" id="btn-phase-celebration-continue" onclick="resolvePhaseCelebration(true)" class="px-5 py-2 bg-emerald-700 hover:bg-emerald-600 rounded-lg text-white font-semibold" data-i18n="app_auto.continuar">Continuar</button>
             </div>
         </div>
     </div>
@@ -966,34 +972,34 @@
                 <input type="hidden" id="inputAccountGroupId">
                 <div class="grid grid-cols-1 sm:grid-cols-[1fr_190px] gap-3">
                     <div>
-                        <label for="inputAccountGroupName" class="block text-xs font-semibold text-gray-300 mb-1.5">Nombre del grupo</label>
-                        <input id="inputAccountGroupName" type="text" required maxlength="60" placeholder="Ej: Fondeo en prueba" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none">
+                        <label for="inputAccountGroupName" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="groups.name_label">Nombre del grupo</label>
+                        <input id="inputAccountGroupName" type="text" required maxlength="60" placeholder="Ej: Fondeo en prueba" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none" data-i18n-placeholder="groups.name_ph">
                     </div>
                     <div>
-                        <label for="inputAccountGroupIcon" class="block text-xs font-semibold text-gray-300 mb-1.5">Icono</label>
+                        <label for="inputAccountGroupIcon" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="groups.icon_label">Icono</label>
                         <select id="inputAccountGroupIcon" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-indigo-500 focus:outline-none">
-                            <option value="fa-solid fa-layer-group">Grupos apilados</option>
-                            <option value="fa-solid fa-graduation-cap">Fase de prueba</option>
-                            <option value="fa-solid fa-award">Fondeada</option>
-                            <option value="fa-solid fa-bolt">Instant</option>
-                            <option value="fa-solid fa-wallet">Cuenta real</option>
-                            <option value="fa-solid fa-building">Prop firm</option>
-                            <option value="fa-solid fa-chart-line">Trading</option>
-                            <option value="fa-solid fa-rocket">Desafío</option>
+                            <option value="fa-solid fa-layer-group" data-i18n="groups.icon_stacked">Grupos apilados</option>
+                            <option value="fa-solid fa-graduation-cap" data-i18n="groups.icon_trial">Fase de prueba</option>
+                            <option value="fa-solid fa-award" data-i18n="modal_session.type_funded">Fondeada</option>
+                            <option value="fa-solid fa-bolt" data-i18n="groups.icon_instant">Instant</option>
+                            <option value="fa-solid fa-wallet" data-i18n="groups.icon_real">Cuenta real</option>
+                            <option value="fa-solid fa-building" data-i18n="groups.icon_prop">Prop firm</option>
+                            <option value="fa-solid fa-chart-line" data-i18n="groups.icon_trading">Trading</option>
+                            <option value="fa-solid fa-rocket" data-i18n="groups.icon_challenge">Desafío</option>
                         </select>
                     </div>
                 </div>
                 <div>
                     <div class="flex items-center justify-between gap-3 mb-2">
-                        <label class="text-xs font-semibold text-gray-300">Cuentas del grupo</label>
+                        <label class="text-xs font-semibold text-gray-300" data-i18n="app_auto.cuentas_del_grupo">Cuentas del grupo</label>
                         <span id="accountGroupSelectionCount" class="text-[10px] text-gray-500">0 cuentas</span>
                     </div>
                     <div id="accountGroupAccountList" class="max-h-56 overflow-y-auto rounded-lg border border-main bg-gray-950/60 p-2 space-y-1"></div>
-                    <p class="text-[10px] text-gray-500 mt-2">Una cuenta puede pertenecer a más de un grupo.</p>
+                    <p class="text-[10px] text-gray-500 mt-2" data-i18n="app_auto.una_cuenta_puede_pertenecer_a_m_s_de_un_">Una cuenta puede pertenecer a más de un grupo.</p>
                 </div>
                 <div class="flex justify-end gap-3 pt-2">
-                    <button type="button" onclick="closeAccountGroupModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300">Cancelar</button>
-                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white font-semibold">Guardar grupo</button>
+                    <button type="button" onclick="closeAccountGroupModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300" data-i18n="btn.cancel">Cancelar</button>
+                    <button type="submit" class="px-5 py-2 bg-indigo-600 hover:bg-indigo-500 rounded-lg text-white font-semibold" data-i18n="app_auto.guardar_grupo">Guardar grupo</button>
                 </div>
             </form>
         </div>
@@ -1008,7 +1014,7 @@
                     <i class="fa-solid fa-pen-to-square text-green-500"></i> Nueva Entrada de Trading
                 </h3>
                 <button type="button" onclick="openTradeLifecycleGuide()" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Ver cómo registrar la entrada y el análisis posterior">
-                    <i class="fa-solid fa-graduation-cap text-emerald-400"></i> <span class="hidden sm:inline">Guía Antes / Después</span>
+                    <i class="fa-solid fa-graduation-cap text-emerald-400"></i> <span class="hidden sm:inline" data-i18n="modal_trade.guide_badge">Guía Antes / Después</span>
                 </button>
             </div>
             <div id="mt5TradeHint" class="hidden shrink-0 mx-4 sm:mx-6 mb-2 rounded border border-blue-800/60 bg-blue-950/40 px-3 py-2 text-[11px] text-blue-200"></div>
@@ -1017,22 +1023,22 @@
                     <i id="quickTradeAlertIcon" class="fa-solid fa-plus text-yellow-400"></i>
                     <span id="quickTradeAlertText" class="min-w-0"></span>
                 </div>
-                <button id="globalTradeSelectButton" type="button" onclick="toggleGlobalTradeAccountSelector()" class="hidden shrink-0 rounded border border-purple-300/30 bg-purple-950/50 px-2.5 py-1.5 text-purple-100 hover:bg-purple-800/60 transition">
+                <button id="globalTradeSelectButton" type="button" onclick="toggleGlobalTradeAccountSelector()" class="hidden shrink-0 rounded border border-purple-300/30 bg-purple-950/50 px-2.5 py-1.5 text-purple-100 hover:bg-purple-800/60 transition" data-i18n="app_auto.elegir_cuentas">
                     Elegir cuentas
                 </button>
             </div>
             <div id="globalTradeAccountPanel" class="hidden shrink-0 mx-4 sm:mx-6 mb-3 rounded border border-purple-500/40 bg-gray-900/90 p-3 text-xs">
                 <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <span class="font-bold text-white">Replicar entrada en:</span>
+                    <span class="font-bold text-white" data-i18n="app_auto.replicar_entrada_en">Replicar entrada en:</span>
                     <div class="flex items-center gap-3">
-                        <button type="button" onclick="selectAllGlobalTradeAccounts(true)" class="text-purple-300 hover:text-white">Todas</button>
-                        <button type="button" onclick="selectAllGlobalTradeAccounts(false)" class="text-purple-300 hover:text-white">Ninguna</button>
+                        <button type="button" onclick="selectAllGlobalTradeAccounts(true)" class="text-purple-300 hover:text-white" data-i18n="app_auto.todas">Todas</button>
+                        <button type="button" onclick="selectAllGlobalTradeAccounts(false)" class="text-purple-300 hover:text-white" data-i18n="app_auto.ninguna">Ninguna</button>
                     </div>
                 </div>
                 <div id="globalTradeAccountList" class="max-h-36 space-y-1 overflow-y-auto overscroll-contain pr-1"></div>
                 <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-gray-700 pt-2">
                     <span id="globalTradeSelectionCount" class="text-gray-400">0 cuentas seleccionadas</span>
-                    <button id="globalTradeAcceptButton" type="button" onclick="acceptGlobalTradeAccountSelection()" class="rounded bg-purple-600 px-3 py-1.5 font-bold text-white hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-40">Aceptar selección</button>
+                    <button id="globalTradeAcceptButton" type="button" onclick="acceptGlobalTradeAccountSelection()" class="rounded bg-purple-600 px-3 py-1.5 font-bold text-white hover:bg-purple-500 disabled:cursor-not-allowed disabled:opacity-40" data-i18n="app_auto.aceptar_selecci_n">Aceptar selección</button>
                 </div>
             </div>
             <div id="editReplicatedAlert" class="hidden shrink-0 mx-4 sm:mx-6 mb-3 rounded border border-indigo-500/40 bg-indigo-950/50 px-3 py-2 text-xs font-bold text-indigo-200 flex items-center justify-between gap-3">
@@ -1040,20 +1046,20 @@
                     <i class="fa-solid fa-copy shrink-0 text-indigo-300"></i>
                     <span id="editReplicatedAlertText" class="min-w-0"></span>
                 </div>
-                <button id="editReplicatedToggleButton" type="button" onclick="toggleEditReplicatedSelector()" class="shrink-0 rounded border border-indigo-300/30 bg-indigo-950/60 px-2.5 py-1.5 text-indigo-100 hover:bg-indigo-800/60 transition">Elegir copias</button>
+                <button id="editReplicatedToggleButton" type="button" onclick="toggleEditReplicatedSelector()" class="shrink-0 rounded border border-indigo-300/30 bg-indigo-950/60 px-2.5 py-1.5 text-indigo-100 hover:bg-indigo-800/60 transition" data-i18n="app_auto.elegir_copias">Elegir copias</button>
             </div>
             <div id="editReplicatedPanel" class="hidden shrink-0 mx-4 sm:mx-6 mb-3 rounded border border-indigo-500/40 bg-gray-900/90 p-3 text-xs">
                 <div class="mb-2 flex flex-wrap items-center justify-between gap-2">
-                    <span class="font-bold text-white">Aplicar los cambios también a:</span>
+                    <span class="font-bold text-white" data-i18n="app_auto.aplicar_los_cambios_tambi_n_a">Aplicar los cambios también a:</span>
                     <div class="flex items-center gap-3">
-                        <button type="button" onclick="selectEditReplicatedCopies(true)" class="text-indigo-300 hover:text-white">Todas</button>
-                        <button type="button" onclick="selectEditReplicatedCopies(false)" class="text-indigo-300 hover:text-white">Ninguna</button>
+                        <button type="button" onclick="selectEditReplicatedCopies(true)" class="text-indigo-300 hover:text-white" data-i18n="app_auto.todas">Todas</button>
+                        <button type="button" onclick="selectEditReplicatedCopies(false)" class="text-indigo-300 hover:text-white" data-i18n="app_auto.ninguna">Ninguna</button>
                     </div>
                 </div>
                 <div id="editReplicatedList" class="max-h-32 space-y-1 overflow-y-auto overscroll-contain pr-1"></div>
                 <div class="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-gray-700 pt-2">
                     <span id="editReplicatedSelectionCount" class="text-gray-400">1 operación seleccionada</span>
-                    <button id="editReplicatedAcceptButton" type="button" onclick="acceptEditReplicatedSelection()" class="rounded bg-indigo-600 px-3 py-1.5 font-bold text-white hover:bg-indigo-500">Aceptar selección</button>
+                    <button id="editReplicatedAcceptButton" type="button" onclick="acceptEditReplicatedSelection()" class="rounded bg-indigo-600 px-3 py-1.5 font-bold text-white hover:bg-indigo-500" data-i18n="app_auto.aceptar_selecci_n">Aceptar selección</button>
                 </div>
             </div>
             
@@ -1062,16 +1068,16 @@
                 <input type="hidden" id="tradeId">
                 <div class="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Fecha</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="app_auto.fecha">Fecha</label>
                         <input type="date" id="inputFecha" required class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Hora</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.time_label">Hora</label>
                         <input type="time" id="inputHora" required class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                     </div>
                     <div>
                         <div class="flex items-center justify-between mb-1">
-                                                        <label id="tradePairLabel" class="block font-medium text-gray-300">Activo / Par</label>
+                                                        <label id="tradePairLabel" class="block font-medium text-gray-300" data-i18n="modal_trade.pair_label">Activo / Par</label>
                         <button id="tradePairManagerButton" type="button" onclick="openPairManager()" class="text-xs text-gray-400 hover:text-white transition" title="Gestionar Pares"><i class="fa-solid fa-gear"></i></button>
 
                         </div>
@@ -1079,45 +1085,45 @@
                         </select>
                     </div>
                                         <div>
-                        <label class="block font-medium text-gray-300 mb-1">Sesión</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.session_label">Sesión</label>
                         <select id="inputSesion" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
-                            <option value="">Sin sesión</option>
-                            <option value="Pre Londres">Pre Londres</option>
-                            <option value="Londres">Londres</option>
-                            <option value="Pre New York">Pre New York</option>
-                            <option value="New York">New York</option>
-                            <option value="Asia">Asia</option>
-                            <option value="Sin clasificar">Sin clasificar (MT5)</option>
+                            <option value="" data-i18n="app_auto.sin_sesi_n">Sin sesión</option>
+                            <option value="Pre Londres" data-i18n="app_auto.pre_londres">Pre Londres</option>
+                            <option value="Londres" data-i18n="app_auto.londres">Londres</option>
+                            <option value="Pre New York" data-i18n="app_auto.pre_new_york">Pre New York</option>
+                            <option value="New York" data-i18n="app_auto.new_york">New York</option>
+                            <option value="Asia" data-i18n="app_auto.asia">Asia</option>
+                            <option value="Sin clasificar" data-i18n="app_auto.sin_clasificar_mt5">Sin clasificar (MT5)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Tendencia</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.trend_label">Tendencia</label>
                         <select id="inputTendencia" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
-                            <option value="Favor">Favor</option>
-                            <option value="Contra">Contra</option>
-                            <option value="Sin clasificar">Sin clasificar (MT5)</option>
+                            <option value="Favor" data-i18n="app_auto.favor">Favor</option>
+                            <option value="Contra" data-i18n="app_auto.contra">Contra</option>
+                            <option value="Sin clasificar" data-i18n="app_auto.sin_clasificar_mt5">Sin clasificar (MT5)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Pips SL</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.pips_sl">Pips SL</label>
                         <input type="number" step="0.1" id="inputPipsSL" oninput="calculateRR()" required placeholder="Ej: 15" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Pips TP</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.pips_tp">Pips TP</label>
                         <input type="number" step="0.1" id="inputPipsTP" oninput="calculateRR()" required placeholder="Ej: 60" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Ratio RR (Auto)</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.rr_label">Ratio RR (Auto)</label>
                         <input type="text" id="inputRR" readonly class="w-full bg-gray-800 border border-main rounded p-2 text-yellow-400 font-bold focus:outline-none">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 min-[420px]:grid-cols-2 md:grid-cols-4 gap-3">
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Tipo Orden</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.type_label">Tipo Orden</label>
                         <select id="inputOrden" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                             <option value="Buy Limit">Buy Limit</option>
                             <option value="Sell Limit">Sell Limit</option>
@@ -1128,40 +1134,40 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Riesgo (%)</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.risk_pct">Riesgo (%)</label>
                         <select id="inputRiesgo" onchange="handleRiskSelection()" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                             <option value="1.0">1.0% (Default)</option>
                             <option value="0.5">0.5%</option>
                             <option value="0.25">0.25%</option>
                             <option value="2.0">2.0%</option>
-                            <option id="customRiskOption" value="custom" hidden>Personalizado…</option>
+                            <option id="customRiskOption" value="custom" hidden data-i18n="app_auto.personalizado">Personalizado…</option>
                         </select>
                         <div id="customRiskContainer" class="hidden mt-2">
                             <input type="number" id="inputRiesgoPersonalizado" min="0.01" step="0.01" placeholder="Riesgo personalizado, ej. 0.75" oninput="calculatePositionSize()" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                         </div>
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1">Estado</label>
+                        <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.status_label">Estado</label>
                         <select id="inputEstado" onchange="toggleParcialInput()" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
-                            <option value="Full TP">Full TP</option>
+                            <option value="Full TP" data-i18n="app_auto.full_tp">Full TP</option>
                             <option value="SL">SL</option>
                             <option value="BE">BE</option>
-                            <option value="Parcial">Parcial</option>
-                            <option value="Activa">Activa</option>
-                            <option value="Cierre manual">Cierre manual</option>
-                            <option value="Pendiente">Pendiente</option>
-                            <option value="Sin Activar">Sin Activar</option>
+                            <option value="Parcial" data-i18n="app_auto.parcial">Parcial</option>
+                            <option value="Activa" data-i18n="app_auto.activa">Activa</option>
+                            <option value="Cierre manual" data-i18n="app_auto.cierre_manual">Cierre manual</option>
+                            <option value="Pendiente" data-i18n="app_auto.pendiente">Pendiente</option>
+                            <option value="Sin Activar" data-i18n="app_auto.sin_activar">Sin Activar</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1" title="Estimación basada en riesgo, stop loss y valor de pip estándar">Lotaje estimado (auto)</label>
+                        <label class="block font-medium text-gray-300 mb-1" title="Estimación basada en riesgo, stop loss y valor de pip estándar" data-i18n="modal_trade.lot_calc">Lotaje estimado (auto)</label>
                         <div id="inputLotajeCalc" class="w-full bg-gray-800 border border-main rounded p-2 text-blue-300 font-bold min-h-[34px]">—</div>
-                        <p id="inputLotajeHelp" class="text-[10px] text-gray-500 mt-1">Estimado; el valor del pip puede variar según el broker.</p>
+                        <p id="inputLotajeHelp" class="text-[10px] text-gray-500 mt-1" data-i18n="modal_trade.lot_help">Estimado; el valor del pip puede variar según el broker.</p>
                     </div>
                 </div>
 
                 <div id="parcialCustomContainer" class="hidden">
-                    <label class="block font-medium text-gray-300 mb-1">Resultado Parcial Realizado (%)</label>
+                    <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.partial_result">Resultado Parcial Realizado (%)</label>
                     <input type="number" step="0.01" id="inputResultadoParcial" placeholder="Ej: 1.5" class="w-full bg-gray-900 border border-main rounded p-2 text-emerald-400 font-bold focus:outline-none">
                 </div>
 
@@ -1176,7 +1182,7 @@
                         </div>
 
                         <div>
-                            <label class="block font-medium text-gray-400 mb-1">Subir Captura(s) Antes <span class="text-xs text-gray-500 font-normal">(o pega con Ctrl+V)</span></label>
+                            <label class="block font-medium text-gray-400 mb-1">Subir Captura(s) Antes <span class="text-xs text-gray-500 font-normal" data-i18n="app_auto.o_pega_con_ctrl_v">(o pega con Ctrl+V)</span></label>
                             <input type="file" id="inputCapturasAntes" multiple accept="image/*" onchange="previewImagesAntes(event)" class="text-xs text-gray-500 w-full">
                             <div id="imagesPreviewAntes" class="flex flex-wrap gap-2 mt-3"></div>
                         </div>
@@ -1191,7 +1197,7 @@
                         </div>
 
                         <div>
-                            <label class="block font-medium text-gray-400 mb-1">Subir Captura(s) Después <span class="text-xs text-gray-500 font-normal">(o pega con Ctrl+V)</span></label>
+                            <label class="block font-medium text-gray-400 mb-1">Subir Captura(s) Después <span class="text-xs text-gray-500 font-normal" data-i18n="app_auto.o_pega_con_ctrl_v">(o pega con Ctrl+V)</span></label>
                             <input type="file" id="inputCapturasDespues" multiple accept="image/*" onchange="previewImagesDespues(event)" class="text-xs text-gray-500 w-full">
                             <div id="imagesPreviewDespues" class="flex flex-wrap gap-2 mt-3"></div>
                         </div>
@@ -1200,8 +1206,8 @@
 
                 </div>
                 <div class="shrink-0 -mx-4 sm:-mx-6 px-4 sm:px-6 py-3 flex justify-end gap-3 bg-[#161b22] border-t border-main">
-                    <button type="button" onclick="closeTradeModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 transition">Cancelar</button>
-                    <button type="submit" id="btn-submit-trade" class="bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold text-white transition">Guardar Operación</button>
+                    <button type="button" onclick="closeTradeModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-gray-300 transition" data-i18n="btn.cancel">Cancelar</button>
+                    <button type="submit" id="btn-submit-trade" class="bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold text-white transition" data-i18n="modal_trade.btn_save">Guardar Operación</button>
                 </div>
             </form>
         </div>
@@ -1213,9 +1219,9 @@
             <button onclick="closeMt5Modal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             <div class="flex items-center gap-3 mb-1 text-blue-400">
                 <i class="fa-solid fa-robot text-2xl"></i>
-                <h3 class="text-lg font-bold text-white">Puente MetaTrader 5</h3>
+                <h3 class="text-lg font-bold text-white" data-i18n="mt5.modal_title">Puente MetaTrader 5</h3>
             </div>
-            <p class="text-xs text-gray-400 mb-4 leading-relaxed">Solo lectura: MT5 llena automáticamente par, tipo, entrada, SL/TP, lotaje, riesgo, RR y estado. Vos completás el análisis del trade y las capturas Antes. Nunca envía operaciones y funciona sin el puente activo.</p>
+            <p class="text-xs text-gray-400 mb-4 leading-relaxed" data-i18n="mt5.modal_desc">Solo lectura: MT5 llena automáticamente par, tipo, entrada, SL/TP, lotaje, riesgo, RR y estado. Vos completás el análisis del trade y las capturas Antes. Nunca envía operaciones y funciona sin el puente activo.</p>
             <div id="mt5ModalBody" class="space-y-3"></div>
         </div>
     </div>
@@ -1226,10 +1232,10 @@
             <button onclick="closeResetModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             <div class="flex items-center gap-3 mb-4 text-red-400">
                 <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
-                <h3 class="text-lg font-bold text-white">Reiniciar Entorno</h3>
+                <h3 class="text-lg font-bold text-white" data-i18n="modal_reset.title">Reiniciar Entorno</h3>
             </div>
             <p class="text-xs text-gray-300 mb-6 leading-relaxed">
-                Estás a punto de borrar <strong>todos los datos</strong> del entorno actual (<span id="reset-mode-text" class="font-bold text-white">Real</span>). Se recomienda exportar un respaldo en formato JSON antes de proceder.
+                Estás a punto de borrar <strong data-i18n="app_auto.todos_los_datos">todos los datos</strong> del entorno actual (<span id="reset-mode-text" class="font-bold text-white">Real</span>). Se recomienda exportar un respaldo en formato JSON antes de proceder.
             </p>
             <div class="flex flex-col gap-3">
                 <button onclick="exportAndReset()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition shadow">
@@ -1238,7 +1244,7 @@
                 <button onclick="confirmReset()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition shadow">
                     <i class="fa-solid fa-trash-can"></i> Borrar Todo y Empezar de 0
                 </button>
-                <button onclick="closeResetModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold py-2 px-4 rounded-lg transition">Cancelar</button>
+                <button onclick="closeResetModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold py-2 px-4 rounded-lg transition" data-i18n="btn.cancel">Cancelar</button>
             </div>
         </div>
     </div>
@@ -1267,7 +1273,7 @@
                         <h3 id="dailyAnalysisModalDate" class="text-lg font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-calendar-day text-emerald-400"></i> Análisis de Operaciones
                         </h3>
-                        <p id="dailyAnalysisModalSummary" class="text-xs text-gray-400 mt-0.5">Operaciones registradas</p>
+                        <p id="dailyAnalysisModalSummary" class="text-xs text-gray-400 mt-0.5" data-i18n="app_auto.operaciones_registradas">Operaciones registradas</p>
                     </div>
                     <div id="dailyAnalysisNavTabs" class="flex flex-wrap items-center gap-2"></div>
                 </div>
@@ -1300,8 +1306,8 @@
                 <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-2 text-xl font-black shadow-lg shadow-emerald-500/20">
                     <i class="fa-solid fa-gem"></i>
                 </div>
-                <h3 class="text-xl font-black text-white">Membresía Pro Ilimitada</h3>
-                <p class="text-xs text-gray-400 mt-1">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
+                <h3 class="text-xl font-black text-white" data-i18n="checkout.title">Membresía Pro Ilimitada</h3>
+                <p class="text-xs text-gray-400 mt-1" data-i18n="checkout.subtitle">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
                 <div class="mt-2">
                     <span id="checkout-mode-indicator" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
                         <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Modo Sandbox Activo
@@ -1328,8 +1334,8 @@
             <!-- Precio Seleccionado -->
             <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-5">
                 <span id="checkout-price-amount" class="text-3xl font-black text-white block">$25 USD</span>
-                <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5">por 1 Mes</span>
-                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
+                <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="app_auto.por_1_mes">por 1 Mes</span>
+                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="app_auto.7_d_as_de_prueba_0_cobrados_hoy_si_es_pr">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
             </div>
 
             <!-- Opciones de Pago (Pasarela Dual) -->
@@ -1357,16 +1363,16 @@
                     <span class="font-bold text-white flex items-center gap-1.5">
                         <i class="fa-solid fa-flask text-emerald-400"></i> Simulación Stripe Checkout (Sandbox)
                     </span>
-                    <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60">TEST MODE</span>
+                    <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60" data-i18n="app_auto.test_mode">TEST MODE</span>
                 </div>
-                <p class="text-gray-300 mb-2 leading-relaxed">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
+                <p class="text-gray-300 mb-2 leading-relaxed" data-i18n="app_auto.prueba_el_flujo_de_suscripci_n_sin_tarje">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
                 <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 mb-3 space-y-1 font-mono text-[11px]">
                     <div class="flex justify-between text-gray-400">
-                        <span>Tarjeta simulada:</span>
+                        <span data-i18n="app_auto.tarjeta_simulada">Tarjeta simulada:</span>
                         <span class="text-white font-bold">4242 •••• •••• 4242 (Visa Test)</span>
                     </div>
                     <div class="flex justify-between text-gray-400">
-                        <span>Monto del plan:</span>
+                        <span data-i18n="app_auto.monto_del_plan">Monto del plan:</span>
                         <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$25.00 USD</span>
                     </div>
                 </div>
@@ -1374,9 +1380,7 @@
                     <button type="button" onclick="simulateCardPaymentSuccess()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-circle-check"></i> Simular Pago Exitoso
                     </button>
-                    <button type="button" onclick="hideCardSandbox()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition">
-                        Cancelar
-                    </button>
+                    <button type="button" onclick="hideCardSandbox()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
                 </div>
             </div>
 
@@ -1389,21 +1393,21 @@
                     <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">25.00 USDT</span>
                 </div>
                 
-                <p class="text-gray-400 mb-2">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
+                <p class="text-gray-400 mb-2" data-i18n="app_auto.env_a_el_monto_exacto_a_una_de_nuestras_">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
                 
                 <div class="space-y-2 mb-3">
                     <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
                         <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                            <span class="text-emerald-300 font-bold">Red TRON (TRC-20)</span>
-                            <button id="copy-btn-trc" onclick="copyToClipboard('TYDzsYUb93ExampleTRC20AddressPlaceholder77', 'copy-btn-trc')" class="text-emerald-400 hover:underline">Copiar</button>
+                            <span class="text-emerald-300 font-bold" data-i18n="app_auto.red_tron_trc_20">Red TRON (TRC-20)</span>
+                            <button id="copy-btn-trc" onclick="copyToClipboard('TYDzsYUb93ExampleTRC20AddressPlaceholder77', 'copy-btn-trc')" class="text-emerald-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
                         </div>
                         <span class="font-mono text-gray-300 text-[10px] break-all block select-all">TYDzsYUb93ExampleTRC20AddressPlaceholder77</span>
                     </div>
 
                     <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
                         <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                            <span class="text-blue-300 font-bold">Red BSC (BEP-20 / Binance)</span>
-                            <button id="copy-btn-bsc" onclick="copyToClipboard('0x71C69446B92ExampleBEP20AddressPlaceholder', 'copy-btn-bsc')" class="text-blue-400 hover:underline">Copiar</button>
+                            <span class="text-blue-300 font-bold" data-i18n="app_auto.red_bsc_bep_20_binance">Red BSC (BEP-20 / Binance)</span>
+                            <button id="copy-btn-bsc" onclick="copyToClipboard('0x71C69446B92ExampleBEP20AddressPlaceholder', 'copy-btn-bsc')" class="text-blue-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
                         </div>
                         <span class="font-mono text-gray-300 text-[10px] break-all block select-all">0x71C69446B92ExampleBEP20AddressPlaceholder</span>
                     </div>
@@ -1411,7 +1415,7 @@
 
                 <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-3">
                     <i class="fa-solid fa-circle-info mt-0.5"></i>
-                    <span>Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
+                    <span data-i18n="app_auto.tras_enviar_tu_transferencia_tu_cuenta_s">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
                 </div>
 
                 <!-- Botón de Simulación Sandbox Cripto -->
@@ -1423,7 +1427,7 @@
             </div>
 
             <div class="text-center text-[11px] text-gray-500">
-                <span>🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
+                <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
             </div>
 
             <!-- Sandbox Developer Testing Strip -->
@@ -1432,9 +1436,9 @@
                     <i class="fa-solid fa-vial text-emerald-400"></i> Herramientas de Prueba:
                 </span>
                 <div class="flex items-center gap-2">
-                    <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura">Simular Prueba Vencida</button>
+                    <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura" data-i18n="app_auto.simular_prueba_vencida">Simular Prueba Vencida</button>
                     <span>·</span>
-                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días">Restablecer 7 Días</button>
+                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días" data-i18n="app_auto.restablecer_7_d_as">Restablecer 7 Días</button>
                 </div>
             </div>
 
@@ -1447,27 +1451,25 @@
             <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-4 text-3xl shadow-lg shadow-emerald-500/30">
                 <i class="fa-solid fa-crown"></i>
             </div>
-            <h3 class="text-xl font-black text-white mb-1">¡Membresía Pro Activada!</h3>
-            <p class="text-xs text-gray-300 mb-4" id="sub-success-desc">
+            <h3 class="text-xl font-black text-white mb-1" data-i18n="celebrate.sub_title">¡Membresía Pro Activada!</h3>
+            <p class="text-xs text-gray-300 mb-4" id="sub-success-desc" data-i18n="celebrate.sub_desc">
                 Tu cuenta ha sido actualizada con acceso total y sincronización continua en la nube.
             </p>
             <div class="bg-gray-950/80 border border-gray-800 rounded-xl p-3 text-xs font-mono text-gray-300 mb-5 space-y-1.5 text-left">
                 <div class="flex justify-between border-b border-gray-800 pb-1">
-                    <span class="text-gray-400 font-sans">Plan Adquirido:</span>
-                    <span id="sub-success-plan" class="text-white font-bold">1 Mes Pro</span>
+                    <span class="text-gray-400 font-sans" data-i18n="celebrate.plan_acquired">Plan Adquirido:</span>
+                    <span id="sub-success-plan" class="text-white font-bold" data-i18n="app_auto.1_mes_pro">1 Mes Pro</span>
                 </div>
                 <div class="flex justify-between border-b border-gray-800 py-1">
-                    <span class="text-gray-400 font-sans">Válido hasta:</span>
+                    <span class="text-gray-400 font-sans" data-i18n="celebrate.valid_until">Válido hasta:</span>
                     <span id="sub-success-date" class="text-emerald-400 font-bold">--/--/----</span>
                 </div>
                 <div class="flex justify-between pt-1">
-                    <span class="text-gray-400 font-sans">Estado:</span>
+                    <span class="text-gray-400 font-sans" data-i18n="common.status">Estado:</span>
                     <span class="text-emerald-400 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-check text-xs"></i> Activo (Sin restricciones)</span>
                 </div>
             </div>
-            <button type="button" onclick="closeSubscriptionCelebration()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-sm shadow-lg transition">
-                Entendido, Continuar a mi Bitácora
-            </button>
+            <button type="button" onclick="closeSubscriptionCelebration()" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-sm shadow-lg transition" data-i18n="celebrate.continue_btn">Entendido, Continuar a mi Bitácora</button>
         </div>
     </div>
 
@@ -1481,10 +1483,10 @@
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
                     <div>
-                        <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                        <h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2" data-i18n="lifecycle.header_title">
                             Ciclo de una Operación: Entrada y Post-Análisis
                         </h3>
-                        <p class="text-xs text-gray-400">Guía práctica paso a paso para documentar tus operaciones como un profesional</p>
+                        <p class="text-xs text-gray-400" data-i18n="lifecycle.header_subtitle">Guía práctica paso a paso para documentar tus operaciones como un profesional</p>
                     </div>
                 </div>
                 <button type="button" onclick="closeTradeLifecycleGuide()" class="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition">
@@ -1496,15 +1498,15 @@
             <div class="grid grid-cols-3 border-b border-main/50 bg-gray-900/60 p-2 gap-2 shrink-0 text-center">
                 <button type="button" onclick="setTradeLifecycleStep(1)" id="tl-tab-1" class="py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 bg-blue-600 text-white shadow-sm">
                     <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
-                    <span>Entrada (Antes)</span>
+                    <span data-i18n="lifecycle.tab1">Entrada (Antes)</span>
                 </button>
                 <button type="button" onclick="setTradeLifecycleStep(2)" id="tl-tab-2" class="py-2 px-3 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition flex items-center justify-center gap-2">
                     <span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-[10px]">2</span>
-                    <span>Durante el Trade</span>
+                    <span data-i18n="lifecycle.tab2">Durante el Trade</span>
                 </button>
                 <button type="button" onclick="setTradeLifecycleStep(3)" id="tl-tab-3" class="py-2 px-3 rounded-xl text-xs font-semibold text-gray-400 hover:text-gray-200 hover:bg-gray-800/60 transition flex items-center justify-center gap-2">
                     <span class="w-5 h-5 rounded-full bg-gray-800 flex items-center justify-center text-[10px]">3</span>
-                    <span>Cierre & Edición (Después)</span>
+                    <span data-i18n="lifecycle.tab3">Cierre & Edición (Después)</span>
                 </button>
             </div>
 
@@ -1515,29 +1517,29 @@
                     <div class="bg-blue-950/30 border border-blue-800/50 rounded-xl p-4 flex items-start gap-3">
                         <i class="fa-solid fa-circle-info text-blue-400 text-base mt-0.5"></i>
                         <div>
-                            <span class="font-bold text-blue-300">Momento: Al momento de colocar o planificar la orden</span>
-                            <p class="text-gray-300 mt-1">Registra la operación justo antes de entrar al mercado para tener documentada tu hipótesis técnica sin sesgos emocionales.</p>
+                            <span class="font-bold text-blue-300" data-i18n="lifecycle.step1_badge">Momento: Al momento de colocar o planificar la orden</span>
+                            <p class="text-gray-300 mt-1" data-i18n="lifecycle.step1_badge_desc">Registra la operación justo antes de entrar al mercado para tener documentada tu hipótesis técnica sin sesgos emocionales.</p>
                         </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                         <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
-                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-sliders text-emerald-400"></i> 1. Datos de Gestión y Riesgo</span>
-                            <p class="text-gray-400">Ingresa el <strong>Par</strong>, los pips de <strong>Stop Loss</strong> y <strong>Take Profit</strong>, y tu <strong>Riesgo (%)</strong>. La Bitácora calcula al instante tu ratio <strong>R/R</strong> y el <strong>Lotaje exacto</strong> recomendado para no sobreapalancarte.</p>
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-sliders text-emerald-400"></i> <span data-i18n="lifecycle.step1_risk_title">1. Datos de Gestión y Riesgo</span></span>
+                            <p class="text-gray-400" data-i18n-html="lifecycle.step1_risk_desc">Ingresa el <strong>Par</strong>, los pips de <strong>Stop Loss</strong> y <strong>Take Profit</strong>, y tu <strong>Riesgo (%)</strong>. La Bitácora calcula al instante tu ratio <strong>R/R</strong> y el <strong>Lotaje exacto</strong> recomendado para no sobreapalancarte.</p>
                         </div>
                         <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
-                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-400"></i> 2. Estado Inicial</span>
-                            <p class="text-gray-400">Selecciona <span class="px-2 py-0.5 rounded bg-blue-900/40 text-blue-300 border border-blue-700/50 font-semibold">Pendiente</span> si es orden Limit/Stop pendiente de ejecución, o <span class="px-2 py-0.5 rounded bg-amber-900/40 text-amber-300 border border-amber-700/50 font-semibold">Activa</span> si entraste por mercado.</p>
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-clock text-amber-400"></i> <span data-i18n="lifecycle.step1_status_title">2. Estado Inicial</span></span>
+                            <p class="text-gray-400" data-i18n-html="lifecycle.step1_status_desc">Selecciona <span class="px-2 py-0.5 rounded bg-blue-900/40 text-blue-300 border border-blue-700/50 font-semibold" data-i18n="app_auto.pendiente">Pendiente</span> si es orden Limit/Stop pendiente de ejecución, o <span class="px-2 py-0.5 rounded bg-amber-900/40 text-amber-300 border border-amber-700/50 font-semibold" data-i18n="app_auto.activa">Activa</span> si entraste por mercado.</p>
                         </div>
                     </div>
 
                     <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2.5">
-                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-camera text-blue-400"></i> 3. Captura y Análisis (ANTES)</span>
-                        <p class="text-gray-300">En la caja izquierda <strong>"Captura y Análisis (ANTES)"</strong>:</p>
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-camera text-blue-400"></i> <span data-i18n="lifecycle.step1_analysis_title">3. Captura y Análisis (ANTES)</span></span>
+                        <p class="text-gray-300" data-i18n="lifecycle.step1_analysis_desc">En la caja izquierda <strong>"Captura y Análisis (ANTES)"</strong>:</p>
                         <ul class="list-disc list-inside space-y-1 text-gray-400 pl-1">
-                            <li><strong class="text-gray-200">Notas Antes:</strong> Escribe tu tesis (tendencia mayor, soporte/resistencia, liquidez, confirmación de entrada).</li>
-                            <li><strong class="text-gray-200">Captura:</strong> En TradingView pulsa <kbd class="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[11px] text-gray-200">Alt+S</kbd> (o copia imagen) y en la Bitácora presiona <kbd class="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[11px] text-gray-200">Ctrl+V</kbd> para pegarla al instante.</li>
-                            <li>Guarda la operación con el botón <span class="font-bold text-emerald-400">Guardar Operación</span>.</li>
+                            <li data-i18n-html="lifecycle.step1_analysis_li1"><strong class="text-gray-200">Notas Antes:</strong> Escribe tu tesis (tendencia mayor, soporte/resistencia, liquidez, confirmación de entrada).</li>
+                            <li data-i18n-html="lifecycle.step1_analysis_li2"><strong class="text-gray-200">Captura:</strong> En TradingView pulsa <kbd class="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[11px] text-gray-200">Alt+S</kbd> (o copia imagen) y en la Bitácora presiona <kbd class="px-1.5 py-0.5 bg-gray-800 border border-gray-700 rounded text-[11px] text-gray-200">Ctrl+V</kbd> para pegarla al instante.</li>
+                            <li data-i18n-html="lifecycle.step1_analysis_li3">Guarda la operación con el botón <span class="font-bold text-emerald-400">Guardar Operación</span>.</li>
                         </ul>
                     </div>
                 </div>
@@ -1547,19 +1549,19 @@
                     <div class="bg-amber-950/30 border border-amber-800/50 rounded-xl p-4 flex items-start gap-3">
                         <i class="fa-solid fa-hourglass-half text-amber-400 text-base mt-0.5"></i>
                         <div>
-                            <span class="font-bold text-amber-300">Momento: Mientras el trade está abierto en el mercado</span>
-                            <p class="text-gray-300 mt-1">El trade queda almacenado y visible en tu pestaña de Operaciones sin afectar tus estadísticas finales hasta su cierre.</p>
+                            <span class="font-bold text-amber-300" data-i18n="lifecycle.step2_badge">Momento: Mientras el trade está abierto en el mercado</span>
+                            <p class="text-gray-300 mt-1" data-i18n="lifecycle.step2_badge_desc">El trade queda almacenado y visible en tu pestaña de Operaciones sin afectar tus estadísticas finales hasta su cierre.</p>
                         </div>
                     </div>
 
                     <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
-                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-table-list text-purple-400"></i> Vista en la tabla de operaciones</span>
-                        <p class="text-gray-400">En la pestaña <strong>Operaciones</strong>, tu trade se mostrará con un chip que indica su estado actual (<span class="text-amber-400 font-semibold">Activa</span> o <span class="text-blue-400 font-semibold">Pendiente</span>). La columna resultado se mantiene neutra hasta que el trade se concluya.</p>
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-table-list text-purple-400"></i> <span data-i18n="lifecycle.step2_table_title">Vista en la tabla de operaciones</span></span>
+                        <p class="text-gray-400" data-i18n-html="lifecycle.step2_table_desc">En la pestaña <strong>Operaciones</strong>, tu trade se mostrará con un chip que indica su estado actual (<span class="text-amber-400 font-semibold" data-i18n="app_auto.activa">Activa</span> o <span class="text-blue-400 font-semibold" data-i18n="app_auto.pendiente">Pendiente</span>). La columna resultado se mantiene neutra hasta que el trade se concluya.</p>
                     </div>
 
                     <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
-                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> Disciplina Psicológica</span>
-                        <p class="text-gray-400">Tener la entrada registrada con su captura previa te permite alejarte de la pantalla y dejar correr tu plan sin micro-gestionar el gráfico por impulso o miedo.</p>
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-shield-halved text-emerald-400"></i> <span data-i18n="lifecycle.step2_psych_title">Disciplina Psicológica</span></span>
+                        <p class="text-gray-400" data-i18n="lifecycle.step2_psych_desc">Tener la entrada registrada con su captura previa te permite alejarte de la pantalla y dejar correr tu plan sin micro-gestionar el gráfico por impulso o miedo.</p>
                     </div>
                 </div>
 
@@ -1568,40 +1570,40 @@
                     <div class="bg-emerald-950/30 border border-emerald-800/50 rounded-xl p-4 flex items-start gap-3">
                         <i class="fa-solid fa-flag-checkered text-emerald-400 text-base mt-0.5"></i>
                         <div>
-                            <span class="font-bold text-emerald-300">Momento: Al cerrarse la operación (TP, SL o Salida Manual)</span>
-                            <p class="text-gray-300 mt-1">Esta es la fase más valiosa para tu crecimiento: editar el trade para calificar el resultado y guardar el feedback final.</p>
+                            <span class="font-bold text-emerald-300" data-i18n="lifecycle.step3_badge">Momento: Al cerrarse la operación (TP, SL o Salida Manual)</span>
+                            <p class="text-gray-300 mt-1" data-i18n="lifecycle.step3_badge_desc">Esta es la fase más valiosa para tu crecimiento: editar el trade para calificar el resultado y guardar el feedback final.</p>
                         </div>
                     </div>
 
                     <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2.5">
-                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-pen-to-square text-blue-400"></i> 1. Ir a Operaciones y pulsar Editar</span>
-                        <p class="text-gray-400">Ve a la pestaña <strong>Operaciones</strong>, busca la fila del trade terminado y haz clic en el botón de edición <span class="px-2 py-0.5 bg-blue-950 border border-blue-800 text-blue-300 rounded font-semibold"><i class="fa-solid fa-pen-to-square mr-1"></i>Editar</span>. Se abrirá el formulario con todos los datos que ingresaste previamente.</p>
+                        <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-pen-to-square text-blue-400"></i> <span data-i18n="lifecycle.step3_edit_title">1. Ir a Operaciones y pulsar Editar</span></span>
+                        <p class="text-gray-400" data-i18n-html="lifecycle.step3_edit_desc">Ve a la pestaña <strong>Operaciones</strong>, busca la fila del trade terminado y haz clic en el botón de edición <span class="px-2 py-0.5 bg-blue-950 border border-blue-800 text-blue-300 rounded font-semibold"><i class="fa-solid fa-pen-to-square mr-1"></i>Editar</span>. Se abrirá el formulario con todos los datos que ingresaste previamente.</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
                         <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
-                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-list-check text-emerald-400"></i> 2. Actualizar el Estado Final</span>
-                            <p class="text-gray-400">Cambia el desplegable <strong>Estado</strong> a:</p>
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-list-check text-emerald-400"></i> <span data-i18n="lifecycle.step3_status_title">2. Actualizar el Estado Final</span></span>
+                            <p class="text-gray-400" data-i18n="lifecycle.step3_status_desc">Cambia el desplegable <strong>Estado</strong> a:</p>
                             <ul class="space-y-1 text-gray-300 text-[11px]">
-                                <li><strong class="text-emerald-400">Full TP:</strong> Ganada (suma el beneficio completo por R/R).</li>
-                                <li><strong class="text-red-400">SL:</strong> Pérdida controlada (resta el riesgo asumido).</li>
-                                <li><strong class="text-gray-400">BE:</strong> Break-even (0% de impacto).</li>
-                                <li><strong class="text-teal-400">Parcial:</strong> Cobro parcial (indicas el % real obtenido).</li>
-                                <li><strong class="text-amber-400">Cierre manual:</strong> Salida anticipada.</li>
+                                <li data-i18n-html="lifecycle.step3_status_tp"><strong class="text-emerald-400">Full TP:</strong> Ganada (suma el beneficio completo por R/R).</li>
+                                <li data-i18n-html="lifecycle.step3_status_sl"><strong class="text-red-400">SL:</strong> Pérdida controlada (resta el riesgo asumido).</li>
+                                <li data-i18n-html="lifecycle.step3_status_be"><strong class="text-gray-400">BE:</strong> Breakeven (0% de impacto).</li>
+                                <li data-i18n-html="lifecycle.step3_status_partial"><strong class="text-teal-400">Parcial:</strong> Cobro parcial (indicas el % real obtenido).</li>
+                                <li data-i18n-html="lifecycle.step3_status_manual"><strong class="text-amber-400">Cierre manual:</strong> Salida anticipada.</li>
                             </ul>
                         </div>
                         <div class="bg-gray-900/80 border border-main rounded-xl p-4 space-y-2">
-                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-camera-rotate text-emerald-400"></i> 3. Captura y Análisis (DESPUÉS)</span>
-                            <p class="text-gray-400">En la caja derecha <strong>"Captura y Análisis (DESPUÉS)"</strong>:</p>
+                            <span class="font-bold text-white flex items-center gap-1.5"><i class="fa-solid fa-camera-rotate text-emerald-400"></i> <span data-i18n="lifecycle.step3_after_title">3. Captura y Análisis (DESPUÉS)</span></span>
+                            <p class="text-gray-400" data-i18n="lifecycle.step3_after_desc">En la caja derecha <strong>"Captura y Análisis (DESPUÉS)"</strong>:</p>
                             <ul class="list-disc list-inside space-y-1 text-gray-300 text-[11px] pl-1">
-                                <li><strong>Notas Después:</strong> ¿Qué aprendiste? ¿Respetaste tu plan? ¿Sentiste ansiedad?</li>
-                                <li><strong>Captura final:</strong> Pega con <kbd class="px-1 py-0.5 bg-gray-800 border border-gray-700 rounded text-[10px]">Ctrl+V</kbd> el gráfico mostrando cómo concluyó el precio.</li>
+                                <li data-i18n-html="lifecycle.step3_after_li1"><strong>Notas Después:</strong> ¿Qué aprendiste? ¿Respetaste tu plan? ¿Sentiste ansiedad?</li>
+                                <li data-i18n-html="lifecycle.step3_after_li2"><strong>Captura final:</strong> Pega con <kbd class="px-1 py-0.5 bg-gray-800 border border-gray-700 rounded text-[10px]">Ctrl+V</kbd> el gráfico mostrando cómo concluyó el precio.</li>
                             </ul>
                         </div>
                     </div>
 
                     <div class="bg-emerald-950/20 border border-emerald-800/40 rounded-xl p-3 text-center text-emerald-300 font-semibold">
-                        <i class="fa-solid fa-sparkles mr-1.5"></i> Al pulsar "Guardar", tu Winrate, Profit Factor, Curva de Capital y el Calendario Mensual se actualizan automáticamente.
+                        <i class="fa-solid fa-sparkles mr-1.5"></i> <span data-i18n="lifecycle.step3_footer_tip">Al pulsar "Guardar", tu Win Rate, Profit Factor, Curva de Capital y el Calendario Mensual se actualizan automáticamente.</span>
                     </div>
                 </div>
             </div>
@@ -1610,18 +1612,18 @@
             <div class="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-t border-main/50 bg-gray-900/50 shrink-0">
                 <div class="flex flex-wrap items-center gap-3">
                     <button type="button" onclick="startTradeFormSpotlightTour()" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 hover:bg-emerald-950/50 px-3 py-1.5 rounded-xl border border-emerald-800/60 transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-bullseye"></i> Ver en el Formulario (Spotlight)
+                        <i class="fa-solid fa-bullseye"></i> <span data-i18n="lifecycle.btn_spotlight">Ver en el Formulario (Spotlight)</span>
                     </button>
                     <label class="flex items-center gap-1.5 text-[11px] text-gray-400 hover:text-gray-300 cursor-pointer select-none">
                         <input type="checkbox" id="lifecycleGuideDontShow" onchange="toggleLifecycleDontShow(this.checked)" class="rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-0">
-                        <span>No volver a mostrar automáticamente</span>
+                        <span data-i18n="lifecycle.dont_show">No volver a mostrar automáticamente</span>
                     </label>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button type="button" id="tl-btn-prev" onclick="prevTradeLifecycleStep()" class="text-xs font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition disabled:opacity-30 disabled:pointer-events-none">
+                    <button type="button" id="tl-btn-prev" onclick="prevTradeLifecycleStep()" class="text-xs font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition disabled:opacity-30 disabled:pointer-events-none" data-i18n="lifecycle.btn_prev">
                         Anterior
                     </button>
-                    <button type="button" id="tl-btn-next" onclick="nextTradeLifecycleStep()" class="text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-xl shadow transition">
+                    <button type="button" id="tl-btn-next" onclick="nextTradeLifecycleStep()" class="text-xs font-bold bg-blue-600 hover:bg-blue-500 text-white px-4 py-1.5 rounded-xl shadow transition" data-i18n="lifecycle.btn_next">
                         Siguiente
                     </button>
                 </div>
@@ -1648,16 +1650,16 @@
         <!-- Tooltip flotante con contenido y navegacion -->
         <div id="tourTooltip" class="absolute z-10 w-[92vw] sm:w-[380px] bg-gray-900/95 border border-emerald-500/50 rounded-2xl p-5 shadow-2xl backdrop-blur-xl pointer-events-auto transition-all duration-300">
             <div class="flex items-center justify-between mb-2">
-                <span id="tourStepBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800/80">Paso 1 de 4</span>
+                <span id="tourStepBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800/80" data-i18n="app_auto.paso_1_de_4">Paso 1 de 4</span>
                 <button type="button" onclick="closeAppTour()" class="text-gray-400 hover:text-white text-sm p-1 transition" title="Saltar tour">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
             <h4 id="tourStepTitle" class="text-base font-bold text-white mb-1.5 flex items-center gap-2">
                 <i id="tourStepIcon" class="fa-solid fa-wallet text-emerald-400"></i>
-                <span id="tourStepTitleText">Tus Cuentas de Trading</span>
+                <span id="tourStepTitleText" data-i18n="app_auto.tus_cuentas_de_trading">Tus Cuentas de Trading</span>
             </h4>
-            <p id="tourStepDesc" class="text-xs text-gray-300 leading-relaxed mb-4">
+            <p id="tourStepDesc" class="text-xs text-gray-300 leading-relaxed mb-4" data-i18n="app_auto.aqu_administras_tus_cuentas_reales_o_eva">
                 Aquí administras tus cuentas reales o evaluaciones de fondeo. Puedes configurar reglas de consistencia, límites de pérdida diaria y metas de fase 1 y 2.
             </p>
             <div class="flex items-center justify-between pt-3 border-t border-gray-800">
@@ -1666,16 +1668,16 @@
                 </button>
                 <div class="flex items-center gap-1.5" id="tourStepDots"></div>
                 <button type="button" id="tourNextBtn" onclick="nextTourStep()" class="text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 px-4 py-1.5 rounded-lg shadow-md transition flex items-center gap-1.5">
-                    <span id="tourNextBtnText">Siguiente</span> <i id="tourNextBtnIcon" class="fa-solid fa-arrow-right text-[10px]"></i>
+                    <span id="tourNextBtnText" data-i18n="app_auto.siguiente">Siguiente</span> <i id="tourNextBtnIcon" class="fa-solid fa-arrow-right text-[10px]"></i>
                 </button>
             </div>
             <!-- Opción para no volver a mostrar la guía -->
             <div class="pt-2.5 mt-2.5 border-t border-gray-800/60 flex items-center justify-between text-[11px] text-gray-400">
                 <label class="flex items-center gap-1.5 cursor-pointer hover:text-gray-300 select-none">
                     <input type="checkbox" id="tourDontShowAgainCheck" onchange="toggleTourDontShowAgain(this.checked)" class="rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-0">
-                    <span>No volver a mostrar esta guía</span>
+                    <span data-i18n="tour.dont_show">No volver a mostrar esta guía</span>
                 </label>
-                <button type="button" onclick="closeAppTour(true)" class="text-gray-500 hover:text-gray-300 text-[11px] transition">Saltar</button>
+                <button type="button" onclick="closeAppTour(true)" class="text-gray-500 hover:text-gray-300 text-[11px] transition" data-i18n="tour.skip">Saltar</button>
             </div>
         </div>
     </div>

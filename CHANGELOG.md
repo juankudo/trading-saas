@@ -5,6 +5,29 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.5] - 2026-11-20
+
+### 🌐 Internacionalización Completa Bilingüe (ES / EN) & Submarca AsTrade Calculator
+- **Lanzamiento de Submarca Oficial "AsTrade Calculator":**
+  - Creación del nuevo isotipo vectorial oficial (`assets/logo/astrade-calculator-mark.svg`), combinando la geometría ascendente característica de AsTrade con una retícula de calibración y punto de mira para cálculo de riesgo milimétrico.
+  - Nuevo badge visual `POSITION & RISK PRO` con gradiente esmeralda AsTrade (`#059669` → `#10b981` → `#34d399`).
+  - Cohesión total de marca: Renombrado de la calculadora a **AsTrade Calculator**, alineando la interfaz, metadatos, favicons y barra de navegación superior.
+- **Motor Reactivo de Internacionalización Bilingüe (`js/i18n.js`):**
+  - Arquitectura modular ultraligera y reactiva con diccionarios completos en español e inglés.
+  - Soporte para atributos declarativos `data-i18n`, `data-i18n-placeholder`, `data-i18n-title` y `data-i18n-aria-label`.
+  - Disparo de eventos desacoplados `languageChanged` para actualización inmediata de interfaces complejas y gráficos sin necesidad de recargar la página.
+  - Sincronización bidireccional y persistencia unificada mediante `astrade_lang` y `app_lang` en `localStorage`, garantizando continuidad de idioma al navegar entre Landing Page (`index.html` / `en.html`), App Principal (`app.html`) y Calculadora (`calculadora/index.html`).
+- **Localización Integral de la Web App (`app.html` & `js/app.js`):**
+  - Cobertura 100% de textos en español e inglés: Barra de navegación, pestañas de gestión, filtros de temporalidad y dirección, tarjetas de KPIs, tabla de operaciones, filtros avanzados, modales de gestión (`#tradeLifecycleModal`, `#viewTradeModal`, `#newSessionModal`, `#editSessionModal`), y sistema de tours interactivos guiados (`APP_TOUR_STEPS`, `FORM_TOUR_STEPS`).
+  - Notificaciones dinámicas traducidas (toasts) y mensajes de confirmación contextuales bilingües.
+  - Respeto estricto del estándar institucional de trading en inglés (*Drawdown*, *Win Rate*, *Profit Factor*, *Breakeven*, *Prop Firm*, *Split*, *R:R*, *Pips*, *SL*, *TP*).
+- **Localización Completa de AsTrade Calculator (`calculadora/index.html` & `calculadora/js/app.js`):**
+  - Pill selector interactivo de idioma `🌐 ES | EN` integrado en la barra de navegación superior.
+  - Traducción de todos los paneles de cálculo, tipos de instrumentos (Forex, Metales, Criptos, Índices), presets de riesgo, modales de guardado y tabla de setups.
+  - Cadenas dinámicas de riesgo y copiado rápido traducidas reactivamente en tiempo real.
+
+---
+
 ## [v3.9.4] - 2026-11-20
 
 ### 🚀 Integración de Inicio de Sesión y Registro con Google (OAuth 2.0)

@@ -105,7 +105,9 @@ const initialTrades = [];
         let dailyCalendarRealAccountContextId = null;
         let currentTabName = "sessions";
 
-        const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+        let monthNames = (typeof window.i18n !== 'undefined')
+            ? window.i18n.getI18nMonthNames()
+            : ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
         function updateActiveAccountBadgeName(name) {
             const badge = document.getElementById("active-account-badge");
@@ -219,6 +221,33 @@ const initialTrades = [];
                 outcomesChartInstance.update();
             }
         }
+
+        
+        // Sincronización reactiva del sistema bilingüe (ES / EN)
+        window.addEventListener('languageChanged', () => {
+            monthNames = (typeof window.i18n !== 'undefined') ? window.i18n.getI18nMonthNames() : monthNames;
+            const tabSessionsText = document.getElementById('tab-text-sessions');
+            if (tabSessionsText) {
+                tabSessionsText.textContent = currentMode === 'real'
+                    ? ((typeof window.t === 'function') ? window.t('tabs.accounts', 'Tus Cuentas') : 'Tus Cuentas')
+                    : ((typeof window.t === 'function') ? window.t('tabs.sessions', 'Tus Sesiones') : 'Tus Sesiones');
+            }
+            const sessionsTitle = document.getElementById('sessions-title');
+            if (sessionsTitle) {
+                sessionsTitle.textContent = currentMode === 'real'
+                    ? ((typeof window.t === 'function') ? window.t('nav.mode_real_title', 'Cuentas Reales') : 'Cuentas Reales')
+                    : ((typeof window.t === 'function') ? window.t('nav.mode_backtesting_title', 'Backtest Sessions') : 'Backtest Sessions');
+            }
+            const btnNewSession = document.getElementById('btn-new-session');
+            if (btnNewSession) {
+                btnNewSession.innerHTML = currentMode === 'real'
+                    ? `${(typeof window.t === 'function') ? window.t('btn.new_account', 'Nueva Cuenta') : 'Nueva Cuenta'} <i class="fa-solid fa-plus ml-2"></i>`
+                    : `${(typeof window.t === 'function') ? window.t('btn.new_session', 'Nueva Sesión') : 'Nueva Sesión'} <i class="fa-solid fa-plus ml-2"></i>`;
+            }
+            if (typeof renderAll === 'function') {
+                renderAll();
+            }
+        });
 
         document.addEventListener("DOMContentLoaded", async () => {
             await loadCustomPairs();
@@ -390,6 +419,18 @@ const initialTrades = [];
         }
 
         async function setMode(mode) {
+
+            const tradeAccent = document.getElementById('main-header-trade-accent');
+            if (tradeAccent) {
+                tradeAccent.className = mode === 'real' ? "text-emerald-400 transition-colors duration-200" : "text-blue-400 transition-colors duration-200";
+            }
+            const titleBadge = document.getElementById('title-mode-badge');
+            if (titleBadge) {
+                titleBadge.className = mode === 'real'
+                    ? "text-xs bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 font-bold px-2 py-0.5 rounded ml-2"
+                    : "text-xs bg-blue-950/80 text-blue-400 border border-blue-700/60 font-bold px-2 py-0.5 rounded ml-2";
+            }
+    
             setGlobalMetricsView(false);
             currentMode = mode;
             activeRealAccountId = null; 
@@ -414,76 +455,40 @@ const initialTrades = [];
             if (mode === 'real') {
                 btnReal.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-green-900/60 text-green-400 shadow-sm transition-all";
                 btnBack.className = "px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all";
-                if (titleBadge) {
-                    titleBadge.textContent = "PRO DASHBOARD";
-                    titleBadge.className = "text-xs bg-emerald-950/80 text-emerald-400 border border-emerald-700/60 font-bold px-2 py-0.5 rounded ml-2";
-                }
+                titleBadge.textContent = "PRO DASHBOARD";
+                titleBadge.className = "text-xs bg-green-900/50 text-green-400 border border-green-700 px-2 py-0.5 rounded ml-2";
                 document.getElementById('reset-mode-text').textContent = "Real";
-                if (mainIcon) {
-                    if (mainIcon.tagName === 'I') {
-                        mainIcon.className = "fa-solid fa-chart-line text-2xl text-green-500";
-                    } else {
-                        mainIcon.className = "w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-emerald-500/30 flex items-center justify-center p-1.5 shadow-sm shrink-0 transition-colors";
-                    }
-                    const appGradStops = document.querySelectorAll('#app_astrade_grad stop');
-                    if (appGradStops && appGradStops.length >= 3) {
-                        appGradStops[0].setAttribute('stop-color', '#059669');
-                        appGradStops[1].setAttribute('stop-color', '#10b981');
-                        appGradStops[2].setAttribute('stop-color', '#34d399');
-                    }
-                }
-                const tradeAccent = document.getElementById('main-header-trade-accent');
-                if (tradeAccent) {
-                    tradeAccent.className = "text-emerald-400 transition-colors duration-200";
-                }
+                mainIcon.className = "fa-solid fa-chart-line text-2xl text-green-500";
                 
                 btnNewTrade.className = "compact-expand-btn group bg-green-600 hover:bg-green-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-green-600 hover:bg-green-700 px-5 py-2 rounded font-semibold text-white transition";
                 
-                document.getElementById('sessions-title').textContent = "Cuentas Reales";
+                document.getElementById('sessions-title').textContent = (typeof window.t === 'function') ? window.t('nav.mode_real_title', 'Cuentas Reales') : "Cuentas Reales";
                 document.getElementById('btn-new-session').className = "bg-gray-800 hover:bg-green-900/30 text-green-400 border border-green-900/50 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm";
-                document.getElementById('btn-new-session').innerHTML = 'Nueva Cuenta <i class="fa-solid fa-plus ml-2"></i>';
+                document.getElementById('btn-new-session').innerHTML = `${(typeof window.t === 'function') ? window.t('btn.new_account', 'Nueva Cuenta') : 'Nueva Cuenta'} <i class="fa-solid fa-plus ml-2"></i>`;
                 
                 tabBtnSessions.className = "pb-3 border-b-2 border-green-500 text-green-400 flex items-center gap-2 font-bold whitespace-nowrap";
                 tabIconSessions.className = "fa-solid fa-wallet";
-                tabTextSessions.textContent = "Tus Cuentas";
+                tabTextSessions.textContent = (typeof window.t === 'function') ? window.t('tabs.accounts', 'Tus Cuentas') : "Tus Cuentas";
                 
             } else {
                 btnBack.className = "px-3 py-1.5 rounded-md text-xs font-bold bg-blue-900/60 text-blue-400 shadow-sm transition-all";
                 btnReal.className = "px-3 py-1.5 rounded-md text-xs font-bold text-gray-500 hover:text-gray-300 transition-all";
-                if (titleBadge) {
-                    titleBadge.textContent = "BACKTESTING";
-                    titleBadge.className = "text-xs bg-blue-900/50 text-blue-400 border border-blue-700 font-bold px-2 py-0.5 rounded ml-2";
-                }
+                titleBadge.textContent = "BACKTESTING";
+                titleBadge.className = "text-xs bg-blue-900/50 text-blue-400 border border-blue-700 px-2 py-0.5 rounded ml-2";
                 document.getElementById('reset-mode-text').textContent = "Backtesting";
-                if (mainIcon) {
-                    if (mainIcon.tagName === 'I') {
-                        mainIcon.className = "fa-solid fa-chart-line text-2xl text-blue-500";
-                    } else {
-                        mainIcon.className = "w-8 h-8 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-800 border border-blue-500/40 flex items-center justify-center p-1.5 shadow-sm shrink-0 transition-colors";
-                    }
-                    const appGradStops = document.querySelectorAll('#app_astrade_grad stop');
-                    if (appGradStops && appGradStops.length >= 3) {
-                        appGradStops[0].setAttribute('stop-color', '#1d4ed8');
-                        appGradStops[1].setAttribute('stop-color', '#3b82f6');
-                        appGradStops[2].setAttribute('stop-color', '#60a5fa');
-                    }
-                }
-                const tradeAccent = document.getElementById('main-header-trade-accent');
-                if (tradeAccent) {
-                    tradeAccent.className = "text-blue-400 transition-colors duration-200";
-                }
+                mainIcon.className = "fa-solid fa-chart-line text-2xl text-blue-500";
                 
                 btnNewTrade.className = "compact-expand-btn group bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-lg";
                 btnSubmitTrade.className = "bg-blue-600 hover:bg-blue-700 px-5 py-2 rounded font-semibold text-white transition";
                 
-                document.getElementById('sessions-title').textContent = "Backtest Sessions";
+                document.getElementById('sessions-title').textContent = (typeof window.t === 'function') ? window.t('nav.mode_backtesting_title', 'Backtest Sessions') : "Backtest Sessions";
                 document.getElementById('btn-new-session').className = "bg-gray-800 hover:bg-blue-900/30 text-blue-400 border border-blue-900/50 px-4 py-2 rounded-lg text-sm font-semibold transition flex items-center shadow-sm";
-                document.getElementById('btn-new-session').innerHTML = 'Nueva Sesión <i class="fa-solid fa-plus ml-2"></i>';
+                document.getElementById('btn-new-session').innerHTML = `${(typeof window.t === 'function') ? window.t('btn.new_session', 'Nueva Sesión') : 'Nueva Sesión'} <i class="fa-solid fa-plus ml-2"></i>`;
                 
                 tabBtnSessions.className = "pb-3 border-b-2 border-blue-500 text-blue-400 flex items-center gap-2 font-bold whitespace-nowrap";
                 tabIconSessions.className = "fa-solid fa-flask";
-                tabTextSessions.textContent = "Tus Sesiones";
+                tabTextSessions.textContent = (typeof window.t === 'function') ? window.t('tabs.sessions', 'Tus Sesiones') : "Tus Sesiones";
             }
 
             document.getElementById('btn-global-trade').classList.toggle('hidden', mode === 'backtesting');
@@ -966,7 +971,7 @@ const initialTrades = [];
         function returnToAccountGroups() {
             activeAccountGroupId = null;
             groupBalancesVisible = false;
-            document.getElementById("sessions-title").textContent = "Cuentas Reales";
+            const _stEl = document.getElementById("sessions-title"); if (_stEl) _stEl.textContent = (typeof window.t === "function") ? window.t("nav.mode_real_title","Cuentas Reales") : "Cuentas Reales";
             document.getElementById("btn-back-account-groups").classList.add("hidden");
             document.getElementById("btn-edit-active-account-group").classList.add("hidden");
             renderGroups();
@@ -1027,42 +1032,42 @@ const initialTrades = [];
                         </h3>
                     </div>
                     <div class="relative shrink-0 -mr-1">
-                        <button type="button" data-account-action="menu-toggle" title="Ajustes de ${isBT ? "sesión" : "cuenta"}" class="text-gray-400 hover:text-white hover:bg-gray-800/90 rounded-lg transition px-2 py-1 focus:outline-none" aria-haspopup="true" aria-expanded="false">
+                        <button type="button" data-account-action="menu-toggle" title="${isBT ? ((typeof window.t === "function") ? window.t("card.session_settings","Ajustes de sesión") : "Ajustes de sesión") : ((typeof window.t === "function") ? window.t("card.account_settings","Ajustes de cuenta") : "Ajustes de cuenta")}" class="text-gray-400 hover:text-white hover:bg-gray-800/90 rounded-lg transition px-2 py-1 focus:outline-none" aria-haspopup="true" aria-expanded="false">
                             <i class="fa-solid fa-ellipsis-vertical text-sm"></i>
                         </button>
                         <div data-account-menu class="hidden absolute right-0 top-7 w-36 bg-[#161b22] border border-gray-700/80 rounded-xl shadow-2xl py-1 z-30 backdrop-blur-md">
                             <button type="button" data-account-action="edit" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800 hover:text-blue-400 flex items-center gap-2 transition">
-                                <i class="fa-solid fa-pen text-[11px] w-4 text-center"></i> Editar
+                                <i class="fa-solid fa-pen text-[11px] w-4 text-center"></i> ${(typeof window.t === "function") ? window.t("common.edit","Editar") : "Editar"}
                             </button>
                             <button type="button" data-account-action="delete" class="w-full text-left px-3 py-1.5 text-xs text-gray-300 hover:bg-red-950/60 hover:text-red-400 flex items-center gap-2 transition">
-                                <i class="fa-solid fa-trash text-[11px] w-4 text-center text-red-400"></i> Borrar
+                                <i class="fa-solid fa-trash text-[11px] w-4 text-center text-red-400"></i> ${(typeof window.t === "function") ? window.t("common.delete","Borrar") : "Borrar"}
                             </button>
                         </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-y-1.5 gap-x-2 text-xs sm:text-sm mb-11 pr-0.5">
-                    ${isBT ? `<div class="text-gray-400 font-semibold text-left">Activo/Par:</div><div class="text-white text-right font-medium">${escapeGalleryHtml(item.pair || "-")}</div>` : ""}
-                    ${isBT ? `<div class="text-gray-400 font-semibold text-left">Inicio:</div><div class="text-white text-right font-medium">${item.startDate ? new Date(item.startDate + "T00:00:00").toLocaleDateString("es-AR") : "-"}</div>` : ""}
+                    ${isBT ? `<div class="text-gray-400 font-semibold text-left">${(typeof window.t === "function") ? window.t("common.pair","Activo/Par") : "Activo/Par"}:</div><div class="text-white text-right font-medium">${escapeGalleryHtml(item.pair || "-")}</div>` : ""}
+                    ${isBT ? `<div class="text-gray-400 font-semibold text-left">${(typeof window.t === "function") ? window.t("card.start","Inicio") : "Inicio"}:</div><div class="text-white text-right font-medium">${item.startDate ? new Date(item.startDate + "T00:00:00").toLocaleDateString("es-AR") : "-"}</div>` : ""}
                     ${isBT ? renderSessionModeRow(item) : ""}
-                    <div class="text-gray-400 font-semibold text-left">Bal. Inicial:</div><div class="text-white text-right font-medium" title="$${Number(initialBal).toLocaleString('en-US')}">${displayedInitialBal}</div>
-                    ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">Bal. efectivo:</div><div class="${actualBalanceClass} text-right font-medium" title="${balanceTitle}">${displayedActual}${balanceBaseLabel ? `<span class="text-[10px] font-normal text-gray-500">${balanceBaseLabel}</span>` : ""}</div>`}
+                    <div class="text-gray-400 font-semibold text-left">${(typeof window.t === "function") ? window.t("metrics.initial_balance","Bal. Inicial:") : "Bal. Inicial:"}</div><div class="text-white text-right font-medium" title="$${Number(initialBal).toLocaleString('en-US')}">${displayedInitialBal}</div>
+                    ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">${(typeof window.t === "function") ? window.t("card.effective_bal","Bal. efectivo:") : "Bal. efectivo:"}</div><div class="${actualBalanceClass} text-right font-medium" title="${balanceTitle}">${displayedActual}${balanceBaseLabel ? `<span class="text-[10px] font-normal text-gray-500">${balanceBaseLabel}</span>` : ""}</div>`}
                     <div class="text-gray-400 font-semibold text-left">Return:</div><div class="${retClass} text-right font-bold font-mono">${ret > 0 ? "+" : ""}${ret.toFixed(2)}%</div>
-                    ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">Etapa:</div><div class="text-right"><span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${ACCOUNT_STAGE_BADGES[accountStage]}"><i class="${ACCOUNT_STAGE_ICONS[accountStage]}"></i>${ACCOUNT_STAGE_LABELS[accountStage]}</span></div>`}
+                    ${isBT ? "" : `<div class="text-gray-400 font-semibold text-left">${(typeof window.t === "function") ? window.t("card.stage","Etapa:") : "Etapa:"}</div><div class="text-right"><span class="inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-bold ${ACCOUNT_STAGE_BADGES[accountStage]}"><i class="${ACCOUNT_STAGE_ICONS[accountStage]}"></i>${getAccountStageLabel(accountStage)}</span></div>`}
                     ${accountGoalMini ? `<div class="col-span-2 mt-0.5">${accountGoalMini}</div>` : ""}
                 </div>
                 ${isBT ? `
                     <div class="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 flex gap-2">
                         <button type="button" data-account-action="start" class="flex-1 min-w-0 bg-blue-600 text-white border border-blue-500/50 rounded-lg px-1 py-2 flex items-center justify-center gap-2 hover:bg-blue-500 transition shadow-lg text-[11px] font-bold whitespace-nowrap">
-                            <i class="fa-solid fa-play"></i><span>Empezar</span>
+                            <i class="fa-solid fa-play"></i><span>${(typeof window.t === "function") ? window.t("card.start_btn","Empezar") : "Empezar"}</span>
                         </button>
                     </div>
                 ` : `
                 <div class="absolute bottom-3.5 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 flex gap-2">
                     <button type="button" data-account-action="quick" class="flex-1 min-w-0 bg-gray-800 text-amber-300 border border-amber-900/50 rounded-lg px-1 py-2 flex items-center justify-center gap-1 hover:bg-amber-500 hover:text-black transition shadow-lg text-[11px] font-bold whitespace-nowrap">
-                        <i class="fa-solid fa-plus"></i><span>Nueva entrada</span>
+                        <i class="fa-solid fa-plus"></i><span>${(typeof window.t === "function") ? window.t("tabs.new_trade","Nueva entrada") : "Nueva entrada"}</span>
                     </button>
                     <button type="button" data-account-action="metrics" class="flex-1 min-w-0 bg-[#112130] text-green-400 hover:bg-green-600 border border-green-900/50 rounded-lg px-1 py-2 flex items-center justify-center gap-1 hover:text-white border transition shadow-lg text-[11px] font-bold whitespace-nowrap">
-                        <i class="fa-solid fa-chart-line"></i><span>Métricas</span>
+                        <i class="fa-solid fa-chart-line"></i><span>${(typeof window.t === "function") ? window.t("card.metrics","Métricas") : "Métricas"}</span>
                     </button>
                 </div>`}
             `;
@@ -1138,7 +1143,7 @@ const initialTrades = [];
             const iconClass = getAccountGroupIconClass(group.icon);
             const previewNames = groupAccounts.length
                 ? `${groupAccounts.slice(0, 3).map(account => escapeGalleryHtml(account.name)).join(" · ")}${groupAccounts.length > 3 ? ` · +${groupAccounts.length - 3}` : ""}`
-                : "Sin cuentas asignadas";
+                : ((typeof window.t === "function") ? window.t("card.no_assigned_accounts","Sin cuentas asignadas") : "Sin cuentas asignadas");
             let groupBalanceSummaryHtml = "";
             if (groupAccounts.length) {
                 const groupSummary = getGroupBalanceSummary(groupAccounts);
@@ -1177,8 +1182,8 @@ const initialTrades = [];
                         ${groupBalanceSummaryHtml}
                     </div>
                     <div class="mt-5 flex gap-2">
-                        <button type="button" data-group-action="open" class="flex-1 rounded-lg border border-main bg-gray-800 px-2 py-2.5 text-xs font-bold text-gray-200 transition hover:bg-gray-700"><i class="fa-solid fa-folder-open mr-1.5"></i>Ver cuentas</button>
-                        <button type="button" data-group-action="trade" ${groupAccounts.length ? "" : "disabled"} class="flex-1 rounded-lg border border-purple-800/70 bg-purple-950/60 px-2 py-2.5 text-xs font-bold text-purple-200 transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-40"><i class="fa-solid fa-layer-group mr-1.5"></i>Entrada múltiple</button>
+                        <button type="button" data-group-action="open" class="flex-1 rounded-lg border border-main bg-gray-800 px-2 py-2.5 text-xs font-bold text-gray-200 transition hover:bg-gray-700"><i class="fa-solid fa-folder-open mr-1.5"></i>${(typeof window.t === "function") ? window.t("card.view_accounts","Ver cuentas") : "Ver cuentas"}</button>
+                        <button type="button" data-group-action="trade" ${groupAccounts.length ? "" : "disabled"} class="flex-1 rounded-lg border border-purple-800/70 bg-purple-950/60 px-2 py-2.5 text-xs font-bold text-purple-200 transition hover:bg-purple-700 disabled:cursor-not-allowed disabled:opacity-40"><i class="fa-solid fa-layer-group mr-1.5"></i>${(typeof window.t === "function") ? window.t("tabs.global_trade","Entrada múltiple") : "Entrada múltiple"}</button>
                     </div>
                 </div>`;
             card.addEventListener("click", () => openAccountGroupView(group.id));
@@ -1365,7 +1370,7 @@ const initialTrades = [];
         async function deleteAccountGroup(groupId) {
             const group = accountGroups.find(item => String(item.id) === String(groupId));
             if (!group) return;
-            if (!confirm(`¿Eliminar el grupo "${group.name}"? Las cuentas y sus operaciones se conservarán.`)) return;
+            if (!confirm(window.i18n && window.i18n.getLanguage() === "en" ? `Delete group "${group.name}"? Accounts and their trades will be preserved.` : `¿Eliminar el grupo "${group.name}"? Las cuentas y sus operaciones se conservarán.`)) return;
             accountGroups = accountGroups.filter(item => String(item.id) !== String(groupId));
             if (String(activeAccountGroupId) === String(groupId)) activeAccountGroupId = null;
             if (typeof deleteFromCloud === "function") deleteFromCloud("group", groupId);
@@ -1384,7 +1389,7 @@ const initialTrades = [];
             btn.textContent = "Crear";
             
             if (currentMode === 'real') {
-                document.getElementById("modalSessionTitle").textContent = "Crear Nueva Cuenta";
+                document.getElementById("modalSessionTitle").textContent = (typeof window.t === "function") ? window.t("modal_session.title_new_real","Crear Nueva Cuenta") : "Crear Nueva Cuenta";
                 document.getElementById("inputSessionBalance").value = 100000;
                 document.getElementById("sessionPairContainer").classList.add("hidden");
                 sessionPairInput.required = false;
@@ -1398,7 +1403,7 @@ const initialTrades = [];
                 document.getElementById("accountStageContainer").classList.add("hidden");
                 document.getElementById("sessionModeContainer").classList.remove("hidden");
                 fillFondeoForm(null);
-                document.getElementById("modalSessionTitle").textContent = "Crear Sesión de Backtest";
+                document.getElementById("modalSessionTitle").textContent = (typeof window.t === "function") ? window.t("modal_session.title_new_bt","Crear Sesión de Backtest") : "Crear Sesión de Backtest";
                 document.getElementById("inputSessionBalance").value = 10000;
                 document.getElementById("sessionPairContainer").classList.remove("hidden");
                 sessionPairInput.required = true;
@@ -1426,7 +1431,7 @@ const initialTrades = [];
             document.getElementById("inputSessionBalanceActual").value = editActualBal !== null ? editActualBal : '';
             document.getElementById("sessionActualBalanceContainer").classList.toggle("hidden", isBT);
             
-            document.getElementById("modalSessionTitle").textContent = isBT ? "Editar Sesión" : "Editar Cuenta";
+            document.getElementById("modalSessionTitle").textContent = isBT ? ((typeof window.t === "function") ? window.t("modal_session.title_edit_bt","Editar Sesión") : "Editar Sesión") : ((typeof window.t === "function") ? window.t("modal_session.title_edit_real","Editar Cuenta") : "Editar Cuenta");
             if (isBT) {
                 document.getElementById("sessionPairContainer").classList.remove("hidden");
                 document.getElementById("inputSessionPair").required = true;
@@ -1448,7 +1453,7 @@ const initialTrades = [];
             }
 
             const btn = document.getElementById("btn-submit-session");
-            btn.textContent = "Guardar Cambios";
+            btn.textContent = (typeof window.t === "function") ? window.t("modal_session.btn_save","Guardar Cambios") : "Guardar Cambios";
             btn.className = isBT ? "bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-lg" : "bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-lg";
             
             document.getElementById("sessionModal").classList.remove("hidden");
@@ -1539,7 +1544,7 @@ const initialTrades = [];
         }
         
         async function deleteGroup(id) {
-            if(confirm(`¿Seguro de eliminar esta ${currentMode==='real'?'cuenta':'sesión'} y todas sus operaciones?`)) {
+            if(confirm(window.i18n && window.i18n.getLanguage() === "en" ? `Are you sure you want to delete this ${currentMode==='real'?'account':'session'} and all its trades?` : `¿Seguro de eliminar esta ${currentMode==='real'?'cuenta':'sesión'} y todas sus operaciones?`)) {
                 if(currentMode === 'real') {
                     realAccounts = realAccounts.filter(s => s.id !== id);
                     trades = trades.filter(t => t.accountId !== id);
@@ -2490,9 +2495,61 @@ const initialTrades = [];
             }
         }
 
+        const TOAST_TRANSLATIONS = {
+            "Operación realizada con éxito": "Operation completed successfully",
+            "Operación Eliminada": "Trade deleted",
+            "Operación eliminada": "Trade deleted",
+            "Cuenta actualizada": "Account updated",
+            "Cuenta creada": "Account created",
+            "Grupo actualizado": "Group updated",
+            "Grupo creado": "Group created",
+            "Grupo eliminado": "Group deleted",
+            "Grupo eliminado; las cuentas se conservaron": "Group deleted; accounts were preserved",
+            "Comentario actualizado": "Comment updated",
+            "Par agregado": "Asset added",
+            "Par eliminado": "Asset removed",
+            "Balance Inicial Actualizado": "Initial Balance updated",
+            "Balances actualizados y registrados correctamente": "Balances updated and saved successfully",
+            "Entra a una cuenta primero": "Enter an account first",
+            "Debes crear al menos una cuenta primero": "You must create at least one account first",
+            "El Balance Inicial debe ser mayor a 0": "Initial Balance must be greater than 0",
+            "Ingresa un monto mayor a 0": "Enter an amount greater than 0",
+            "Ingresa un monto válido": "Enter a valid amount",
+            "Selecciona al menos una cuenta": "Select at least one account",
+            "Selecciona al menos una cuenta para replicar la entrada": "Select at least one account to replicate trade",
+            "Copiado al portapapeles": "Copied to clipboard",
+            "Imagen pegada en ANTES": "Image pasted into BEFORE",
+            "Imagen pegada en DESPUÉS": "Image pasted into AFTER",
+            "Carpeta configurada con éxito": "Folder successfully configured",
+            "Configuración del puente guardada": "Bridge configuration saved",
+            "Datos Importados y Migrados Correctamente": "Data imported and migrated successfully",
+            "Error al importar el archivo JSON": "Error importing JSON file",
+            "Entorno reiniciado": "Environment reset",
+            "Reiniciado": "Reset complete",
+            "Reinicio deshecho": "Reset undone",
+            "Retiro registrado": "Withdrawal logged",
+            "Retiro eliminado": "Withdrawal deleted",
+            "Retiro eliminado del histórico": "Withdrawal deleted from history",
+            "Nuevo intento iniciado desde la Fase 1": "New attempt started from Phase 1",
+            "Acepta la selección de copias antes de guardar": "Confirm trade replication before saving",
+            "Acepta la selección de cuentas antes de guardar": "Confirm account selection before saving",
+            "El par ya existe": "Pair already exists",
+            "Esta cuenta no tiene metas configuradas": "This account has no goals configured",
+            "Este grupo no tiene cuentas asignadas": "This group has no accounts assigned",
+            "¡Excelente! Ahora ya sabes cómo documentar antes y después de cada trade": "Great! Now you know how to document before and after each trade",
+            "¡Listo! Puedes repetir la Guía cuando quieras desde la barra superior": "All set! You can replay the guide anytime from the top bar"
+        };
+
         function showToast(message, isError = false) {
             const toast = document.getElementById("toast"), toastMsg = document.getElementById("toastMsg"), toastIcon = document.getElementById("toastIcon");
-            toastMsg.textContent = message;
+            let displayMsg = message;
+            const isEn = window.i18n && window.i18n.getLanguage() === 'en';
+            if (isEn && TOAST_TRANSLATIONS[message]) {
+                displayMsg = TOAST_TRANSLATIONS[message];
+            } else if (typeof window.t === 'function' && window.t(message)) {
+                displayMsg = window.t(message);
+            }
+            toastMsg.textContent = displayMsg;
             toast.className = `fixed bottom-5 right-5 bg-gray-800 text-white border ${isError ? 'border-red-500' : 'border-green-500'} px-4 py-3 rounded-xl shadow-2xl z-50 flex items-center gap-3 opacity-100 translate-y-0 transition-all`;
             toastIcon.className = `fa-solid ${isError ? 'fa-circle-exclamation text-red-400' : 'fa-circle-check text-green-400'} text-lg`;
             setTimeout(() => toast.classList.replace("opacity-100", "opacity-0"), 3000);
@@ -3296,6 +3353,14 @@ const initialTrades = [];
         // ===================== ETAPAS Y METAS DE CUENTAS REALES =====================
         const ACCOUNT_STAGES = ["real", "prueba", "fondeada", "instant"];
         const ACCOUNT_STAGE_LABELS = { real: "Cuenta real", prueba: "Fase de prueba", fondeada: "Fondeada", instant: "Instant" };
+        function getAccountStageLabel(stage) {
+            const isEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            if (isEn) {
+                const map = { real: "Live Account", prueba: "Evaluation", fondeada: "Funded", instant: "Instant" };
+                return map[stage] || stage;
+            }
+            return ACCOUNT_STAGE_LABELS[stage] || stage;
+        }
         const ACCOUNT_STAGE_ICONS = { real: "fa-solid fa-wallet", prueba: "fa-solid fa-graduation-cap", fondeada: "fa-solid fa-award", instant: "fa-solid fa-bolt" };
         const ACCOUNT_STAGE_BADGES = {
             real: "border-gray-700 bg-gray-800 text-gray-300",
@@ -3921,7 +3986,6 @@ const initialTrades = [];
 
         // Confeti propio sobre canvas (sin dependencias) para celebrar la fase superada.
         function launchConfetti() {
-            if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
             const canvas = document.getElementById("confettiCanvas");
             if (!canvas) return;
             stopConfetti();
@@ -4072,7 +4136,8 @@ const initialTrades = [];
 
         function buildAccountGoalPanelHtml(account) {
             const stage = getAccountStage(account);
-            const stageBadge = `<span class="rounded-full border px-3 py-1 text-xs font-bold ${ACCOUNT_STAGE_BADGES[stage]}"><i class="${ACCOUNT_STAGE_ICONS[stage]} mr-1"></i>${ACCOUNT_STAGE_LABELS[stage]}</span>`;
+            const isEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            const stageBadge = `<span class="rounded-full border px-3 py-1 text-xs font-bold ${ACCOUNT_STAGE_BADGES[stage]}"><i class="${ACCOUNT_STAGE_ICONS[stage]} mr-1"></i>${getAccountStageLabel(stage)}</span>`;
             const toneText = { ok: "text-emerald-400", warn: "text-amber-300", bad: "text-red-400", info: "text-blue-300", muted: "text-gray-300" };
             const toneFill = { ok: "bg-emerald-500", warn: "bg-amber-500", bad: "bg-red-500", info: "bg-blue-500", muted: "bg-gray-500" };
             const usageTone = pct => (pct >= 80 ? "bad" : (pct >= 50 ? "warn" : "ok"));
@@ -4089,9 +4154,9 @@ const initialTrades = [];
                     <button type="button" data-goal-action="edit" class="mt-3 rounded-lg border border-main bg-gray-800 px-3 py-1.5 text-xs font-bold text-gray-200 transition hover:bg-gray-700"><i class="fa-solid fa-pen mr-1"></i>Configurar meta</button>
                 </div>`;
 
-            const editButton = `<button type="button" data-goal-action="edit" class="rounded-lg border border-main bg-gray-800 px-3 py-1.5 text-xs font-bold text-gray-200 transition hover:bg-gray-700"><i class="fa-solid fa-pen mr-1"></i>Configurar meta</button>`;
+            const editButton = `<button type="button" data-goal-action="edit" class="rounded-lg border border-main bg-gray-800 px-3 py-1.5 text-xs font-bold text-gray-200 transition hover:bg-gray-700"><i class="fa-solid fa-pen mr-1"></i>${isEn ? "Configure goal" : "Configurar meta"}</button>`;
             const withdrawButton = (stage === "fondeada" || stage === "instant")
-                ? `<button type="button" data-goal-action="withdraw" class="rounded-lg border border-emerald-800 bg-emerald-900/40 px-3 py-1.5 text-xs font-bold text-emerald-300 transition hover:bg-emerald-700 hover:text-white"><i class="fa-solid fa-hand-holding-dollar mr-1"></i>Registrar retiro</button>`
+                ? `<button type="button" data-goal-action="withdraw" class="rounded-lg border border-emerald-800 bg-emerald-900/40 px-3 py-1.5 text-xs font-bold text-emerald-300 transition hover:bg-emerald-700 hover:text-white"><i class="fa-solid fa-hand-holding-dollar mr-1"></i>${isEn ? "Log withdrawal" : "Registrar retiro"}</button>`
                 : "";
 
             const cards = [];
@@ -4122,7 +4187,7 @@ const initialTrades = [];
                     cards.push(card(`Objetivo de beneficio${phaseTitle}`, progressText, subText, status.targetProgress, status.targetReached ? "ok" : "info"));
                 }
                 if (status.nextAction) {
-                    const advanceLabel = status.nextAction === "fase2" ? "Pasar a fase 2" : "Convertir a Fondeada";
+                    const advanceLabel = status.nextAction === "fase2" ? (isEn ? "Advance to Phase 2" : "Pasar a fase 2") : (isEn ? "Advance to Funded" : "Convertir a Fondeada");
                     advanceHeaderButton = `<button type="button" data-goal-action="advance-phase" class="rounded-lg border border-amber-600 bg-amber-900/40 px-3 py-1.5 text-xs font-bold text-amber-300 transition hover:bg-amber-600 hover:text-white"><i class="fa-solid fa-flag-checkered mr-1"></i>${advanceLabel}</button>`;
                 }
                 if (status.ddLimit !== null) {
@@ -4166,7 +4231,7 @@ const initialTrades = [];
                     status.balance >= status.initial ? "ok" : "muted"
                 ));
                 cards.push(card(
-                    "Tu parte retirable",
+                    isEn ? "Withdrawable share" : "Tu parte retirable",
                     formatBalanceHistoryMoney(status.yourShare),
                     `Beneficio retirable ${formatBalanceHistoryMoney(status.availableProfit)} · Split ${status.config.splitPct}% · Colchón ${formatBalanceHistoryMoney(status.buffer)}`,
                     null,
@@ -4179,7 +4244,7 @@ const initialTrades = [];
                     cards.push(card("Próximo retiro", status.readyToWithdraw ? "Listo para retirar" : `${Math.round(status.progress)}%`, subText, status.progress, status.readyToWithdraw ? "ok" : "info"));
                 }
                 cards.push(card(
-                    "Total retirado",
+                    isEn ? "Total withdrawn" : "Total retirado",
                     formatBalanceHistoryMoney(status.totalWithdrawn),
                     `${status.withdrawals.length} ${status.withdrawals.length === 1 ? "retiro registrado" : "retiros registrados"}`,
                     null,
@@ -4939,7 +5004,7 @@ const initialTrades = [];
         }
 
         async function deleteTrade(id) {
-            if (confirm("¿Estás seguro de eliminar esta operación?")) {
+            if (confirm(window.i18n && window.i18n.getLanguage() === "en" ? "Are you sure you want to delete this trade?" : "¿Estás seguro de eliminar esta operación?")) {
                 const removedTrade = trades.find(trade => String(trade.id) === String(id));
                 trades = trades.filter(t => t.id !== id);
                 addMt5TombstoneFromTrade(removedTrade);
@@ -5078,7 +5143,8 @@ const initialTrades = [];
                 addBreakdown(pairsData, (t.par || "N/A").toUpperCase(), outcomePct);
 
                 let d = new Date(t.fecha+"T00:00:00").getDay();
-                let dayName = ["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"][d];
+                const _dayNamesArr = (typeof window.i18n !== "undefined") ? window.i18n.getI18nDayNames() : ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"];
+                let dayName = _dayNamesArr[(d + 6) % 7];
                 addBreakdown(daysData, dayName, outcomePct);
 
                 addBreakdown(sessionsData, normalizeSessionName(t.sesion), outcomePct);
@@ -5107,7 +5173,8 @@ const initialTrades = [];
             let total = activeTrades.length;
             let winRate = total > 0 ? (wins / total) * 100 : 0;
             document.getElementById("kpi-winrate").textContent = winRate.toFixed(1) + "%";
-            document.getElementById("kpi-trades-count").textContent = `${activeTrades.length} trades · ${wins}G / ${losses}P / ${breakeven}BE`;
+            const _isEnKpi = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            document.getElementById("kpi-trades-count").textContent = `${activeTrades.length} trades · ${wins}${_isEnKpi ? "W" : "G"} / ${losses}${_isEnKpi ? "L" : "P"} / ${breakeven}BE`;
 
             // Profit Factor = ganancias brutas / pérdidas brutas; los BE no alteran el cociente.
             let avgRR = countRR > 0 ? (totalRR / countRR) : 0;
@@ -5126,7 +5193,8 @@ const initialTrades = [];
             document.getElementById("kpi-drawdown-dollar").textContent = ""; // Se eliminó la etiqueta de dólares del drawdown
 
             document.getElementById("kpi-best-trade").textContent = bestPct !== -Infinity ? "+" + bestPct.toFixed(2) + "%" : "0.00%";
-            document.getElementById("kpi-worst-trade").textContent = worstPct !== Infinity ? "Peor: " + worstPct.toFixed(2) + "%" : "Peor: 0.00%";
+            const _lblWorst = (typeof window.t === "function") ? window.t("metrics.worst","Peor:") : "Peor:";
+            document.getElementById("kpi-worst-trade").textContent = `${_lblWorst} ${worstPct !== Infinity ? worstPct.toFixed(2) + "%" : "0.00%"}`;
 
             // --- ACTUALIZACIÓN DE TARJETA: OBJETIVOS ALCANZADOS & DISTRIBUCIÓN ---
             let tp1Count = 0, tp2Count = 0, tp3Count = 0, slCount = 0;
@@ -5214,10 +5282,10 @@ const initialTrades = [];
                     const color = item.wins + item.losses === 0 ? "text-amber-300" : (rate >= 50 ? "text-emerald-400" : "text-red-400");
                     html += `<div class="flex justify-between items-center gap-3 bg-gray-900/60 border border-main rounded-lg px-4 py-2.5 text-sm">
                                 <span class="font-semibold text-gray-200 truncate">${k}</span>
-                                <span class="flex items-center gap-3 shrink-0 text-right"><span class="text-xs text-gray-500">${item.wins}G/${item.losses}P${item.breakeven ? `/${item.breakeven}BE` : ''} · ${item.total} ops</span><strong class="font-mono ${color}">${rate.toFixed(1)}%</strong></span>
+                                <span class="flex items-center gap-3 shrink-0 text-right"><span class="text-xs text-gray-500">${item.wins}${typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en" ? "W" : "G"}/${item.losses}${typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en" ? "L" : "P"}${item.breakeven ? `/${item.breakeven}BE` : ''} · ${item.total} ${(typeof window.t === "function") ? window.t("calendar.ops","ops") : "ops"}</span><strong class="font-mono ${color}">${rate.toFixed(1)}%</strong></span>
                              </div>`;
                 });
-                document.getElementById(elementId).innerHTML = html || '<div class="text-xs text-gray-500">Sin operaciones en este periodo</div>';
+                document.getElementById(elementId).innerHTML = html || `<div class="text-xs text-gray-500">${(typeof window.t === "function") ? window.t("metrics.no_trades_period","Sin operaciones en este periodo") : "Sin operaciones en este periodo"}</div>`;
             }
 
             const pairMetricsTitle = document.getElementById("metrics-pair-title");
@@ -5365,7 +5433,7 @@ function renderMonthlyPerformance() {
                 const cardTone = isBest ? "monthly-month-best" : (isWorst ? "monthly-month-worst" : (isCurrentFallback ? "monthly-month-current" : (isMonthBE ? "monthly-month-be" : "monthly-month-empty")));
                 const badge = (text, color) => `<span class="rounded-full border px-2 py-1 text-xs font-bold ${color}">${text}</span>`;
                 let badges = "";
-                if (isMonthBE) badges += badge("Mes BE", "border-amber-500/50 text-amber-300 bg-amber-900/30");
+                if (isMonthBE) badges += badge(window.t('calendar.month_be','Mes BE'), "border-amber-500/50 text-amber-300 bg-amber-900/30");
                 const rate = month.total ? (month.wins / month.total) * 100 : 0;
                 const netColor = month.netPct > 0.004 ? "text-emerald-400" : (month.netPct < -0.004 ? "text-red-400" : "text-amber-300");
                 const netValue = month.total ? formatPct(month.netPct) : "—";
@@ -5375,9 +5443,11 @@ function renderMonthlyPerformance() {
                 const bestSession = Object.entries(month.sessionStats).reduce((best, [name, stats]) => !best || stats.netPct > best.stats.netPct || (stats.netPct === best.stats.netPct && stats.total > best.stats.total) ? { name, stats } : best, null);
                 const bestTradeValue = month.bestTrade ? formatPct(month.bestTrade.outcome) : "—";
                 const bestTradeAsset = month.bestTrade && currentMode !== "backtesting" ? `${escapeGalleryHtml(month.bestTrade.trade.par || "Activo")} · ` : "";
-                const bestTradeDate = month.bestTrade ? new Date(month.bestTrade.trade.fecha + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "";
+                const _mLang = (typeof window.i18n !== "undefined") ? window.i18n.getLanguage() : "es";
+                const _mLocale = _mLang === "en" ? "en-US" : "es-AR";
+                const bestTradeDate = month.bestTrade ? new Date(month.bestTrade.trade.fecha + "T00:00:00").toLocaleDateString(_mLocale, { day: "2-digit", month: "short" }) : "";
                 const bestTradeColor = month.bestTrade && month.bestTrade.outcome > 0 ? "text-emerald-300" : (month.bestTrade && month.bestTrade.outcome < 0 ? "text-red-300" : "text-amber-300");
-                const bestDayLabel = bestDay ? new Date(bestDay.date + "T00:00:00").toLocaleDateString("es-AR", { day: "2-digit", month: "short" }) : "—";
+                const bestDayLabel = bestDay ? new Date(bestDay.date + "T00:00:00").toLocaleDateString(_mLocale, { day: "2-digit", month: "short" }) : "—";
                 const bestSessionName = bestSession ? escapeGalleryHtml(bestSession.name) : "—";
                 const bestSessionRate = bestSession && bestSession.stats.total ? (bestSession.stats.wins / bestSession.stats.total) * 100 : 0;
                 return `<article onclick="goToJournalMonth(${monthIndex}, ${year})" tabindex="0" aria-label="${month.name}: ${month.total} operaciones, retorno ${netValue}, efectividad ${rate.toFixed(1)} por ciento" class="monthly-month-card flex min-h-0 flex-col justify-between ${cardTone} border rounded-xl p-3 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400">
@@ -5389,15 +5459,15 @@ function renderMonthlyPerformance() {
                     <div class="monthly-primary-metrics w-full mt-auto border-t border-gray-800/80 pt-1.5 pb-0.5">
                         <div class="grid grid-cols-2 gap-x-2 gap-y-1">
                             <div class="min-w-0">
-                                <p class="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 font-semibold leading-none mb-1">Retorno</p>
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 font-semibold leading-none mb-1">${window.t('calendar.return','Retorno')}</p>
                                 <p class="monthly-primary-value truncate text-lg sm:text-xl md:text-2xl font-bold leading-tight ${netColor}">${netValue}</p>
                             </div>
                             <div class="min-w-0 text-right">
-                                <p class="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 font-semibold leading-none mb-1">Efectividad</p>
+                                <p class="text-[10px] sm:text-xs uppercase tracking-wider text-gray-400 font-semibold leading-none mb-1">${window.t('metrics.win_rate_short','Efectividad')}</p>
                                 <p class="monthly-secondary-value truncate text-sm sm:text-base md:text-lg font-bold leading-tight text-white">${month.total ? `${rate.toFixed(1)}%` : "—"}</p>
                             </div>
                             <div class="flex items-center justify-between gap-1 text-[11px] sm:text-xs text-gray-400 pt-0.5">
-                                <span class="text-gray-400">Operaciones</span><strong class="text-gray-200 font-semibold">${month.total}</strong>
+                                <span class="text-gray-400">${window.t('metrics.operations','Operaciones')}</span><strong class="text-gray-200 font-semibold">${month.total}</strong>
                             </div>
                             <div class="flex items-center justify-end gap-1.5 text-[11px] sm:text-xs text-gray-400 pt-0.5">
                                 <span class="text-gray-400">PF</span><strong class="${profitFactor === null ? "text-gray-400" : "text-gray-200"} font-semibold">${profitFactorLabel}</strong>
@@ -5407,24 +5477,24 @@ function renderMonthlyPerformance() {
                     <div class="monthly-month-details text-sm text-gray-300">
                         <div class="grid grid-cols-2 gap-3">
                             <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
-                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Mejor trade</span>
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">${window.t('calendar.best_trade','Mejor trade')}</span>
                                 <strong class="block truncate text-base ${bestTradeColor}">${bestTradeValue}</strong>
-                                <span class="block truncate text-xs text-gray-400">${bestTradeDate ? `${bestTradeAsset}${bestTradeDate} · ${escapeGalleryHtml(month.bestTrade.trade.estado || "")}` : "Sin operaciones"}</span>
+                                <span class="block truncate text-xs text-gray-400">${bestTradeDate ? `${bestTradeAsset}${bestTradeDate} · ${escapeGalleryHtml(month.bestTrade.trade.estado || "")}` : window.t('calendar.no_trades','Sin operaciones')}</span>
                             </div>
                             <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
-                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Mejor día</span>
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">${window.t('calendar.best_day','Mejor dia')}</span>
                                 <strong class="block truncate text-base ${bestDay && bestDay.stats.netPct < 0 ? "text-red-300" : "text-emerald-300"}">${bestDay ? formatPct(bestDay.stats.netPct) : "—"}</strong>
-                                <span class="block truncate text-xs text-gray-400">${bestDay ? `${bestDayLabel} · ${bestDay.stats.total} ops` : "Sin operaciones"}</span>
+                                <span class="block truncate text-xs text-gray-400">${bestDay ? `${bestDayLabel} · ${bestDay.stats.total} ${window.t('calendar.ops','ops')}` : window.t('calendar.no_trades','Sin operaciones')}</span>
                             </div>
                             <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
-                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Mejor sesión</span>
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">${window.t('monthly.best_session','Mejor sesion')}</span>
                                 <strong class="block truncate text-base text-indigo-200">${bestSessionName}</strong>
-                                <span class="block truncate text-xs text-gray-400">${bestSession ? `${formatPct(bestSession.stats.netPct)} · ${bestSessionRate.toFixed(0)}% efect.` : "Sin operaciones"}</span>
+                                <span class="block truncate text-xs text-gray-400">${bestSession ? `${formatPct(bestSession.stats.netPct)} · ${bestSessionRate.toFixed(0)}% ${window.t('monthly.effectiveness_short','efect.')}` : window.t('calendar.no_trades','Sin operaciones')}</span>
                             </div>
                             <div class="rounded-lg border border-gray-700 bg-gray-950 p-3">
-                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">Distribución</span>
+                                <span class="block text-xs uppercase tracking-wide text-gray-500 font-semibold">${window.t('metrics.distribution','Distribucion')}</span>
                                 <strong class="block truncate text-base"><span class="text-emerald-400">${month.wins}G</span> / <span class="text-red-400">${month.losses}P</span> / <span class="text-amber-300">${month.breakeven}BE</span></strong>
-                                <span class="block truncate text-xs text-gray-400">${month.total} operaciones cerradas</span>
+                                <span class="block truncate text-xs text-gray-400">${month.total} ${window.t('monthly.closed_trades','operaciones cerradas')}</span>
                             </div>
                         </div>
                     </div>
@@ -5569,11 +5639,14 @@ function renderMonthlyPerformance() {
         function formatFondeoDate(fecha) {
             if (!fecha) return "—";
             const date = new Date(`${fecha}T00:00:00`);
-            return Number.isNaN(date.getTime()) ? fecha : date.toLocaleDateString("es-AR", { day: "2-digit", month: "short", year: "numeric" });
+            const _fdLang = (typeof window.i18n !== "undefined") ? window.i18n.getLanguage() : "es";
+            const _fdLoc = _fdLang === "en" ? "en-US" : "es-AR";
+            return Number.isNaN(date.getTime()) ? fecha : date.toLocaleDateString(_fdLoc, { day: "2-digit", month: "short", year: "numeric" });
         }
 
         function getFondeoPhaseLabel(index, rules) {
-            return index < rules.phases ? `Fase ${index + 1}` : "Fondeada";
+            const _pEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            return index < rules.phases ? (_pEn ? `Phase ${index + 1}` : `Fase ${index + 1}`) : (_pEn ? "Funded" : "Fondeada");
         }
 
         // Reproduce las operaciones de la sesión en orden y aplica las reglas del desafío.
@@ -5705,12 +5778,14 @@ function renderMonthlyPerformance() {
 
         function renderSessionModeRow(session) {
             if (!isFondeoSession(session)) {
-                return `<div class="text-gray-400 font-semibold text-left">Modo:</div><div class="text-gray-300 text-right font-medium">Trading libre</div>`;
+                const _mEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            return `<div class="text-gray-400 font-semibold text-left">${_mEn ? "Mode:" : "Modo:"}</div><div class="text-gray-300 text-right font-medium">${_mEn ? "Free trading" : "Trading libre"}</div>`;
             }
             const sim = simulateFondeo(session);
-            const label = sim.status === "failed" ? "Quemada" : getFondeoPhaseLabel(sim.phase.index, sim.rules);
+            const _smEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            const label = sim.status === "failed" ? (_smEn ? "Breached" : "Quemada") : getFondeoPhaseLabel(sim.phase.index, sim.rules);
             const color = sim.status === "failed" ? "text-red-400" : (sim.funded ? "text-emerald-400" : "text-amber-300");
-            return `<div class="text-gray-400 font-semibold text-left">Modo:</div><div class="${color} text-right font-bold"><i class="fa-solid fa-trophy mr-1"></i>Fondeo · ${label}</div>`;
+            return `<div class="text-gray-400 font-semibold text-left">${_smEn ? "Mode:" : "Modo:"}</div><div class="${color} text-right font-bold"><i class="fa-solid fa-trophy mr-1"></i>${_smEn ? "Prop Firm" : "Fondeo"} · ${label}</div>`;
         }
 
         function getActiveFondeoSession() {
@@ -5760,7 +5835,6 @@ function renderMonthlyPerformance() {
         }
 
         function showFondeoCelebration(title, message, isFunded) {
-            if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
             document.querySelectorAll(".fondeo-celebration").forEach(element => element.remove());
             const overlay = document.createElement("div");
             overlay.className = "fondeo-celebration";
@@ -5836,28 +5910,28 @@ function renderMonthlyPerformance() {
             const failed = sim.status === "failed";
             const phaseLabel = getFondeoPhaseLabel(sim.phase.index, rules);
             const statusBadge = failed
-                ? `<span class="rounded-full border border-red-700 bg-red-900/40 px-3 py-1 text-xs font-bold text-red-400"><i class="fa-solid fa-fire mr-1"></i>Cuenta quemada · ${phaseLabel}</span>`
+                ? `<span class="rounded-full border border-red-700 bg-red-900/40 px-3 py-1 text-xs font-bold text-red-400"><i class="fa-solid fa-fire mr-1"></i>${window.t('prop.burned_account','Cuenta quemada')} · ${phaseLabel}</span>`
                 : (sim.funded
-                    ? `<span class="rounded-full border border-emerald-700 bg-emerald-900/40 px-3 py-1 text-xs font-bold text-emerald-400"><i class="fa-solid fa-sack-dollar mr-1"></i>Fondeada</span>`
+                    ? `<span class="rounded-full border border-emerald-700 bg-emerald-900/40 px-3 py-1 text-xs font-bold text-emerald-400"><i class="fa-solid fa-sack-dollar mr-1"></i>${window.t('prop.funded','Fondeada')}</span>`
                     : `<span class="rounded-full border border-amber-700 bg-amber-900/30 px-3 py-1 text-xs font-bold text-amber-300"><i class="fa-solid fa-flag-checkered mr-1"></i>${phaseLabel} de ${rules.phases}</span>`);
 
             const ruleChips = [
-                `${rules.phases} ${rules.phases === 1 ? "fase" : "fases"}`,
-                `Objetivo F1 ${rules.target1}%` + (rules.phases === 2 ? ` · F2 ${rules.target2}%` : ""),
-                rules.dailyDD ? `DD diario ${rules.dailyDD}%` : "Sin DD diario",
-                rules.monthlyDD ? `DD mensual ${rules.monthlyDD}%` : null,
-                rules.maxDD ? `DD máx. ${rules.maxDD}% ${rules.ddType === "trailing" ? "trailing" : "estático"}` : "Sin DD máximo",
-                rules.riskPerTrade ? `Riesgo/trade ≤ ${rules.riskPerTrade}%` : null,
-                rules.minTradingDays ? `Mín. ${rules.minTradingDays} días` : null,
-                rules.minProfitDays ? `Mín. ${rules.minProfitDays} días rentables` : null,
-                rules.consistency ? `Consistencia ≤ ${rules.consistencyPct}%` : null,
+                `${rules.phases} ${rules.phases === 1 ? window.t("chip.phase_singular","fase") : window.t("chip.phase_plural","fases")}`,
+                `${window.t("chip.target_f1","Objetivo F1")} ${rules.target1}%` + (rules.phases === 2 ? ` · F2 ${rules.target2}%` : ""),
+                rules.dailyDD ? `${window.t("chip.daily_dd","DD diario")} ${rules.dailyDD}%` : window.t("chip.no_daily_dd","Sin DD diario"),
+                rules.monthlyDD ? `${window.t("chip.monthly_dd","DD mensual")} ${rules.monthlyDD}%` : null,
+                rules.maxDD ? `${window.t("chip.max_dd","DD max.")} ${rules.maxDD}% ${rules.ddType === "trailing" ? "trailing" : window.t("chip.static","estatico")}` : window.t("chip.no_max_dd","Sin DD maximo"),
+                rules.riskPerTrade ? `${window.t("chip.risk_per_trade","Riesgo/trade")} ≤ ${rules.riskPerTrade}%` : null,
+                rules.minTradingDays ? `${window.t("chip.min_days","Min.")} ${rules.minTradingDays} ${window.t("chip.days","dias")}` : null,
+                rules.minProfitDays ? `${window.t("chip.min_profit_days","Min.")} ${rules.minProfitDays} ${window.t("chip.profitable_days","dias rentables")}` : null,
+                rules.consistency ? `${window.t("chip.consistency","Consistencia")} ≤ ${rules.consistencyPct}%` : null,
                 `Split ${rules.profitSplit}%`
             ].filter(Boolean).map(text => `<span class="rounded border border-main bg-gray-900/60 px-2 py-0.5 text-[11px] text-gray-400">${text}</span>`).join("");
 
             // Tarjetas de métricas de la fase actual
             const cards = [];
             cards.push(card(
-                "Balance de la fase",
+                window.t("prop.phase_balance","Balance de la fase"),
                 formatFondeoMoney(sim.phase.balance),
                 `${metrics.profit >= 0 ? "+" : ""}${formatFondeoMoney(metrics.profit)} (${metrics.profitPct >= 0 ? "+" : ""}${metrics.profitPct.toFixed(2)}%) · base ${formatFondeoMoney(base)}`,
                 null,
@@ -5865,47 +5939,47 @@ function renderMonthlyPerformance() {
             ));
             if (!sim.funded) {
                 const progress = metrics.targetAmount > 0 ? (Math.max(0, metrics.profit) / metrics.targetAmount) * 100 : 100;
-                cards.push(card("Objetivo de beneficio", `${Math.min(100, progress).toFixed(0)}%`, `${formatFondeoMoney(Math.max(0, metrics.profit))} de ${formatFondeoMoney(metrics.targetAmount)} (${(sim.phase.index === 0 ? rules.target1 : rules.target2)}%)`, progress, metrics.targetOk ? "ok" : "info"));
+                cards.push(card(window.t("prop.profit_target","Objetivo de beneficio"), `${Math.min(100, progress).toFixed(0)}%`, `${formatFondeoMoney(Math.max(0, metrics.profit))} ${window.t("prop.target_amount","de")} ${formatFondeoMoney(metrics.targetAmount)} (${(sim.phase.index === 0 ? rules.target1 : rules.target2)}%)`, progress, metrics.targetOk ? "ok" : "info"));
             } else {
-                cards.push(card("Beneficio retirable", formatFondeoMoney(Math.max(0, metrics.profit)), `Tu parte (${rules.profitSplit}%): ${formatFondeoMoney(Math.max(0, metrics.profit) * rules.profitSplit / 100)}`, null, metrics.profit > 0 ? "ok" : "muted"));
+                cards.push(card(window.t("prop.withdrawable_profit","Beneficio retirable"), formatFondeoMoney(Math.max(0, metrics.profit)), `${window.t("prop.your_split","Tu parte")} (${rules.profitSplit}%): ${formatFondeoMoney(Math.max(0, metrics.profit) * rules.profitSplit / 100)}`, null, metrics.profit > 0 ? "ok" : "muted"));
             }
             if (rules.dailyDD) {
                 const limit = base * rules.dailyDD / 100;
                 const pct = (sim.dailyUsed / limit) * 100;
-                cards.push(card("Drawdown diario", `${formatFondeoMoney(sim.dailyUsed)} / ${formatFondeoMoney(limit)}`, sim.currentDay ? `Último día operado: ${formatFondeoDate(sim.currentDay)}` : "Sin operaciones en esta fase", pct, usageTone(pct)));
+                cards.push(card(window.t("prop.daily_drawdown","Drawdown diario"), `${formatFondeoMoney(sim.dailyUsed)} / ${formatFondeoMoney(limit)}`, sim.currentDay ? `${window.t("prop.last_traded_day","Ultimo dia operado")}: ${formatFondeoDate(sim.currentDay)}` : window.t("prop.no_trades_phase","Sin operaciones en esta fase"), pct, usageTone(pct)));
             }
             if (rules.monthlyDD) {
                 const limit = base * rules.monthlyDD / 100;
                 const pct = (sim.monthlyUsed / limit) * 100;
-                cards.push(card("Drawdown mensual", `${formatFondeoMoney(sim.monthlyUsed)} / ${formatFondeoMoney(limit)}`, sim.currentMonth ? `Mes: ${sim.currentMonth}` : "Sin operaciones en esta fase", pct, usageTone(pct)));
+                cards.push(card(window.t("prop.monthly_drawdown","Drawdown mensual"), `${formatFondeoMoney(sim.monthlyUsed)} / ${formatFondeoMoney(limit)}`, sim.currentMonth ? `${window.t("calendar.month","Mes")}: ${sim.currentMonth}` : window.t("prop.no_trades_phase","Sin operaciones en esta fase"), pct, usageTone(pct)));
             }
             if (sim.floor !== null) {
                 const limit = base * rules.maxDD / 100;
                 const room = Math.max(0, sim.phase.balance - sim.floor);
                 const usedPct = ((limit - Math.min(limit, room)) / limit) * 100;
-                cards.push(card(`Drawdown máximo ${rules.ddType === "trailing" ? "(trailing)" : "(estático)"}`, `Margen ${formatFondeoMoney(room)}`, `Límite de balance: ${formatFondeoMoney(sim.floor)}`, usedPct, usageTone(usedPct)));
+                cards.push(card(`${window.t("prop.max_drawdown","Drawdown maximo")} ${rules.ddType === "trailing" ? "(trailing)" : "("+window.t("chip.static","estatico")+")"}`, `${window.t("funding.margin","Margen")} ${formatFondeoMoney(room)}`, `${window.t("funding.max_limit","Limite de balance")}: ${formatFondeoMoney(sim.floor)}`, usedPct, usageTone(usedPct)));
             }
             // Los requisitos de días y consistencia solo aplican a las fases de evaluación
             if (rules.minTradingDays && !sim.funded) {
-                cards.push(card("Días de trading", `${metrics.tradingDays} / ${rules.minTradingDays}`, metrics.daysOk ? "Requisito cumplido" : `Faltan ${rules.minTradingDays - metrics.tradingDays}`, (metrics.tradingDays / rules.minTradingDays) * 100, metrics.daysOk ? "ok" : "info"));
+                cards.push(card(window.t("prop.trading_days","Dias de trading"), `${metrics.tradingDays} / ${rules.minTradingDays}`, metrics.daysOk ? window.t("funding.req_met","Requisito cumplido") : `${window.t("prop.remaining_days","Faltan")} ${rules.minTradingDays - metrics.tradingDays}`, (metrics.tradingDays / rules.minTradingDays) * 100, metrics.daysOk ? "ok" : "info"));
             }
             if (rules.minProfitDays && !sim.funded) {
-                cards.push(card("Días rentables", `${metrics.profitDays} / ${rules.minProfitDays}`, metrics.profitDaysOk ? "Requisito cumplido" : `Faltan ${rules.minProfitDays - metrics.profitDays}`, (metrics.profitDays / rules.minProfitDays) * 100, metrics.profitDaysOk ? "ok" : "info"));
+                cards.push(card(window.t("prop.profitable_days","Dias rentables"), `${metrics.profitDays} / ${rules.minProfitDays}`, metrics.profitDaysOk ? window.t("funding.req_met","Requisito cumplido") : `${window.t("prop.remaining_days","Faltan")} ${rules.minProfitDays - metrics.profitDays}`, (metrics.profitDays / rules.minProfitDays) * 100, metrics.profitDaysOk ? "ok" : "info"));
             }
             if (rules.consistency && !sim.funded) {
                 const ratio = metrics.consistencyRatio;
-                cards.push(card("Consistencia", ratio === null ? "—" : `${ratio.toFixed(1)}%`, `Mejor día ${formatFondeoMoney(metrics.bestDay)} · máximo permitido ${rules.consistencyPct}% del beneficio`, ratio === null ? null : (ratio / rules.consistencyPct) * 100, ratio === null ? "muted" : (metrics.consistencyOk ? "ok" : "bad")));
+                cards.push(card(window.t("chip.consistency","Consistencia"), ratio === null ? "—" : `${ratio.toFixed(1)}%`, `${window.t("funding.best_day_label","Mejor dia")} ${formatFondeoMoney(metrics.bestDay)} · ${window.t("funding.max_allowed","maximo permitido")} ${rules.consistencyPct}% ${window.t("funding.of_profit","del beneficio")}`, ratio === null ? null : (ratio / rules.consistencyPct) * 100, ratio === null ? "muted" : (metrics.consistencyOk ? "ok" : "bad")));
             }
 
             // Historial de fases superadas
             const timeline = sim.history.length
                 ? sim.history.map(item => `
                     <div class="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg border border-emerald-900/50 bg-emerald-900/20 px-3 py-2 text-xs">
-                        <span class="font-bold text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i>Fase ${item.index + 1} superada</span>
+                        <span class="font-bold text-emerald-400"><i class="fa-solid fa-circle-check mr-1"></i>${window.t('funding.phase','Fase')} ${item.index + 1} ${window.t('funding.phase_passed','superada')}</span>
                         <span class="text-gray-400">${formatFondeoDate(item.startFecha)} → ${formatFondeoDate(item.endFecha)}</span>
                         <span class="text-gray-300">+${item.profitPct.toFixed(2)}% · ${item.tradingDays} días · ${item.trades} ops</span>
                     </div>`).join("")
-                : `<p class="text-xs text-gray-500">Aún no superaste ninguna fase${session.fondeoStartAfter ? " en este intento" : ""}.</p>`;
+                : `<p class="text-xs text-gray-500">${window.t('funding.no_phase_passed','Aun no superaste ninguna fase')}${session.fondeoStartAfter ? " "+window.t('funding.in_this_attempt','en este intento') : ""}.</p>`;
 
             const failureBox = failed ? `
                 <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-red-900/50 bg-red-900/20 p-3 text-sm">
@@ -5959,14 +6033,14 @@ function renderMonthlyPerformance() {
             return `
                 <div class="bg-card border ${failed ? "border-red-900/50" : (sim.funded ? "border-emerald-900/50" : "border-amber-900/50")} rounded-xl p-5 shadow space-y-4">
                     <div class="flex flex-wrap items-center justify-between gap-3">
-                        <h2 class="flex items-center gap-2 text-base font-bold text-white"><i class="fa-solid fa-trophy text-amber-400"></i> Simulación de fondeo</h2>
+                        <h2 class="flex items-center gap-2 text-base font-bold text-white"><i class="fa-solid fa-trophy text-amber-400"></i> ${window.t('funding.title','Simulacion de fondeo')}</h2>
                         ${statusBadge}
                     </div>
                     <div class="flex flex-wrap gap-1.5">${ruleChips}</div>
                     ${failureBox}
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">${cards.join("")}</div>
                     <div class="space-y-2">
-                        <h4 class="text-xs font-bold uppercase tracking-wide text-gray-400">Progreso de fases</h4>
+                        <h4 class="text-xs font-bold uppercase tracking-wide text-gray-400">${window.t('funding.phase_progress','Progreso de fases')}</h4>
                         ${timeline}
                         ${restartNote}
                     </div>
@@ -6090,16 +6164,18 @@ function renderMonthlyPerformance() {
                 const outColor = outcomePct > 0 ? "text-emerald-400" : (outcomePct < 0 ? "text-red-400" : "text-gray-400");
                 const acumColor = acumPct > 0 ? "text-emerald-400" : (acumPct < 0 ? "text-red-400" : "text-gray-400");
 
+                const isTableEn = typeof window.i18n !== 'undefined' && window.i18n.getLanguage() === 'en';
                 const dayName = t.fecha
-                    ? new Date(`${t.fecha}T00:00:00`).toLocaleDateString('es-AR', { weekday: 'long' })
+                    ? new Date(`${t.fecha}T00:00:00`).toLocaleDateString(isTableEn ? 'en-US' : 'es-AR', { weekday: 'long' })
                     : '';
+                const displayDate = (typeof window.i18n !== 'undefined') ? window.i18n.formatDateForDisplay(t.fecha) : t.fecha;
                 const risk = Number(t.riesgo);
                 const rr = Number(t.rr);
                 const tradeKey = isGlobalMetricsView ? Number(t.globalId) : Number(t.id);
 
                 return `
                     <tr class="bg-card-hover transition">
-                        <td class="px-2 py-2 font-mono whitespace-nowrap">${t.fecha}<br><span class="text-gray-500 text-[11px]">${t.hora}</span></td>
+                        <td class="px-2 py-2 font-mono whitespace-nowrap">${displayDate}<br><span class="text-gray-500 text-[11px]">${t.hora}</span></td>
                         <td class="px-2 py-2 text-gray-300 capitalize">${dayName}</td>
                         ${showPairColumn ? `<td class="px-2 py-2 font-bold text-white"><span class="bg-gray-800 px-2 py-0.5 rounded border border-main">${(t.par || '-').toUpperCase()}</span></td>` : ""}
                         <td class="px-2 py-2"><span class="bg-gray-900 text-gray-400 px-2 py-0.5 rounded border border-gray-800">${normalizeSessionName(t.sesion) || '-'}</span></td>
@@ -6176,7 +6252,8 @@ function renderMonthlyPerformance() {
             const color = isBefore
                 ? "border-blue-500/30 bg-blue-950/50 text-blue-200 hover:bg-blue-900/70"
                 : "border-purple-500/30 bg-purple-950/50 text-purple-200 hover:bg-purple-900/70";
-            const buttonText = currentMode === "backtesting" ? "Abrir gráfico" : "Abrir gráfico en TradingView";
+            const _tvEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            const buttonText = currentMode === "backtesting" ? (_tvEn ? "Open chart" : "Abrir gráfico") : (_tvEn ? "Open chart in TradingView" : "Abrir gráfico en TradingView");
             return `<a href="${escapeGalleryHtml(safeUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex w-fit items-center gap-2 rounded-lg border ${color} px-3 py-2 text-xs font-semibold transition"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>${buttonText}</span></a>`;
         }
 
@@ -7085,8 +7162,10 @@ function renderMonthlyPerformance() {
         const APP_TOUR_STEPS = [
             {
                 title: "Tus Cuentas y Metas de Fondeo",
+                titleKey: "tour.step1_title",
                 icon: "fa-solid fa-wallet",
                 desc: "Aquí administras tus cuentas reales o evaluaciones de fondeo. Puedes configurar reglas de consistencia, límites de pérdida diaria y metas automáticas de fase 1 y 2 con avance en un solo clic.",
+                descKey: "tour.step1_desc",
                 selector: "#tab-btn-sessions",
                 fallbackSelector: "#sessions-grid",
                 action: () => {
@@ -7095,8 +7174,10 @@ function renderMonthlyPerformance() {
             },
             {
                 title: "Registro Inteligente de Operaciones",
+                titleKey: "tour.step2_title",
                 icon: "fa-solid fa-circle-plus",
                 desc: "Al hacer clic aquí puedes registrar tus trades. La Bitácora calcula automáticamente el lotaje exacto según tu porcentaje de riesgo y te permite adjuntar capturas de pantalla antes y después del trade.",
+                descKey: "tour.step2_desc",
                 selector: "#btn-new-trade",
                 fallbackSelector: "#tab-btn-sessions",
                 action: () => {
@@ -7109,8 +7190,10 @@ function renderMonthlyPerformance() {
             },
             {
                 title: "Estadísticas y Curva de Capital",
+                titleKey: "tour.step3_title",
                 icon: "fa-solid fa-gauge-high",
-                desc: "Analiza tu rendimiento con métricas clave en vivo: Winrate, Profit Factor, Ratio Riesgo/Beneficio real y el gráfico interactivo de curva de balance y equidad.",
+                desc: "Analiza tu rendimiento con métricas clave en vivo: Win Rate, Profit Factor, Ratio Riesgo/Beneficio real y el gráfico interactivo de curva de balance y equidad.",
+                descKey: "tour.step3_desc",
                 selector: "#tab-btn-dashboard",
                 fallbackSelector: "#tab-btn-dashboard",
                 action: () => {
@@ -7122,8 +7205,10 @@ function renderMonthlyPerformance() {
             },
             {
                 title: "Calendario y Consistencia Operativa",
+                titleKey: "tour.step4_title",
                 icon: "fa-solid fa-calendar-days",
                 desc: "Visualiza tus resultados día por día en un mapa de calor financiero. Identifica tus mejores jornadas y mantén el control de tu consistencia operativa mes a mes.",
+                descKey: "tour.step4_desc",
                 selector: "#tab-btn-monthly",
                 fallbackSelector: "#tab-btn-monthly",
                 action: () => {
@@ -7136,7 +7221,6 @@ function renderMonthlyPerformance() {
         ];
 
         function startAppTour() {
-            if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
             const overlay = document.getElementById('tourOverlay');
             if (!overlay) return;
 
@@ -7194,7 +7278,7 @@ function renderMonthlyPerformance() {
                 try { step.action(); } catch (e) { console.warn(e); }
             }
 
-            // Actualizar textos
+            // Actualizar textos con soporte bilingüe (ES / EN)
             const badge = document.getElementById('tourStepBadge');
             const icon = document.getElementById('tourStepIcon');
             const title = document.getElementById('tourStepTitleText');
@@ -7204,21 +7288,25 @@ function renderMonthlyPerformance() {
             const nextBtnIcon = document.getElementById('tourNextBtnIcon');
             const dotsContainer = document.getElementById('tourStepDots');
 
-            if (badge) badge.textContent = `Paso ${index + 1} de ${APP_TOUR_STEPS.length}`;
+            const isEn = window.i18n && window.i18n.getLanguage() === 'en';
+            if (badge) {
+                badge.textContent = isEn ? `Step ${index + 1} of ${APP_TOUR_STEPS.length}` : `Paso ${index + 1} de ${APP_TOUR_STEPS.length}`;
+            }
             if (icon) icon.className = `${step.icon} text-emerald-400`;
-            if (title) title.textContent = step.title;
-            if (desc) desc.textContent = step.desc;
+            if (title) title.textContent = (step.titleKey && window.t) ? window.t(step.titleKey) : step.title;
+            if (desc) desc.textContent = (step.descKey && window.t) ? window.t(step.descKey) : step.desc;
 
             if (prevBtn) {
                 prevBtn.disabled = index === 0;
+                prevBtn.innerHTML = `<i class="fa-solid fa-arrow-left text-[10px]"></i> ${isEn ? "Back" : "Anterior"}`;
             }
 
             if (nextBtnText && nextBtnIcon) {
                 if (index === APP_TOUR_STEPS.length - 1) {
-                    nextBtnText.textContent = "¡Comenzar!";
+                    nextBtnText.textContent = isEn ? "Get Started!" : "¡Comenzar!";
                     nextBtnIcon.className = "fa-solid fa-rocket text-[10px]";
                 } else {
-                    nextBtnText.textContent = "Siguiente";
+                    nextBtnText.textContent = isEn ? "Next" : "Siguiente";
                     nextBtnIcon.className = "fa-solid fa-arrow-right text-[10px]";
                 }
             }
@@ -7372,8 +7460,8 @@ function renderMonthlyPerformance() {
 
         function initTourAutoTrigger() {
             try {
-                if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning || window.__VIDEO_RENDER_MODE__)) return;
-                if (localStorage.getItem('journal_tour_never_show') === 'true' || localStorage.getItem('journal_tour_completed') === 'true') return;
+                if (typeof window !== 'undefined' && (window.__SMOKE_TEST__ || window.__smokeTestRunning)) return;
+                if (localStorage.getItem('journal_tour_never_show') === 'true') return;
                 const tourDone = localStorage.getItem('journal_tour_completed');
                 if (!tourDone) {
                     setTimeout(() => {
@@ -7474,29 +7562,37 @@ function renderMonthlyPerformance() {
             const FORM_TOUR_STEPS = [
                 {
                     title: "1. Par y Cálculo de Lotaje",
+                    titleKey: "tour.form_step1_title",
                     icon: "fa-solid fa-sliders",
                     desc: "Selecciona el par y define los pips de Stop Loss y Take Profit. La Bitácora calcula el ratio R/R y el lotaje exacto para tu riesgo asignado.",
+                    descKey: "tour.form_step1_desc",
                     selector: "#inputPar",
                     fallbackSelector: "#tradePairLabel"
                 },
                 {
                     title: "2. Captura y Análisis (ANTES)",
+                    titleKey: "tour.form_step2_title",
                     icon: "fa-solid fa-camera",
                     desc: "En este bloque documentas tu hipótesis técnica al entrar. Presiona Ctrl+V en la pantalla para pegar la captura del gráfico al instante.",
+                    descKey: "tour.form_step2_desc",
                     selector: "#inputNotaAntes",
                     fallbackSelector: "#tradeModal"
                 },
                 {
                     title: "3. Estado Inicial y Cierre",
+                    titleKey: "tour.form_step3_title",
                     icon: "fa-solid fa-list-check",
                     desc: "Al crear la orden déjalo en 'Pendiente' o 'Activa'. Cuando la operación termine, cámbialo aquí a 'Full TP', 'SL', 'BE' o 'Parcial'.",
+                    descKey: "tour.form_step3_desc",
                     selector: "#inputEstado",
                     fallbackSelector: "#inputEstado"
                 },
                 {
                     title: "4. Captura y Análisis (DESPUÉS)",
+                    titleKey: "tour.form_step4_title",
                     icon: "fa-solid fa-flag-checkered",
                     desc: "Al cerrar el trade, pulsa 'Editar' en la tabla de operaciones y completa aquí tus aprendizajes y la captura final del desarrollo.",
+                    descKey: "tour.form_step4_desc",
                     selector: "#inputNotaDespues",
                     fallbackSelector: "#tradeModal"
                 }
@@ -7642,8 +7738,12 @@ function renderMonthlyPerformance() {
                 const availableYears = getAvailableYears();
 
                 // 1. Asegurar opciones del mes (12 meses)
-                if (monthSelect.children.length !== 12) {
+                const currentCalLang = typeof window.i18n !== 'undefined' ? window.i18n.getLanguage() : 'es';
+                if (monthSelect.children.length !== 12 || monthSelect.getAttribute('data-i18n-lang') !== currentCalLang) {
+                    const prevCalVal = monthSelect.value;
+                    monthSelect.setAttribute('data-i18n-lang', currentCalLang);
                     monthSelect.innerHTML = monthNames.map((m, idx) => `<option value="${idx}">${m}</option>`).join("");
+                    if (prevCalVal !== "") monthSelect.value = prevCalVal;
                 }
 
                 // 2. Sincronizar select de año con los años disponibles
@@ -7726,12 +7826,15 @@ function renderMonthlyPerformance() {
 
                 // Resumen superior del mes
                 if (summaryEl) {
+                    const lblReturn = (typeof window.t === 'function') ? window.t('calendar.return', 'Retorno') : 'Retorno';
+                    const lblOps = (typeof window.t === 'function') ? window.t('calendar.ops', 'ops') : 'ops';
                     if (monthTotalTrades > 0) {
                         const monthNetDollar = initialBalance * (monthNetPct / 100);
                         const netColor = monthNetPct > 0 ? "text-emerald-400" : (monthNetPct < 0 ? "text-red-400" : "text-gray-300");
-                        summaryEl.innerHTML = `Retorno: <strong class="${netColor} font-mono">${formatSignedDollar(monthNetDollar)} (${monthNetPct >= 0 ? '+' : ''}${monthNetPct.toFixed(2)}%)</strong> · <span class="text-gray-400 font-normal">${monthTotalTrades} ops</span>`;
+                        summaryEl.innerHTML = `${lblReturn}: <strong class="${netColor} font-mono">${formatSignedDollar(monthNetDollar)} (${monthNetPct >= 0 ? '+' : ''}${monthNetPct.toFixed(2)}%)</strong> · <span class="text-gray-400 font-normal">${monthTotalTrades} ${lblOps}</span>`;
                     } else {
-                        summaryEl.innerHTML = `<span class="text-gray-500 font-normal text-xs">Sin operaciones en este mes</span>`;
+                        const lblNoTrades = (typeof window.t === 'function') ? window.t('calendar.no_trades_month', 'Sin operaciones en este mes') : 'Sin operaciones en este mes';
+                        summaryEl.innerHTML = `<span class="text-gray-500 font-normal text-xs">${lblNoTrades}</span>`;
                     }
                 }
 
@@ -7817,14 +7920,14 @@ function renderMonthlyPerformance() {
                             dayContentHtml = `
                                 <div class="flex justify-between items-center leading-none mb-0.5">
                                     <span class="text-[10px] sm:text-[11px] font-bold ${isToday ? 'text-amber-400' : 'text-gray-300'}">${dayNum}</span>
-                                    ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                                    ${isToday ? `<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">${(typeof window.t === 'function') ? window.t('calendar.today', 'Hoy') : 'Hoy'}</span>` : ''}
                                 </div>
                                 <div onclick="openDailyTradeAnalysis('${dateKey}')" title="Ver análisis de ${dayTrades.length} operaciones del ${dayNum}" class="flex-grow min-h-0 flex flex-col justify-center items-center rounded p-1 border cursor-pointer transition-all hover:scale-[1.02] ${cardBg}">
                                     <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${textDollarColor}">
                                         ${formatSignedDollar(netDollar)}
                                     </div>
                                     <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${textPctColor} mt-0.5">
-                                        ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}% · ${dayTrades.length} ops
+                                        ${netPct >= 0 ? '+' : ''}${netPct.toFixed(2)}% · ${dayTrades.length} ${(typeof window.t === "function") ? window.t("calendar.ops","ops") : "ops"}
                                     </div>
                                 </div>
                             `;
@@ -7833,7 +7936,7 @@ function renderMonthlyPerformance() {
                             dayContentHtml = `
                                 <div class="flex justify-between items-start leading-none">
                                     <span class="text-[10px] sm:text-[11px] font-semibold ${isToday ? 'text-amber-400 font-bold' : 'text-gray-500'}">${dayNum}</span>
-                                    ${isToday ? '<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">Hoy</span>' : ''}
+                                    ${isToday ? `<span class="text-[8px] bg-amber-500/20 text-amber-400 px-1 rounded font-bold">${(typeof window.t === 'function') ? window.t('calendar.today', 'Hoy') : 'Hoy'}</span>` : ''}
                                 </div>
                                 <div class="flex-grow flex items-center justify-center text-gray-800 text-[10px] select-none">·</div>
                             `;
@@ -7869,14 +7972,14 @@ function renderMonthlyPerformance() {
                         weekCardClasses += weekBorder;
                         weekNetHtml = `
                             <div class="leading-none mb-0.5">
-                                <span class="text-[10px] sm:text-[11px] font-bold text-gray-300">Semana ${weekNum}</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-gray-300">${(typeof window.t === "function") ? window.t("calendar.week", "Semana") : "Semana"} ${weekNum}</span>
                             </div>
                             <div class="flex-grow min-h-0 flex flex-col justify-center">
                                 <div class="font-mono font-bold text-xs sm:text-[13px] leading-tight ${weekDollarColor}">
                                     ${formatSignedDollar(weekNetDollar)}
                                 </div>
                                 <div class="text-[9px] sm:text-[10px] font-semibold leading-tight ${weekPctColor} mt-0.5">
-                                    ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}% · ${weekTrades.length} ops
+                                    ${weekNetPct >= 0 ? '+' : ''}${weekNetPct.toFixed(2)}% · ${weekTrades.length} ${(typeof window.t === "function") ? window.t("calendar.ops","ops") : "ops"}
                                 </div>
                             </div>
                         `;
@@ -7884,7 +7987,7 @@ function renderMonthlyPerformance() {
                         weekCardClasses += "border-gray-800 bg-[#0d1117]";
                         weekNetHtml = `
                             <div class="leading-none">
-                                <span class="text-[10px] sm:text-[11px] font-bold text-gray-400">Semana ${weekNum}</span>
+                                <span class="text-[10px] sm:text-[11px] font-bold text-gray-400">${(typeof window.t === "function") ? window.t("calendar.week", "Semana") : "Semana"} ${weekNum}</span>
                             </div>
                             <div class="text-xs text-gray-600 font-bold leading-none">—</div>
                         `;
@@ -7961,7 +8064,9 @@ function renderMonthlyPerformance() {
             const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
             const dayNamesFull = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
             const monthNamesFull = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-            const formattedDate = `${dayNamesFull[d.getDay()]}, ${d.getDate()} de ${monthNamesFull[d.getMonth()]} de ${d.getFullYear()}`;
+            const _daLang = (typeof window.i18n !== "undefined") ? window.i18n.getLanguage() : "es";
+            const _daLoc = _daLang === "en" ? "en-US" : "es-AR";
+            const formattedDate = d.toLocaleDateString(_daLoc, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
             const initialBalance = getActiveInitialBalance();
             const dayTotalPct = allTrades.reduce((acc, t) => acc + getTradeOutcome(t), 0);
@@ -7974,7 +8079,10 @@ function renderMonthlyPerformance() {
             }
             if (summaryEl) {
                 const netColor = dayTotalPct > 0 ? 'text-emerald-400' : (dayTotalPct < 0 ? 'text-red-400' : 'text-gray-300');
-                summaryEl.innerHTML = `Total del día: <strong class="${netColor} font-mono">${formatSignedDollar(dayTotalDollar)} (${dayTotalPct >= 0 ? '+' : ''}${dayTotalPct.toFixed(2)}%)</strong> · ${allTrades.length} ${allTrades.length === 1 ? 'operación' : 'operaciones'}`;
+                const _daIsEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+                const _lblDayTotal = _daIsEn ? "Day Total" : "Total del día";
+                const _lblOpsCount = allTrades.length === 1 ? (_daIsEn ? "trade" : "operación") : (_daIsEn ? "trades" : "operaciones");
+                summaryEl.innerHTML = `${_lblDayTotal}: <strong class="${netColor} font-mono">${formatSignedDollar(dayTotalDollar)} (${dayTotalPct >= 0 ? '+' : ''}${dayTotalPct.toFixed(2)}%)</strong> · ${allTrades.length} ${_lblOpsCount}`;
             }
 
             const tabsContainer = document.getElementById("dailyAnalysisNavTabs");
@@ -8060,9 +8168,9 @@ function renderMonthlyPerformance() {
                     <div class="bg-card border border-main rounded-xl p-4 flex flex-col justify-between space-y-3">
                         <div>
                             <h4 class="text-xs font-bold text-blue-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 border-b border-gray-800 pb-2">
-                                <i class="fa-solid fa-camera"></i> Análisis ANTES de la entrada
+                                <i class="fa-solid fa-camera"></i> ${(typeof window.t === "function") ? window.t("daily.analysis_before","Análisis ANTES de la entrada") : "Análisis ANTES de la entrada"}
                             </h4>
-                            ${t.notaAntes ? `<p class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeGalleryHtml(t.notaAntes)}</p>` : `<p class="text-xs text-gray-500 italic">Sin notas registradas antes de entrar.</p>`}
+                            ${t.notaAntes ? `<p class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeGalleryHtml(t.notaAntes)}</p>` : `<p class="text-xs text-gray-500 italic">${(typeof window.t === "function") ? window.t("daily.no_notes_before","Sin notas registradas antes de entrar.") : "Sin notas registradas antes de entrar."}</p>`}
                         </div>
                         <div class="space-y-2 pt-2 border-t border-gray-800/80">
                             ${renderTradingViewButton(t.linkAntes, true)}
@@ -8078,9 +8186,9 @@ function renderMonthlyPerformance() {
                     <div class="bg-card border border-main rounded-xl p-4 flex flex-col justify-between space-y-3">
                         <div>
                             <h4 class="text-xs font-bold text-purple-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 border-b border-gray-800 pb-2">
-                                <i class="fa-solid fa-flag-checkered"></i> Análisis DESPUÉS del cierre
+                                <i class="fa-solid fa-flag-checkered"></i> ${(typeof window.t === "function") ? window.t("daily.analysis_after","Análisis DESPUÉS del cierre") : "Análisis DESPUÉS del cierre"}
                             </h4>
-                            ${t.notaDespues ? `<p class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeGalleryHtml(t.notaDespues)}</p>` : `<p class="text-xs text-gray-500 italic">Sin notas registradas después del cierre.</p>`}
+                            ${t.notaDespues ? `<p class="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">${escapeGalleryHtml(t.notaDespues)}</p>` : `<p class="text-xs text-gray-500 italic">${(typeof window.t === "function") ? window.t("daily.no_notes_after","Sin notas registradas después del cierre.") : "Sin notas registradas después del cierre."}</p>`}
                         </div>
                         <div class="space-y-2 pt-2 border-t border-gray-800/80">
                             ${renderTradingViewButton(t.linkDespues, false)}

@@ -77,9 +77,11 @@ let presets = [];
 
             layout.classList.toggle('calculator-collapsed', collapsed);
             button.setAttribute('aria-expanded', String(!collapsed));
-            button.title = collapsed ? 'Mostrar calculadora' : 'Ocultar calculadora';
+            const showText = window.t ? window.t('calc.toggle_show') : 'Mostrar calculadora';
+            const hideText = window.t ? window.t('calc.toggle_hide') : 'Ocultar calculadora';
+            button.title = collapsed ? showText : hideText;
             icon.className = `fa-solid ${collapsed ? 'fa-angles-right' : 'fa-angles-left'} text-blue-500`;
-            text.textContent = collapsed ? 'Mostrar calculadora' : 'Ocultar calculadora';
+            text.textContent = collapsed ? showText : hideText;
 
             if (persist) localStorage.setItem('calculatorPanelCollapsed', collapsed ? '1' : '0');
         }
@@ -102,7 +104,8 @@ let presets = [];
 
             if (balance <= 0 || riskPct <= 0 || slPips <= 0) {
                 document.getElementById('resultLot').textContent = "0.00";
-                document.getElementById('riskAmount').textContent = `${SYMBOLS[acctCur] || '$'}0.00 ${acctCur} en riesgo`;
+                const atRiskText = window.t ? window.t('calc.risk_at_risk') : 'en riesgo';
+                document.getElementById('riskAmount').textContent = `${SYMBOLS[acctCur] || '$'}0.00 ${acctCur} ${atRiskText}`;
                 if (mainCopiedValue !== null) resetMainCopyBtn();
                 return;
             }
@@ -115,7 +118,8 @@ let presets = [];
 
             document.getElementById('resultLot').textContent = lot.toFixed(2);
             if (mainCopiedValue !== null && mainCopiedValue !== lot.toFixed(2)) resetMainCopyBtn();
-            document.getElementById('riskAmount').textContent = `${formatCurrency(riskAmount, acctCur)} ${acctCur} en riesgo`;
+            const atRiskText = window.t ? window.t('calc.risk_at_risk') : 'en riesgo';
+            document.getElementById('riskAmount').textContent = `${formatCurrency(riskAmount, acctCur)} ${acctCur} ${atRiskText}`;
             
             // Guardar en memoria
             localStorage.setItem('last_calc_balance', balance);
@@ -140,8 +144,10 @@ let presets = [];
         function resetMainCopyBtn() {
             mainCopiedValue = null;
             const btn = document.getElementById('mainCopyBtn');
+            if (!btn) return;
             btn.classList.remove('copy-done');
-            btn.innerHTML = '<i class="fa-regular fa-copy"></i> Copiar Lotaje';
+            const copyText = window.t ? window.t('calc.copy_lot') : 'Copiar Lotaje';
+            btn.innerHTML = `<i class="fa-regular fa-copy"></i> <span data-i18n="calc.copy_lot">${copyText}</span>`;
         }
 
         // Se muestra una vez por sesión al calcular oro, salvo que se haya marcado "no volver a mostrar"
@@ -163,7 +169,7 @@ let presets = [];
             const balance = parseFloat(document.getElementById('balance').value) || 0;
             const riskPct = parseFloat(document.getElementById('riskPct').value) || 0;
 
-            if (balance <= 0 || riskPct <= 0) return alert("Define balance y riesgo primero");
+            if (balance <= 0 || riskPct <= 0) return alert(window.t ? window.t('calc.define_balance_first') : "Define balance y riesgo primero");
 
             document.getElementById('setupName').value = `Cuenta ${balance/1000}k | ${riskPct}%`;
             
@@ -189,7 +195,7 @@ let presets = [];
             const instNameFull = instSelect.options[instSelect.selectedIndex].text;
             const instName = instNameFull.split(' ')[0];
 
-            if (!name) return alert("Ponle un nombre al setup");
+            if (!name) return alert(window.t ? window.t('calc.name_setup_first') : "Ponle un nombre al setup");
 
             const accountCurrency = document.getElementById('accountCurrency').value;
             const newPreset = { id: Date.now(), name, balance, riskPct, instKey, instName, group, quoteCurrency: quoteCur, accountCurrency };
@@ -292,7 +298,8 @@ let presets = [];
         function renderPresets() {
             const container = document.getElementById('presetsGrid');
             if (presets.length === 0) {
-                container.innerHTML = `<div class="col-span-full py-8 text-center border-2 border-dashed border-main rounded-xl text-gray-500 bg-gray-900/10"><p class="text-xs">No hay setups guardados</p></div>`;
+                const noSetups = window.t ? window.t('calc.no_setups') : 'No hay setups guardados';
+                container.innerHTML = `<div class="col-span-full py-8 text-center border-2 border-dashed border-main rounded-xl text-gray-500 bg-gray-900/10"><p class="text-xs" data-i18n="calc.no_setups">${noSetups}</p></div>`;
                 return;
             }
 
@@ -339,9 +346,10 @@ let presets = [];
                                     lotResult = (riskAmount / (presetPips * pipValAcct)).toFixed(2);
                                     
                                     const isCopied = copiedPresets.get(p.id) === lotResult;
+                                    const copyActionText = window.t ? window.t('calc.copy_action') : 'COPIAR';
                                     copyButtonHTML = `
                                         <button onclick="copyLotage(this, '${lotResult}', ${p.id}); event.stopPropagation();" class="text-[9px] font-black bg-blue-600 hover:bg-blue-500 text-white border border-transparent px-2 py-1 rounded shadow-sm transition-all flex items-center gap-1 active:scale-95 ${isCopied ? 'copy-done' : ''}">
-                                            ${isCopied ? `<i class="fa-solid fa-check"></i> ${lotResult}` : '<i class="fa-regular fa-copy"></i> COPIAR'}
+                                            ${isCopied ? `<i class="fa-solid fa-check"></i> ${lotResult}` : `<i class="fa-regular fa-copy"></i> ${copyActionText}`}
                                         </button>
                                     `;
                                 }
@@ -414,3 +422,9 @@ let presets = [];
             // Inicia la carga de precios al abrir (y luego calcula automáticamente)
             fetchExchangeRates(); 
         };
+
+        // Re-render and recalculate when language changes
+        window.addEventListener('languageChanged', () => {
+            calculateMain();
+            renderPresets();
+        });
