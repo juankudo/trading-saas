@@ -141,20 +141,21 @@ function updateAppSubscriptionUI(subState) {
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
 
     const userPill = document.getElementById('app-user-pill');
+    const userPrefix = (typeof window.t === 'function') ? window.t('nav.user_prefix', 'Usuario') : 'Usuario';
     if (userEmail && user && user.email) {
         userEmail.textContent = user.email;
     }
     if (userPill && user && user.email) {
-        userPill.title = `Usuario: ${user.email}`;
+        userPill.title = `${userPrefix}: ${user.email}`;
     }
     const userContainer = document.getElementById('app-user-menu-container');
     if (userContainer && user && user.email) {
-        userContainer.title = `Usuario: ${user.email}`;
+        userContainer.title = `${userPrefix}: ${user.email}`;
     }
 
     if (userBadge) {
         let iconHtml = '<i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>';
-        let badgeText = 'Prueba';
+        let badgeText = (typeof window.t === 'function') ? window.t('nav.trial', 'Prueba') : 'Prueba';
         let colorClasses = "bg-emerald-950/90 text-emerald-400 border-emerald-800";
 
         if (subState.isPaid) {
@@ -162,15 +163,19 @@ function updateAppSubscriptionUI(subState) {
                 ? subState.expiresAt.toLocaleDateString() 
                 : new Date(subState.expiresAt).toLocaleDateString();
             iconHtml = '<i class="fa-solid fa-crown text-amber-400 text-xs shrink-0"></i>';
-            badgeText = `Pro Activo (${expDateStr})`;
+            badgeText = (typeof window.t === 'function')
+                ? window.t('nav.pro_active', 'Pro Activo ({0})').replace('{0}', expDateStr)
+                : `Pro Activo (${expDateStr})`;
             colorClasses = "bg-emerald-950/90 text-emerald-300 border-emerald-700/80 shadow-sm";
         } else if (subState.expired) {
             iconHtml = '<i class="fa-solid fa-lock text-rose-400 text-xs shrink-0"></i>';
-            badgeText = `Solo Lectura`;
+            badgeText = (typeof window.t === 'function') ? window.t('nav.readonly_badge', 'Solo Lectura') : `Solo Lectura`;
             colorClasses = "bg-rose-950/90 text-rose-300 border-rose-700/80 shadow-sm animate-pulse";
         } else if (subState.isTrial) {
             iconHtml = '<i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>';
-            badgeText = `Prueba: ${subState.daysRemaining}d`;
+            badgeText = (typeof window.t === 'function')
+                ? window.t('nav.trial_badge', 'Prueba: {0}d').replace('{0}', subState.daysRemaining)
+                : `Prueba: ${subState.daysRemaining}d`;
             colorClasses = subState.daysRemaining <= 3 
                 ? "bg-amber-950/90 text-amber-400 border-amber-700 animate-pulse"
                 : "bg-emerald-950/90 text-emerald-400 border-emerald-800";
@@ -224,6 +229,7 @@ function applyReadOnlyMode(isReadOnly, message = "") {
 }
 
 window.addEventListener('languageChanged', () => {
+    updateUserNavBadge();
     const banner = document.getElementById('readonly-warning-banner');
     if (banner && !banner.classList.contains('hidden')) {
         const msgEl = document.getElementById('readonly-banner-msg');

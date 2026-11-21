@@ -90,21 +90,21 @@
                     <i class="fa-solid fa-globe text-emerald-400 text-xs"></i>
                     <span id="lang-toggle-label" translate="no" class="notranslate">EN</span>
                 </button>
-                <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2 py-1 rounded-lg text-xs shrink-0 shadow-sm" title="Usuario conectado">
+                <div id="app-user-menu-container" class="flex items-center gap-1.5 bg-gray-900/90 border border-gray-700/80 px-2 py-1 rounded-lg text-xs shrink-0 shadow-sm" title="Usuario conectado" data-i18n-title="nav.user_connected">
                     <!-- Pastilla de Usuario / Email (Icono 👤, despliega email al hover) -->
-                    <div id="app-user-pill" class="nav-pill-expandable bg-gray-800/80 hover:bg-gray-700/80 border border-main/80 text-gray-300 cursor-default select-none" title="Usuario conectado">
+                    <div id="app-user-pill" class="nav-pill-expandable bg-gray-800/80 hover:bg-gray-700/80 border border-main/80 text-gray-300 cursor-default select-none" title="Usuario conectado" data-i18n-title="nav.user_connected">
                         <i class="fa-solid fa-user text-gray-400 text-xs shrink-0"></i>
                         <span id="app-user-email" class="nav-pill-label text-xs text-gray-300 font-medium whitespace-nowrap overflow-hidden">trader@email.com</span>
                     </div>
 
                     <!-- Pastilla de Tiempo / Plan (Icono 🕒, despliega días/plan al hover) -->
-                    <span id="app-user-badge" class="nav-pill-expandable bg-emerald-950/90 border border-emerald-800 text-emerald-400 cursor-default select-none" title="Prueba activa">
+                    <span id="app-user-badge" class="nav-pill-expandable bg-emerald-950/90 border border-emerald-800 text-emerald-400 cursor-default select-none" title="Prueba activa" data-i18n-title="nav.trial_active">
                         <i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>
                         <span class="nav-pill-label text-xs font-bold text-emerald-400 whitespace-nowrap overflow-hidden" data-i18n="nav.trial_days">Prueba 7 días</span>
                     </span>
 
                     <!-- Botón Cerrar Sesión -->
-                    <button onclick="logout()" class="p-1.5 text-gray-400 hover:text-red-400 transition rounded-md hover:bg-gray-800" title="Cerrar sesión">
+                    <button onclick="logout()" class="p-1.5 text-gray-400 hover:text-red-400 transition rounded-md hover:bg-gray-800" title="Cerrar sesión" data-i18n-title="nav.logout">
                         <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
                     </button>
                 </div>
@@ -138,7 +138,7 @@
                 <i class="fa-solid fa-upload"></i> <span data-i18n="toolbar.import">Importar</span>
             </button>
             <div class="relative inline-block text-left" id="guideDropdownContainer">
-                <button id="btn-tour-guide" onclick="toggleGuideMenu()" class="bg-gray-800 hover:bg-emerald-900/40 hover:border-emerald-700/60 border border-main text-gray-300 hover:text-emerald-300 text-sm px-3 py-2 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Guías y ayuda interactiva">
+                <button id="btn-tour-guide" onclick="toggleGuideMenu()" class="bg-gray-800 hover:bg-emerald-900/40 hover:border-emerald-700/60 border border-main text-gray-300 hover:text-emerald-300 text-sm px-3 py-2 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Guías y ayuda interactiva" data-i18n-title="toolbar.guide_tooltip">
                     <i class="fa-solid fa-compass text-emerald-400"></i> <span class="hidden md:inline" data-i18n="toolbar.guide">Guía</span> <i class="fa-solid fa-chevron-down text-xs ml-0.5 opacity-70"></i>
                 </button>
                 <div id="guideMenu" class="hidden absolute right-0 mt-2 w-64 bg-card border border-main rounded-xl shadow-2xl z-50 overflow-hidden backdrop-blur-md">
@@ -156,30 +156,30 @@
                             <div class="text-[10px] text-gray-400" data-i18n="toolbar.trade_lifecycle_desc">Cómo registrar la entrada y editar al salir</div>
                         </div>
                     </button>
-                    <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" onclick="toggleGuideMenu()" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-rose-950/40 hover:text-rose-300 flex items-center gap-2.5 transition" title="Ver videos tutoriales en nuestro canal oficial">
+                    <a href="https://www.youtube.com/@tradingjournalpro" target="_blank" rel="noopener noreferrer" onclick="toggleGuideMenu()" class="w-full text-left px-4 py-2.5 text-xs text-gray-200 hover:bg-rose-950/40 hover:text-rose-300 flex items-center gap-2.5 transition" title="Ver videos tutoriales en nuestro canal oficial" data-i18n-title="toolbar.video_tutorials_tooltip">
                         <i class="fa-brands fa-youtube text-rose-500 text-sm"></i>
                         <div>
-                            <div class="font-bold text-white flex items-center gap-1.5">Tutoriales en Video <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-gray-400"></i></div>
+                            <div class="font-bold text-white flex items-center gap-1.5"><span data-i18n="toolbar.video_tutorials">Tutoriales en Video</span> <i class="fa-solid fa-arrow-up-right-from-square text-[9px] text-gray-400"></i></div>
                             <div class="text-[10px] text-gray-400" data-i18n="toolbar.video_tutorials_desc">Canal oficial de YouTube (@tradingjournalpro)</div>
                         </div>
                     </a>
                 </div>
             </div>
-            <a href="calculadora/index.html" target="_blank" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Abrir Calculadora de Lotaje en nueva pestaña">
+            <a href="calculadora/index.html" target="_blank" class="bg-gray-800 hover:bg-gray-700 border border-main text-gray-300 text-sm px-3 py-2 rounded-lg flex items-center gap-2 transition" title="Abrir Calculadora de Lotaje en nueva pestaña" data-i18n-title="toolbar.calc_tooltip">
                 <i class="fa-solid fa-calculator text-blue-400"></i> <span class="hidden md:inline" data-i18n="toolbar.calculator">Calculadora</span>
             </a>
-            <button onclick="openResetModal()" title="Reiniciar Entorno" class="bg-gray-800 hover:bg-red-900/40 border border-main text-gray-400 hover:text-red-400 text-sm p-2 rounded-lg transition">
+            <button onclick="openResetModal()" title="Reiniciar Entorno" data-i18n-title="toolbar.reset_tooltip" class="bg-gray-800 hover:bg-red-900/40 border border-main text-gray-400 hover:text-red-400 text-sm p-2 rounded-lg transition">
                 <i class="fa-solid fa-rotate-left"></i>
             </button>
             
             <!-- Cloud Sync Indicator (Comprimido a check, despliega al hover sin romper la línea) -->
-            <div id="cloud-sync-status" class="nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main text-emerald-400 cursor-default select-none" title="Sincronizado con la nube">
+            <div id="cloud-sync-status" class="nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main text-emerald-400 cursor-default select-none" title="Sincronizado con la nube" data-i18n-title="toolbar.sync_tooltip">
                 <i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>
                 <span class="nav-pill-label text-xs font-medium text-emerald-400" data-i18n="toolbar.sync_status">Sincronizado</span>
             </div>
 
             <!-- Botón Suscripción (Comprimido a diamante, despliega al hover sin romper la línea) -->
-            <button onclick="openCheckoutModal()" class="nav-pill-expandable font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 shadow cursor-pointer" title="Ver planes y suscripción">
+            <button onclick="openCheckoutModal()" class="nav-pill-expandable font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 shadow cursor-pointer" title="Ver planes y suscripción" data-i18n-title="toolbar.subscription_tooltip">
                 <i class="fa-solid fa-gem text-xs shrink-0"></i>
                 <span class="nav-pill-label text-xs" data-i18n="toolbar.subscription">Suscripción</span>
             </button>
@@ -311,7 +311,7 @@
                         </div>
                         <div id="dashboardActualBalanceGroup" class="flex items-center gap-2 ml-0 sm:ml-2">
                             <span class="text-sm font-bold text-gray-400" data-i18n="metrics.actual_balance">Actual (Opcional):</span>
-                            <div class="relative" title="Último cierre informado; las operaciones posteriores se suman al cálculo. No incluye comisiones.">
+                            <div class="relative" title="Último cierre informado; las operaciones posteriores se suman al cálculo. No incluye comisiones." data-i18n-title="metrics.actual_balance_tooltip">
                                 <span class="absolute left-2.5 top-1.5 text-gray-400 font-bold">$</span>
                                 <input type="number" step="0.01" id="dashboardBalanceActual" onchange="updateActualBalance()" placeholder="Auto" class="bg-gray-900 border border-main rounded pl-6 pr-2 py-1 text-xs font-bold text-blue-300 focus:outline-none focus:border-blue-400 w-24 placeholder-gray-600">
                             </div>
@@ -587,10 +587,10 @@
                         </div>
                     </div>
                     <div class="flex items-center justify-between gap-1.5 pt-3 border-t border-gray-800 mt-2">
-                        <button onclick="navDailyCalendar(-1)" class="flex-1 py-1.5 px-2 rounded-lg bg-gray-900 hover:bg-gray-800 border border-main text-gray-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1 transition" title="Mes anterior">
+                        <button onclick="navDailyCalendar(-1)" class="flex-1 py-1.5 px-2 rounded-lg bg-gray-900 hover:bg-gray-800 border border-main text-gray-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1 transition" title="Mes anterior" data-i18n-title="calendar.prev_month">
                             <i class="fa-solid fa-chevron-left text-[10px]"></i> Ant.
                         </button>
-                        <button onclick="navDailyCalendar(1)" class="flex-1 py-1.5 px-2 rounded-lg bg-gray-900 hover:bg-gray-800 border border-main text-gray-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1 transition" title="Mes siguiente">
+                        <button onclick="navDailyCalendar(1)" class="flex-1 py-1.5 px-2 rounded-lg bg-gray-900 hover:bg-gray-800 border border-main text-gray-300 hover:text-white text-xs font-semibold flex items-center justify-center gap-1 transition" title="Mes siguiente" data-i18n-title="calendar.next_month">
                             Sig. <i class="fa-solid fa-chevron-right text-[10px]"></i>
                         </button>
                     </div>
@@ -641,7 +641,7 @@
                 <div id="sessionPairContainer">
                     <div class="flex items-center justify-between mb-1.5">
                         <label class="block text-xs font-semibold text-gray-300" data-i18n="modal_session.pair">Activo / Par de la sesión</label>
-                        <button type="button" onclick="openPairManager()" class="text-xs text-gray-400 hover:text-white transition" title="Gestionar pares de backtesting"><i class="fa-solid fa-gear"></i></button>
+                        <button type="button" onclick="openPairManager()" class="text-xs text-gray-400 hover:text-white transition" title="Gestionar pares de backtesting" data-i18n-title="pairs.manage_backtest_pairs"><i class="fa-solid fa-gear"></i></button>
                     </div>
                     <select id="inputSessionPair" required class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white uppercase focus:border-blue-500 focus:outline-none transition"></select>
                     <p class="text-[10px] text-gray-500 mt-1" data-i18n="modal_session.pair_hint">Este activo queda fijo para todas las operaciones de la sesión.</p>
@@ -1013,7 +1013,7 @@
                 <h3 id="modalTitle" class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
                     <i class="fa-solid fa-pen-to-square text-green-500"></i> Nueva Entrada de Trading
                 </h3>
-                <button type="button" onclick="openTradeLifecycleGuide()" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Ver cómo registrar la entrada y el análisis posterior">
+                <button type="button" onclick="openTradeLifecycleGuide()" class="text-xs font-semibold text-emerald-400 hover:text-emerald-300 bg-emerald-950/60 hover:bg-emerald-900/80 border border-emerald-800/80 px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition shadow-sm" title="Ver cómo registrar la entrada y el análisis posterior" data-i18n-title="lifecycle.open_guide_tooltip">
                     <i class="fa-solid fa-graduation-cap text-emerald-400"></i> <span class="hidden sm:inline" data-i18n="modal_trade.guide_badge">Guía Antes / Después</span>
                 </button>
             </div>
@@ -1078,7 +1078,7 @@
                     <div>
                         <div class="flex items-center justify-between mb-1">
                                                         <label id="tradePairLabel" class="block font-medium text-gray-300" data-i18n="modal_trade.pair_label">Activo / Par</label>
-                        <button id="tradePairManagerButton" type="button" onclick="openPairManager()" class="text-xs text-gray-400 hover:text-white transition" title="Gestionar Pares"><i class="fa-solid fa-gear"></i></button>
+                        <button id="tradePairManagerButton" type="button" onclick="openPairManager()" class="text-xs text-gray-400 hover:text-white transition" title="Gestionar Pares" data-i18n-title="pairs.manage_pairs"><i class="fa-solid fa-gear"></i></button>
 
                         </div>
                         <select id="inputPar" required onchange="calculatePositionSize()" class="w-full bg-gray-900 border border-main rounded p-2 text-white uppercase font-semibold focus:outline-none focus:border-gray-500">
@@ -1160,7 +1160,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block font-medium text-gray-300 mb-1" title="Estimación basada en riesgo, stop loss y valor de pip estándar" data-i18n="modal_trade.lot_calc">Lotaje estimado (auto)</label>
+                        <label class="block font-medium text-gray-300 mb-1" title="Estimación basada en riesgo, stop loss y valor de pip estándar" data-i18n-title="form.lot_calc_tooltip" data-i18n="modal_trade.lot_calc">Lotaje estimado (auto)</label>
                         <div id="inputLotajeCalc" class="w-full bg-gray-800 border border-main rounded p-2 text-blue-300 font-bold min-h-[34px]">—</div>
                         <p id="inputLotajeHelp" class="text-[10px] text-gray-500 mt-1" data-i18n="modal_trade.lot_help">Estimado; el valor del pip puede variar según el broker.</p>
                     </div>
@@ -1436,9 +1436,9 @@
                     <i class="fa-solid fa-vial text-emerald-400"></i> Herramientas de Prueba:
                 </span>
                 <div class="flex items-center gap-2">
-                    <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura" data-i18n="app_auto.simular_prueba_vencida">Simular Prueba Vencida</button>
+                    <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura" data-i18n-title="checkout.simulate_expired_tooltip" data-i18n="app_auto.simular_prueba_vencida">Simular Prueba Vencida</button>
                     <span>·</span>
-                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días" data-i18n="app_auto.restablecer_7_d_as">Restablecer 7 Días</button>
+                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días" data-i18n-title="checkout.simulate_restore_tooltip" data-i18n="app_auto.restablecer_7_d_as">Restablecer 7 Días</button>
                 </div>
             </div>
 
@@ -1651,7 +1651,7 @@
         <div id="tourTooltip" class="absolute z-10 w-[92vw] sm:w-[380px] bg-gray-900/95 border border-emerald-500/50 rounded-2xl p-5 shadow-2xl backdrop-blur-xl pointer-events-auto transition-all duration-300">
             <div class="flex items-center justify-between mb-2">
                 <span id="tourStepBadge" class="px-2.5 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-emerald-950 text-emerald-400 border border-emerald-800/80" data-i18n="app_auto.paso_1_de_4">Paso 1 de 4</span>
-                <button type="button" onclick="closeAppTour()" class="text-gray-400 hover:text-white text-sm p-1 transition" title="Saltar tour">
+                <button type="button" onclick="closeAppTour()" class="text-gray-400 hover:text-white text-sm p-1 transition" title="Saltar tour" data-i18n-title="tour.skip_tooltip">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>

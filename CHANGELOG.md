@@ -7,7 +7,12 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [v3.9.6] - 2026-11-20
 
-### 🌐 Localización Reactiva de Métricas Globales, Tabla de Balances y Cache-Busting
+### 🌐 Localización Reactiva de Métricas Globales, Tabla de Balances, Guías y Tooltips
+- **Localización Completa de Descripciones y Tooltips del Menú Guía y Barra de Herramientas (`app.html`, `js/app.js`, `js/i18n.js`):**
+  - Tooltips de navegación totalmente reactivos: Guía (`Guides & interactive help`), Calculadora (`Open Lot Size Calculator in new tab`), Suscripción (`View plans & subscription`), Sincronización en la nube (`Synced with cloud` / `Syncing with cloud...`) y Reinicio de entorno (`Reset Environment`).
+  - Menú desplegable de Guía traducido al 100%: "Tour General" (`General Tour`), "Entrada y Post-Análisis" (`Entry & Post-Analysis`) y "Tutoriales en Video" (`Video Tutorials`) con descripciones operativas completas y enlaces oficiales a YouTube.
+  - Pasos del tour guiado de formulario (`showFormStep`) y ciclo de vida de operaciones (`tradeLifecycleModal`) totalmente sincronizados con botones "Next", "Back", "Understood!" y "Done!".
+  - Pastilla de usuario y suscripción en el Navbar traducida dinámicamente (`User: <email>`, `7-day Trial`, `Trial: <días>d`, `Read-Only`, `Pro Active`).
 - **Badge Reactivo de Métricas Globales (`js/app.js`):**
   - Implementado enlace dinámico `data-i18n="tabs.global_metrics"` en `#active-account-name` y `data-i18n-title` en `#active-account-badge`.
   - El badge superior en la barra de pestañas responde instantáneamente a cambios de idioma en caliente (`Global Metrics` en inglés, `Métricas globales` en español), tanto en la vista de Dashboard/Métricas como en Seguimiento de Balances.

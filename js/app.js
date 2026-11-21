@@ -7605,11 +7605,19 @@ function renderMonthlyPerformance() {
                 }
             }
 
+            const isEn = window.i18n && window.i18n.getLanguage() === 'en';
             const prevBtn = document.getElementById('tl-btn-prev');
             const nextBtn = document.getElementById('tl-btn-next');
-            if (prevBtn) prevBtn.disabled = step === 1;
+            if (prevBtn) {
+                prevBtn.disabled = step === 1;
+                prevBtn.textContent = (typeof window.t === 'function') ? window.t('lifecycle.btn_prev', isEn ? "Back" : "Anterior") : (isEn ? "Back" : "Anterior");
+            }
             if (nextBtn) {
-                nextBtn.textContent = step === 3 ? "¡Entendido!" : "Siguiente";
+                if (step === 3) {
+                    nextBtn.textContent = (typeof window.t === 'function') ? window.t('lifecycle.btn_understood', isEn ? "Understood!" : "¡Entendido!") : (isEn ? "Understood!" : "¡Entendido!");
+                } else {
+                    nextBtn.textContent = (typeof window.t === 'function') ? window.t('lifecycle.btn_next', isEn ? "Next" : "Siguiente") : (isEn ? "Next" : "Siguiente");
+                }
             }
         }
 
@@ -7692,18 +7700,26 @@ function renderMonthlyPerformance() {
                 const nextBtnIcon = document.getElementById('tourNextBtnIcon');
                 const dotsContainer = document.getElementById('tourStepDots');
 
-                if (badge) badge.textContent = `Formulario: ${idx + 1} de ${FORM_TOUR_STEPS.length}`;
+                const isEn = window.i18n && window.i18n.getLanguage() === 'en';
+                if (badge) {
+                    badge.textContent = (typeof window.t === 'function')
+                        ? window.t('tour.form_step_counter', `Formulario: ${idx + 1} de ${FORM_TOUR_STEPS.length}`).replace('{0}', idx + 1).replace('{1}', FORM_TOUR_STEPS.length)
+                        : (isEn ? `Form: ${idx + 1} of ${FORM_TOUR_STEPS.length}` : `Formulario: ${idx + 1} de ${FORM_TOUR_STEPS.length}`);
+                }
                 if (icon) icon.className = `${step.icon} text-emerald-400`;
-                if (title) title.textContent = step.title;
-                if (desc) desc.textContent = step.desc;
-                if (prevBtn) prevBtn.disabled = idx === 0;
+                if (title) title.textContent = (step.titleKey && window.t) ? window.t(step.titleKey, step.title) : step.title;
+                if (desc) desc.textContent = (step.descKey && window.t) ? window.t(step.descKey, step.desc) : step.desc;
+                if (prevBtn) {
+                    prevBtn.disabled = idx === 0;
+                    prevBtn.innerHTML = `<i class="fa-solid fa-arrow-left text-[10px]"></i> ${(typeof window.t === 'function') ? window.t('lifecycle.btn_prev', isEn ? "Back" : "Anterior") : (isEn ? "Back" : "Anterior")}`;
+                }
 
                 if (nextBtnText && nextBtnIcon) {
                     if (idx === FORM_TOUR_STEPS.length - 1) {
-                        nextBtnText.textContent = "¡Listo!";
+                        nextBtnText.textContent = (typeof window.t === 'function') ? window.t('tour.btn_done', isEn ? "Done!" : "¡Listo!") : (isEn ? "Done!" : "¡Listo!");
                         nextBtnIcon.className = "fa-solid fa-check text-[10px]";
                     } else {
-                        nextBtnText.textContent = "Siguiente";
+                        nextBtnText.textContent = (typeof window.t === 'function') ? window.t('lifecycle.btn_next', isEn ? "Next" : "Siguiente") : (isEn ? "Next" : "Siguiente");
                         nextBtnIcon.className = "fa-solid fa-arrow-right text-[10px]";
                     }
                 }

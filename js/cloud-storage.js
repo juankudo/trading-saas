@@ -458,20 +458,24 @@ function updateCloudSyncIndicator(status, text) {
 
     let iconHtml = '<i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>';
     let textColor = 'text-emerald-400';
-    let defaultText = text || 'Sincronizado';
+    let defaultText = text || ((typeof window.t === 'function') ? window.t('sync.synced', 'Sincronizado') : 'Sincronizado');
+    let tooltipText = (typeof window.t === 'function') ? window.t('sync.synced_tooltip', 'Sincronizado con la nube') : 'Sincronizado con la nube';
 
     if (status === 'syncing') {
         iconHtml = '<i class="fa-solid fa-arrows-rotate fa-spin text-blue-400 text-sm shrink-0"></i>';
         textColor = 'text-blue-400';
-        defaultText = text || 'Sincronizando...';
+        defaultText = text || ((typeof window.t === 'function') ? window.t('sync.syncing', 'Sincronizando...') : 'Sincronizando...');
+        tooltipText = (typeof window.t === 'function') ? window.t('sync.syncing_tooltip', 'Sincronizando con la nube...') : 'Sincronizando con la nube...';
     } else if (status === 'synced') {
         iconHtml = '<i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>';
         textColor = 'text-emerald-400';
-        defaultText = text || 'Sincronizado';
+        defaultText = text || ((typeof window.t === 'function') ? window.t('sync.synced', 'Sincronizado') : 'Sincronizado');
+        tooltipText = (typeof window.t === 'function') ? window.t('sync.synced_tooltip', 'Sincronizado con la nube') : 'Sincronizado con la nube';
     } else if (status === 'error') {
         iconHtml = '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm shrink-0"></i>';
         textColor = 'text-amber-400';
-        defaultText = text || 'Error de sincronización';
+        defaultText = text || ((typeof window.t === 'function') ? window.t('sync.error', 'Error de sincronización') : 'Error de sincronización');
+        tooltipText = (typeof window.t === 'function') ? window.t('sync.error_tooltip', 'Error de sincronización con la nube') : 'Error de sincronización con la nube';
     }
 
     indicator.innerHTML = `
@@ -479,5 +483,20 @@ function updateCloudSyncIndicator(status, text) {
         <span class="nav-pill-label text-xs font-medium ${textColor}">${defaultText}</span>
     `;
     indicator.className = `nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main ${textColor} cursor-default select-none`;
-    indicator.title = defaultText;
+    indicator.title = tooltipText;
 }
+
+window.addEventListener('languageChanged', () => {
+    const indicator = document.getElementById('cloud-sync-status');
+    if (indicator) {
+        const isSpinning = indicator.querySelector('.fa-spin');
+        const isError = indicator.querySelector('.fa-triangle-exclamation');
+        if (isSpinning) {
+            updateCloudSyncIndicator('syncing');
+        } else if (isError) {
+            updateCloudSyncIndicator('error');
+        } else {
+            updateCloudSyncIndicator('synced');
+        }
+    }
+});
