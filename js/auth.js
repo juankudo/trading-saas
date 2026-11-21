@@ -48,7 +48,7 @@ function getTrialInfo(user) {
     
     // Si tiene suscripción activa de pago (Stripe / NOWPayments)
     if (user.subscription && user.subscription.status === 'active') {
-        const expDate = new Date(user.subscription.current_period_end);
+        const expDate = new Date(user.subscription.current_period_end || (Date.now() + 365 * 86400000));
         const daysLeft = Math.ceil((expDate - new Date()) / (1000 * 60 * 60 * 24));
         return {
             isTrial: false,
@@ -288,20 +288,34 @@ function updateNavbarUserUI() {
 
         if (userTrialBadge) {
             const trial = getTrialInfo(user);
+            const isEn = (document.documentElement.lang === 'en') ||
+                         (window.location.pathname.includes('en.html')) ||
+                         (typeof window.i18n !== 'undefined' && window.i18n.getLanguage() === 'en') ||
+                         (localStorage.getItem('astrade_lang') === 'en');
             if (trial.isTrial) {
-                userTrialBadge.textContent = `Prueba: ${trial.daysRemaining} días`;
-                userTrialBadge.className = trial.daysRemaining <= 3 
-                    ? "px-2 py-0.5 text-xs font-semibold rounded bg-amber-900/60 text-amber-300 border border-amber-600"
-                    : "px-2 py-0.5 text-xs font-semibold rounded bg-green-900/60 text-green-300 border border-green-600";
+                const days = trial.daysRemaining;
+                if (isEn) {
+                    userTrialBadge.textContent = days === 1 ? 'Active Trial (1 day)' : `Active Trial (${days} days)`;
+                } else {
+                    userTrialBadge.textContent = days === 1 ? 'Prueba Activa (1 día)' : `Prueba Activa (${days} días)`;
+                }
+                userTrialBadge.className = days <= 3 
+                    ? "px-2.5 py-1 text-xs font-bold rounded bg-amber-950/80 text-amber-300 border border-amber-700/60"
+                    : "px-2.5 py-1 text-xs font-bold rounded bg-emerald-950/80 text-emerald-400 border border-emerald-700/60";
             } else if (trial.isPaid) {
-                userTrialBadge.textContent = "Plan Pro Activo";
-                userTrialBadge.className = "px-2 py-0.5 text-xs font-semibold rounded bg-emerald-900/60 text-emerald-300 border border-emerald-600";
+                userTrialBadge.textContent = isEn ? "Pro Active" : "Pro Activo";
+                userTrialBadge.className = "px-2.5 py-1 text-xs font-bold rounded bg-emerald-950 text-emerald-300 border border-emerald-600";
             }
         }
     } else {
         if (guestNav) guestNav.classList.remove('hidden');
         if (userNav) userNav.classList.add('hidden');
     }
+}
+
+// Sincronización reactiva con cambio de idioma
+if (typeof window !== 'undefined') {
+    window.addEventListener('languageChanged', updateNavbarUserUI);
 }
 
 // Auto-inicializar cuando el DOM esté listo

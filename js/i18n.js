@@ -5358,6 +5358,8 @@
             "checkout.semester_desc": "Ahorras 10% ($22.50/mes · Ahorras $15) · Facturado cada 6 meses",
             "checkout.year_desc": "Ahorras 17% ($20.83/mes · Ahorras $50) · Facturado anualmente",
             "checkout.official_production": "Producción Oficial",
+            "checkout.back_to_plans": "← Cambiar método / Volver",
+            "checkout.selected_plan": "Plan seleccionado",
 
 
 
@@ -12095,6 +12097,8 @@
             "checkout.semester_desc": "Save 10% ($22.50/mo · Save $15) · Billed every 6 months",
             "checkout.year_desc": "Save 17% ($20.83/mo · Save $50) · Billed annually",
             "checkout.official_production": "Official Production",
+            "checkout.back_to_plans": "← Change method / Back",
+            "checkout.selected_plan": "Selected plan",
 
 
 

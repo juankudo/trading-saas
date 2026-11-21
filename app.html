@@ -1309,150 +1309,170 @@
 
     <!-- MODAL DE CHECKOUT / RENOVACIÓN DE SUSCRIPCIÓN -->
     <div id="checkoutModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-[70] hidden items-center justify-center p-4">
-        <div class="bg-[#111625] border border-gray-700/80 rounded-2xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+        <div class="bg-[#111625] border border-gray-700/80 rounded-2xl w-full max-w-lg p-5 sm:p-7 shadow-2xl relative animate-in fade-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             
             <!-- Close Button -->
             <button onclick="closeCheckoutModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg p-2 transition">
                 <i class="fa-solid fa-xmark"></i>
             </button>
 
-            <div class="text-center mb-5">
-                <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-2 text-xl font-black shadow-lg shadow-emerald-500/20">
-                    <i class="fa-solid fa-gem"></i>
-                </div>
-                <h3 class="text-xl font-black text-white" data-i18n="checkout.title">Membresía Pro Ilimitada</h3>
-                <p class="text-xs text-gray-400 mt-1" data-i18n="checkout.subtitle">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
-                <div class="mt-2">
-                    <span id="checkout-mode-indicator" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
-                        <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Modo Sandbox Activo
-                    </span>
-                </div>
-            </div>
-
-            <!-- Selector de Períodos -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-5 text-center">
-                <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-2.5 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
-                    <span data-i18n="checkout.month_1">1 Mes</span>
-                </button>
-                <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    <span data-i18n="checkout.month_3">3 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
-                </button>
-                <button type="button" id="checkout-period-semester" onclick="selectCheckoutPeriod('semester')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    <span data-i18n="checkout.month_6">6 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-10%</span>
-                </button>
-                <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    <span data-i18n="checkout.month_12">12 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-17%</span>
-                </button>
-            </div>
-
-            <!-- Precio Seleccionado -->
-            <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-5">
-                <span id="checkout-price-amount" class="text-3xl font-black text-white block">$25 USD</span>
-                <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="checkout.period_month_label">por 1 Mes</span>
-                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
-            </div>
-
-            <!-- Opciones de Pago (Pasarela Dual) -->
-            <div class="space-y-3 mb-5">
-                <!-- Opción 1: Tarjetas Globales (Stripe) -->
-                <button onclick="handleStripeCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
-                    <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-credit-card text-base"></i> <span data-i18n="checkout.pay_card">Pagar con Tarjeta (Visa, Mastercard, Apple Pay vía Stripe)</span>
-                    </span>
-                    <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono font-bold">Stripe &rarr;</span>
-                </button>
-
-                <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
-                <button onclick="showCryptoCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white flex items-center justify-between transition">
-                    <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-coins text-emerald-400 text-base"></i> <span data-i18n="checkout.pay_crypto">Pagar con Criptomonedas (USDT / Crypto)</span>
-                    </span>
-                    <span class="text-xs text-gray-400 font-mono">NOWPayments &rarr;</span>
-                </button>
-            </div>
-
-            <!-- Stripe Card Sandbox Simulation Drawer -->
-            <div id="checkout-stripe-sandbox" class="hidden bg-gray-900 border border-emerald-500/50 rounded-xl p-4 mb-4 text-xs animate-in fade-in">
-                <div class="flex items-center justify-between mb-2.5 border-b border-gray-800 pb-2">
-                    <span class="font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-flask text-emerald-400"></i> <span data-i18n="checkout.card_sandbox_title">Simulación Stripe Checkout (Sandbox)</span>
-                    </span>
-                    <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60" data-i18n="app_auto.test_mode">TEST MODE</span>
-                </div>
-                <p class="text-gray-300 mb-2 leading-relaxed" data-i18n="checkout.card_sandbox_desc">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
-                <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 mb-3 space-y-1 font-mono text-[11px]">
-                    <div class="flex justify-between text-gray-400">
-                        <span data-i18n="checkout.sim_card">Tarjeta simulada:</span>
-                        <span class="text-white font-bold">4242 •••• •••• 4242 (Visa Test)</span>
+            <!-- PASO 1: SELECCIÓN DE PLAN Y MÉTODO DE PAGO -->
+            <div id="checkout-step-plans" class="space-y-4">
+                <div class="text-center mb-4">
+                    <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-2 text-xl font-black shadow-lg shadow-emerald-500/20">
+                        <i class="fa-solid fa-gem"></i>
                     </div>
-                    <div class="flex justify-between text-gray-400">
-                        <span data-i18n="checkout.plan_amount">Monto del plan:</span>
-                        <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$25.00 USD</span>
+                    <h3 class="text-xl font-black text-white" data-i18n="checkout.title">Membresía Pro Ilimitada</h3>
+                    <p class="text-xs text-gray-400 mt-1" data-i18n="checkout.subtitle">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
+                    <div class="mt-2">
+                        <span id="checkout-mode-indicator" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Modo Sandbox Activo
+                        </span>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row gap-2">
-                    <button type="button" onclick="simulateCardPaymentSuccess()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-circle-check"></i> <span data-i18n="checkout.sim_success_btn">Simular Pago Exitoso</span>
+
+                <!-- Selector de Períodos -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl text-center">
+                    <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-2.5 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
+                        <span data-i18n="checkout.month_1">1 Mes</span>
                     </button>
-                    <button type="button" onclick="hideCardSandbox()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
-                </div>
-            </div>
-
-            <!-- Crypto Drawer / Factura USDT -->
-            <div id="checkout-crypto-invoice" class="hidden bg-gray-900 border border-emerald-600/40 rounded-xl p-4 mb-4 text-xs">
-                <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2">
-                    <span class="font-bold text-emerald-400 flex items-center gap-1.5">
-                        <i class="fa-brands fa-ethereum"></i> <span data-i18n="checkout.crypto_invoice_title">Transferencia USDT / USDC</span>
-                    </span>
-                    <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">25.00 USDT</span>
-                </div>
-                
-                <p class="text-gray-400 mb-2" data-i18n="checkout.crypto_instruction">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
-                
-                <div class="space-y-2 mb-3">
-                    <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
-                        <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                            <span class="text-emerald-300 font-bold" data-i18n="app_auto.red_tron_trc_20">Red TRON (TRC-20)</span>
-                            <button id="copy-btn-trc" onclick="copyToClipboard('TYDzsYUb93ExampleTRC20AddressPlaceholder77', 'copy-btn-trc')" class="text-emerald-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
-                        </div>
-                        <span class="font-mono text-gray-300 text-[10px] break-all block select-all">TYDzsYUb93ExampleTRC20AddressPlaceholder77</span>
-                    </div>
-
-                    <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
-                        <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                            <span class="text-blue-300 font-bold" data-i18n="app_auto.red_bsc_bep_20_binance">Red BSC (BEP-20 / Binance)</span>
-                            <button id="copy-btn-bsc" onclick="copyToClipboard('0x71C69446B92ExampleBEP20AddressPlaceholder', 'copy-btn-bsc')" class="text-blue-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
-                        </div>
-                        <span class="font-mono text-gray-300 text-[10px] break-all block select-all">0x71C69446B92ExampleBEP20AddressPlaceholder</span>
-                    </div>
-                </div>
-
-                <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-3">
-                    <i class="fa-solid fa-circle-info mt-0.5"></i>
-                    <span data-i18n="checkout.crypto_note">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
-                </div>
-
-                <!-- Botón de Simulación Sandbox Cripto -->
-                <div id="crypto-test-action" class="pt-2 border-t border-gray-800">
-                    <button type="button" onclick="simulateCryptoPaymentSuccess()" class="w-full py-2.5 px-3 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-bolt text-amber-400"></i> <span data-i18n="checkout.crypto_sim_btn">Simular Confirmación de Transferencia (TxHash OK)</span>
+                    <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                        <span data-i18n="checkout.month_3">3 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
+                    </button>
+                    <button type="button" id="checkout-period-semester" onclick="selectCheckoutPeriod('semester')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                        <span data-i18n="checkout.month_6">6 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-10%</span>
+                    </button>
+                    <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
+                        <span data-i18n="checkout.month_12">12 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-17%</span>
                     </button>
                 </div>
+
+                <!-- Precio Seleccionado -->
+                <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3.5 text-center">
+                    <span id="checkout-price-amount" class="text-3xl font-black text-white block">$25 USD</span>
+                    <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="checkout.period_month_label">por 1 Mes</span>
+                    <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
+                </div>
+
+                <!-- Opciones de Pago (Pasarela Dual) -->
+                <div class="space-y-2.5">
+                    <!-- Opción 1: Tarjetas Globales (Stripe) -->
+                    <button onclick="handleStripeCheckout()" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
+                        <span class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-credit-card text-base"></i> <span data-i18n="checkout.pay_card">Pagar con Tarjeta (Visa, Mastercard, Apple Pay vía Stripe)</span>
+                        </span>
+                        <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono font-bold">Stripe &rarr;</span>
+                    </button>
+
+                    <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
+                    <button onclick="showCryptoCheckout()" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white flex items-center justify-between transition">
+                        <span class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-coins text-emerald-400 text-base"></i> <span data-i18n="checkout.pay_crypto">Pagar con Criptomonedas (USDT / Crypto)</span>
+                        </span>
+                        <span class="text-xs text-gray-400 font-mono">NOWPayments &rarr;</span>
+                    </button>
+                </div>
+
+                <div class="text-center text-[11px] text-gray-500 pt-1">
+                    <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
+                </div>
+
+                <!-- Sandbox Developer Testing Strip -->
+                <div class="pt-2 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] text-gray-400 font-mono">
+                    <span class="flex items-center gap-1 text-gray-300">
+                        <i class="fa-solid fa-vial text-emerald-400"></i> Herramientas de Prueba:
+                    </span>
+                    <div class="flex items-center gap-2">
+                        <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura" data-i18n-title="checkout.simulate_expired_tooltip" data-i18n="app_auto.simular_prueba_vencida">Simular Prueba Vencida</button>
+                        <span>·</span>
+                        <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días" data-i18n-title="checkout.simulate_restore_tooltip" data-i18n="app_auto.restablecer_7_d_as">Restablecer 7 Días</button>
+                    </div>
+                </div>
             </div>
 
-            <div class="text-center text-[11px] text-gray-500">
-                <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
-            </div>
+            <!-- PASO 2: VISTA DE PAGO DIRECTA (ZERO SCROLL) -->
+            <div id="checkout-step-payment" class="hidden space-y-4">
+                <!-- Barra superior con botón volver y resumen del plan -->
+                <div class="flex items-center justify-between border-b border-gray-800 pb-3 pr-8">
+                    <button type="button" onclick="backToCheckoutPlans()" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-arrow-left"></i> <span data-i18n="checkout.back_to_plans">← Cambiar método / Volver</span>
+                    </button>
+                    <span id="checkout-step2-plan-badge" class="px-2.5 py-1 rounded-lg text-xs font-black bg-gray-900 border border-gray-700 text-white font-mono">
+                        $25.00 USD
+                    </span>
+                </div>
 
-            <!-- Sandbox Developer Testing Strip -->
-            <div class="mt-4 pt-3 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] text-gray-400 font-mono">
-                <span class="flex items-center gap-1 text-gray-300">
-                    <i class="fa-solid fa-vial text-emerald-400"></i> Herramientas de Prueba:
-                </span>
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura" data-i18n-title="checkout.simulate_expired_tooltip" data-i18n="app_auto.simular_prueba_vencida">Simular Prueba Vencida</button>
-                    <span>·</span>
-                    <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días" data-i18n-title="checkout.simulate_restore_tooltip" data-i18n="app_auto.restablecer_7_d_as">Restablecer 7 Días</button>
+                <!-- Stripe Card Sandbox Simulation Drawer -->
+                <div id="checkout-stripe-sandbox" class="hidden bg-gray-900 border border-emerald-500/50 rounded-xl p-4 text-xs animate-in fade-in">
+                    <div class="flex items-center justify-between mb-2.5 border-b border-gray-800 pb-2">
+                        <span class="font-bold text-white flex items-center gap-1.5">
+                            <i class="fa-solid fa-flask text-emerald-400"></i> <span data-i18n="checkout.card_sandbox_title">Simulación Stripe Checkout (Sandbox)</span>
+                        </span>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60" data-i18n="app_auto.test_mode">TEST MODE</span>
+                    </div>
+                    <p class="text-gray-300 mb-2 leading-relaxed" data-i18n="checkout.card_sandbox_desc">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
+                    <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 mb-3 space-y-1 font-mono text-[11px]">
+                        <div class="flex justify-between text-gray-400">
+                            <span data-i18n="checkout.sim_card">Tarjeta simulada:</span>
+                            <span class="text-white font-bold">4242 •••• •••• 4242 (Visa Test)</span>
+                        </div>
+                        <div class="flex justify-between text-gray-400">
+                            <span data-i18n="checkout.plan_amount">Monto del plan:</span>
+                            <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$25.00 USD</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <button type="button" onclick="simulateCardPaymentSuccess()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> <span data-i18n="checkout.sim_success_btn">Simular Pago Exitoso</span>
+                        </button>
+                        <button type="button" onclick="backToCheckoutPlans()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
+                    </div>
+                </div>
+
+                <!-- Crypto Drawer / Factura USDT -->
+                <div id="checkout-crypto-invoice" class="hidden bg-gray-900 border border-emerald-600/40 rounded-xl p-4 text-xs">
+                    <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2">
+                        <span class="font-bold text-emerald-400 flex items-center gap-1.5">
+                            <i class="fa-brands fa-ethereum"></i> <span data-i18n="checkout.crypto_invoice_title">Transferencia USDT / USDC</span>
+                        </span>
+                        <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">25.00 USDT</span>
+                    </div>
+                    
+                    <p class="text-gray-400 mb-2" data-i18n="checkout.crypto_instruction">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
+                    
+                    <div class="space-y-2 mb-3">
+                        <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
+                            <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                                <span class="text-emerald-300 font-bold" data-i18n="app_auto.red_tron_trc_20">Red TRON (TRC-20)</span>
+                                <button id="copy-btn-trc" onclick="copyToClipboard('TYDzsYUb93ExampleTRC20AddressPlaceholder77', 'copy-btn-trc')" class="text-emerald-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
+                            </div>
+                            <span class="font-mono text-gray-300 text-[10px] break-all block select-all">TYDzsYUb93ExampleTRC20AddressPlaceholder77</span>
+                        </div>
+
+                        <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
+                            <div class="flex justify-between text-[11px] text-gray-400 mb-1">
+                                <span class="text-blue-300 font-bold" data-i18n="app_auto.red_bsc_bep_20_binance">Red BSC (BEP-20 / Binance)</span>
+                                <button id="copy-btn-bsc" onclick="copyToClipboard('0x71C69446B92ExampleBEP20AddressPlaceholder', 'copy-btn-bsc')" class="text-blue-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
+                            </div>
+                            <span class="font-mono text-gray-300 text-[10px] break-all block select-all">0x71C69446B92ExampleBEP20AddressPlaceholder</span>
+                        </div>
+                    </div>
+
+                    <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-3">
+                        <i class="fa-solid fa-circle-info mt-0.5"></i>
+                        <span data-i18n="checkout.crypto_note">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
+                    </div>
+
+                    <!-- Botón de Simulación Sandbox Cripto -->
+                    <div id="crypto-test-action" class="pt-2 border-t border-gray-800">
+                        <button type="button" onclick="simulateCryptoPaymentSuccess()" class="w-full py-2.5 px-3 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-bolt text-amber-400"></i> <span data-i18n="checkout.crypto_sim_btn">Simular Confirmación de Transferencia (TxHash OK)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center text-[11px] text-gray-500 pt-1">
+                    <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
                 </div>
             </div>
 
@@ -1722,13 +1742,14 @@
             if (userContainer && user) userContainer.title = `Usuario: ${user.email || user.name || ''}`;
             if (badgeSpan) {
                 const info = getTrialInfo(user);
+                const isEn = (typeof window.i18n !== 'undefined' && window.i18n.getLanguage() === 'en') || (localStorage.getItem('astrade_lang') === 'en');
                 if (info.isTrial) {
-                    badgeSpan.textContent = `Prueba: ${info.daysRemaining}d`;
+                    badgeSpan.textContent = isEn ? `Trial: ${info.daysRemaining}d` : `Prueba: ${info.daysRemaining}d`;
                     badgeSpan.className = info.daysRemaining <= 3 
                         ? "px-2 py-0.5 rounded font-bold bg-amber-950 text-amber-300 border border-amber-800"
                         : "px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-400 border border-emerald-800";
                 } else if (info.isPaid) {
-                    badgeSpan.textContent = "Pro Activo";
+                    badgeSpan.textContent = isEn ? "Pro Active" : "Pro Activo";
                     badgeSpan.className = "px-2 py-0.5 rounded font-bold bg-emerald-950 text-emerald-300 border border-emerald-600";
                 }
             }

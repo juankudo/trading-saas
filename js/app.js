@@ -281,6 +281,19 @@ const initialTrades = [];
             if (typeof renderAll === 'function') {
                 renderAll();
             }
+            const appBadgeSpan = document.getElementById('app-user-badge');
+            if (appBadgeSpan && typeof getCurrentUser === 'function' && typeof getTrialInfo === 'function') {
+                const u = getCurrentUser();
+                if (u) {
+                    const info = getTrialInfo(u);
+                    const isEn = (typeof window.i18n !== 'undefined' && window.i18n.getLanguage() === 'en');
+                    if (info.isTrial) {
+                        appBadgeSpan.textContent = isEn ? `Trial: ${info.daysRemaining}d` : `Prueba: ${info.daysRemaining}d`;
+                    } else if (info.isPaid) {
+                        appBadgeSpan.textContent = isEn ? "Pro Active" : "Pro Activo";
+                    }
+                }
+            }
         });
 
         document.addEventListener("DOMContentLoaded", async () => {

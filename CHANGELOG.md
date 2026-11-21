@@ -5,6 +5,26 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.7] - 2026-11-21
+
+### 💎 Flujo en 2 Pasos del Modal de Checkout (Cero Scroll Vertical)
+- **Modal de Checkout Modular (`app.html`, `js/payments.js` & `js/i18n.js`):**
+  - Reestructurado el modal `#checkoutModal` dividiendo su interfaz en dos fases independientes para eliminar por completo la necesidad de scroll vertical:
+    - **Paso 1 (`#checkout-step-plans`):** Presenta el selector de períodos de suscripción (1, 3, 6, 12 meses), el desglose de precio y los botones de acción para cada pasarela de pago (Tarjeta / Stripe y Criptomonedas / NOWPayments).
+    - **Paso 2 (`#checkout-step-payment`):** Al seleccionar un método de pago, el Paso 1 se oculta limpiamente y se despliega una barra de navegación con botón de retroceso `← Cambiar método / Volver` (`checkout.back_to_plans`), badge con resumen del plan activo (`#checkout-step2-plan-badge`, ej. `"12 Months · $249.00 USD"`) y el contenedor de pago exclusivo (sandbox de tarjeta Stripe o billeteras de USDT).
+  - Los botones de cancelación y cierre reinician el modal al Paso 1 automáticamente.
+
+### 🌐 Internacionalización Dinámica de Badges de Membresía y Período de Prueba
+- **Badges de Navbar en Landing Page (`index.html`, `en.html` & `js/auth.js`):**
+  - El badge `#nav-trial-badge` detecta de forma reactiva el idioma del usuario y la página activa (`en.html` vs `index.html` / `localStorage` / `document.documentElement.lang`).
+  - En inglés muestra: `"Active Trial (X days)"` / `"Active Trial (1 day)"` y `"Pro Active"`.
+  - En español muestra: `"Prueba Activa (X días)"` / `"Prueba Activa (1 día)"` y `"Pro Activo"`.
+  - Vinculado al evento global `languageChanged` para actualización inmediata al alternar de idioma sin requerir recarga.
+- **Badge de Usuario en la Aplicación (`app.html` & `js/app.js`):**
+  - Sincronizado `#app-user-badge` en la inicialización y en el switch de idiomas para reflejar `"Trial: Xd"` / `"Pro Active"` en inglés y `"Prueba: Xd"` / `"Pro Activo"` en español.
+
+---
+
 ## [v3.9.6] - 2026-11-20
 
 ### 🌐 Auditoría y Corrección de Tooltips de Reglas, Metas y Modal de Cuentas

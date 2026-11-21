@@ -250,6 +250,41 @@ window.addEventListener('languageChanged', () => {
 });
 
 /**
+ * Control del Flujo en 2 Pasos del Checkout (Sin scroll vertical)
+ */
+function showCheckoutStep(step) {
+    const stepPlans = document.getElementById('checkout-step-plans');
+    const stepPayment = document.getElementById('checkout-step-payment');
+    if (!stepPlans || !stepPayment) return;
+
+    if (step === 'payment') {
+        stepPlans.classList.add('hidden');
+        stepPayment.classList.remove('hidden');
+
+        // Actualizar resumen del plan en la barra del Paso 2
+        const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
+        if (plan) {
+            const periodText = (typeof window.t === 'function' && plan.periodKey) ? window.t(plan.periodKey, plan.periodText) : plan.periodText;
+            const badge = document.getElementById('checkout-step2-plan-badge');
+            if (badge) {
+                badge.textContent = `${periodText} · $${plan.price}.00 USD`;
+            }
+        }
+    } else {
+        stepPayment.classList.add('hidden');
+        stepPlans.classList.remove('hidden');
+        const sandboxCard = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
+        if (sandboxCard) sandboxCard.classList.add('hidden');
+        const invoiceDiv = document.getElementById('checkout-crypto-invoice');
+        if (invoiceDiv) invoiceDiv.classList.add('hidden');
+    }
+}
+
+function backToCheckoutPlans() {
+    showCheckoutStep('plans');
+}
+
+/**
  * Control del Modal de Checkout
  */
 function openCheckoutModal(defaultPeriod = 'month') {
@@ -262,9 +297,8 @@ function openCheckoutModal(defaultPeriod = 'month') {
     const modal = document.getElementById('checkoutModal');
     if (!modal) return;
 
+    showCheckoutStep('plans');
     updateCheckoutPricingDisplay();
-    hideStripeSandbox();
-    hideCryptoInvoice();
     updateSandboxModeBanner();
 
     modal.classList.remove('hidden');
@@ -276,8 +310,7 @@ function closeCheckoutModal() {
     if (!modal) return;
     modal.classList.add('hidden');
     modal.classList.remove('flex');
-    hideStripeSandbox();
-    hideCryptoInvoice();
+    showCheckoutStep('plans');
 }
 
 function selectCheckoutPeriod(period) {
@@ -377,6 +410,9 @@ const handleCardCheckout = handleStripeCheckout;
 const handleLemonSqueezyCheckout = handleStripeCheckout;
 
 function showCardSandbox() {
+    showCheckoutStep('payment');
+    const invoiceDiv = document.getElementById('checkout-crypto-invoice');
+    if (invoiceDiv) invoiceDiv.classList.add('hidden');
     const sandboxDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
     if (sandboxDiv) {
         sandboxDiv.classList.remove('hidden');
@@ -386,8 +422,7 @@ function showCardSandbox() {
 const showStripeSandbox = showCardSandbox;
 
 function hideCardSandbox() {
-    const sandboxDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
-    if (sandboxDiv) sandboxDiv.classList.add('hidden');
+    backToCheckoutPlans();
 }
 const hideStripeSandbox = hideCardSandbox;
 
@@ -405,18 +440,20 @@ const simulateStripePaymentSuccess = simulateCardPaymentSuccess;
  * Muestra las opciones y factura para pago con Criptomonedas (USDT)
  */
 function showCryptoCheckout() {
-    hideStripeSandbox();
+    showCheckoutStep('payment');
+    const sandboxDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
+    if (sandboxDiv) sandboxDiv.classList.add('hidden');
     const invoiceDiv = document.getElementById('checkout-crypto-invoice');
-    if (invoiceDiv) invoiceDiv.classList.remove('hidden');
-
-    const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
-    const amountSpan = document.getElementById('crypto-amount-display');
-    if (amountSpan) amountSpan.textContent = `${plan.price}.00 USDT`;
+    if (invoiceDiv) {
+        invoiceDiv.classList.remove('hidden');
+        const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
+        const amountSpan = document.getElementById('crypto-amount-display');
+        if (amountSpan && plan) amountSpan.textContent = `${plan.price}.00 USDT`;
+    }
 }
 
 function hideCryptoInvoice() {
-    const invoiceDiv = document.getElementById('checkout-crypto-invoice');
-    if (invoiceDiv) invoiceDiv.classList.add('hidden');
+    backToCheckoutPlans();
 }
 
 /**
