@@ -557,7 +557,6 @@ async function simulateCryptoPaymentSuccess() {
 async function completeSubscriptionPayment(periodKey, provider, transactionId) {
     const plan = PAYMENTS_CONFIG.pricing[periodKey] || PAYMENTS_CONFIG.pricing.month;
     const now = new Date();
-    const expiresAt = new Date(now.getTime() + plan.periodDays * 24 * 60 * 60 * 1000);
 
     let user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
     if (!user) {
@@ -568,6 +567,22 @@ async function completeSubscriptionPayment(periodKey, provider, transactionId) {
         };
     }
 
+    // Preservar y acumular días restantes de prueba gratuita si el usuario compra durante su trial
+    let remainingTrialMs = 0;
+    if (user.trial_ends_at) {
+        const trialEnd = new Date(user.trial_ends_at).getTime();
+        if (trialEnd > now.getTime()) {
+            remainingTrialMs = trialEnd - now.getTime();
+        }
+    }
+    const planDurationMs = plan.periodDays * 24 * 60 * 60 * 1000;
+    const expiresAt = new Date(now.getTime() + remainingTrialMs + planDurationMs);
+    const bonusTrialDays = Math.ceil(remainingTrialMs / (24 * 60 * 60 * 1000));
+
+    if (bonusTrialDays > 0) {
+        console.log(`[AsTrade Payments] Sumando ${bonusTrialDays} días restantes de prueba al plan pagado.`);
+    }
+
     const subData = {
         status: 'active',
         provider: provider, // 'stripe' | 'nowpayments'
@@ -575,6 +590,7 @@ async function completeSubscriptionPayment(periodKey, provider, transactionId) {
         plan_name: `Membresía Pro (${plan.periodText})`,
         price: plan.price,
         current_period_end: expiresAt.toISOString(),
+        bonus_trial_days: bonusTrialDays,
         transaction_id: transactionId || ('sim_' + Date.now()),
         updated_at: now.toISOString()
     };
@@ -743,6 +759,161 @@ function copyToClipboard(text, elementId = null) {
     }
 }
 
+/**
+ * Compra directa de plan (salta o conecta tras registro/login)
+ */
+function openDirectCheckout(periodKey) {
+    if (periodKey) {
+        selectedCheckoutPeriod = periodKey;
+        try {
+            localStorage.setItem('preferred_billing_cycle', periodKey);
+        } catch (e) {}
+    }
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    if (user) {
+        if (typeof openCheckoutModal === 'function') {
+            openCheckoutModal(periodKey || 'month');
+        } else {
+            window.location.href = 'app.html?open_checkout=' + encodeURIComponent(periodKey || 'month');
+        }
+    } else {
+        try {
+            localStorage.setItem('direct_checkout_after_login', periodKey || 'month');
+        } catch (e) {}
+        if (typeof openAuthModal === 'function') {
+            openAuthModal('register');
+        } else {
+            window.location.href = 'index.html?action=register';
+        }
+    }
+}
+
+/**
+ * Inicializa el banner promocional dismissible dentro de app.html para usuarios en prueba gratuita
+ */
+function initAppPromoBanner() {
+    const banner = document.getElementById('app-promo-banner');
+    if (!banner) return;
+
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    if (!user) {
+        banner.classList.add('hidden');
+        return;
+    }
+
+    const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { isTrial: false };
+    // Solo se muestra si el usuario está en prueba gratuita activa y no vencida
+    if (!trial.isTrial || trial.expired) {
+        banner.classList.add('hidden');
+        return;
+    }
+
+    const LAUNCH_START = new Date('2026-11-30T21:00:00+01:00').getTime();
+    const PROMO_END = new Date('2026-12-06T23:59:59+01:00').getTime();
+    const now = Date.now();
+
+    // Si ya terminó la promoción
+    if (now >= PROMO_END) {
+        banner.classList.add('hidden');
+        return;
+    }
+
+    const isLastDay = (now >= PROMO_END - 24 * 60 * 60 * 1000);
+    const dismissedAt = localStorage.getItem('astrade_promo_banner_dismissed');
+
+    // Si fue descartado hace menos de 24 horas y NO es el último día, respetar la decisión
+    if (dismissedAt && !isLastDay) {
+        const timeSinceDismiss = now - parseInt(dismissedAt, 10);
+        if (timeSinceDismiss < 24 * 60 * 60 * 1000) {
+            banner.classList.add('hidden');
+            return;
+        }
+    }
+
+    const isEn = (localStorage.getItem('astrade_lang') === 'en') || (document.documentElement.lang === 'en');
+
+    if (now < LAUNCH_START) {
+        // Fase 1: Pre-lanzamiento
+        banner.className = "app-promo-banner py-2 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-md transition-all duration-300";
+        banner.innerHTML = `
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
+                    <i class="fa-solid fa-rocket text-[9px]"></i> ${isEn ? 'Launch Deal' : 'Lanzamiento'}
+                </span>
+                <span class="font-medium">
+                    ${isEn 
+                        ? 'Official Launch on Nov 30 at 21:00 CET. Your 7-day trial is active and you can lock in <strong>20% OFF</strong> before your trial ends!'
+                        : 'Gran Lanzamiento el 30 de Noviembre a las 21:00hs. ¡Tu prueba de 7 días está activa y podrás asegurar tu <strong>20% OFF</strong> antes de que termine!'}
+                </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="openCheckoutModal('semester')" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow transition whitespace-nowrap">
+                    ${isEn ? 'Preview Offers &rarr;' : 'Ver Ofertas &rarr;'}
+                </button>
+                <button onclick="dismissAppPromoBanner()" class="text-gray-400 hover:text-white p-1 transition" title="${isEn ? 'Dismiss' : 'Ocultar'}">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+        `;
+    } else if (isLastDay) {
+        // Fase 2 - Último día (Urgencia)
+        banner.className = "app-promo-banner app-promo-urgent py-2.5 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-lg transition-all duration-300";
+        banner.innerHTML = `
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 shadow-sm animate-bounce">
+                    <i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${isEn ? 'Last Day' : 'Último Día'}
+                </span>
+                <span class="font-bold">
+                    ${isEn
+                        ? '⚠️ <strong>Final Hours!</strong> Today at midnight (23:59 CET) the 20% Black Friday discounts expire. If you upgrade today, your remaining trial days are added to your subscription!'
+                        : '⚠️ <strong>¡Últimas horas!</strong> Hoy a medianoche (23:59hs) finalizan los descuentos del 20% de Black Friday. ¡Tus días restantes de prueba se sumarán a tu suscripción!'}
+                </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="openCheckoutModal('semester')" class="px-3 py-1 rounded-md text-[11px] font-black bg-amber-500 hover:bg-amber-400 text-gray-950 shadow-md transition whitespace-nowrap">
+                    ${isEn ? 'Claim 20% OFF Now &rarr;' : 'Aprovechar 20% OFF Ahora &rarr;'}
+                </button>
+                <button onclick="dismissAppPromoBanner()" class="text-amber-300 hover:text-white p-1 transition" title="${isEn ? 'Dismiss' : 'Ocultar'}">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+        `;
+    } else {
+        // Fase 2 - Promo Activa Regular (30/11 a 05/12)
+        banner.className = "app-promo-banner py-2 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-md transition-all duration-300";
+        banner.innerHTML = `
+            <div class="flex items-center gap-2 flex-wrap">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
+                    <i class="fa-solid fa-fire text-[9px]"></i> Black Friday
+                </span>
+                <span class="font-medium">
+                    ${isEn
+                        ? '🔥 <strong>Launch Deals Active:</strong> 20% OFF on all plans. Lock in your discount today; your remaining trial days are added to your plan!'
+                        : '🔥 <strong>Ofertas de Lanzamiento Activas:</strong> 20% OFF en todos los planes. Asegura tu descuento; ¡tus días restantes de prueba se sumarán a tu plan!'}
+                </span>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+                <button onclick="openCheckoutModal('semester')" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow transition whitespace-nowrap">
+                    ${isEn ? 'Lock In 20% OFF &rarr;' : 'Asegurar 20% OFF &rarr;'}
+                </button>
+                <button onclick="dismissAppPromoBanner()" class="text-gray-400 hover:text-white p-1 transition" title="${isEn ? 'Dismiss' : 'Ocultar'}">
+                    <i class="fa-solid fa-xmark text-xs"></i>
+                </button>
+            </div>
+        `;
+    }
+
+    banner.classList.remove('hidden');
+}
+
+function dismissAppPromoBanner() {
+    const banner = document.getElementById('app-promo-banner');
+    if (banner) banner.classList.add('hidden');
+    try {
+        localStorage.setItem('astrade_promo_banner_dismissed', Date.now().toString());
+    } catch(e) {}
+}
+
 // Prevenir cierre del modal por Escape durante Bloqueo Paywall
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isMandatoryLockdown) {
@@ -754,6 +925,22 @@ document.addEventListener('keydown', (e) => {
 // Inicialización automática de escuchas
 document.addEventListener('DOMContentLoaded', () => {
     checkUrlPaymentParams();
+    initAppPromoBanner();
+
+    // Auto-abrir checkout si se solicitó compra directa tras login/registro
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const directPlan = urlParams.get('open_checkout') || localStorage.getItem('direct_checkout_after_login');
+        if (directPlan) {
+            localStorage.removeItem('direct_checkout_after_login');
+            setTimeout(() => {
+                if (typeof openCheckoutModal === 'function') {
+                    openCheckoutModal(directPlan);
+                }
+            }, 600);
+        }
+    } catch (e) {}
+
     const checkoutModalEl = document.getElementById('checkoutModal');
     if (checkoutModalEl) {
         checkoutModalEl.addEventListener('click', (e) => {

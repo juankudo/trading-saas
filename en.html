@@ -35,20 +35,20 @@
 
     <!-- Top Announcement Bar -->
     <div id="top-announcement-bar" class="bg-gradient-to-r from-emerald-950/90 via-slate-900 to-emerald-950/90 border-b border-emerald-500/30 py-2 px-3 sm:px-4 text-center text-xs text-gray-200 flex flex-wrap items-center justify-center gap-2 sm:gap-3 transition-colors duration-200">
-        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
-            <i class="fa-solid fa-fire text-[9px]"></i> Black Friday
+        <span id="bf-announcement-badge" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
+            <i class="fa-solid fa-rocket text-[9px]"></i> Launch
         </span>
-        <span class="font-semibold text-white">Official Launch Deal: <strong>20% OFF</strong> on all plans!</span>
+        <span id="bf-announcement-label" class="font-semibold text-white">Official Launch & Black Friday Deals (<strong>20% OFF</strong>) start in:</span>
         <div class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
             <i class="fa-regular fa-clock text-[10px]"></i>
-            <span>Ends in:</span>
+            <span id="bf-timer-prefix">Starts in:</span>
             <span class="bf-timer-box font-mono bf-timer-days">--</span>d
             <span class="bf-timer-box font-mono bf-timer-hours">--</span>h
             <span class="bf-timer-box font-mono bf-timer-mins">--</span>m
             <span class="bf-timer-box font-mono bf-timer-secs">--</span>s
         </div>
-        <a href="#precios" class="inline-flex items-center gap-1 font-bold text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition ml-0.5">
-            View Deals &rarr;
+        <a id="bf-announcement-link" href="#precios" class="inline-flex items-center gap-1 font-bold text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition ml-0.5">
+            Pre-Register Free &rarr;
         </a>
     </div>
 
@@ -2679,6 +2679,7 @@
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                                 <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Cancel anytime with 1 click</span>
+                                <button onclick="openDirectCheckout('month')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-1">or purchase directly with 20% OFF &rarr;</button>
                             </div>
                         </div>
 
@@ -2736,6 +2737,7 @@
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                                 <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Save $14 USD vs regular price</span>
+                                <button onclick="openDirectCheckout('quarter')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-1">or purchase directly with 20% OFF &rarr;</button>
                             </div>
                         </div>
 
@@ -2793,6 +2795,7 @@
                                     <span>Start 7-Day Trial with 20% OFF</span>
                                 </button>
                                 <span class="text-[10px] text-emerald-400/90 font-medium block text-center mt-1.5">$0 today · Immediate full Pro access</span>
+                                <button onclick="openDirectCheckout('semester')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-1">or purchase directly with 20% OFF &rarr;</button>
                             </div>
                         </div>
 
@@ -2850,11 +2853,7 @@
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                                 <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Maximum savings ($50 USD)</span>
-                            </div>
-                        </div>
-                                    <i class="fa-solid fa-arrow-right text-[11px]"></i>
-                                </button>
-                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 hoy · Mayor ahorro ($50 USD)</span>
+                                <button onclick="openDirectCheckout('year')" class="bf-direct-buy-link text-amber-400 hover:text-amber-300 block text-center mx-auto mt-1">or purchase directly with 20% OFF &rarr;</button>
                             </div>
                         </div>
 
@@ -6430,16 +6429,52 @@
 
     </script>
 
-    <!-- Black Friday Launch Countdown Timer -->
+    <!-- Black Friday Launch Campaign Dynamic 2-Phase Countdown Controller -->
     <script>
-        function initBlackFridayCountdown() {
-            // Target: December 6, 2026 at 23:59:59 CET (UTC+1)
-            const targetDate = new Date('2026-12-06T23:59:59+01:00').getTime();
+        function initBlackFridayCampaignCountdown() {
+            // Phase 1: Live Launch Stream Start (Nov 30, 2026 at 21:00 CET)
+            const LAUNCH_START = new Date('2026-11-30T21:00:00+01:00').getTime();
+            // Phase 2: Official Deal Closing (Dec 6, 2026 at 23:59:59 CET)
+            const PROMO_END = new Date('2026-12-06T23:59:59+01:00').getTime();
 
-            function updateCountdown() {
+            function updateCampaign() {
                 const now = Date.now();
-                const diff = Math.max(0, targetDate - now);
+                const topBar = document.getElementById('top-announcement-bar');
+                const badge = document.getElementById('bf-announcement-badge');
+                const label = document.getElementById('bf-announcement-label');
+                const link = document.getElementById('bf-announcement-link');
+                const timerPrefix = document.getElementById('bf-timer-prefix');
 
+                let targetDate;
+
+                if (now < LAUNCH_START) {
+                    targetDate = LAUNCH_START;
+                    if (badge) badge.innerHTML = '<i class="fa-solid fa-rocket text-[9px]"></i> Launch';
+                    if (label) label.innerHTML = 'Official Launch & Black Friday Deals (<strong>20% OFF</strong>) start in:';
+                    if (timerPrefix) timerPrefix.textContent = 'Starts in:';
+                    if (link) {
+                        link.innerHTML = 'Pre-Register Free &rarr;';
+                        link.setAttribute('href', '#precios');
+                    }
+                } else if (now < PROMO_END) {
+                    targetDate = PROMO_END;
+                    if (badge) badge.innerHTML = '<i class="fa-solid fa-fire text-[9px]"></i> Black Friday';
+                    if (label) label.innerHTML = 'Official Launch Deal: <strong>20% OFF</strong> on all plans!';
+                    if (timerPrefix) timerPrefix.textContent = 'Ends in:';
+                    if (link) {
+                        link.innerHTML = 'View Deals &rarr;';
+                        link.setAttribute('href', '#precios');
+                    }
+                } else {
+                    if (topBar) {
+                        topBar.innerHTML = `<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">NEW</span>
+                            <span>Start your 7-day free trial. Cancel anytime with 1 click.</span>
+                            <button onclick="openAuthModal('register')" class="underline hover:text-white font-semibold transition ml-1">Create free account &rarr;</button>`;
+                    }
+                    return;
+                }
+
+                const diff = Math.max(0, targetDate - now);
                 const days = Math.floor(diff / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -6453,14 +6488,14 @@
                 document.querySelectorAll('.bf-timer-secs').forEach(el => el.textContent = pad(secs));
             }
 
-            updateCountdown();
-            setInterval(updateCountdown, 1000);
+            updateCampaign();
+            setInterval(updateCampaign, 1000);
         }
 
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initBlackFridayCountdown);
+            document.addEventListener('DOMContentLoaded', initBlackFridayCampaignCountdown);
         } else {
-            initBlackFridayCountdown();
+            initBlackFridayCampaignCountdown();
         }
     </script>
 

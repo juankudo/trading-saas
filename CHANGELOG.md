@@ -5,6 +5,29 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.10] - 2026-11-21
+
+### 🚀 Cuenta Regresiva de 2 Fases (Pre-Lanzamiento y Ofertas) y Experiencia de Prueba (Trial Rollover UX)
+- **Cuenta Regresiva Automatizada de 2 Fases (`index.html` & `en.html`):**
+  - **Fase 1 (Pre-Lanzamiento):** Cuenta regresiva en vivo hasta el stream en directo de lanzamiento oficial del **30 de Noviembre de 2026 a las 21:00 CET** (Hora España, UTC+1). La barra superior muestra badge animado `Lanzamiento` / `Launch` y texto explicativo del inicio de las ofertas de Black Friday (20% OFF).
+  - **Fase 2 (Ofertas Activas):** Transición automática e instantánea al llegar el 30/11 21:00 CET, iniciando la cuenta regresiva hacia el cierre de las ofertas el **6 de Diciembre de 2026 a las 23:59:59 CET** con badge `Black Friday`.
+  - Al expirar la campaña el 6 de Diciembre, la barra muestra el mensaje de campaña finalizada con enlace para explorar planes estándar.
+- **Acumulación y Protección de Días Restantes de Prueba (Trial Days Rollover) (`js/payments.js`):**
+  - Resuelto el dilema de experiencia de usuario para traders que se registran durante la promoción: si un usuario en período de prueba gratuito (7 días) decide adquirir una membresía con 20% OFF antes de que venza su trial, **los días restantes de prueba no se pierden**, sino que se suman automáticamente a la duración de su suscripción de pago (`now + remainingTrialMs + planDurationMs`).
+  - El sistema registra `bonus_trial_days` y `active_trial_until` en la base de datos y en sesión local, garantizando que el usuario aproveche al 100% sus 7 días de regalo sin penalización por comprar con descuento anticipadamente.
+- **Banner Promocional In-App para Usuarios en Prueba (`app.html`, `js/payments.js` & `css/styles.css`):**
+  - Implementado `#app-promo-banner` en la cabecera interactiva de `app.html` exclusivo para usuarios con período de prueba activo.
+  - **Modo Normal (Fase 1 y Fase 2):** Informa de los descuentos de lanzamiento del 20% OFF y aclara que los días de prueba no se pierden al suscribirse.
+  - **Modo Urgente de Últimas Horas (`.app-promo-urgent`):** Durante el último día de la campaña (6 de Diciembre), el banner conmuta automáticamente a estilo ámbar de alta visibilidad alertando del vencimiento de las ofertas a medianoche.
+  - Incluye botón de descarte rápido con persistencia de 24 horas en `localStorage`.
+- **Acceso a Compra Directa desde Landing Page (`index.html` & `en.html`):**
+  - Añadido enlace secundario `.bf-direct-buy-link` (*"o comprar directamente con 20% OFF"* / *"or buy directly with 20% OFF"*) en las 4 tarjetas de precios.
+  - Permite a usuarios nuevos o existentes saltar el trial o completar la compra de inmediato. Si el usuario aún no ha iniciado sesión, guarda el plan seleccionado y despliega automáticamente el checkout modal al registrarse o iniciar sesión.
+- **Ajustes de Contraste y Accesibilidad Dual-Theme (`css/styles.css`):**
+  - Añadidas reglas específicas para `.app-promo-banner`, `.app-promo-urgent` y `.bf-direct-buy-link` con colores adaptados a Tema Oscuro y Tema Claro (`html.light`).
+
+---
+
 ## [v3.9.9] - 2026-11-21
 
 ### 🔥 Campaña de Lanzamiento Oficial y Ofertas de Black Friday (20% OFF en Todos los Planes)

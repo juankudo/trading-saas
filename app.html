@@ -46,6 +46,11 @@
     <!-- CONTENEDOR PRINCIPAL INTERACTIVO DE LA APP (Atenuado en Paywall Lockdown) -->
     <div id="app-main-content" class="min-h-screen flex flex-col flex-grow w-full max-w-full transition-all duration-300">
 
+        <!-- Banner Promocional Dismissible para Usuarios en Prueba (Black Friday / Lanzamiento) -->
+        <div id="app-promo-banner" class="hidden app-promo-banner py-2 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-md transition-all duration-300">
+            <!-- Inyectado dinámicamente por initAppPromoBanner() -->
+        </div>
+
         <header class="bg-card border-b border-main px-6 py-3.5 flex flex-col gap-3 sticky top-0 z-40">
         <!-- FILA 1: Encabezado Principal (Logo a la izquierda, Modo Centrado, Registro de Usuario a la derecha) -->
         <div class="app-header-top-row">

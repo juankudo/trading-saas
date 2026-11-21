@@ -372,16 +372,58 @@ html.light #top-announcement-bar {
 html.light #top-announcement-bar span.text-emerald-300 {
     color: #047857 !important;
 }
-html.light #top-announcement-bar button.underline {
+html.light #top-announcement-bar button.underline,
+html.light #top-announcement-bar a.underline {
     color: #065f46 !important;
 }
-html.light #top-announcement-bar button.underline:hover {
+html.light #top-announcement-bar button.underline:hover,
+html.light #top-announcement-bar a.underline:hover {
     color: #022c22 !important;
 }
 html.light #top-announcement-bar .bg-emerald-500\/20 {
     background-color: #d1fae5 !important;
     color: #047857 !important;
     border-color: #6ee7b7 !important;
+}
+
+/* In-App Promotional Banner (app.html) */
+.app-promo-banner {
+    background: linear-gradient(90deg, rgba(6, 78, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(6, 78, 59, 0.85) 100%);
+    border-bottom: 1px solid rgba(16, 185, 129, 0.4);
+    color: #e2e8f0;
+}
+html.light .app-promo-banner {
+    background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 50%, #eff6ff 100%) !important;
+    border-bottom: 1px solid #a7f3d0 !important;
+    color: #065f46 !important;
+}
+html.light .app-promo-banner span,
+html.light .app-promo-banner strong {
+    color: #065f46 !important;
+}
+
+.app-promo-urgent {
+    background: linear-gradient(90deg, rgba(120, 53, 15, 0.9) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(120, 53, 15, 0.9) 100%) !important;
+    border-bottom: 1px solid rgba(245, 158, 11, 0.6) !important;
+    color: #fef3c7 !important;
+}
+html.light .app-promo-urgent {
+    background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 50%, #fff7ed 100%) !important;
+    border-bottom: 1px solid #fcd34d !important;
+    color: #92400e !important;
+}
+html.light .app-promo-urgent span,
+html.light .app-promo-urgent strong {
+    color: #92400e !important;
+}
+
+.bf-direct-buy-link {
+    font-size: 11px;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+    transition: color 0.15s ease;
 }
         html.light .text-gray-600 { color: #9ca3af; }
         html.light .hover\:text-white:hover { color: #111827; }
