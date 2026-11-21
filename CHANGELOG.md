@@ -7,6 +7,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [v3.9.6] - 2026-11-20
 
+### 🌐 Auditoría y Corrección de Tooltips de Reglas, Metas y Modal de Cuentas
+- **Tooltips Dinámicos en Badges de Reglas de Cuenta (`js/app.js` & `js/i18n.js`):**
+  - Los tooltips nativos (`title`) de los chips de reglas en las tarjetas de cuentas (`buildAccountRulesMiniHtml`) ahora se traducen reactivamente al idioma activo:
+    - Regla de consistencia: `"Consistency rule: {0} (max limit {1}%)"` / `"Regla de consistencia: {0} (límite máx {1}%)"`.
+    - Días mínimos de trading: `"Min trading days: {0} of {1} traded days"` / `"Días mínimos de trading: {0} de {1} días operados"`.
+    - Días rentables: `"Profitable days: {0} of {1} days in profit"` / `"Días rentables: {0} de {1} días en beneficio"`.
+    - Pérdida diaria máxima: `"Max daily loss: {0}% (limit {1}%)"` / `"Pérdida diaria máxima: {0}% (límite {1}%)"`.
+- **Tooltips y Etiquetas de Balance Efectivo (`js/app.js` & `js/i18n.js`):**
+  - Localizados los tooltips al pasar el cursor sobre el balance efectivo (`card.balance_no_informed_tip`, `card.balance_projected_tip`, `card.balance_last_close_tip`) y sus sufijos (`" · initial base"` / `" · base inicial"`, `" · projected"` / `" · proyectado"`).
+- **Campos de Metas y Placeholders en Modal de Cuentas / Sesiones (`app.html` & `js/i18n.js`):**
+  - Input de valor de meta (`inputAccountGoalValue`) provisto de placeholder traducido con `data-i18n-placeholder="modal_session.goal_value_ph"` (`"e.g. 150000"` / `"Ej: 150000"`).
+  - Texto de ayuda de meta personalizada en cuenta real enlazado a `modal_session.custom_goal_help` (`"A custom goal: progress and distance to completion will be displayed."` / `"Una meta propia: se mostrará el avance y cuánto falta para alcanzarla."`).
+  - Textos de ayuda de reglas de retiro e instant funding localizados (`modal_session.withdraw_rules_help`, `modal_session.instant_funding_help`).
+  - Inputs de porcentaje de objetivo (`inputAccountGoalTargetPct` y `inputPruebaTarget2`) provistos de `data-i18n-placeholder` (`"e.g. 8"` / `"Ej: 8"`, `"e.g. 5"` / `"Ej: 5"`).
+  - Títulos de sección y opciones del modal traducidos dinámicamente: `"Optional account rules"` / `"Reglas opcionales de la cuenta"`, `"Free trading"` / `"Trading libre"`, `"Funding simulation"` / `"Simulación de fondeo"`, `"Challenge rules"` / `"Reglas del desafío"`.
+
 ### 🌐 Auditoría y Corrección Integral de Traducción, Títulos Duplicados y Modales
 - **Componente Estilizado de Subida de Archivos en Modal de Operaciones (`app.html` & `js/app.js`):**
   - Reemplazado el control de archivos nativo del navegador (que renderizaba textos del sistema operativo como `"Elegir archivos"` y `"Ningún archivo seleccionado"`) por un componente visual desacoplado con botón estilizado (`"Choose Files"` / `"Elegir archivos"`) e indicador reactivo del estado de selección (`"No file chosen"` / `"Ningún archivo seleccionado"` y recuento de archivos seleccionados).

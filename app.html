@@ -680,7 +680,7 @@
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label for="inputAccountGoalTargetPct" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.objetivo_de_beneficio">Objetivo de beneficio (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputAccountGoalTargetPct" placeholder="Ej: 8" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputAccountGoalTargetPct" placeholder="Ej: 8" data-i18n-placeholder="modal_session.target_pct_ph" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
                             </div>
                             <div>
                                 <label for="inputAccountGoalMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
@@ -697,7 +697,7 @@
                             </div>
                             <div id="pruebaPhase2Field" class="hidden">
                                 <label for="inputPruebaTarget2" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.objetivo_fase_2">Objetivo fase 2 (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputPruebaTarget2" placeholder="Ej: 5" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputPruebaTarget2" placeholder="Ej: 5" data-i18n-placeholder="modal_session.phase2_target_ph" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
                             </div>
                         </div>
                         <p class="text-[10px] text-gray-500" data-i18n="modal_session.goal_help">Verás el avance hacia el objetivo y el colchón de drawdown restante en las métricas. Al superar una fase: confeti y felicitación al abrir las métricas, con la opción de reiniciar el balance y pasar a la fase 2 o a Fondeada.</p>
@@ -713,7 +713,7 @@
                             </div>
                             <div>
                                 <label for="inputAccountGoalValue" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.valor_de_la_meta">Valor de la meta</label>
-                                <input type="number" step="0.01" min="0" id="inputAccountGoalValue" placeholder="Ej: 150000" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-teal-500 focus:outline-none">
+                                <input type="number" step="0.01" min="0" id="inputAccountGoalValue" placeholder="Ej: 150000" data-i18n-placeholder="modal_session.goal_value_ph" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-teal-500 focus:outline-none">
                             </div>
                         </div>
                         <p class="text-[10px] text-gray-500" data-i18n="modal_session.custom_goal_help">Una meta propia: se mostrará el avance y cuánto falta para alcanzarla.</p>
@@ -774,7 +774,7 @@
                     <div id="accountRulesSection" class="hidden space-y-3 rounded-lg border border-amber-900/60 bg-amber-900/15 p-3">
                         <label class="flex cursor-pointer items-center gap-2.5 text-xs font-bold text-amber-300">
                             <input type="checkbox" id="inputRulesEnabled" onchange="toggleAccountRuleInputs()" class="h-4 w-4 accent-amber-500">
-                            <span><i class="fa-solid fa-scale-balanced mr-1"></i>Reglas opcionales de la cuenta</span>
+                            <span><i class="fa-solid fa-scale-balanced mr-1"></i><span data-i18n="modal_session.optional_rules">Reglas opcionales de la cuenta</span></span>
                         </label>
                         <div id="accountRulesFields" class="hidden space-y-3">
                             <div class="grid grid-cols-1 gap-2.5 text-xs sm:grid-cols-2">
@@ -817,15 +817,15 @@
                         <label class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="modal_session.session_type">Tipo de sesión</label>
                         <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
                             <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-main bg-[#161b22] p-2.5 text-gray-300 transition has-[:checked]:border-blue-500 has-[:checked]:text-white">
-                                <input type="radio" name="sessionMode" value="libre" checked onchange="toggleFondeoRules()" class="accent-blue-500"> <i class="fa-solid fa-chart-line text-blue-400"></i> Trading libre
+                                <input type="radio" name="sessionMode" value="libre" checked onchange="toggleFondeoRules()" class="accent-blue-500"> <i class="fa-solid fa-chart-line text-blue-400"></i> <span data-i18n="modal_session.free_trading">Trading libre</span>
                             </label>
                             <label class="flex cursor-pointer items-center gap-2 rounded-lg border border-main bg-[#161b22] p-2.5 text-gray-300 transition has-[:checked]:border-amber-500 has-[:checked]:text-white">
-                                <input type="radio" name="sessionMode" value="fondeo" onchange="toggleFondeoRules()" class="accent-amber-500"> <i class="fa-solid fa-trophy text-amber-400"></i> Simulación de fondeo
+                                <input type="radio" name="sessionMode" value="fondeo" onchange="toggleFondeoRules()" class="accent-amber-500"> <i class="fa-solid fa-trophy text-amber-400"></i> <span data-i18n="modal_session.funding_sim">Simulación de fondeo</span>
                             </label>
                         </div>
                     </div>
                     <div id="fondeoRulesContainer" class="hidden space-y-3 rounded-lg border border-amber-900/50 bg-amber-900/20 p-3">
-                        <p class="text-xs font-bold text-amber-300"><i class="fa-solid fa-scale-balanced mr-1"></i> Reglas del desafío</p>
+                        <p class="text-xs font-bold text-amber-300"><i class="fa-solid fa-scale-balanced mr-1"></i> <span data-i18n="modal_session.rules_title">Reglas del desafío</span></p>
                         <div class="grid grid-cols-2 gap-3 text-xs">
                             <div>
                                 <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.phases">Fases</label>

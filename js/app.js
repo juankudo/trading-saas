@@ -1081,10 +1081,10 @@ const initialTrades = [];
             const balanceBaseLabel = effectiveBal ? getBalanceBaseLabel(effectiveBal) : "";
             const balanceTitle = effectiveBal
                 ? (!effectiveBal.informed
-                    ? "Sin Balance Actual: se usa el Balance Inicial como base; incluye las operaciones registradas. No incluye comisiones."
+                    ? ((typeof window.t === "function") ? window.t("card.balance_no_informed_tip") : "Sin Balance Actual: se usa el Balance Inicial como base; incluye las operaciones registradas. No incluye comisiones.")
                     : (effectiveBal.projected
-                        ? "Último cierre + operaciones posteriores. No incluye comisiones."
-                        : "Último cierre informado."))
+                        ? ((typeof window.t === "function") ? window.t("card.balance_projected_tip") : "Último cierre + operaciones posteriores. No incluye comisiones.")
+                        : ((typeof window.t === "function") ? window.t("card.balance_last_close_tip") : "Último cierre informado.")))
                 : "";
             const actualBalanceClass = effectiveBal && effectiveBal.informed ? "text-blue-300" : "text-gray-400";
 
@@ -3573,8 +3573,8 @@ const initialTrades = [];
 
         function getBalanceBaseLabel(status) {
             if (!status) return "";
-            if (!status.informed) return " · base inicial";
-            if (status.projected) return " · proyectado";
+            if (!status.informed) return (typeof window.t === "function") ? window.t("card.base_initial_label", " · base inicial") : " · base inicial";
+            if (status.projected) return (typeof window.t === "function") ? window.t("card.projected_label", " · proyectado") : " · proyectado";
             return "";
         }
 
@@ -3800,19 +3800,23 @@ const initialTrades = [];
             if (rules.consistency.enabled) {
                 const evaluable = rules.consistency.state === "evaluada";
                 const ratioText = rules.consistency.ratio === null ? "—" : `${Math.round(rules.consistency.ratio)}%`;
-                const title = `Regla de consistencia: ${ratioText} (límite máx ${rules.consistency.limit}%)`;
+                const titleTemplate = (typeof window.t === "function") ? window.t("card.rule_consistency_tip", "Regla de consistencia: {0} (límite máx {1}%)") : "Regla de consistencia: {0} (límite máx {1}%)";
+                const title = titleTemplate.replace("{0}", ratioText).replace("{1}", rules.consistency.limit);
                 chips.push(chip(rules.consistency.ok, "fa-solid fa-chart-pie", `${ratioText}/${rules.consistency.limit}%`, title, evaluable ? null : "muted"));
             }
             if (rules.tradingDays.enabled) {
-                const title = `Días mínimos de trading: ${rules.tradingDays.count} de ${rules.tradingDays.min} días operados`;
+                const titleTemplate = (typeof window.t === "function") ? window.t("card.rule_trading_days_tip", "Días mínimos de trading: {0} de {1} días operados") : "Días mínimos de trading: {0} de {1} días operados";
+                const title = titleTemplate.replace("{0}", rules.tradingDays.count).replace("{1}", rules.tradingDays.min);
                 chips.push(chip(rules.tradingDays.ok, "fa-solid fa-calendar-check", `${rules.tradingDays.count}/${rules.tradingDays.min}`, title));
             }
             if (rules.profitableDays.enabled) {
-                const title = `Días rentables: ${rules.profitableDays.count} de ${rules.profitableDays.min} días en beneficio`;
+                const titleTemplate = (typeof window.t === "function") ? window.t("card.rule_profitable_days_tip", "Días rentables: {0} de {1} días en beneficio") : "Días rentables: {0} de {1} días en beneficio";
+                const title = titleTemplate.replace("{0}", rules.profitableDays.count).replace("{1}", rules.profitableDays.min);
                 chips.push(chip(rules.profitableDays.ok, "fa-solid fa-arrow-trend-up", `${rules.profitableDays.count}/${rules.profitableDays.min}`, title));
             }
             if (rules.dailyLoss.enabled) {
-                const title = `Pérdida diaria máxima: ${rules.dailyLoss.usedPct.toFixed(1)}% (límite ${rules.dailyLoss.limit}%)`;
+                const titleTemplate = (typeof window.t === "function") ? window.t("card.rule_daily_loss_tip", "Pérdida diaria máxima: {0}% (límite {1}%)") : "Pérdida diaria máxima: {0}% (límite {1}%)";
+                const title = titleTemplate.replace("{0}", rules.dailyLoss.usedPct.toFixed(1)).replace("{1}", rules.dailyLoss.limit);
                 chips.push(chip(rules.dailyLoss.ok, "fa-solid fa-shield-halved", `${rules.dailyLoss.usedPct.toFixed(0)}%/${rules.dailyLoss.limit}%`, title));
             }
             if (!chips.length) return "";
