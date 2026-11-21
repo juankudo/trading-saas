@@ -2920,7 +2920,7 @@
 
 
 
-            "gallery.title": "Bitacora Visual & Analisis Tecnico",
+            "gallery.title": "Bitácora Visual & Análisis Técnico",
 
 
 
@@ -6413,10 +6413,18 @@
             "groups.accounts_note": "Una cuenta puede pertenecer a más de un grupo.",
 
             "groups.save_btn": "Guardar grupo",
-
             "groups.choose_accounts": "Elegir cuentas",
-
             "groups.replicate_in": "Replicar entrada en:",
+            "groups.ungrouped": "Sin grupo",
+            "groups.total": "Total del grupo",
+            "groups.group_fallback": "Grupo",
+            "balance.no_records_hint": "Todavía no hay registros. Usa “Cargar balances” para actualizar todas tus cuentas reales y guardar una captura histórica.",
+            "balance.no_accounts_hint": "No hay cuentas asociadas a los registros históricos.",
+            "balance.empty": "No hay balances registrados.",
+            "balance.partial_note": "Solo se suman las cuentas informadas",
+            "balance.partial_label": "(parcial)",
+            "balance.edit_snapshot": "Editar registro",
+            "balance.delete_snapshot": "Eliminar registro",
 
 
 
@@ -9638,7 +9646,7 @@
 
 
 
-            "btn.new_group": "New group",
+            "btn.new_group": "New Group",
 
 
 
@@ -13035,10 +13043,18 @@
             "groups.accounts_note": "An account can belong to more than one group.",
 
             "groups.save_btn": "Save Group",
-
             "groups.choose_accounts": "Select Accounts",
-
             "groups.replicate_in": "Replicate trade into:",
+            "groups.ungrouped": "Ungrouped",
+            "groups.total": "Group Total",
+            "groups.group_fallback": "Group",
+            "balance.no_records_hint": "No records yet. Use “Load balances” to update all your live accounts and save a historical snapshot.",
+            "balance.no_accounts_hint": "No accounts associated with historical records.",
+            "balance.empty": "No balances recorded yet.",
+            "balance.partial_note": "Only reported accounts are added",
+            "balance.partial_label": "(partial)",
+            "balance.edit_snapshot": "Edit record",
+            "balance.delete_snapshot": "Delete record",
 
 
 

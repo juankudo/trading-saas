@@ -5,6 +5,25 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.6] - 2026-11-20
+
+### 🌐 Localización Reactiva de Métricas Globales, Tabla de Balances y Cache-Busting
+- **Badge Reactivo de Métricas Globales (`js/app.js`):**
+  - Implementado enlace dinámico `data-i18n="tabs.global_metrics"` en `#active-account-name` y `data-i18n-title` en `#active-account-badge`.
+  - El badge superior en la barra de pestañas responde instantáneamente a cambios de idioma en caliente (`Global Metrics` en inglés, `Métricas globales` en español), tanto en la vista de Dashboard/Métricas como en Seguimiento de Balances.
+- **Localización Completa de Tabla de Balances Históricos (`js/app.js` & `js/i18n.js`):**
+  - Encabezados de columnas traducidos bilingüemente: "Fecha" (`Date`) y "Acciones" (`Actions`).
+  - Agrupadores de cuentas traducidos: "Sin grupo" (`Ungrouped`), "Total del grupo" (`Group Total`) y fallback "Grupo" (`Group`).
+  - Mensajes de estado vacío y pistas operativas bilingües (`balance.no_records_hint`, `balance.empty`, `balance.partial_note`).
+  - Tooltips de acciones traducidos: "Editar registro" (`Edit record`) y "Eliminar registro" (`Delete record`).
+- **Cache-Busting de Recursos Estáticos (`app.html` & `calculadora/index.html`):**
+  - Incorporado versionado dinámico (`?v=3.9.6`) en enlaces de estilos CSS (`css/styles.css?v=3.9.6`) y scripts de internacionalización (`js/i18n.js?v=3.9.6`, `js/app.js?v=3.9.6`).
+  - Evita inconsistencias de renderizado por caché del navegador del cliente, garantizando la aplicación inmediata de estilos de alto contraste en Modo Claro de la Calculadora y traducciones reactivas.
+- **Normalización de Estilo en Acciones de Sesión:**
+  - Ajustado `"New Group"` con Title Case consistente en inglés para alinearse con `Bulk Entry`, `Global Metrics` y `New Account +`.
+
+---
+
 ## [v3.9.5] - 2026-11-20
 
 ### 🌐 Internacionalización Completa Bilingüe (ES / EN) & Submarca AsTrade Calculator

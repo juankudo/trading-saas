@@ -109,14 +109,24 @@ const initialTrades = [];
             ? window.i18n.getI18nMonthNames()
             : ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-        function updateActiveAccountBadgeName(name) {
+        function updateActiveAccountBadgeName(name, i18nKey = null) {
             const badge = document.getElementById("active-account-badge");
             const nameEl = document.getElementById("active-account-name");
             const containerEl = document.getElementById("active-account-name-container");
             if (!badge || !nameEl) return;
-            const text = String(name || "").trim();
-            nameEl.textContent = text;
-            badge.title = text;
+            if (i18nKey) {
+                nameEl.setAttribute("data-i18n", i18nKey);
+                badge.setAttribute("data-i18n-title", i18nKey);
+                const translated = (typeof window.t === "function") ? window.t(i18nKey, name) : name;
+                nameEl.textContent = translated;
+                badge.title = translated;
+            } else {
+                nameEl.removeAttribute("data-i18n");
+                badge.removeAttribute("data-i18n-title");
+                const text = String(name || "").trim();
+                nameEl.textContent = text;
+                badge.title = text;
+            }
             
             requestAnimationFrame(() => {
                 if (!containerEl) return;
@@ -246,8 +256,14 @@ const initialTrades = [];
                     ? `${(typeof window.t === 'function') ? window.t('btn.new_account', 'Nueva Cuenta') : 'Nueva Cuenta'} <i class="fa-solid fa-plus ml-2"></i>`
                     : `${(typeof window.t === 'function') ? window.t('btn.new_session', 'Nueva Sesión') : 'Nueva Sesión'} <i class="fa-solid fa-plus ml-2"></i>`;
             }
+            if (isGlobalMetricsView) {
+                updateActiveAccountBadgeName((typeof window.t === 'function') ? window.t('tabs.global_metrics', 'Métricas globales') : 'Métricas globales', 'tabs.global_metrics');
+            }
             if (currentTabName === 'sessions' && typeof renderGroups === 'function') {
                 renderGroups();
+            }
+            if (currentTabName === 'balance-history' && typeof renderRealBalanceHistory === 'function') {
+                renderRealBalanceHistory();
             }
             if (typeof renderAll === 'function') {
                 renderAll();
@@ -601,11 +617,14 @@ const initialTrades = [];
             document.getElementById("dashboardActualBalanceGroup").classList.toggle("hidden", enabled || currentMode === "backtesting");
             const chartIcon = document.getElementById("dashboard-chart-icon");
             if (chartIcon && chartIcon.nextSibling) {
-                chartIcon.nextSibling.textContent = enabled ? " Retorno acumulado (%)" : " Evoluci\u00f3n de la Cuenta ($)";
+                const chartLabel = enabled
+                    ? ((typeof window.t === 'function') ? window.t('metrics.accumulated_return', 'Retorno acumulado (%)') : 'Retorno acumulado (%)')
+                    : ((typeof window.t === 'function') ? window.t('metrics.account_growth', 'Evolución de la Cuenta ($)') : 'Evolución de la Cuenta ($)');
+                chartIcon.nextSibling.textContent = ` ${chartLabel}`;
             }
             const badge = document.getElementById("active-account-badge");
             if (enabled) {
-                updateActiveAccountBadgeName("M\u00e9tricas globales");
+                updateActiveAccountBadgeName((typeof window.t === 'function') ? window.t('tabs.global_metrics', 'Métricas globales') : 'Métricas globales', 'tabs.global_metrics');
                 if (badge) badge.classList.remove("hidden");
             } else {
                 const selected = currentMode === "real"
@@ -2794,10 +2813,12 @@ const initialTrades = [];
                     const memberIds = new Set((Array.isArray(group.accountIds) ? group.accountIds : []).map(String));
                     const members = accounts.filter(account => memberIds.has(String(account.id)) && !assigned.has(String(account.id)));
                     members.forEach(account => assigned.add(String(account.id)));
-                    if (members.length) buckets.push({ key: String(group.id), name: group.name || "Grupo", icon: getAccountGroupIconClass(group.icon), accounts: members });
+                    const defaultGroupName = (typeof window.t === "function") ? window.t("groups.group_fallback", "Grupo") : "Grupo";
+                    if (members.length) buckets.push({ key: String(group.id), name: group.name || defaultGroupName, icon: getAccountGroupIconClass(group.icon), accounts: members });
                 });
             const rest = accounts.filter(account => !assigned.has(String(account.id)));
-            if (rest.length) buckets.push({ key: "ungrouped", name: "Sin grupo", icon: "fa-solid fa-layer-group", accounts: rest });
+            const ungroupedLabel = (typeof window.t === "function") ? window.t("groups.ungrouped", "Sin grupo") : "Sin grupo";
+            if (rest.length) buckets.push({ key: "ungrouped", name: ungroupedLabel, icon: "fa-solid fa-layer-group", accounts: rest });
             return buckets;
         }
 
@@ -2835,14 +2856,16 @@ const initialTrades = [];
             cleanOrphanBalanceHistory();
             const container = document.getElementById("balance-history-table-container");
             if (!realBalanceHistory.length) {
-                container.innerHTML = `<p class="p-6 text-sm text-gray-400">Todavía no hay registros. Usa “Cargar balances” para actualizar todas tus cuentas reales y guardar una captura histórica.</p>`;
+                const noRecordsHint = (typeof window.t === "function") ? window.t("balance.no_records_hint", "Todavía no hay registros. Usa “Cargar balances” para actualizar todas tus cuentas reales y guardar una captura histórica.") : "Todavía no hay registros. Usa “Cargar balances” para actualizar todas tus cuentas reales y guardar una captura histórica.";
+                container.innerHTML = `<p class="p-6 text-sm text-gray-400">${noRecordsHint}</p>`;
                 document.getElementById("btn-record-balance-snapshot").disabled = realAccounts.length === 0;
                 return;
             }
 
             const buckets = groupAccountsForBalanceView(getRealBalanceHistoryAccounts());
             if (!buckets.length) {
-                container.innerHTML = `<p class="p-6 text-sm text-gray-400">No hay cuentas asociadas a los registros históricos.</p>`;
+                const noAccountsHint = (typeof window.t === "function") ? window.t("balance.no_accounts_hint", "No hay cuentas asociadas a los registros históricos.") : "No hay cuentas asociadas a los registros históricos.";
+                container.innerHTML = `<p class="p-6 text-sm text-gray-400">${noAccountsHint}</p>`;
                 document.getElementById("btn-record-balance-snapshot").disabled = realAccounts.length === 0;
                 return;
             }
@@ -2858,19 +2881,30 @@ const initialTrades = [];
                 ? Math.max(96, Math.min(150, Math.floor(availableWidth / accountCount) - 2))
                 : 116;
             const colgroup = `<colgroup><col style="width:${dateColumnWidth}px">${Array.from({ length: accountCount }, () => `<col style="width:${valueColumnWidth}px">`).join("")}<col style="width:${actionColumnWidth}px"></colgroup>`;
+            const actionExpand = (typeof window.t === "function") ? window.t("btn.expand", "Expandir") : "Expandir";
+            const actionCollapse = (typeof window.t === "function") ? window.t("btn.collapse", "Colapsar") : "Colapsar";
+            const groupTotalLabel = (typeof window.t === "function") ? window.t("groups.total", "Total del grupo") : "Total del grupo";
             const groupHeaders = buckets.map(bucket => {
                 const isCollapsed = collapsed.has(bucket.key);
                 const chevron = isCollapsed ? "fa-chevron-right" : "fa-chevron-down";
-                const action = isCollapsed ? "Expandir" : "Colapsar";
+                const action = isCollapsed ? actionExpand : actionCollapse;
                 const label = `<button type="button" data-balance-group-toggle="${escapeGalleryHtml(bucket.key)}" title="${action} ${escapeGalleryHtml(bucket.name)}" class="inline-flex items-center gap-1.5 text-white transition hover:text-indigo-200"><i class="fa-solid ${chevron} text-[9px] text-indigo-300"></i>${escapeGalleryHtml(bucket.name)}<span class="normal-case font-normal text-gray-500">· ${bucket.accounts.length}</span></button>`;
                 return `<th colspan="${groupHeaderSpan(bucket)}" data-balance-group-cell="${escapeGalleryHtml(bucket.key)}" class="border-l border-main px-2 py-2 text-center">${label}</th>`;
             }).join("");
             const accountHeaders = `<tr>${buckets.map(bucket => {
-                if (collapsed.has(bucket.key)) return `<th colspan="${groupHeaderSpan(bucket)}" data-balance-group-cell="${escapeGalleryHtml(bucket.key)}" class="border-l border-main px-2 py-3 text-center align-middle normal-case tracking-normal font-normal text-indigo-300/80">Total del grupo</th>`;
+                if (collapsed.has(bucket.key)) return `<th colspan="${groupHeaderSpan(bucket)}" data-balance-group-cell="${escapeGalleryHtml(bucket.key)}" class="border-l border-main px-2 py-3 text-center align-middle normal-case tracking-normal font-normal text-indigo-300/80">${groupTotalLabel}</th>`;
                 return bucket.accounts.map(account => `
                     <th data-balance-group-cell="${escapeGalleryHtml(bucket.key)}" class="border-l border-main px-2 py-2 text-center align-middle text-[11px] font-bold text-white">${escapeGalleryHtml(account.name || "Cuenta")}</th>
                 `).join("");
             }).join("")}</tr>`;
+            const isEn = typeof window.i18n !== "undefined" && window.i18n.getLanguage() === "en";
+            const partialNoteText = (typeof window.t === "function") ? window.t("balance.partial_note", "Solo se suman las cuentas informadas") : "Solo se suman las cuentas informadas";
+            const partialLabel = (typeof window.t === "function") ? window.t("balance.partial_label", "(parcial)") : "(parcial)";
+            const editLabel = (typeof window.t === "function") ? window.t("balance.edit_snapshot", "Editar registro") : "Editar registro";
+            const deleteLabel = (typeof window.t === "function") ? window.t("balance.delete_snapshot", "Eliminar registro") : "Eliminar registro";
+            const dateColLabel = (typeof window.t === "function") ? window.t("table.col_date", "Fecha") : "Fecha";
+            const actionsColLabel = (typeof window.t === "function") ? window.t("table.col_actions", "Acciones") : "Acciones";
+            const emptyBalances = (typeof window.t === "function") ? window.t("balance.empty", "No hay balances registrados.") : "No hay balances registrados.";
             const rows = [...realBalanceHistory]
                 .sort(compareBalanceSnapshots)
                 .map(snapshot => {
@@ -2878,7 +2912,7 @@ const initialTrades = [];
                         (Array.isArray(snapshot.accounts) ? snapshot.accounts : []).map(account => [String(account.accountId), account])
                     );
                     const date = snapshot.date
-                        ? new Date(`${snapshot.date}T00:00:00`).toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" })
+                        ? new Date(`${snapshot.date}T00:00:00`).toLocaleDateString(isEn ? "en-US" : "es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" })
                         : "—";
                     const values = buckets.map(bucket => {
                         if (collapsed.has(bucket.key)) {
@@ -2887,7 +2921,7 @@ const initialTrades = [];
                             const pnlFmt = formatBalancePnlText(totals.pnl);
                             const pctFmt = formatBalancePctText(totals.pct);
                             const partialNote = totals.informed < totals.total
-                                ? ` <span class="text-gray-500" title="Solo se suman las cuentas informadas (${totals.informed}/${totals.total})">(parcial)</span>`
+                                ? ` <span class="text-gray-500" title="${partialNoteText} (${totals.informed}/${totals.total})">${partialLabel}</span>`
                                 : "";
                             return `<td colspan="${groupHeaderSpan(bucket)}" data-balance-group-cell="${escapeGalleryHtml(bucket.key)}" class="border-l border-main px-2 py-2 text-center whitespace-nowrap">
                                 <span class="block font-semibold text-white">${formatBalanceHistoryMoney(totals.actual)}</span>
@@ -2918,17 +2952,17 @@ const initialTrades = [];
                     return `<tr class="border-b border-main hover:bg-gray-800/40">
                         <td class="px-2 py-2 whitespace-nowrap font-medium text-white">${date}</td>
                         ${values}
-                        <td class="border-l border-main px-2 py-2 text-center whitespace-nowrap"><button type="button" data-snapshot-edit="${escapeGalleryHtml(snapshot.id)}" class="text-gray-500 hover:text-blue-400 transition mr-2" title="Editar registro"><i class="fa-solid fa-pen"></i></button><button type="button" data-snapshot-id="${escapeGalleryHtml(snapshot.id)}" class="text-gray-500 hover:text-red-400 transition" title="Eliminar registro"><i class="fa-solid fa-trash"></i></button></td>
+                        <td class="border-l border-main px-2 py-2 text-center whitespace-nowrap"><button type="button" data-snapshot-edit="${escapeGalleryHtml(snapshot.id)}" class="text-gray-500 hover:text-blue-400 transition mr-2" title="${editLabel}"><i class="fa-solid fa-pen"></i></button><button type="button" data-snapshot-id="${escapeGalleryHtml(snapshot.id)}" class="text-gray-500 hover:text-red-400 transition" title="${deleteLabel}"><i class="fa-solid fa-trash"></i></button></td>
                     </tr>`;
                 }).join("");
 
             container.innerHTML = `<table class="journal-table w-full text-left text-xs text-gray-300">
                 ${colgroup}
                 <thead class="bg-gray-900 uppercase text-[10px] text-gray-400 border-b border-main font-semibold sticky top-0 z-10">
-                    <tr><th rowspan="2" class="px-2 py-2 align-middle">Fecha</th>${groupHeaders}<th rowspan="2" class="border-l border-main px-2 py-2 text-center align-middle">Acciones</th></tr>
+                    <tr><th rowspan="2" class="px-2 py-2 align-middle">${dateColLabel}</th>${groupHeaders}<th rowspan="2" class="border-l border-main px-2 py-2 text-center align-middle">${actionsColLabel}</th></tr>
                     ${accountHeaders}
                 </thead>
-                <tbody class="divide-y divide-main">${rows || `<tr><td colspan="${tableColumns}" class="p-6 text-center text-gray-400">No hay balances registrados.</td></tr>`}</tbody>
+                <tbody class="divide-y divide-main">${rows || `<tr><td colspan="${tableColumns}" class="p-6 text-center text-gray-400">${emptyBalances}</td></tr>`}</tbody>
             </table>`;
             container.scrollLeft = previousScrollLeft;
             container.querySelectorAll("[data-balance-group-toggle]").forEach(button => {
@@ -5568,7 +5602,9 @@ function renderMonthlyPerformance() {
             const currentActiveItem = currentMode === "real"
                 ? realAccounts.find(item => item.id === activeRealAccountId)
                 : backtestSessions.find(item => item.id === activeSessionId);
-            if (currentActiveItem && !isGlobalMetricsView) {
+            if (isGlobalMetricsView) {
+                updateActiveAccountBadgeName((typeof window.t === 'function') ? window.t('tabs.global_metrics', 'Métricas globales') : 'Métricas globales', 'tabs.global_metrics');
+            } else if (currentActiveItem) {
                 updateActiveAccountBadgeName(currentActiveItem.name);
             }
             renderTable(); renderGallery(); updateMetricsAndCharts(); renderMonthlyPerformance(); renderDailyCalendar();
