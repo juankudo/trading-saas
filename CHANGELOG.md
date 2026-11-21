@@ -5,6 +5,36 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.9] - 2026-11-21
+
+### 🔥 Campaña de Lanzamiento Oficial y Ofertas de Black Friday (20% OFF en Todos los Planes)
+- **Barra de Anuncios Superior con Cuenta Regresiva en Vivo (`index.html`, `en.html` & `css/styles.css`):**
+  - Implementada barra de anuncios destacada `#top-announcement-bar` con degradado esmeralda profundo y badge animado `Black Friday`.
+  - Integrada cuenta regresiva interactiva en vivo (`.bf-timer-box`) con cajas monoespaciadas para días, horas, minutos y segundos, finalizando el 6 de Diciembre de 2026 a las 23:59:59 CET (Hora España, UTC+1).
+  - Enlace directo con scroll suave a la sección `#precios`.
+  - Estilos específicos de alto contraste para Tema Oscuro y Tema Claro (`html.light #top-announcement-bar`).
+- **Sección de Precios con Descuentos de Lanzamiento (`index.html`, `en.html` & `css/styles.css`):**
+  - Actualizados los precios regulares y de oferta en las 4 tarjetas de la sección `#precios` (3D Stack Card):
+    - **Mensual:** De ~`$25 USD`~ a **`$20 USD`** (-20% OFF).
+      - Incorporada nota regulatoria explícita: `* 20% OFF exclusivo en el 1er mes ($20.00/mes). Renovaciones posteriores al precio habitual de $25/mes.` / `* Promotional rate applies to 1st month ($20.00/mo). Subsequent renewals at regular $25/mo rate.`.
+    - **Trimestral:** De ~`$70 USD`~ a **`$56 USD`** (-20% OFF).
+      - Badge de ahorro congelado: `Ahorras $14 USD` (`$18.67/mes`).
+    - **Semestral ⭐ (Más Popular):** De ~`$135 USD`~ a **`$108 USD`** (-20% OFF).
+      - Badge de ahorro congelado: `Ahorras $27 USD` (`$18.00/mes`).
+    - **Anual 🚀 (Mejor Valor):** De ~`$250 USD`~ a **`$200 USD`** (-20% OFF).
+      - Badge de máximo ahorro congelado: `Ahorras $50 USD` (`$16.67/mes`).
+  - Precios originales tachados (`.bf-original-price`) con perfecta visibilidad y contraste en modo oscuro y claro.
+  - Botones de acción actualizados a: `Comenzar 7 Días con 20% OFF` / `Start 7-Day Trial with 20% OFF`.
+  - Selector de pestañas segmentadas actualizado con etiquetas de oferta: `$20 (-20%)`, `$56 (-20%)`, `$108 (-20% ⭐)`, `$200 (-20% 🚀)`.
+- **Motor de Pagos (`js/payments.js`):**
+  - Sincronizados los importes promocionales en `PAYMENTS_CONFIG.pricing`: `month: 20`, `quarter: 56`, `semester: 108`, `year: 200` y descripciones comerciales actualizadas.
+- **Hero Section (`index.html` & `en.html`):**
+  - Actualizado el badge superior con ping animado indicando: `Black Friday 2026 · 20% OFF de Lanzamiento en Todos los Planes` / `Black Friday 2026 · 20% OFF Launch Deals on All Plans`.
+- **Verificación Automatizada Dual-Theme:**
+  - Verificado visualmente y mediante pruebas automatizadas Playwright en modo oscuro y modo claro en español e inglés, garantizando cero regresiones de contraste o maquetación.
+
+---
+
 ## [v3.9.8] - 2026-11-21
 
 ### 🔒 Bloqueo Paywall Obligatorio por Vencimiento de Suscripción o Prueba (Lockdown Mode)

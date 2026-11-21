@@ -34,10 +34,22 @@
 <body class="min-h-screen flex flex-col bg-[#0b0f19] text-gray-200 antialiased selection:bg-emerald-500 selection:text-white overflow-x-hidden w-full max-w-full">
 
     <!-- Top Announcement Bar -->
-    <div id="top-announcement-bar" class="bg-gradient-to-r from-emerald-950/80 via-emerald-900/60 to-slate-900 border-b border-emerald-800/40 py-2 px-4 text-center text-xs text-emerald-300 flex items-center justify-center gap-2">
-        <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">NEW</span>
-        <span>Start your 7-day free trial. Cancel anytime with 1 click.</span>
-        <button onclick="openAuthModal('register')" class="underline hover:text-white font-semibold transition ml-1">Create free account &rarr;</button>
+    <div id="top-announcement-bar" class="bg-gradient-to-r from-emerald-950/90 via-slate-900 to-emerald-950/90 border-b border-emerald-500/30 py-2 px-3 sm:px-4 text-center text-xs text-gray-200 flex flex-wrap items-center justify-center gap-2 sm:gap-3 transition-colors duration-200">
+        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
+            <i class="fa-solid fa-fire text-[9px]"></i> Black Friday
+        </span>
+        <span class="font-semibold text-white">Official Launch Deal: <strong>20% OFF</strong> on all plans!</span>
+        <div class="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">
+            <i class="fa-regular fa-clock text-[10px]"></i>
+            <span>Ends in:</span>
+            <span class="bf-timer-box font-mono bf-timer-days">--</span>d
+            <span class="bf-timer-box font-mono bf-timer-hours">--</span>h
+            <span class="bf-timer-box font-mono bf-timer-mins">--</span>m
+            <span class="bf-timer-box font-mono bf-timer-secs">--</span>s
+        </div>
+        <a href="#precios" class="inline-flex items-center gap-1 font-bold text-emerald-400 hover:text-emerald-300 underline underline-offset-2 transition ml-0.5">
+            View Deals &rarr;
+        </a>
     </div>
 
     <!-- Navigation Header -->
@@ -125,9 +137,10 @@
 
             <div class="max-w-5xl mx-auto text-center relative z-10">
                 <!-- Badge -->
-                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/70 border border-emerald-600/40 text-emerald-400 text-[11px] font-semibold mb-2 shadow-inner">
-                    <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i>
-                    <span>Professional Cloud Journal · Backtesting Pro & Prop Firm Simulator</span>
+                <div class="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-emerald-950/70 border border-emerald-500/40 text-emerald-400 text-[11px] font-bold mb-2 shadow-inner">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                    <i class="fa-solid fa-tag text-emerald-400 text-xs"></i>
+                    <span>Black Friday 2026 · 20% OFF Launch Deals on All Plans</span>
                 </div>
 
                 <!-- Headline -->
@@ -2568,10 +2581,10 @@
             <div class="pointer-events-none absolute -top-12 left-1/2 -translate-x-1/2 w-[700px] h-[340px] bg-emerald-500/10 blur-[140px] rounded-full"></div>
 
             <div class="max-w-6xl mx-auto text-center relative z-10">
-                <span class="text-xs sm:text-sm font-semibold text-emerald-400 block mb-1">Simple & Transparent Pricing</span>
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2">One Single Plan with Everything Unlocked</h2>
+                <span class="text-xs sm:text-sm font-black uppercase tracking-wider text-emerald-400 block mb-1">🔥 Official Launch Offers · Black Friday</span>
+                <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white mb-2">Special Launch Pricing (20% OFF)</h2>
                 <p class="text-gray-400 text-xs sm:text-sm max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed">
-                    No artificial limits or locked features. Choose your billing period and save up to $50 USD (17%). All plans include a 7-day free trial ($0 today).
+                    Take advantage of our 20% launch discount until December 6. Multi-month plans lock in the biggest savings. All plans include a 7-day free trial ($0 today).
                 </p>
 
                 <!-- 4 Pricing Cards Row (Desktop: 4 cols, Tablet: 2 cols, Mobile: Stacked) -->
@@ -2580,22 +2593,22 @@
                     <div class="inline-flex p-1.5 rounded-2xl bg-[#111726]/90 border border-gray-800 shadow-xl backdrop-blur-md max-w-full overflow-x-auto gap-1 sm:gap-1.5" id="pricing-tabs-container">
                         <button onclick="setPricingActiveCard(0, true)" id="pricing-tab-0" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                             <span>Monthly</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-gray-800 text-gray-400 font-semibold border border-gray-700/60">$25</span>
+                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-700/60">$20 (-20%)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
                         <button onclick="setPricingActiveCard(1, true)" id="pricing-tab-1" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                             <span>Quarterly</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-semibold border border-emerald-700/60">-7%</span>
+                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-700/60">$56 (-20%)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
                         <button onclick="setPricingActiveCard(2, true)" id="pricing-tab-2" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap active is-auto-rotating cursor-pointer">
                             <span>Semi-Annual</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-500 text-gray-950 font-black">-10% ⭐</span>
+                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-500 text-gray-950 font-black">$108 (-20% ⭐)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
                         <button onclick="setPricingActiveCard(3, true)" id="pricing-tab-3" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
                             <span>Annual</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-amber-500 text-gray-950 font-black">-17% 🚀</span>
+                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-amber-500 text-gray-950 font-black">$200 (-20% 🚀)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
                     </div>
@@ -2605,7 +2618,7 @@
                 <div class="pricing-stack-stage relative" id="pricing-stack-stage">
                     
                     <!-- Floating Prev Arrow -->
-                    <button id="pricing-stack-prev" onclick="pricingStackPrev()" aria-label="Plan anterior" class="hidden sm:flex absolute left-2 lg:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-gray-900/80 hover:bg-emerald-500 hover:text-gray-950 text-gray-300 border border-gray-700/80 hover:border-emerald-400 shadow-xl items-center justify-center transition-all duration-300 z-40 backdrop-blur-md cursor-pointer">
+                    <button id="pricing-stack-prev" onclick="pricingStackPrev()" aria-label="Previous plan" class="hidden sm:flex absolute left-2 lg:left-8 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-gray-900/80 hover:bg-emerald-500 hover:text-gray-950 text-gray-300 border border-gray-700/80 hover:border-emerald-400 shadow-xl items-center justify-center transition-all duration-300 z-40 backdrop-blur-md cursor-pointer">
                         <i class="fa-solid fa-chevron-left text-sm"></i>
                     </button>
 
@@ -2617,16 +2630,23 @@
                             <div>
                                 <div class="flex items-center justify-between mb-2">
                                     <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Monthly</span>
-                                    <span class="text-[10px] font-semibold text-gray-400 bg-gray-800/80 px-2 py-0.5 rounded border border-gray-700/60">Flexibilidad</span>
+                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">20% OFF Launch Deal</span>
                                 </div>
-                                <div class="mb-2.5">
+                                <div class="mb-2">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="bf-original-price">$25 USD</span>
+                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded">20% OFF</span>
+                                    </div>
                                     <div class="flex items-baseline gap-1.5">
                                         <span class="text-gray-400 text-xl font-bold">$</span>
-                                        <span class="text-3xl sm:text-4xl font-black text-white">25</span>
+                                        <span class="text-3xl sm:text-4xl font-black text-white">20</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-gray-400 font-bold block mt-0.5">for 1 Month</span>
-                                    <p class="text-[11px] text-gray-400 mt-0.5 font-medium">$25.00/mes · Facturado mensualmente</p>
+                                    <p class="text-[11px] text-gray-400 mt-0.5 font-medium">$20.00/mo · Billed monthly</p>
+                                    <div class="bf-monthly-note">
+                                        * Promotional rate applies to 1st month ($20.00/mo). Subsequent renewals at regular $25/mo rate.
+                                    </div>
                                 </div>
 
                                 <div class="border-t border-gray-800/60 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
@@ -2640,7 +2660,7 @@
                                     </div>
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
-                                        <span>Control Drawdown & Reglas Prop</span>
+                                        <span>Drawdown Tracking & Prop Rules</span>
                                     </div>
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
@@ -2655,7 +2675,7 @@
 
                             <div class="pt-1">
                                 <button onclick="selectPlanAndRegister('month')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gray-800/90 hover:bg-gray-700 text-white border border-gray-700/80 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    <span>Start 7 Days Free</span>
+                                    <span>Start 7-Day Trial with 20% OFF</span>
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                                 <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Cancel anytime with 1 click</span>
@@ -2665,21 +2685,25 @@
                         <!-- Plan 1: Trimestral -->
                         <div id="pricing-card-quarter" class="stack-card pricing-glass-card stack-pos-left p-5 sm:p-6 flex flex-col justify-between text-left">
                             <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gray-800 text-emerald-400 border border-emerald-500/40 shadow-md whitespace-nowrap">
-                                -7% Ahorro
+                                20% OFF Black Friday
                             </span>
                             <div>
                                 <div class="flex items-center justify-between mb-2 pt-0.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Quarterly</span>
-                                    <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">Ahorras $5</span>
+                                    <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">Save $14 USD</span>
                                 </div>
-                                <div class="mb-2.5">
+                                <div class="mb-2">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="bf-original-price">$70 USD</span>
+                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded">20% OFF</span>
+                                    </div>
                                     <div class="flex items-baseline gap-1.5">
                                         <span class="text-gray-400 text-xl font-bold">$</span>
-                                        <span class="text-3xl sm:text-4xl font-black text-white">70</span>
+                                        <span class="text-3xl sm:text-4xl font-black text-white">56</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-emerald-400 font-bold block mt-0.5">for 3 Months</span>
-                                    <p class="text-[11px] text-emerald-400 mt-0.5 font-semibold">Save 7% ($23.33/mo · Save $5)</p>
+                                    <p class="text-[11px] text-emerald-400 mt-0.5 font-semibold">Equivalent to $18.67/mo · Locked savings: $14 USD</p>
                                 </div>
 
                                 <div class="border-t border-gray-800/60 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
@@ -2708,31 +2732,35 @@
 
                             <div class="pt-1">
                                 <button onclick="selectPlanAndRegister('quarter')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gray-800/90 hover:bg-gray-700 text-white border border-gray-700/80 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    <span>Start 7 Days Free</span>
+                                    <span>Start 7-Day Trial with 20% OFF</span>
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
-                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Save $5 vs monthly</span>
+                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Save $14 USD vs regular price</span>
                             </div>
                         </div>
 
                         <!-- Plan 2: Semestral (HERO / Estrella) -->
                         <div id="pricing-card-semester" class="stack-card stack-pos-center p-5 sm:p-6 flex flex-col justify-between text-left">
                             <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-lg shadow-emerald-500/30 whitespace-nowrap flex items-center gap-1">
-                                <i class="fa-solid fa-star text-[9px]"></i> Most Popular · 10% Off
+                                <i class="fa-solid fa-star text-[9px]"></i> Most Popular · 20% OFF
                             </span>
                             <div>
                                 <div class="flex items-center justify-between mb-2 pt-0.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Semi-Annual</span>
-                                    <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-700/60 shadow-sm">Ahorras $15</span>
+                                    <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-700/60 shadow-sm">Save $27 USD</span>
                                 </div>
-                                <div class="mb-2.5">
+                                <div class="mb-2">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="bf-original-price">$135 USD</span>
+                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 px-1.5 py-0.5 rounded font-extrabold">20% OFF</span>
+                                    </div>
                                     <div class="flex items-baseline gap-1.5">
                                         <span class="text-gray-400 text-xl font-bold">$</span>
-                                        <span class="text-3xl sm:text-4xl font-black text-white">135</span>
+                                        <span class="text-3xl sm:text-4xl font-black text-white">108</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-emerald-400 font-bold block mt-0.5">for 6 Months</span>
-                                    <p class="text-[11px] text-emerald-400 mt-0.5 font-semibold">Save 10% ($22.50/mo · Save $15)</p>
+                                    <p class="text-[11px] text-emerald-400 mt-0.5 font-semibold">Equivalent to $18.00/mo · Locked savings: $27 USD</p>
                                 </div>
 
                                 <div class="border-t border-emerald-500/30 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
@@ -2750,11 +2778,11 @@
                                     </div>
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
-                                        <span>Control Drawdown & Reglas Prop en Vivo</span>
+                                        <span>Live Drawdown Tracking & Prop Rules</span>
                                     </div>
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-bolt text-emerald-400 text-xs shrink-0"></i>
-                                        <span class="text-emerald-300 font-semibold">Acceso Prioritario a MT5 Cloud Sync</span>
+                                        <span class="text-emerald-300 font-semibold">Priority Access to MT5 Cloud Sync</span>
                                     </div>
                                 </div>
                             </div>
@@ -2762,30 +2790,34 @@
                             <div class="pt-1">
                                 <button onclick="selectPlanAndRegister('semester')" class="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 hover:brightness-110 text-gray-950 shadow-lg shadow-emerald-500/25 transition flex items-center justify-center gap-1.5 cursor-pointer">
                                     <i class="fa-solid fa-rocket text-xs"></i>
-                                    <span>Start 7 Days Free</span>
+                                    <span>Start 7-Day Trial with 20% OFF</span>
                                 </button>
-                                <span class="text-[10px] text-emerald-400/90 font-medium block text-center mt-1.5">$0 hoy · Acceso Pro total inmediato</span>
+                                <span class="text-[10px] text-emerald-400/90 font-medium block text-center mt-1.5">$0 today · Immediate full Pro access</span>
                             </div>
                         </div>
 
                         <!-- Plan 4: Anual (Mejor Valor) -->
                         <div id="pricing-card-year" class="stack-card pricing-glass-card stack-pos-right p-5 sm:p-6 flex flex-col justify-between text-left">
                             <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 shadow-md whitespace-nowrap">
-                                🚀 Mejor Valor · -17%
+                                🚀 Best Value · 20% OFF
                             </span>
                             <div>
                                 <div class="flex items-center justify-between mb-2 pt-0.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Annual</span>
-                                    <span class="text-[10px] font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-700/60">Ahorras $50</span>
+                                    <span class="text-[10px] font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-700/60">Save $50 USD</span>
                                 </div>
-                                <div class="mb-2.5">
+                                <div class="mb-2">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <span class="bf-original-price">$250 USD</span>
+                                        <span class="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 px-1.5 py-0.5 rounded font-extrabold">20% OFF</span>
+                                    </div>
                                     <div class="flex items-baseline gap-1.5">
                                         <span class="text-gray-400 text-xl font-bold">$</span>
-                                        <span class="text-3xl sm:text-4xl font-black text-white">250</span>
+                                        <span class="text-3xl sm:text-4xl font-black text-white">200</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-amber-400 font-bold block mt-0.5">for 12 Months</span>
-                                    <p class="text-[11px] text-amber-400 mt-0.5 font-semibold">Save 17% ($20.83/mo · Save $50)</p>
+                                    <p class="text-[11px] text-amber-400 mt-0.5 font-semibold">Equivalent to $16.67/mo · Max locked savings: $50 USD</p>
                                 </div>
 
                                 <div class="border-t border-gray-800/60 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
@@ -2814,7 +2846,12 @@
 
                             <div class="pt-1">
                                 <button onclick="selectPlanAndRegister('year')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-110 text-gray-950 font-bold shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
-                                    <span>Start 7 Days Free</span>
+                                    <span>Start 7-Day Trial with 20% OFF</span>
+                                    <i class="fa-solid fa-arrow-right text-[11px]"></i>
+                                </button>
+                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 today · Maximum savings ($50 USD)</span>
+                            </div>
+                        </div>
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
                                 <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 hoy · Mayor ahorro ($50 USD)</span>
@@ -6391,6 +6428,40 @@
             initShowcaseTourListeners();
         }
 
+    </script>
+
+    <!-- Black Friday Launch Countdown Timer -->
+    <script>
+        function initBlackFridayCountdown() {
+            // Target: December 6, 2026 at 23:59:59 CET (UTC+1)
+            const targetDate = new Date('2026-12-06T23:59:59+01:00').getTime();
+
+            function updateCountdown() {
+                const now = Date.now();
+                const diff = Math.max(0, targetDate - now);
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+                const pad = (n) => String(n).padStart(2, '0');
+
+                document.querySelectorAll('.bf-timer-days').forEach(el => el.textContent = pad(days));
+                document.querySelectorAll('.bf-timer-hours').forEach(el => el.textContent = pad(hours));
+                document.querySelectorAll('.bf-timer-mins').forEach(el => el.textContent = pad(mins));
+                document.querySelectorAll('.bf-timer-secs').forEach(el => el.textContent = pad(secs));
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initBlackFridayCountdown);
+        } else {
+            initBlackFridayCountdown();
+        }
     </script>
 
     <!-- Language Switch Handler -->

@@ -327,6 +327,62 @@ html.light .auth-divider-line {
 html.light .auth-divider-text {
     color: #6b7280 !important;
 }
+
+/* Black Friday Promotion Campaign Styles */
+.bf-original-price {
+    text-decoration: line-through;
+    color: #64748b;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+html.light .bf-original-price {
+    color: #94a3b8 !important;
+}
+
+.bf-timer-box {
+    background-color: rgba(17, 24, 39, 0.85);
+    border: 1px solid rgba(55, 65, 81, 0.7);
+    color: #f3f4f6;
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.4rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+html.light .bf-timer-box {
+    background-color: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #0f172a !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.bf-monthly-note {
+    color: #fbbf24;
+}
+html.light .bf-monthly-note {
+    color: #b45309 !important;
+}
+
+/* Announcement Bar in Light Mode */
+html.light #top-announcement-bar {
+    background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 50%, #eff6ff 100%) !important;
+    border-color: #a7f3d0 !important;
+    color: #065f46 !important;
+}
+html.light #top-announcement-bar span.text-emerald-300 {
+    color: #047857 !important;
+}
+html.light #top-announcement-bar button.underline {
+    color: #065f46 !important;
+}
+html.light #top-announcement-bar button.underline:hover {
+    color: #022c22 !important;
+}
+html.light #top-announcement-bar .bg-emerald-500\/20 {
+    background-color: #d1fae5 !important;
+    color: #047857 !important;
+    border-color: #6ee7b7 !important;
+}
         html.light .text-gray-600 { color: #9ca3af; }
         html.light .hover\:text-white:hover { color: #111827; }
         html.light .hover\:text-gray-300:hover { color: #374151; }

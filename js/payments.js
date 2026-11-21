@@ -46,36 +46,40 @@ const PAYMENTS_CONFIG = {
 
     pricing: {
         month: { 
-            price: 25, 
+            price: 20, 
+            originalPrice: 25,
             periodDays: 30, 
             periodKey: 'checkout.period_month_label',
             periodText: 'por 1 Mes', 
             descKey: 'checkout.trial_desc',
-            desc: '7 días de prueba ($0 cobrados hoy si es primera vez)' 
+            desc: 'Oferta Black Friday (-20% 1er mes): $20 USD · 7 días gratis ($0 hoy)' 
         },
         quarter: { 
-            price: 70, 
+            price: 56, 
+            originalPrice: 70,
             periodDays: 90, 
             periodKey: 'checkout.period_quarter_label',
             periodText: 'por 3 Meses', 
             descKey: 'checkout.quarter_desc',
-            desc: 'Ahorras 7% ($23.33/mes · Ahorras $5) · Facturado cada 3 meses' 
+            desc: 'Oferta Black Friday (Ahorro congelado $14): $56 USD por 3 meses ($18.67/mes)' 
         },
         semester: { 
-            price: 135, 
+            price: 108, 
+            originalPrice: 135,
             periodDays: 180, 
             periodKey: 'checkout.period_semester_label',
             periodText: 'por 6 Meses', 
             descKey: 'checkout.semester_desc',
-            desc: 'Ahorras 10% ($22.50/mes · Ahorras $15) · Facturado cada 6 meses' 
+            desc: 'Oferta Black Friday (Ahorro congelado $27): $108 USD por 6 meses ($18.00/mes)' 
         },
         year: { 
-            price: 250, 
+            price: 200, 
+            originalPrice: 250,
             periodDays: 365, 
             periodKey: 'checkout.period_year_label',
             periodText: 'por 12 Meses', 
             descKey: 'checkout.year_desc',
-            desc: 'Ahorras 17% ($20.83/mes · Ahorras $50) · Facturado anualmente' 
+            desc: 'Oferta Black Friday (Máximo Ahorro congelado $50): $200 USD por 12 meses ($16.67/mes)' 
         }
     }
 };
