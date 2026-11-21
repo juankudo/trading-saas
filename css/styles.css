@@ -2734,3 +2734,18 @@ html.light #lang-toggle-btn:hover {
     color: #0f172a !important;
 }
 
+/* ==========================================================================
+   ESTADO DE BLOQUEO POR SUSCRIPCIÓN / PRUEBA VENCIDA (PAYWALL LOCKDOWN)
+   ========================================================================== */
+.app-lockdown-dimmed {
+    filter: blur(3px) brightness(0.35) !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    transition: filter 0.35s ease, brightness 0.35s ease !important;
+}
+
+body.is-subscription-locked {
+    overflow: hidden !important;
+}
+
+

@@ -165,6 +165,7 @@ const initialTrades = [];
         }
 
         function openPairManager() {
+            if (checkExpiredLockdownBlock()) return;
             const isBacktesting = currentMode === "backtesting";
             const titleKey = isBacktesting ? "pairs.modal_title_bt" : "pairs.modal_title_real";
             const defaultTitle = isBacktesting ? "Pares de Backtesting" : "Pares de Cuentas Reales";
@@ -307,6 +308,23 @@ const initialTrades = [];
                 checkSubscriptionAccess();
             }
         });
+
+        /**
+         * Verifica si el acceso está bloqueado por suscripción o prueba vencida.
+         * Si está bloqueado, dispara el Paywall y muestra una alerta.
+         */
+        function checkExpiredLockdownBlock() {
+            if (typeof isSubscriptionExpired === 'function' && isSubscriptionExpired()) {
+                const msg = (typeof window.t === 'function')
+                    ? window.t('paywall.locked_toast', 'Acceso bloqueado: renueva tu membresía Pro para acceder a esta función.')
+                    : 'Acceso bloqueado: renueva tu membresía Pro para acceder a esta función.';
+                if (typeof showToast === 'function') showToast(msg, true);
+                if (typeof applyPaywallLockdown === 'function') applyPaywallLockdown(true);
+                return true;
+            }
+            return false;
+        }
+        window.checkExpiredLockdownBlock = checkExpiredLockdownBlock;
 
         // WebP en alta calidad conserva mejor textos y líneas finas de los gráficos que JPEG.
         // Se guarda igual como data URL, así que es compatible con imágenes y respaldos anteriores.
@@ -903,6 +921,7 @@ const initialTrades = [];
         }
 
         async function openGlobalMetrics() {
+            if (checkExpiredLockdownBlock()) return;
             if (currentMode !== "real") {
                 showToast("Las m\u00e9tricas globales est\u00e1n disponibles en cuentas reales", true);
                 return;
@@ -1407,6 +1426,7 @@ const initialTrades = [];
         }
 
         function openAccountGroupModal(groupId = null) {
+            if (checkExpiredLockdownBlock()) return;
             const group = groupId === null ? null : accountGroups.find(item => String(item.id) === String(groupId));
             if (groupId !== null && !group) return;
             editingAccountGroupId = group ? group.id : null;
@@ -1426,6 +1446,7 @@ const initialTrades = [];
 
         async function saveAccountGroup(event) {
             event.preventDefault();
+            if (checkExpiredLockdownBlock()) return;
             const idInput = document.getElementById("inputAccountGroupId").value;
             const isEdit = idInput !== "";
             const id = isEdit ? editingAccountGroupId : Date.now();
@@ -1454,6 +1475,7 @@ const initialTrades = [];
         }
 
         async function deleteAccountGroup(groupId) {
+            if (checkExpiredLockdownBlock()) return;
             const group = accountGroups.find(item => String(item.id) === String(groupId));
             if (!group) return;
             if (!confirm(window.i18n && window.i18n.getLanguage() === "en" ? `Delete group "${group.name}"? Accounts and their trades will be preserved.` : `¿Eliminar el grupo "${group.name}"? Las cuentas y sus operaciones se conservarán.`)) return;
@@ -1466,6 +1488,7 @@ const initialTrades = [];
         }
 
         function openSessionModal() {
+            if (checkExpiredLockdownBlock()) return;
             document.getElementById("sessionForm").reset();
             document.getElementById("inputIdSession").value = "";
             document.getElementById("sessionActualBalanceContainer").classList.toggle("hidden", currentMode === "backtesting");
@@ -1551,6 +1574,7 @@ const initialTrades = [];
         
         async function saveSession(e) {
             e.preventDefault();
+            if (checkExpiredLockdownBlock()) return;
             const idVal = document.getElementById("inputIdSession").value;
             const isEdit = idVal !== "";
             const id = isEdit ? parseInt(idVal) : Date.now();
@@ -2031,6 +2055,7 @@ const initialTrades = [];
         }
 
         function openGlobalTradeModal(groupId = null) {
+            if (checkExpiredLockdownBlock()) return;
             clearEditReplicatedContext();
             editingLatestMultiEntryId = null;
             const list = currentMode === 'real' ? realAccounts : backtestSessions;
@@ -2585,7 +2610,10 @@ const initialTrades = [];
             return true;
         }
 
-        function openResetModal() { document.getElementById("resetModal").classList.remove("hidden"); }
+        function openResetModal() {
+            if (checkExpiredLockdownBlock()) return;
+            document.getElementById("resetModal").classList.remove("hidden");
+        }
         function closeResetModal() { document.getElementById("resetModal").classList.add("hidden"); }
 
         async function exportAndReset() {
@@ -3035,6 +3063,7 @@ const initialTrades = [];
         }
 
         function openRealBalanceEntryModal(groupId = null, accountIds = null) {
+            if (checkExpiredLockdownBlock()) return;
             if (currentMode !== "real") return;
             if (!realAccounts.length) {
                 showToast("Crea una cuenta real antes de registrar balances", true);
@@ -4589,6 +4618,7 @@ const initialTrades = [];
         }
 
         function switchTab(tab) {
+            if (tab !== "sessions" && checkExpiredLockdownBlock()) return;
             if (tab === "goals" && (currentTabName === "sessions" || currentTabName === "balance-history" || isGlobalMetricsView || !hasActiveAccountGoals())) {
                 showToast("Esta cuenta no tiene metas configuradas", true);
                 switchTab(currentTabName === "sessions" || currentTabName === "balance-history" ? currentTabName : "dashboard");
@@ -4708,6 +4738,7 @@ const initialTrades = [];
         }
 
         function openTradeModal(id = null, latestMultiEntryId = null) {
+            if (checkExpiredLockdownBlock()) return;
             editingLatestMultiEntryId = latestMultiEntryId;
             clearEditReplicatedContext();
             isGlobalTradeContext = false;
@@ -5009,6 +5040,7 @@ const initialTrades = [];
 
         async function saveTrade(e) {
             e.preventDefault();
+            if (checkExpiredLockdownBlock()) return;
             const wasGlobalTradeContext = isGlobalTradeContext;
             const finishingLatestMultiEntryId = editingLatestMultiEntryId;
             const list = currentMode === 'real' ? realAccounts : backtestSessions;
@@ -5205,6 +5237,7 @@ const initialTrades = [];
         }
 
         async function deleteTrade(id) {
+            if (checkExpiredLockdownBlock()) return;
             if (confirm(window.i18n && window.i18n.getLanguage() === "en" ? "Are you sure you want to delete this trade?" : "¿Estás seguro de eliminar esta operación?")) {
                 const removedTrade = trades.find(trade => String(trade.id) === String(id));
                 trades = trades.filter(t => t.id !== id);

@@ -5,6 +5,27 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.8] - 2026-11-21
+
+### 🔒 Bloqueo Paywall Obligatorio por Vencimiento de Suscripción o Prueba (Lockdown Mode)
+- **Fondo Atenuado y No Interactivo (`app.html`, `css/styles.css` & `js/payments.js`):**
+  - Al iniciar sesión con prueba o suscripción vencida, `#app-main-content` recibe automáticamente la clase `.app-lockdown-dimmed` (`filter: blur(3px) brightness(0.35)` y `pointer-events: none`), mostrando la bitácora y cuentas atenuadas al fondo sin permitir clics sobre la aplicación.
+  - Se añade `body.is-subscription-locked` para fijar el scroll de la página de fondo.
+- **Paywall Central No Cerrable (`app.html` & `js/payments.js`):**
+  - Se despliega `#checkoutModal` como paywall obligatorio centralizado en pantalla sin botón de cierre `X`.
+  - Inhabilitado el cierre por clic en el fondo y cancelada la propagación de la tecla `Escape`.
+  - Encabezados dinámicos bilingües: *"Tu Período de Prueba ha Finalizado"* / *"Your Free Trial Has Ended"* y *"Tu Membresía Pro ha Vencido"* / *"Your Pro Membership Has Expired"*.
+  - Añadido botón accesible de **Cerrar Sesión** (`#checkout-lockdown-actions`) en el modal para salir al login sin fricción.
+- **Guardias de Seguridad en JavaScript (`js/app.js`):**
+  - Implementada la función de comprobación de acceso `checkExpiredLockdownBlock()`.
+  - Bloqueo estricto de navegación en `switchTab(tab)`: impide ingresar a Dashboard, Metas, Registro de Trades, Métricas, Rendimiento por Mes, Calendario y Galería.
+  - Bloqueo de entrada de datos en `openTradeModal()`, `saveTrade()`, `openGlobalTradeModal()`, `openRealBalanceEntryModal()`, `openSessionModal()`, `saveSession()`, `openAccountGroupModal()` y `openPairManager()`.
+  - Mensaje de aviso toast: *"Acceso bloqueado: renueva tu membresía Pro para acceder a esta función."*.
+- **Internacionalización Bilingüe (`js/i18n.js` & `js/auth.js`):**
+  - Nuevas claves en español e inglés para `paywall.*` y sincronización reactiva del badge de usuario en el navbar (`"Vencido"` / `"Expired"`).
+
+---
+
 ## [v3.9.7] - 2026-11-21
 
 ### 💎 Flujo en 2 Pasos del Modal de Checkout (Cero Scroll Vertical)

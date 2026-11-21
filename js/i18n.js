@@ -5360,6 +5360,14 @@
             "checkout.official_production": "Producción Oficial",
             "checkout.back_to_plans": "← Cambiar método / Volver",
             "checkout.selected_plan": "Plan seleccionado",
+            "paywall.title_trial_expired": "Tu Período de Prueba ha Finalizado",
+            "paywall.title_pro_expired": "Tu Membresía Pro ha Vencido",
+            "paywall.subtitle": "Tus cuentas y métricas están a salvo. Renueva tu membresía Pro para desbloquear la bitácora completa y continuar operando.",
+            "paywall.logout_btn": "Cerrar sesión",
+            "paywall.safe_data_badge": "Datos seguros en la nube",
+            "paywall.locked_toast": "Acceso bloqueado: renueva tu membresía Pro para acceder a esta función.",
+            "paywall.badge_expired": "Suscripción Vencida",
+            "paywall.badge_trial_ended": "Prueba Vencida",
 
 
 
@@ -12099,6 +12107,14 @@
             "checkout.official_production": "Official Production",
             "checkout.back_to_plans": "← Change method / Back",
             "checkout.selected_plan": "Selected plan",
+            "paywall.title_trial_expired": "Your Free Trial Has Ended",
+            "paywall.title_pro_expired": "Your Pro Membership Has Expired",
+            "paywall.subtitle": "Your accounts and metrics are safe. Renew your Pro membership to unlock the full journal and continue trading.",
+            "paywall.logout_btn": "Log Out",
+            "paywall.safe_data_badge": "Cloud-secured data",
+            "paywall.locked_toast": "Access locked: renew your Pro membership to access this feature.",
+            "paywall.badge_expired": "Subscription Expired",
+            "paywall.badge_trial_ended": "Trial Ended",
 
 
 

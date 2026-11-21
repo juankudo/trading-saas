@@ -292,7 +292,10 @@ function updateNavbarUserUI() {
                          (window.location.pathname.includes('en.html')) ||
                          (typeof window.i18n !== 'undefined' && window.i18n.getLanguage() === 'en') ||
                          (localStorage.getItem('astrade_lang') === 'en');
-            if (trial.isTrial) {
+            if (trial.expired) {
+                userTrialBadge.textContent = isEn ? "Expired" : "Vencido";
+                userTrialBadge.className = "px-2.5 py-1 text-xs font-bold rounded bg-rose-950/80 text-rose-300 border border-rose-700/60 animate-pulse";
+            } else if (trial.isTrial) {
                 const days = trial.daysRemaining;
                 if (isEn) {
                     userTrialBadge.textContent = days === 1 ? 'Active Trial (1 day)' : `Active Trial (${days} days)`;

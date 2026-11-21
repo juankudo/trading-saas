@@ -82,21 +82,120 @@ const PAYMENTS_CONFIG = {
 
 let selectedCheckoutPeriod = 'month';
 let selectedCryptoCurrency = 'usdttrc20';
+let isMandatoryLockdown = false;
 
 /**
- * Verifica si el usuario actual tiene acceso completo o debe estar en Modo Solo Lectura
+ * Determina si la suscripción o período de prueba del usuario actual está vencida
+ */
+function isSubscriptionExpired() {
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    if (!user) return false;
+
+    // 1. Suscripción de pago (Stripe / NOWPayments)
+    if (user.subscription && user.subscription.status === 'active') {
+        const expDate = new Date(user.subscription.current_period_end || Date.now());
+        return expDate.getTime() <= Date.now();
+    }
+    if (user.subscription && user.subscription.status === 'expired') {
+        return true;
+    }
+
+    // 2. Período de prueba
+    const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 7 };
+    return Boolean(trial.expired);
+}
+
+/**
+ * Aplica o retira el bloqueo Paywall obligatorio (fondo desenfocado + modal obligatorio sin X)
+ */
+function applyPaywallLockdown(isExpired, details = {}) {
+    isMandatoryLockdown = Boolean(isExpired);
+    const mainContent = document.getElementById('app-main-content');
+    const closeBtn = document.getElementById('checkout-close-btn');
+    const lockdownActions = document.querySelectorAll('.checkout-lockdown-actions');
+    const titleEl = document.getElementById('checkout-modal-title');
+    const subtitleEl = document.getElementById('checkout-modal-subtitle');
+    const iconContainer = document.getElementById('checkout-modal-icon');
+    const banner = document.getElementById('readonly-warning-banner');
+
+    if (isExpired) {
+        // 1. Fondo oscurecido y desenfocado, sin interacción
+        if (mainContent) {
+            mainContent.classList.add('app-lockdown-dimmed');
+        }
+        document.body.classList.add('is-subscription-locked');
+
+        // 2. Ocultar banner amarillo (el modal paywall toma el protagonismo completo)
+        if (banner) banner.classList.add('hidden');
+
+        // 3. Ajustar modal a modo obligatorio (sin X, con botón cerrar sesión)
+        if (closeBtn) closeBtn.classList.add('hidden');
+        lockdownActions.forEach(el => el.classList.remove('hidden'));
+
+        // 4. Textos dinámicos del Paywall según tipo de vencimiento
+        const isProExpired = details.isProExpired || (details.reason === 'subscription_expired');
+        if (titleEl) {
+            titleEl.textContent = isProExpired
+                ? (typeof window.t === 'function' ? window.t('paywall.title_pro_expired', 'Tu Membresía Pro ha Vencido') : 'Tu Membresía Pro ha Vencido')
+                : (typeof window.t === 'function' ? window.t('paywall.title_trial_expired', 'Tu Período de Prueba ha Finalizado') : 'Tu Período de Prueba ha Finalizado');
+        }
+        if (subtitleEl) {
+            subtitleEl.textContent = typeof window.t === 'function'
+                ? window.t('paywall.subtitle', 'Tus cuentas y métricas están a salvo. Renueva tu membresía Pro para desbloquear la bitácora completa y continuar operando.')
+                : 'Tus cuentas y métricas están a salvo. Renueva tu membresía Pro para desbloquear la bitácora completa y continuar operando.';
+        }
+        if (iconContainer) {
+            iconContainer.className = "w-12 h-12 rounded-xl bg-gradient-to-tr from-rose-600 to-amber-500 text-gray-950 flex items-center justify-center mx-auto mb-2 text-xl font-black shadow-lg shadow-rose-500/20";
+            iconContainer.innerHTML = '<i class="fa-solid fa-lock"></i>';
+        }
+
+        // 5. Abrir el modal de checkout forzosamente
+        openCheckoutModal(selectedCheckoutPeriod, true);
+    } else {
+        // 1. Restaurar fondo
+        if (mainContent) {
+            mainContent.classList.remove('app-lockdown-dimmed');
+        }
+        document.body.classList.remove('is-subscription-locked');
+
+        // 2. Restaurar modal a modo normal
+        if (closeBtn) closeBtn.classList.remove('hidden');
+        lockdownActions.forEach(el => el.classList.add('hidden'));
+
+        if (titleEl) {
+            titleEl.textContent = typeof window.t === 'function'
+                ? window.t('checkout.title', 'Membresía Pro Ilimitada')
+                : 'Membresía Pro Ilimitada';
+        }
+        if (subtitleEl) {
+            subtitleEl.textContent = typeof window.t === 'function'
+                ? window.t('checkout.subtitle', 'Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube')
+                : 'Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube';
+        }
+        if (iconContainer) {
+            iconContainer.className = "w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 text-gray-950 flex items-center justify-center mx-auto mb-2 text-xl font-black shadow-lg shadow-emerald-500/20";
+            iconContainer.innerHTML = '<i class="fa-solid fa-gem"></i>';
+        }
+
+        // Cerrar modal si estaba en bloqueo
+        closeCheckoutModal(true);
+    }
+}
+
+/**
+ * Verifica si el usuario actual tiene acceso completo o debe estar en Modo Bloqueo Paywall
  */
 function checkSubscriptionAccess() {
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
     if (!user) return { canEdit: false, isReadOnly: true, reason: 'unauthenticated' };
 
-    // 1. Si tiene suscripción activa de pago (Stripe / NOWPayments)
+    // 1. Si tiene suscripción de pago (Stripe / NOWPayments)
     if (user.subscription && user.subscription.status === 'active') {
         const expDate = new Date(user.subscription.current_period_end || Date.now());
         const isStillValid = expDate.getTime() > Date.now();
 
         if (isStillValid) {
-            applyReadOnlyMode(false);
+            applyPaywallLockdown(false);
             updateAppSubscriptionUI({
                 isPaid: true,
                 isTrial: false,
@@ -105,7 +204,7 @@ function checkSubscriptionAccess() {
             });
             return { canEdit: true, isReadOnly: false, isPaid: true, expiresAt: expDate };
         } else {
-            applyReadOnlyMode(true, "Tu membresía Pro ha vencido. Renueva para continuar registrando operaciones.");
+            applyPaywallLockdown(true, { isProExpired: true, reason: 'subscription_expired' });
             updateAppSubscriptionUI({
                 isPaid: false,
                 isTrial: false,
@@ -116,11 +215,22 @@ function checkSubscriptionAccess() {
         }
     }
 
+    if (user.subscription && user.subscription.status === 'expired') {
+        applyPaywallLockdown(true, { isProExpired: true, reason: 'subscription_expired' });
+        updateAppSubscriptionUI({
+            isPaid: false,
+            isTrial: false,
+            expired: true,
+            plan: 'Membresía Vencida'
+        });
+        return { canEdit: false, isReadOnly: true, reason: 'subscription_expired' };
+    }
+
     // 2. Si está en período de prueba gratuito (7 días)
     const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 7 };
     
     if (trial.expired) {
-        applyReadOnlyMode(true, "Tu período de prueba de 7 días ha finalizado. Tu cuenta está en Modo Solo Lectura.");
+        applyPaywallLockdown(true, { isTrialExpired: true, reason: 'trial_expired' });
         updateAppSubscriptionUI({
             isPaid: false,
             isTrial: true,
@@ -130,7 +240,7 @@ function checkSubscriptionAccess() {
         return { canEdit: false, isReadOnly: true, reason: 'trial_expired' };
     }
 
-    applyReadOnlyMode(false);
+    applyPaywallLockdown(false);
     updateAppSubscriptionUI({
         isPaid: false,
         isTrial: true,
@@ -177,7 +287,7 @@ function updateAppSubscriptionUI(subState) {
             colorClasses = "bg-emerald-950/90 text-emerald-300 border-emerald-700/80 shadow-sm";
         } else if (subState.expired) {
             iconHtml = '<i class="fa-solid fa-lock text-rose-400 text-xs shrink-0"></i>';
-            badgeText = (typeof window.t === 'function') ? window.t('nav.readonly_badge', 'Solo Lectura') : `Solo Lectura`;
+            badgeText = (typeof window.t === 'function') ? window.t('paywall.badge_expired', 'Suscripción Vencida') : `Suscripción Vencida`;
             colorClasses = "bg-rose-950/90 text-rose-300 border-rose-700/80 shadow-sm animate-pulse";
         } else if (subState.isTrial) {
             iconHtml = '<i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>';
@@ -199,51 +309,20 @@ function updateAppSubscriptionUI(subState) {
 }
 
 /**
- * Aplica o retira el Modo Solo Lectura en la interfaz
+ * Aplica o retira el Modo Solo Lectura en la interfaz (Mantenido por compatibilidad)
  */
 function applyReadOnlyMode(isReadOnly, message = "") {
-    const banner = document.getElementById('readonly-warning-banner');
-    const newTradeBtn = document.getElementById('btn-new-trade');
-
     if (isReadOnly) {
-        if (banner) {
-            banner.classList.remove('hidden');
-            const msgEl = document.getElementById('readonly-banner-msg');
-            if (msgEl) {
-                if (typeof window.t === 'function' && (message.includes('7') || message.includes('prueba') || message.includes('trial'))) {
-                    msgEl.innerHTML = window.t('banner.readonly', message);
-                } else if (typeof window.t === 'function' && (message.includes('vencido') || message.includes('expired'))) {
-                    msgEl.innerHTML = window.t('banner.pro_expired', message);
-                } else if (message) {
-                    msgEl.innerHTML = message;
-                }
-            }
-        }
-        if (newTradeBtn) {
-            newTradeBtn.disabled = true;
-            newTradeBtn.classList.add('opacity-40', 'cursor-not-allowed');
-            newTradeBtn.title = (typeof window.t === 'function')
-                ? window.t('banner.readonly_tooltip', "Modo Solo Lectura: Activa tu membresía Pro para registrar nuevas entradas")
-                : "Modo Solo Lectura: Activa tu membresía Pro para registrar nuevas entradas";
-        }
+        applyPaywallLockdown(true, { message });
     } else {
-        if (banner) banner.classList.add('hidden');
-        if (newTradeBtn) {
-            newTradeBtn.disabled = false;
-            newTradeBtn.classList.remove('opacity-40', 'cursor-not-allowed');
-            newTradeBtn.removeAttribute('title');
-        }
+        applyPaywallLockdown(false);
     }
 }
 
 window.addEventListener('languageChanged', () => {
     updateUserNavBadge();
-    const banner = document.getElementById('readonly-warning-banner');
-    if (banner && !banner.classList.contains('hidden')) {
-        const msgEl = document.getElementById('readonly-banner-msg');
-        if (msgEl && typeof window.t === 'function') {
-            msgEl.innerHTML = window.t('banner.readonly', msgEl.innerHTML);
-        }
+    if (isMandatoryLockdown) {
+        applyPaywallLockdown(true);
     }
     updateCheckoutPricingDisplay();
     updateSandboxModeBanner();
@@ -287,7 +366,10 @@ function backToCheckoutPlans() {
 /**
  * Control del Modal de Checkout
  */
-function openCheckoutModal(defaultPeriod = 'month') {
+function openCheckoutModal(defaultPeriod = 'month', isMandatory = false) {
+    if (isMandatory) {
+        isMandatoryLockdown = true;
+    }
     const savedPeriod = localStorage.getItem('preferred_billing_cycle');
     if (savedPeriod && PAYMENTS_CONFIG.pricing[savedPeriod]) {
         selectedCheckoutPeriod = savedPeriod;
@@ -305,7 +387,8 @@ function openCheckoutModal(defaultPeriod = 'month') {
     modal.classList.add('flex');
 }
 
-function closeCheckoutModal() {
+function closeCheckoutModal(force = false) {
+    if (isMandatoryLockdown && !force) return;
     const modal = document.getElementById('checkoutModal');
     if (!modal) return;
     modal.classList.add('hidden');
@@ -520,8 +603,8 @@ async function completeSubscriptionPayment(periodKey, provider, transactionId) {
     }
 
     // 3. Actualizar interfaz y permisos
-    closeCheckoutModal();
-    applyReadOnlyMode(false);
+    applyPaywallLockdown(false);
+    closeCheckoutModal(true);
     checkSubscriptionAccess();
 
     // 4. Mostrar modal de celebración con confeti
@@ -588,7 +671,6 @@ function simulateTrialExpired() {
         localStorage.setItem('trading_saas_user_session', JSON.stringify(user));
     }
 
-    closeCheckoutModal();
     checkSubscriptionAccess();
 }
 
@@ -607,8 +689,12 @@ function simulateRestoreTrial() {
         localStorage.setItem('trading_saas_user_session', JSON.stringify(user));
     }
 
-    closeCheckoutModal();
+    applyPaywallLockdown(false);
+    closeCheckoutModal(true);
     checkSubscriptionAccess();
+    if (typeof showToast === 'function') {
+        showToast("Prueba de 7 días restablecida con éxito");
+    }
 }
 
 function togglePaymentsMode() {
@@ -653,7 +739,23 @@ function copyToClipboard(text, elementId = null) {
     }
 }
 
+// Prevenir cierre del modal por Escape durante Bloqueo Paywall
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && isMandatoryLockdown) {
+        e.stopPropagation();
+        e.preventDefault();
+    }
+}, true);
+
 // Inicialización automática de escuchas
 document.addEventListener('DOMContentLoaded', () => {
     checkUrlPaymentParams();
+    const checkoutModalEl = document.getElementById('checkoutModal');
+    if (checkoutModalEl) {
+        checkoutModalEl.addEventListener('click', (e) => {
+            if (isMandatoryLockdown) {
+                e.stopPropagation();
+            }
+        });
+    }
 });
