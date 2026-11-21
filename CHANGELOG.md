@@ -7,7 +7,16 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [v3.9.6] - 2026-11-20
 
-### 🌐 Localización Reactiva de Métricas Globales, Tabla de Balances, Guías y Tooltips
+### 🌐 Localización Reactiva de Métricas Globales, Tabla de Balances, Guías, Pastilla de Sincronización y Tarjetas de Cuentas
+- **Pastilla de Sincronización en la Nube Reactiva (`js/cloud-storage.js`):**
+  - Desacoplado el paso de cadenas literales en español (`'Sincronizado'`, `'Sincronizando...'`, `'Error de sincronización'`) en las llamadas a `updateCloudSyncIndicator`.
+  - Vinculación declarativa con `data-i18n` y `data-i18n-title`, permitiendo que el estado de sincronización refleje inmediatamente el idioma activo (`Synced` / `Sincronizado`, `Synced with cloud` / `Sincronizado con la nube`, `Syncing with cloud...` / `Sincronizando con la nube...`) tanto al cargar la app como al alternar el idioma en caliente sin recargar.
+- **Selector de Modo en Barra Superior (`app.html`):**
+  - Etiquetado de los botones de modo con `data-i18n="nav.mode_real"` y `data-i18n="nav.mode_backtesting"`, traduciendo con precisión `"Cuenta Real"` a `"Live Account"` y preservando la terminología técnica institucional.
+- **Localización Completa de Tarjetas de Cuentas (`js/app.js` & `js/i18n.js`):**
+  - Sub-etiquetas de objetivos y fases traducidas: `"Objetivo 8% · F1"` a `"Target 8% · P1"`, `"DD máx 10%"` a `"Max DD 10%"`, y `"usado"` a `"used"`.
+  - Estados de cuentas fondeadas e instantáneas: `"Retirable"` traducido dinámicamente a `"Withdrawable"`.
+  - Encabezado de chips de cumplimiento de reglas de evaluación: `"Reglas:"` traducido a `"Rules:"`.
 - **Localización Completa de Descripciones y Tooltips del Menú Guía y Barra de Herramientas (`app.html`, `js/app.js`, `js/i18n.js`):**
   - Tooltips de navegación totalmente reactivos: Guía (`Guides & interactive help`), Calculadora (`Open Lot Size Calculator in new tab`), Suscripción (`View plans & subscription`), Sincronización en la nube (`Synced with cloud` / `Syncing with cloud...`) y Reinicio de entorno (`Reset Environment`).
   - Menú desplegable de Guía traducido al 100%: "Tour General" (`General Tour`), "Entrada y Post-Análisis" (`Entry & Post-Analysis`) y "Tutoriales en Video" (`Video Tutorials`) con descripciones operativas completas y enlaces oficiales a YouTube.

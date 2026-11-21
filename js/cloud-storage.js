@@ -15,7 +15,7 @@ async function initCloudSync() {
     const user = getCurrentUser();
     if (!user) return;
 
-    updateCloudSyncIndicator('syncing', 'Sincronizando...');
+    updateCloudSyncIndicator('syncing');
 
     try {
         await loadFromCloud(user.id);
@@ -25,10 +25,10 @@ async function initCloudSync() {
             await saveToCloud(user.id);
         }
 
-        updateCloudSyncIndicator('synced', 'Sincronizado');
+        updateCloudSyncIndicator('synced');
     } catch (err) {
         console.error("Error sincronizando desde la nube:", err);
-        updateCloudSyncIndicator('error', 'Error de sincronización');
+        updateCloudSyncIndicator('error');
     }
 
     // Verificar estado de suscripción y modo solo lectura
@@ -240,25 +240,25 @@ function triggerCloudSave(immediate = false) {
     const user = getCurrentUser();
     if (!user) return;
 
-    updateCloudSyncIndicator('syncing', 'Guardando...');
+    updateCloudSyncIndicator('syncing');
     if (cloudSyncTimeout) clearTimeout(cloudSyncTimeout);
 
     if (immediate) {
         return saveToCloud(user.id)
-            .then(() => updateCloudSyncIndicator('synced', 'Sincronizado'))
+            .then(() => updateCloudSyncIndicator('synced'))
             .catch(err => {
                 console.error("Error guardando en la nube:", err);
-                updateCloudSyncIndicator('error', 'Error al guardar');
+                updateCloudSyncIndicator('error');
             });
     }
 
     cloudSyncTimeout = setTimeout(async () => {
         try {
             await saveToCloud(user.id);
-            updateCloudSyncIndicator('synced', 'Sincronizado');
+            updateCloudSyncIndicator('synced');
         } catch (err) {
             console.error("Error guardando en la nube:", err);
-            updateCloudSyncIndicator('error', 'Error al guardar');
+            updateCloudSyncIndicator('error');
         }
     }, 700);
 }
@@ -458,32 +458,45 @@ function updateCloudSyncIndicator(status, text) {
 
     let iconHtml = '<i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>';
     let textColor = 'text-emerald-400';
-    let defaultText = text || ((typeof window.t === 'function') ? window.t('sync.synced', 'Sincronizado') : 'Sincronizado');
-    let tooltipText = (typeof window.t === 'function') ? window.t('sync.synced_tooltip', 'Sincronizado con la nube') : 'Sincronizado con la nube';
+    let i18nKey = 'sync.synced';
+    let tooltipKey = 'sync.synced_tooltip';
+    let defaultText = (typeof window.t === 'function') ? window.t(i18nKey, 'Sincronizado') : 'Sincronizado';
+    let tooltipText = (typeof window.t === 'function') ? window.t(tooltipKey, 'Sincronizado con la nube') : 'Sincronizado con la nube';
 
     if (status === 'syncing') {
         iconHtml = '<i class="fa-solid fa-arrows-rotate fa-spin text-blue-400 text-sm shrink-0"></i>';
         textColor = 'text-blue-400';
-        defaultText = text || ((typeof window.t === 'function') ? window.t('sync.syncing', 'Sincronizando...') : 'Sincronizando...');
-        tooltipText = (typeof window.t === 'function') ? window.t('sync.syncing_tooltip', 'Sincronizando con la nube...') : 'Sincronizando con la nube...';
+        i18nKey = 'sync.syncing';
+        tooltipKey = 'sync.syncing_tooltip';
+        defaultText = (typeof window.t === 'function') ? window.t(i18nKey, 'Sincronizando...') : 'Sincronizando...';
+        tooltipText = (typeof window.t === 'function') ? window.t(tooltipKey, 'Sincronizando con la nube...') : 'Sincronizando con la nube...';
     } else if (status === 'synced') {
         iconHtml = '<i class="fa-solid fa-circle-check text-emerald-400 text-sm shrink-0"></i>';
         textColor = 'text-emerald-400';
-        defaultText = text || ((typeof window.t === 'function') ? window.t('sync.synced', 'Sincronizado') : 'Sincronizado');
-        tooltipText = (typeof window.t === 'function') ? window.t('sync.synced_tooltip', 'Sincronizado con la nube') : 'Sincronizado con la nube';
+        i18nKey = 'sync.synced';
+        tooltipKey = 'sync.synced_tooltip';
+        defaultText = (typeof window.t === 'function') ? window.t(i18nKey, 'Sincronizado') : 'Sincronizado';
+        tooltipText = (typeof window.t === 'function') ? window.t(tooltipKey, 'Sincronizado con la nube') : 'Sincronizado con la nube';
     } else if (status === 'error') {
         iconHtml = '<i class="fa-solid fa-triangle-exclamation text-amber-400 text-sm shrink-0"></i>';
         textColor = 'text-amber-400';
-        defaultText = text || ((typeof window.t === 'function') ? window.t('sync.error', 'Error de sincronización') : 'Error de sincronización');
-        tooltipText = (typeof window.t === 'function') ? window.t('sync.error_tooltip', 'Error de sincronización con la nube') : 'Error de sincronización con la nube';
+        i18nKey = 'sync.error';
+        tooltipKey = 'sync.error_tooltip';
+        defaultText = (typeof window.t === 'function') ? window.t(i18nKey, 'Error de sincronización') : 'Error de sincronización';
+        tooltipText = (typeof window.t === 'function') ? window.t(tooltipKey, 'Error de sincronización con la nube') : 'Error de sincronización con la nube';
+    }
+
+    if (text && !['Sincronizado', 'Sincronizando...', 'Error de sincronización', 'Guardando...', 'Error al guardar'].includes(text)) {
+        defaultText = text;
     }
 
     indicator.innerHTML = `
         ${iconHtml}
-        <span class="nav-pill-label text-xs font-medium ${textColor}">${defaultText}</span>
+        <span class="nav-pill-label text-xs font-medium ${textColor}" data-i18n="${i18nKey}">${defaultText}</span>
     `;
     indicator.className = `nav-pill-expandable bg-gray-800 hover:bg-gray-700 border border-main ${textColor} cursor-default select-none`;
     indicator.title = tooltipText;
+    indicator.setAttribute('data-i18n-title', tooltipKey);
 }
 
 window.addEventListener('languageChanged', () => {

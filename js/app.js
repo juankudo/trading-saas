@@ -3779,7 +3779,8 @@ const initialTrades = [];
                 chips.push(chip(rules.dailyLoss.ok, "fa-solid fa-shield-halved", `${rules.dailyLoss.usedPct.toFixed(0)}%/${rules.dailyLoss.limit}%`, title));
             }
             if (!chips.length) return "";
-            return `<div class="flex items-center gap-1 overflow-x-auto whitespace-nowrap no-scrollbar pt-0.5"><span class="text-[9px] uppercase tracking-wide text-gray-500 font-bold shrink-0">Reglas:</span>${chips.join("")}</div>`;
+            const rulesLabel = (typeof window.t === "function") ? window.t("card.rules", "Reglas") : "Reglas";
+            return `<div class="flex items-center gap-1 overflow-x-auto whitespace-nowrap no-scrollbar pt-0.5"><span class="text-[9px] uppercase tracking-wide text-gray-500 font-bold shrink-0">${rulesLabel}:</span>${chips.join("")}</div>`;
         }
 
         function buildAccountGoalMiniHtml(account) {
@@ -3788,34 +3789,39 @@ const initialTrades = [];
             if (stage === "prueba") {
                 const status = getPruebaGoalStatus(account);
                 if (status.targetAmount > 0) {
-                    const phaseSuffix = status.phases === 2 ? ` · F${status.phase}` : "";
-                    label = `Objetivo ${status.currentTargetPct}%${phaseSuffix}`;
+                    const phasePrefix = (typeof window.t === "function") ? window.t("card.phase_short", "F") : "F";
+                    const phaseSuffix = status.phases === 2 ? ` · ${phasePrefix}${status.phase}` : "";
+                    const targetLabel = (typeof window.t === "function") ? window.t("card.target", "Objetivo") : "Objetivo";
+                    label = `${targetLabel} ${status.currentTargetPct}%${phaseSuffix}`;
                     detail = `${status.profitPct >= 0 ? "+" : ""}${status.profitPct.toFixed(2)}% / ${status.currentTargetPct}%`;
                     progress = status.targetProgress;
                     fill = status.targetReached ? "bg-emerald-500" : "bg-blue-500";
                 } else if (status.ddLimit !== null) {
-                    label = `DD máx ${status.config.maxDDPct}%`;
-                    detail = `${status.ddUsedPct.toFixed(0)}% usado`;
+                    const maxDdLabel = (typeof window.t === "function") ? window.t("card.max_dd", "DD máx") : "DD máx";
+                    const usedLabel = (typeof window.t === "function") ? window.t("card.used", "usado") : "usado";
+                    label = `${maxDdLabel} ${status.config.maxDDPct}%`;
+                    detail = `${status.ddUsedPct.toFixed(0)}% ${usedLabel}`;
                     progress = status.ddUsedPct;
                     fill = status.ddUsedPct >= 80 ? "bg-red-500" : (status.ddUsedPct >= 50 ? "bg-amber-500" : "bg-emerald-500");
                 }
             } else if (stage === "real") {
                 const status = getRealGoalStatus(account);
                 if (status.hasMeta) {
-                    label = `Meta ${status.config.mode === "percent" ? `${status.config.value}%` : formatBalanceHistoryMoney(status.target)}`;
+                    const goalLabel = (typeof window.t === "function") ? window.t("card.goal", "Meta") : "Meta";
+                    label = `${goalLabel} ${status.config.mode === "percent" ? `${status.config.value}%` : formatBalanceHistoryMoney(status.target)}`;
                     detail = `${Math.round(status.progress)}%`;
                     progress = status.progress;
                     fill = status.reached ? "bg-emerald-500" : "bg-teal-500";
                 }
             } else if (stage === "fondeada") {
                 const status = getFondeadaGoalStatus(account);
-                label = "Retirable";
+                label = (typeof window.t === "function") ? window.t("card.withdrawable", "Retirable") : "Retirable";
                 detail = formatBalanceHistoryMoney(status.yourShare);
                 progress = status.progress;
                 fill = status.readyToWithdraw ? "bg-emerald-500" : "bg-indigo-500";
             } else {
                 const status = getInstantGoalStatus(account);
-                label = "Retirable";
+                label = (typeof window.t === "function") ? window.t("card.withdrawable", "Retirable") : "Retirable";
                 detail = formatBalanceHistoryMoney(status.yourShare);
                 progress = status.progress;
                 fill = status.readyToWithdraw ? "bg-emerald-500" : "bg-purple-500";

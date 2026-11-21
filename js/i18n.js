@@ -3861,6 +3861,13 @@
 
 
             "card.no_assigned_accounts": "Sin cuentas asignadas",
+            "card.rules": "Reglas",
+            "card.target": "Objetivo",
+            "card.phase_short": "F",
+            "card.max_dd": "DD máx",
+            "card.used": "usado",
+            "card.goal": "Meta",
+            "card.withdrawable": "Retirable",
 
 
 
@@ -10519,6 +10526,13 @@
 
 
             "card.no_assigned_accounts": "No assigned accounts",
+            "card.rules": "Rules",
+            "card.target": "Target",
+            "card.phase_short": "P",
+            "card.max_dd": "Max DD",
+            "card.used": "used",
+            "card.goal": "Goal",
+            "card.withdrawable": "Withdrawable",
 
 
 
