@@ -259,6 +259,16 @@ const initialTrades = [];
             if (isGlobalMetricsView) {
                 updateActiveAccountBadgeName((typeof window.t === 'function') ? window.t('tabs.global_metrics', 'Métricas globales') : 'Métricas globales', 'tabs.global_metrics');
             }
+            const chartTitle = document.getElementById("dashboard-chart-title");
+            if (chartTitle) {
+                const key = isGlobalMetricsView ? 'metrics.accumulated_return' : 'metrics.account_growth';
+                const fallback = isGlobalMetricsView ? 'Retorno acumulado (%)' : 'Evolución de la Cuenta ($)';
+                chartTitle.setAttribute('data-i18n', key);
+                chartTitle.textContent = (typeof window.t === 'function') ? window.t(key, fallback) : fallback;
+            }
+            if (typeof populatePairDropdowns === 'function') {
+                populatePairDropdowns();
+            }
             if (currentTabName === 'sessions' && typeof renderGroups === 'function') {
                 renderGroups();
             }
@@ -615,12 +625,12 @@ const initialTrades = [];
             isGlobalMetricsView = enabled;
             document.getElementById("dashboard-balance-controls").classList.toggle("hidden", enabled);
             document.getElementById("dashboardActualBalanceGroup").classList.toggle("hidden", enabled || currentMode === "backtesting");
-            const chartIcon = document.getElementById("dashboard-chart-icon");
-            if (chartIcon && chartIcon.nextSibling) {
-                const chartLabel = enabled
-                    ? ((typeof window.t === 'function') ? window.t('metrics.accumulated_return', 'Retorno acumulado (%)') : 'Retorno acumulado (%)')
-                    : ((typeof window.t === 'function') ? window.t('metrics.account_growth', 'Evolución de la Cuenta ($)') : 'Evolución de la Cuenta ($)');
-                chartIcon.nextSibling.textContent = ` ${chartLabel}`;
+            const chartTitle = document.getElementById("dashboard-chart-title");
+            if (chartTitle) {
+                const key = enabled ? 'metrics.accumulated_return' : 'metrics.account_growth';
+                const fallback = enabled ? 'Retorno acumulado (%)' : 'Evolución de la Cuenta ($)';
+                chartTitle.setAttribute('data-i18n', key);
+                chartTitle.textContent = (typeof window.t === 'function') ? window.t(key, fallback) : fallback;
             }
             const badge = document.getElementById("active-account-badge");
             if (enabled) {
@@ -1339,7 +1349,8 @@ const initialTrades = [];
             ungroupedAccounts.forEach(account => appendAccountCard(grid, account, false));
 
             if (!accountGroups.length && !realAccounts.length) {
-                grid.innerHTML = `<div class="col-span-full rounded-xl border border-main bg-[#161b22] py-12 text-center text-gray-500 shadow"><i class="fa-regular fa-folder-open mb-3 block text-4xl text-gray-600"></i>No hay cuentas creadas. Puedes crear una cuenta o un grupo.</div>`;
+                const noAccountsMsg = (typeof window.t === "function") ? window.t("card.no_accounts", "No hay cuentas creadas. Puedes crear una cuenta o un grupo.") : "No hay cuentas creadas. Puedes crear una cuenta o un grupo.";
+                grid.innerHTML = `<div class="col-span-full rounded-xl border border-main bg-[#161b22] py-12 text-center text-gray-500 shadow"><i class="fa-regular fa-folder-open mb-3 block text-4xl text-gray-600"></i>${noAccountsMsg}</div>`;
             }
         }
         function renderAccountGroupAccountPicker(selectedIds = []) {
@@ -1347,7 +1358,8 @@ const initialTrades = [];
             const selected = new Set(selectedIds.map(String));
             container.innerHTML = "";
             if (!realAccounts.length) {
-                container.innerHTML = `<p class="p-3 text-xs text-gray-500">Crea cuentas reales para agregarlas a este grupo.</p>`;
+                const createAccountsHint = (typeof window.t === "function") ? window.t("groups.create_accounts_hint", "Crea cuentas reales para agregarlas a este grupo.") : "Crea cuentas reales para agregarlas a este grupo.";
+                container.innerHTML = `<p class="p-3 text-xs text-gray-500">${createAccountsHint}</p>`;
                 updateAccountGroupSelectionCount();
                 return;
             }
@@ -4631,7 +4643,10 @@ const initialTrades = [];
             const managerButton = document.getElementById("tradePairManagerButton");
             if (currentMode !== "backtesting") {
                 input.disabled = false;
-                label.textContent = "Activo / Par";
+                if (label) {
+                    label.textContent = (typeof window.t === "function") ? window.t("modal_trade.pair_label", "Activo / Par") : "Activo / Par";
+                    label.setAttribute("data-i18n", "modal_trade.pair_label");
+                }
                 managerButton.classList.remove("hidden");
                 return;
             }
@@ -4643,7 +4658,10 @@ const initialTrades = [];
             }
             if (pair) input.value = pair;
             input.disabled = true;
-            label.textContent = "Activo / Par (fijo de la sesión)";
+            if (label) {
+                label.textContent = (typeof window.t === "function") ? window.t("modal_trade.pair_fixed", "Activo / Par (fijo de la sesión)") : "Activo / Par (fijo de la sesión)";
+                label.setAttribute("data-i18n", "modal_trade.pair_fixed");
+            }
             managerButton.classList.add("hidden");
         }
 
@@ -4656,7 +4674,9 @@ const initialTrades = [];
             document.getElementById("tradeForm").reset();
             document.getElementById("tradeId").value = "";
             configureRiskInputForMode();
-            document.getElementById("modalTitle").innerHTML = `<i class="fa-solid fa-pen-to-square ${currentMode === 'backtesting' ? 'text-blue-500' : 'text-green-500'}"></i> Nueva Entrada de Trading`;
+            const modalTitleEl = document.getElementById("modalTitle");
+            const newTitle = (typeof window.t === 'function') ? window.t('modal_trade.title_new', 'Registrar Nueva Operación') : 'Registrar Nueva Operación';
+            if (modalTitleEl) modalTitleEl.innerHTML = `<i class="fa-solid fa-pen-to-square ${currentMode === 'backtesting' ? 'text-blue-500' : 'text-green-500'}"></i> <span data-i18n="modal_trade.title_new">${newTitle}</span>`;
             document.getElementById("quickTradeAlert").classList.add('hidden');
             document.getElementById("globalTradeSelectButton").classList.add("hidden");
             document.getElementById("globalTradeAccountPanel").classList.add("hidden");
@@ -4673,7 +4693,8 @@ const initialTrades = [];
                     : getBaseTrades().find(x => String(x.id) === String(id));
                 if (t) {
                     document.getElementById("tradeId").value = t.id;
-                    document.getElementById("modalTitle").innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-500"></i> Editar Operación`;
+                    const editTitle = (typeof window.t === 'function') ? window.t('modal_trade.title_edit', 'Editar Operación') : 'Editar Operación';
+                    if (modalTitleEl) modalTitleEl.innerHTML = `<i class="fa-solid fa-pen-to-square text-amber-500"></i> <span data-i18n="modal_trade.title_edit">${editTitle}</span>`;
                     document.getElementById("inputFecha").value = t.fecha;
                     document.getElementById("inputHora").value = t.hora;
                     
@@ -4829,8 +4850,8 @@ const initialTrades = [];
             const help = document.getElementById("inputLotajeHelp");
             if (!output || !help) return null;
             if (isGlobalTradeContext) {
-                output.textContent = "Por cuenta";
-                help.textContent = "La cantidad se calcula por separado usando el balance de cada cuenta.";
+                output.textContent = (typeof window.t === "function") ? window.t("modal_trade.calc_per_account", "Por cuenta") : "Por cuenta";
+                help.textContent = (typeof window.t === "function") ? window.t("modal_trade.calc_per_account_help", "La cantidad se calcula por separado usando el balance de cada cuenta.") : "La cantidad se calcula por separado usando el balance de cada cuenta.";
                 return null;
             }
             const pair = document.getElementById("inputPar").value;
@@ -4840,17 +4861,22 @@ const initialTrades = [];
             const pipValue = getPipValuePerLot(pair);
             const lotSize = calculateLotSize(pair, sl, risk, balance);
             if (!pipValue) {
-                output.textContent = "N/D";
-                help.textContent = "No hay una especificación automática para este activo.";
+                output.textContent = (typeof window.t === "function") ? window.t("modal_trade.calc_na", "N/D") : "N/D";
+                help.textContent = (typeof window.t === "function") ? window.t("modal_trade.calc_no_spec", "No hay una especificación automática para este activo.") : "No hay una especificación automática para este activo.";
             } else if (!(sl > 0)) {
                 output.textContent = "—";
-                help.textContent = "Ingresa el stop loss para calcular el tamaño.";
+                help.textContent = (typeof window.t === "function") ? window.t("modal_trade.calc_enter_sl", "Ingresa el stop loss para calcular el tamaño.") : "Ingresa el stop loss para calcular el tamaño.";
             } else if (!lotSize) {
                 output.textContent = "< 0.01";
-                help.textContent = `El tamaño mínimo calculado es menor a 0.01 lotes. Riesgo: $${(balance * risk / 100).toFixed(2)}.`;
+                const minLotHelp = (typeof window.t === "function") ? window.t("modal_trade.calc_min_lots", "El tamaño mínimo calculado es menor a 0.01 lotes. Riesgo: $") : "El tamaño mínimo calculado es menor a 0.01 lotes. Riesgo: $";
+                help.textContent = `${minLotHelp}${(balance * risk / 100).toFixed(2)}.`;
             } else {
-                output.textContent = `${lotSize.toFixed(2)} lotes`;
-                help.textContent = `Riesgo aprox. $${(balance * risk / 100).toFixed(2)} · valor pip asumido: $${pipValue}/lote.`;
+                const lotsUnit = (typeof window.t === "function") ? window.t("modal_trade.calc_lots", "lotes") : "lotes";
+                const riskApprox = (typeof window.t === "function") ? window.t("modal_trade.calc_risk_approx", "Riesgo aprox.") : "Riesgo aprox.";
+                const pipValText = (typeof window.t === "function") ? window.t("modal_trade.calc_pip_value", "valor pip asumido:") : "valor pip asumido:";
+                const perLot = (typeof window.t === "function") ? window.t("modal_trade.calc_per_lot", "/lote") : "/lote";
+                output.textContent = `${lotSize.toFixed(2)} ${lotsUnit}`;
+                help.textContent = `${riskApprox} $${(balance * risk / 100).toFixed(2)} · ${pipValText} $${pipValue}${perLot}.`;
             }
             return lotSize;
         }
@@ -5124,7 +5150,8 @@ const initialTrades = [];
             const allPairs = [...new Set([...configuredPairs, ...getBaseTrades().map(t => (t.par || "EURUSD").toUpperCase()), activeSessionPair].filter(Boolean))].sort();
             
             const filter = document.getElementById("filterPar"), currentF = filter.value;
-            filter.innerHTML = '<option value="ALL">Todos los Activos</option>' + allPairs.map(p => `<option value="${p}">${p}</option>`).join('');
+            const allAssetsLabel = (typeof window.t === 'function') ? window.t('table.filter_all_pairs', 'Todos los Activos') : 'Todos los Activos';
+            filter.innerHTML = `<option value="ALL" data-i18n="table.filter_all_pairs">${allAssetsLabel}</option>` + allPairs.map(p => `<option value="${p}">${p}</option>`).join('');
             if(allPairs.includes(currentF) || currentF === "ALL") filter.value = currentF;
 
             const input = document.getElementById("inputPar"), currentI = input ? input.value : "";
@@ -6185,6 +6212,25 @@ function renderMonthlyPerformance() {
             }, 50);
         }
 
+        function formatTendencia(tendencia) {
+            if (!tendencia) return "-";
+            if (tendencia === "Favor") return (typeof window.t === "function") ? window.t("app_auto.favor", "Favor") : "Favor";
+            if (tendencia === "Contra") return (typeof window.t === "function") ? window.t("app_auto.contra", "Contra") : "Contra";
+            if (tendencia === "Sin clasificar") return (typeof window.t === "function") ? window.t("app_auto.sin_clasificar_mt5", "Sin clasificar") : "Sin clasificar";
+            return tendencia;
+        }
+
+        function formatTradeStatus(estado) {
+            if (!estado) return (typeof window.t === "function") ? window.t("app_auto.sin_activar", "Sin Activar") : "Sin Activar";
+            if (estado === "Full TP" || estado === "SL" || estado === "BE") return estado;
+            if (estado === "Parcial") return (typeof window.t === "function") ? window.t("app_auto.parcial", "Parcial") : "Parcial";
+            if (estado === "Activa") return (typeof window.t === "function") ? window.t("app_auto.activa", "Activa") : "Activa";
+            if (estado === "Cierre manual") return (typeof window.t === "function") ? window.t("app_auto.cierre_manual", "Cierre manual") : "Cierre manual";
+            if (estado === "Pendiente") return (typeof window.t === "function") ? window.t("app_auto.pendiente", "Pendiente") : "Pendiente";
+            if (estado === "Sin Activar") return (typeof window.t === "function") ? window.t("app_auto.sin_activar", "Sin Activar") : "Sin Activar";
+            return estado;
+        }
+
         function renderTable() {
             const tbody = document.getElementById("journal-table-body"); tbody.innerHTML = "";
             const showPairColumn = currentMode !== "backtesting";
@@ -6205,7 +6251,11 @@ function renderMonthlyPerformance() {
                 (!textSearch || ((t.notaAntes||'')+" "+(t.notaDespues||'')+(showPairColumn ? " "+(t.par||'') : "")).toLowerCase().includes(textSearch))
             );
 
-            if (!fList.length) { tbody.innerHTML = `<tr><td colspan="${emptyRowColspan}" class="p-8 text-center text-gray-500"><i class="fa-solid fa-search text-2xl mb-2 block"></i>No se encontraron operaciones</td></tr>`; return; }
+            if (!fList.length) {
+                const emptyMsg = (typeof window.t === "function") ? window.t("table.empty", "No se encontraron operaciones") : "No se encontraron operaciones";
+                tbody.innerHTML = `<tr><td colspan="${emptyRowColspan}" class="p-8 text-center text-gray-500"><i class="fa-solid fa-search text-2xl mb-2 block"></i>${emptyMsg}</td></tr>`;
+                return;
+            }
 
             // Orden cronológico ascendente para cálculo exacto de acumulados y balances por operación
             const sortedAsc = [...fList].sort((a, b) => new Date((a.fecha || "") + "T" + (a.hora || "00:00")) - new Date((b.fecha || "") + "T" + (b.hora || "00:00")));
@@ -6239,7 +6289,7 @@ function renderMonthlyPerformance() {
                     "Pendiente":"bg-purple-900/60 text-purple-400 border-purple-700",
                     "Activa":"bg-blue-900/60 text-blue-400 border-blue-700"
                 };
-                const st = `<span class="inline-block px-2 py-0.5 rounded font-semibold text-[11px] border ${stColors[t.estado] || 'bg-gray-900 text-gray-500 border-gray-800'}">${t.estado || 'Sin Activar'}</span>${t.mt5 ? `<span class="inline-block ml-1 px-1 py-0.5 rounded bg-blue-950/70 text-blue-300 border border-blue-800 text-[9px] font-bold align-middle" title="Sincronizada con MetaTrader 5">MT5</span>` : ""}`;
+                const st = `<span class="inline-block px-2 py-0.5 rounded font-semibold text-[11px] border ${stColors[t.estado] || 'bg-gray-900 text-gray-500 border-gray-800'}">${formatTradeStatus(t.estado)}</span>${t.mt5 ? `<span class="inline-block ml-1 px-1 py-0.5 rounded bg-blue-950/70 text-blue-300 border border-blue-800 text-[9px] font-bold align-middle" title="Sincronizada con MetaTrader 5">MT5</span>` : ""}`;
                 const ord = (t.orden||'').toLowerCase().includes("buy") ? `<span class="text-emerald-400 font-semibold"><i class="fa-solid fa-arrow-trend-up"></i> ${t.orden}</span>` : `<span class="text-red-400 font-semibold"><i class="fa-solid fa-arrow-trend-down"></i> ${t.orden}</span>`;
                 
                 const outColor = outcomePct > 0 ? "text-emerald-400" : (outcomePct < 0 ? "text-red-400" : "text-gray-400");
@@ -6260,7 +6310,7 @@ function renderMonthlyPerformance() {
                         <td class="px-2 py-2 text-gray-300 capitalize">${dayName}</td>
                         ${showPairColumn ? `<td class="px-2 py-2 font-bold text-white"><span class="bg-gray-800 px-2 py-0.5 rounded border border-main">${(t.par || '-').toUpperCase()}</span></td>` : ""}
                         <td class="px-2 py-2"><span class="bg-gray-900 text-gray-400 px-2 py-0.5 rounded border border-gray-800">${normalizeSessionName(t.sesion) || '-'}</span></td>
-                        <td class="px-2 py-2 text-gray-400">${t.tendencia || '-'}</td>
+                        <td class="px-2 py-2 text-gray-400">${formatTendencia(t.tendencia)}</td>
                         <td class="px-2 py-2 font-mono whitespace-nowrap"><span class="text-red-400">${t.pipsSL}</span> / <span class="text-emerald-400">${t.pipsTP}</span></td>
                         <td class="px-2 py-2 whitespace-nowrap">${ord}</td>
                         <td class="px-2 py-2 font-bold text-yellow-400 font-mono whitespace-nowrap">1:${Number.isFinite(rr) ? rr.toFixed(1) : '0.0'}</td>
@@ -6310,18 +6360,24 @@ function renderMonthlyPerformance() {
             const editorId = `gallery-note-${galleryKey}-${side}`;
             const escapedNote = escapeGalleryHtml(note);
             const buttonColor = isBefore ? "text-blue-300 hover:text-blue-200" : "text-purple-300 hover:text-purple-200";
-            const buttonText = note ? "Editar comentario" : "Añadir comentario";
+            const editCommentLabel = (typeof window.t === "function") ? window.t("gallery.edit_comment", "Editar comentario") : "Editar comentario";
+            const addCommentLabel = (typeof window.t === "function") ? window.t("gallery.add_comment", "Añadir comentario") : "Añadir comentario";
+            const noCommentLabel = (typeof window.t === "function") ? window.t("gallery.no_comment", "Sin comentario todavía.") : "Sin comentario todavía.";
+            const commentPlaceholder = (typeof window.t === "function") ? window.t("gallery.write_comment", "Escribe tu comentario...") : "Escribe tu comentario...";
+            const cancelLabel = (typeof window.t === "function") ? window.t("btn.cancel", "Cancelar") : "Cancelar";
+            const saveLabel = (typeof window.t === "function") ? window.t("btn.save", "Guardar") : "Guardar";
+            const buttonText = note ? editCommentLabel : addCommentLabel;
 
             return `<div class="space-y-2">
                 <div id="${editorId}-display" class="space-y-2">
-                    ${note ? `<p class="text-xs text-gray-300 bg-gray-900/60 p-3 rounded-lg whitespace-pre-wrap break-words">${escapedNote}</p>` : `<p class="text-xs text-gray-500 italic">Sin comentario todavía.</p>`}
+                    ${note ? `<p class="text-xs text-gray-300 bg-gray-900/60 p-3 rounded-lg whitespace-pre-wrap break-words">${escapedNote}</p>` : `<p class="text-xs text-gray-500 italic">${noCommentLabel}</p>`}
                     <button type="button" onclick="toggleGalleryCommentEditor(${galleryKey}, '${side}', true)" class="inline-flex items-center gap-1.5 text-xs font-semibold ${buttonColor}"><i class="fa-solid fa-pen-to-square"></i>${buttonText}</button>
                 </div>
                 <div id="${editorId}-editor" class="hidden space-y-2">
-                    <textarea id="${editorId}-input" rows="3" class="w-full resize-y rounded-lg border border-gray-700 bg-gray-950 p-3 text-xs text-white focus:border-indigo-400 focus:outline-none" placeholder="Escribe tu comentario...">${escapedNote}</textarea>
+                    <textarea id="${editorId}-input" rows="3" class="w-full resize-y rounded-lg border border-gray-700 bg-gray-950 p-3 text-xs text-white focus:border-indigo-400 focus:outline-none" placeholder="${commentPlaceholder}">${escapedNote}</textarea>
                     <div class="flex justify-end gap-2">
-                        <button type="button" onclick="toggleGalleryCommentEditor(${galleryKey}, '${side}', false)" class="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800">Cancelar</button>
-                        <button type="button" onclick="saveGalleryComment(${galleryKey}, '${side}')" class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-indigo-500"><i class="fa-solid fa-floppy-disk"></i>Guardar</button>
+                        <button type="button" onclick="toggleGalleryCommentEditor(${galleryKey}, '${side}', false)" class="rounded-lg border border-gray-700 px-3 py-1.5 text-xs text-gray-300 hover:bg-gray-800">${cancelLabel}</button>
+                        <button type="button" onclick="saveGalleryComment(${galleryKey}, '${side}')" class="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-indigo-500"><i class="fa-solid fa-floppy-disk"></i>${saveLabel}</button>
                     </div>
                 </div>
             </div>`;
@@ -6384,8 +6440,11 @@ function renderMonthlyPerformance() {
         function renderGallery() {
             const container = document.getElementById("gallery-cards-container"); container.innerHTML = "";
             const activeTrades = getBaseTrades().filter(t => t.estado !== "Sin Activar");
+            const analysisBeforeLabel = (typeof window.t === "function") ? window.t("gallery.analysis_before", "Análisis ANTES") : "Análisis ANTES";
+            const analysisAfterLabel = (typeof window.t === "function") ? window.t("gallery.analysis_after", "Análisis DESPUÉS") : "Análisis DESPUÉS";
+            const noTradesWithAnalysisLabel = (typeof window.t === "function") ? window.t("gallery.no_trades", "Aún no hay operaciones registradas con análisis.") : "Aún no hay operaciones registradas con análisis.";
 
-            if (!activeTrades.length) { container.innerHTML = `<p class="text-gray-500 text-sm">Aún no hay operaciones registradas con análisis.</p>`; return; }
+            if (!activeTrades.length) { container.innerHTML = `<p class="text-gray-500 text-sm">${noTradesWithAnalysisLabel}</p>`; return; }
 
             [...activeTrades].reverse().forEach(t => {
                 const out = getTradeOutcome(t);
@@ -6400,7 +6459,7 @@ function renderMonthlyPerformance() {
                 let html = `<div id="gallery-card-${galleryKey}" class="bg-card border ${borderColor} rounded-xl p-5 shadow-lg relative transition-all">`;
                 
                 html += `<div class="flex flex-wrap justify-between items-center mb-4 border-b border-main pb-2">
-                    <div class="flex items-center gap-3"><span class="font-bold text-white">${t.par}</span><span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> ${t.fecha} ${t.hora}</span><span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-gray-300 border border-gray-700">${normalizeSessionName(t.sesion)} / ${t.tendencia}</span></div>
+                    <div class="flex items-center gap-3"><span class="font-bold text-white">${t.par}</span><span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> ${t.fecha} ${t.hora}</span><span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-gray-300 border border-gray-700">${normalizeSessionName(t.sesion)} / ${formatTendencia(t.tendencia)}</span></div>
                     <div class="font-bold font-mono px-3 py-1 rounded ${badgeColor}">${out > 0 ? '+' : ''}${out.toFixed(2)}%</div>
                 </div>`;
                 
@@ -6408,7 +6467,7 @@ function renderMonthlyPerformance() {
                 
                 // ANTES
                 html += `<div class="space-y-2">
-                    <h4 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-1">Análisis ANTES</h4>
+                    <h4 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-1">${analysisBeforeLabel}</h4>
                     ${renderGalleryCommentEditor(t, "antes")}
                     ${renderTradingViewButton(t.linkAntes, true)}
                     <div class="flex flex-wrap gap-2 mt-2">
@@ -6418,7 +6477,7 @@ function renderMonthlyPerformance() {
                 
                 // DESPUÉS
                 html += `<div class="space-y-2">
-                    <h4 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-1">Análisis DESPUÉS</h4>
+                    <h4 class="text-sm font-bold text-gray-300 border-b border-gray-700 pb-1">${analysisAfterLabel}</h4>
                     ${renderGalleryCommentEditor(t, "despues")}
                     ${renderTradingViewButton(t.linkDespues, false)}
                     <div class="flex flex-wrap gap-2 mt-2">
@@ -8247,7 +8306,7 @@ function renderMonthlyPerformance() {
                             ${orderIcon} ${t.orden || 'Orden'}
                         </span>
                         <span class="text-xs px-2 py-0.5 rounded font-semibold bg-gray-900 border border-gray-700 text-gray-300">
-                            ${t.estado || 'Cerrada'}
+                            ${formatTradeStatus(t.estado)}
                         </span>
                         ${t.hora ? `<span class="text-xs text-gray-500"><i class="fa-regular fa-clock"></i> ${t.hora}</span>` : ''}
                     </div>

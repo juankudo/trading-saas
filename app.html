@@ -363,7 +363,7 @@
                 <div class="lg:col-span-2 bg-card p-5 rounded-xl border border-main shadow flex flex-col justify-between">
                     <div>
                         <h2 class="text-base font-bold text-white mb-4 flex items-center gap-2">
-                            <i id="dashboard-chart-icon" class="fa-solid fa-chart-area text-green-500"></i> <span data-i18n="metrics.account_growth">Evolución de la Cuenta ($)</span>
+                            <i id="dashboard-chart-icon" class="fa-solid fa-chart-area text-green-500"></i><span id="dashboard-chart-title" data-i18n="metrics.account_growth">Evolución de la Cuenta ($)</span>
                         </h2>
                         <div class="h-80"><canvas id="equityChart"></canvas></div>
                     </div>
@@ -684,7 +684,7 @@
                             </div>
                             <div>
                                 <label for="inputAccountGoalMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputAccountGoalMaxDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputAccountGoalMaxDD" placeholder="Sin límite" data-i18n-placeholder="common.no_limit" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-blue-500 focus:outline-none">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
@@ -730,7 +730,7 @@
                             </div>
                             <div>
                                 <label for="inputAccountMinWithdrawal" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.m_nimo_a_retirar">Mínimo a retirar ($)</label>
-                                <input type="number" step="0.01" min="0" id="inputAccountMinWithdrawal" placeholder="Sin mínimo" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
+                                <input type="number" step="0.01" min="0" id="inputAccountMinWithdrawal" placeholder="Sin mínimo" data-i18n-placeholder="common.no_minimum" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-emerald-500 focus:outline-none">
                             </div>
                         </div>
                         <p class="text-[10px] text-gray-500" data-i18n="modal_session.withdraw_rules_help">Reglas de retiro: la app calcula tu parte retirable y avisa cuánto falta para el próximo retiro.</p>
@@ -753,13 +753,13 @@
                                     <option value="amount">$</option>
                                     <option value="percent" data-i18n="app_auto.del_balance">% del balance</option>
                                 </select>
-                                <input type="number" step="0.01" min="0" id="inputAccountInstantMinWithdrawal" placeholder="Sin mínimo" class="min-w-0 flex-1 bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
+                                <input type="number" step="0.01" min="0" id="inputAccountInstantMinWithdrawal" placeholder="Sin mínimo" data-i18n-placeholder="common.no_minimum" class="min-w-0 flex-1 bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label for="inputAccountInstantMaxDD" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputAccountInstantMaxDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputAccountInstantMaxDD" placeholder="Sin límite" data-i18n-placeholder="common.no_limit" class="w-full bg-[#161b22] border border-main rounded-lg p-2.5 text-white focus:border-purple-500 focus:outline-none">
                             </div>
                             <div>
                                 <label for="inputAccountInstantDDType" class="block text-xs font-semibold text-gray-300 mb-1.5" data-i18n="app_auto.tipo_de_drawdown">Tipo de drawdown</label>
@@ -848,19 +848,19 @@
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.daily_dd">Drawdown diario (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputFondeoDailyDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputFondeoDailyDD" placeholder="Sin límite" data-i18n-placeholder="common.no_limit" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.monthly_dd">Drawdown mensual (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputFondeoMonthlyDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputFondeoMonthlyDD" placeholder="Sin límite" data-i18n-placeholder="common.no_limit" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-300 mb-1" data-i18n="app_auto.drawdown_m_ximo">Drawdown máximo (%)</label>
-                                <input type="number" step="0.1" min="0" id="inputFondeoMaxDD" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
+                                <input type="number" step="0.1" min="0" id="inputFondeoMaxDD" placeholder="Sin límite" data-i18n-placeholder="common.no_limit" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.risk_per_trade">Límite de riesgo por trade (%)</label>
-                                <input type="number" step="0.01" min="0" id="inputFondeoRiskPerTrade" placeholder="Sin límite" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
+                                <input type="number" step="0.01" min="0" id="inputFondeoRiskPerTrade" placeholder="Sin límite" data-i18n-placeholder="common.no_limit" class="w-full bg-[#161b22] border border-main rounded-lg p-2 text-white focus:border-amber-500 focus:outline-none">
                             </div>
                             <div>
                                 <label class="block font-semibold text-gray-300 mb-1" data-i18n="modal_session.dd_type">Tipo de drawdown máx.</label>
@@ -901,7 +901,7 @@
     <div id="realBalanceEntryModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-[#11151c] border border-emerald-500/40 rounded-xl w-full max-w-xl max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
             <button type="button" onclick="closeRealBalanceEntryModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
-            <h3 id="realBalanceEntryTitle" class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-money-bill-transfer text-emerald-400 mr-2"></i>Cargar balances reales</h3>
+            <h3 id="realBalanceEntryTitle" class="text-lg font-bold text-white mb-2"><i class="fa-solid fa-money-bill-transfer text-emerald-400 mr-2"></i><span data-i18n="modal_balance.title">Cargar balances reales</span></h3>
             <p id="realBalanceEntryHint" class="text-xs text-gray-400 mb-5" data-i18n="modal_balance.hint">Actualiza aquí el balance actual de cada cuenta. Al guardar, se actualizarán las cuentas y se registrará una captura histórica.</p>
             <form id="realBalanceEntryForm" onsubmit="saveRealBalanceEntry(event)" class="space-y-4">
                 <div id="realBalanceEntryDateRow" class="hidden">
@@ -911,7 +911,7 @@
                 <div id="realBalanceEntryList" class="space-y-3"></div>
                 <label id="realBalanceApplyCurrentRow" class="hidden cursor-pointer items-center gap-2.5 rounded-lg border border-main bg-gray-900/60 p-3 text-xs text-gray-300">
                     <input type="checkbox" id="realBalanceApplyCurrent" class="h-4 w-4 accent-emerald-500">
-                    <span>Aplicar también estos balances al <b class="text-white">Balance Actual</b> de las cuentas</span>
+                    <span data-i18n="modal_balance.apply_current">Aplicar también estos balances al Balance Actual de las cuentas</span>
                 </label>
                 <div class="sticky bottom-2 flex justify-end gap-3 pt-2">
                     <button type="button" onclick="closeRealBalanceEntryModal()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-gray-300" data-i18n="btn.cancel">Cancelar</button>
@@ -924,8 +924,8 @@
     <div id="withdrawalModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-[#11151c] border border-emerald-500/40 rounded-xl w-full max-w-md max-h-[90vh] overflow-y-auto p-6 shadow-2xl relative">
             <button type="button" onclick="closeWithdrawalModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg" aria-label="Cerrar"><i class="fa-solid fa-xmark"></i></button>
-            <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-hand-holding-dollar text-emerald-400 mr-2"></i>Registrar retiro</h3>
-            <p class="text-xs text-gray-400 mb-5">Cuenta: <span id="withdrawalModalAccount" class="font-semibold text-gray-200"></span></p>
+            <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-hand-holding-dollar text-emerald-400 mr-2"></i><span data-i18n="modal_withdrawal.title">Registrar retiro</span></h3>
+            <p class="text-xs text-gray-400 mb-5"><span data-i18n="modal_withdrawal.account_label">Cuenta:</span> <span id="withdrawalModalAccount" class="font-semibold text-gray-200"></span></p>
             <form id="withdrawalForm" onsubmit="saveAccountWithdrawal(event)" class="space-y-4">
                 <input type="hidden" id="inputWithdrawalAccountId">
                 <div class="grid grid-cols-2 gap-3">
@@ -1109,11 +1109,11 @@
                     </div>
                     <div>
                         <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.pips_sl">Pips SL</label>
-                        <input type="number" step="0.1" id="inputPipsSL" oninput="calculateRR()" required placeholder="Ej: 15" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
+                        <input type="number" step="0.1" id="inputPipsSL" oninput="calculateRR()" required placeholder="Ej: 15" data-i18n-placeholder="modal_trade.pips_sl_placeholder" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                     </div>
                     <div>
                         <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.pips_tp">Pips TP</label>
-                        <input type="number" step="0.1" id="inputPipsTP" oninput="calculateRR()" required placeholder="Ej: 60" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
+                        <input type="number" step="0.1" id="inputPipsTP" oninput="calculateRR()" required placeholder="Ej: 60" data-i18n-placeholder="modal_trade.pips_tp_placeholder" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                     </div>
                     <div>
                         <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.rr_label">Ratio RR (Auto)</label>
@@ -1136,14 +1136,14 @@
                     <div>
                         <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.risk_pct">Riesgo (%)</label>
                         <select id="inputRiesgo" onchange="handleRiskSelection()" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
-                            <option value="1.0">1.0% (Default)</option>
+                            <option value="1.0" data-i18n="modal_trade.risk_default">1.0% (Default)</option>
                             <option value="0.5">0.5%</option>
                             <option value="0.25">0.25%</option>
                             <option value="2.0">2.0%</option>
                             <option id="customRiskOption" value="custom" hidden data-i18n="app_auto.personalizado">Personalizado…</option>
                         </select>
                         <div id="customRiskContainer" class="hidden mt-2">
-                            <input type="number" id="inputRiesgoPersonalizado" min="0.01" step="0.01" placeholder="Riesgo personalizado, ej. 0.75" oninput="calculatePositionSize()" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
+                            <input type="number" id="inputRiesgoPersonalizado" min="0.01" step="0.01" placeholder="Riesgo personalizado, ej. 0.75" data-i18n-placeholder="modal_trade.custom_risk_placeholder" oninput="calculatePositionSize()" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500">
                         </div>
                     </div>
                     <div>
@@ -1168,36 +1168,36 @@
 
                 <div id="parcialCustomContainer" class="hidden">
                     <label class="block font-medium text-gray-300 mb-1" data-i18n="modal_trade.partial_result">Resultado Parcial Realizado (%)</label>
-                    <input type="number" step="0.01" id="inputResultadoParcial" placeholder="Ej: 1.5" class="w-full bg-gray-900 border border-main rounded p-2 text-emerald-400 font-bold focus:outline-none">
+                    <input type="number" step="0.01" id="inputResultadoParcial" placeholder="Ej: 1.5" data-i18n-placeholder="modal_trade.partial_result_placeholder" class="w-full bg-gray-900 border border-main rounded p-2 text-emerald-400 font-bold focus:outline-none">
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
                     <div class="bg-gray-900/50 p-4 rounded-lg border border-dashed border-main space-y-3">
-                        <h4 class="text-sm font-bold text-gray-200 flex items-center gap-2"><i class="fa-solid fa-camera text-blue-400"></i> Captura y Análisis (ANTES)</h4>
-                        <textarea id="inputNotaAntes" rows="3" placeholder="Contexto, confluencias, por qué entraste..." class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500"></textarea>
+                        <h4 class="text-sm font-bold text-gray-200 flex items-center gap-2"><i class="fa-solid fa-camera text-blue-400"></i> <span data-i18n="modal_trade.capture_before">Captura y Análisis (ANTES)</span></h4>
+                        <textarea id="inputNotaAntes" rows="3" placeholder="Contexto, confluencias, por qué entraste..." data-i18n-placeholder="modal_trade.notes_before_placeholder" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500"></textarea>
                         
                         <div>
-                            <label class="block font-medium text-gray-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-link text-blue-400"></i> Link (Antes)</label>
+                            <label class="block font-medium text-gray-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-link text-blue-400"></i> <span data-i18n="modal_trade.link_before">Link (Antes)</span></label>
                             <input type="url" id="inputLinkAntes" placeholder="https://www.tradingview.com/chart/..." class="w-full bg-gray-900 border border-main rounded p-2 text-blue-300 focus:outline-none focus:border-gray-500 text-xs">
                         </div>
 
                         <div>
-                            <label class="block font-medium text-gray-400 mb-1">Subir Captura(s) Antes <span class="text-xs text-gray-500 font-normal" data-i18n="app_auto.o_pega_con_ctrl_v">(o pega con Ctrl+V)</span></label>
+                            <label class="block font-medium text-gray-400 mb-1"><span data-i18n="modal_trade.upload_before">Subir Captura(s) Antes</span> <span class="text-xs text-gray-500 font-normal" data-i18n="modal_trade.ctrl_v">(o pega con Ctrl+V)</span></label>
                             <input type="file" id="inputCapturasAntes" multiple accept="image/*" onchange="previewImagesAntes(event)" class="text-xs text-gray-500 w-full">
                             <div id="imagesPreviewAntes" class="flex flex-wrap gap-2 mt-3"></div>
                         </div>
                     </div>
                     <div class="bg-gray-900/50 p-4 rounded-lg border border-dashed border-main space-y-3">
-                        <h4 class="text-sm font-bold text-gray-200 flex items-center gap-2"><i class="fa-solid fa-camera-retro text-purple-400"></i> Captura y Análisis (DESPUÉS)</h4>
-                        <textarea id="inputNotaDespues" rows="3" placeholder="Gestión, emociones, qué pasó al final..." class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500"></textarea>
+                        <h4 class="text-sm font-bold text-gray-200 flex items-center gap-2"><i class="fa-solid fa-camera-retro text-purple-400"></i> <span data-i18n="modal_trade.capture_after">Captura y Análisis (DESPUÉS)</span></h4>
+                        <textarea id="inputNotaDespues" rows="3" placeholder="Gestión, emociones, qué pasó al final..." data-i18n-placeholder="modal_trade.notes_after_placeholder" class="w-full bg-gray-900 border border-main rounded p-2 text-white focus:outline-none focus:border-gray-500"></textarea>
                         
                         <div>
-                            <label class="block font-medium text-gray-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-link text-purple-400"></i> Link (Después)</label>
+                            <label class="block font-medium text-gray-300 mb-1 flex items-center gap-1.5"><i class="fa-solid fa-link text-purple-400"></i> <span data-i18n="modal_trade.link_after">Link (Después)</span></label>
                             <input type="url" id="inputLinkDespues" placeholder="https://www.tradingview.com/chart/..." class="w-full bg-gray-900 border border-main rounded p-2 text-purple-300 focus:outline-none focus:border-gray-500 text-xs">
                         </div>
 
                         <div>
-                            <label class="block font-medium text-gray-400 mb-1">Subir Captura(s) Después <span class="text-xs text-gray-500 font-normal" data-i18n="app_auto.o_pega_con_ctrl_v">(o pega con Ctrl+V)</span></label>
+                            <label class="block font-medium text-gray-400 mb-1"><span data-i18n="modal_trade.upload_after">Subir Captura(s) Después</span> <span class="text-xs text-gray-500 font-normal" data-i18n="modal_trade.ctrl_v">(o pega con Ctrl+V)</span></label>
                             <input type="file" id="inputCapturasDespues" multiple accept="image/*" onchange="previewImagesDespues(event)" class="text-xs text-gray-500 w-full">
                             <div id="imagesPreviewDespues" class="flex flex-wrap gap-2 mt-3"></div>
                         </div>
@@ -1239,10 +1239,10 @@
             </p>
             <div class="flex flex-col gap-3">
                 <button onclick="exportAndReset()" class="bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition shadow">
-                    <i class="fa-solid fa-download"></i> Respaldar (JSON) y Reiniciar
+                    <i class="fa-solid fa-download"></i> <span data-i18n="modal_reset.btn_backup_reset">Respaldar (JSON) y Reiniciar</span>
                 </button>
                 <button onclick="confirmReset()" class="bg-red-600 hover:bg-red-700 text-white text-xs font-bold py-2.5 px-4 rounded-lg flex items-center justify-center gap-2 transition shadow">
-                    <i class="fa-solid fa-trash-can"></i> Borrar Todo y Empezar de 0
+                    <i class="fa-solid fa-trash-can"></i> <span data-i18n="modal_reset.btn_wipe_start">Borrar Todo y Empezar de 0</span>
                 </button>
                 <button onclick="closeResetModal()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 text-xs font-semibold py-2 px-4 rounded-lg transition" data-i18n="btn.cancel">Cancelar</button>
             </div>
@@ -1253,9 +1253,9 @@
     <div id="pairManagerModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden z-[60] flex items-center justify-center p-4">
         <div class="bg-card border border-main rounded-xl w-full max-w-sm p-6 shadow-2xl relative">
             <button type="button" onclick="closePairManager()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <h3 id="pairManagerTitle" class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-list-ul text-amber-400"></i> Gestionar Pares</h3>
+            <h3 id="pairManagerTitle" class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-list-ul text-amber-400"></i> <span data-i18n="pairs.modal_title">Gestionar Pares</span></h3>
             <div class="flex gap-2 mb-4">
-                <input type="text" id="newPairInput" class="flex-grow bg-gray-900 border border-main rounded p-2 text-white uppercase focus:outline-none focus:border-gray-500" placeholder="Ej: GBPUSD">
+                <input type="text" id="newPairInput" class="flex-grow bg-gray-900 border border-main rounded p-2 text-white uppercase focus:outline-none focus:border-gray-500" placeholder="Ej: GBPUSD" data-i18n-placeholder="pairs.input_ph">
                 <button type="button" onclick="addPair()" class="bg-green-600 hover:bg-green-500 px-4 rounded text-white transition"><i class="fa-solid fa-plus"></i></button>
             </div>
             <div id="pairListContainer" class="max-h-48 overflow-y-auto space-y-2 pr-1"></div>
@@ -1271,7 +1271,7 @@
                 <div class="flex flex-wrap items-center justify-between gap-3 pr-8">
                     <div>
                         <h3 id="dailyAnalysisModalDate" class="text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-calendar-day text-emerald-400"></i> Análisis de Operaciones
+                            <i class="fa-solid fa-calendar-day text-emerald-400"></i> <span data-i18n="daily.modal_title">Análisis de Operaciones</span>
                         </h3>
                         <p id="dailyAnalysisModalSummary" class="text-xs text-gray-400 mt-0.5" data-i18n="app_auto.operaciones_registradas">Operaciones registradas</p>
                     </div>
@@ -1318,24 +1318,24 @@
             <!-- Selector de Períodos -->
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl mb-5 text-center">
                 <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-2.5 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
-                    1 Mes
+                    <span data-i18n="checkout.month_1">1 Mes</span>
                 </button>
                 <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    3 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
+                    <span data-i18n="checkout.month_3">3 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
                 </button>
                 <button type="button" id="checkout-period-semester" onclick="selectCheckoutPeriod('semester')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    6 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-10%</span>
+                    <span data-i18n="checkout.month_6">6 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-10%</span>
                 </button>
                 <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                    12 Meses <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-17%</span>
+                    <span data-i18n="checkout.month_12">12 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-17%</span>
                 </button>
             </div>
 
             <!-- Precio Seleccionado -->
             <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-4 text-center mb-5">
                 <span id="checkout-price-amount" class="text-3xl font-black text-white block">$25 USD</span>
-                <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="app_auto.por_1_mes">por 1 Mes</span>
-                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="app_auto.7_d_as_de_prueba_0_cobrados_hoy_si_es_pr">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
+                <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="checkout.period_month_label">por 1 Mes</span>
+                <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
             </div>
 
             <!-- Opciones de Pago (Pasarela Dual) -->
@@ -1343,7 +1343,7 @@
                 <!-- Opción 1: Tarjetas Globales (Stripe) -->
                 <button onclick="handleStripeCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
                     <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-credit-card text-base"></i> Pagar con Tarjeta (Visa, Mastercard, Apple Pay vía Stripe)
+                        <i class="fa-solid fa-credit-card text-base"></i> <span data-i18n="checkout.pay_card">Pagar con Tarjeta (Visa, Mastercard, Apple Pay vía Stripe)</span>
                     </span>
                     <span class="text-xs bg-gray-950/20 px-2 py-0.5 rounded font-mono font-bold">Stripe &rarr;</span>
                 </button>
@@ -1351,7 +1351,7 @@
                 <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
                 <button onclick="showCryptoCheckout()" class="w-full py-3.5 px-4 rounded-xl text-sm font-bold bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white flex items-center justify-between transition">
                     <span class="flex items-center gap-2.5">
-                        <i class="fa-solid fa-coins text-emerald-400 text-base"></i> Pagar con Criptomonedas (USDT / Crypto)
+                        <i class="fa-solid fa-coins text-emerald-400 text-base"></i> <span data-i18n="checkout.pay_crypto">Pagar con Criptomonedas (USDT / Crypto)</span>
                     </span>
                     <span class="text-xs text-gray-400 font-mono">NOWPayments &rarr;</span>
                 </button>
@@ -1361,24 +1361,24 @@
             <div id="checkout-stripe-sandbox" class="hidden bg-gray-900 border border-emerald-500/50 rounded-xl p-4 mb-4 text-xs animate-in fade-in">
                 <div class="flex items-center justify-between mb-2.5 border-b border-gray-800 pb-2">
                     <span class="font-bold text-white flex items-center gap-1.5">
-                        <i class="fa-solid fa-flask text-emerald-400"></i> Simulación Stripe Checkout (Sandbox)
+                        <i class="fa-solid fa-flask text-emerald-400"></i> <span data-i18n="checkout.card_sandbox_title">Simulación Stripe Checkout (Sandbox)</span>
                     </span>
                     <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60" data-i18n="app_auto.test_mode">TEST MODE</span>
                 </div>
-                <p class="text-gray-300 mb-2 leading-relaxed" data-i18n="app_auto.prueba_el_flujo_de_suscripci_n_sin_tarje">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
+                <p class="text-gray-300 mb-2 leading-relaxed" data-i18n="checkout.card_sandbox_desc">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
                 <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 mb-3 space-y-1 font-mono text-[11px]">
                     <div class="flex justify-between text-gray-400">
-                        <span data-i18n="app_auto.tarjeta_simulada">Tarjeta simulada:</span>
+                        <span data-i18n="checkout.sim_card">Tarjeta simulada:</span>
                         <span class="text-white font-bold">4242 •••• •••• 4242 (Visa Test)</span>
                     </div>
                     <div class="flex justify-between text-gray-400">
-                        <span data-i18n="app_auto.monto_del_plan">Monto del plan:</span>
+                        <span data-i18n="checkout.plan_amount">Monto del plan:</span>
                         <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$25.00 USD</span>
                     </div>
                 </div>
                 <div class="flex flex-col sm:flex-row gap-2">
                     <button type="button" onclick="simulateCardPaymentSuccess()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-circle-check"></i> Simular Pago Exitoso
+                        <i class="fa-solid fa-circle-check"></i> <span data-i18n="checkout.sim_success_btn">Simular Pago Exitoso</span>
                     </button>
                     <button type="button" onclick="hideCardSandbox()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
                 </div>
@@ -1388,12 +1388,12 @@
             <div id="checkout-crypto-invoice" class="hidden bg-gray-900 border border-emerald-600/40 rounded-xl p-4 mb-4 text-xs">
                 <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2">
                     <span class="font-bold text-emerald-400 flex items-center gap-1.5">
-                        <i class="fa-brands fa-ethereum"></i> Transferencia USDT / USDC
+                        <i class="fa-brands fa-ethereum"></i> <span data-i18n="checkout.crypto_invoice_title">Transferencia USDT / USDC</span>
                     </span>
                     <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">25.00 USDT</span>
                 </div>
                 
-                <p class="text-gray-400 mb-2" data-i18n="app_auto.env_a_el_monto_exacto_a_una_de_nuestras_">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
+                <p class="text-gray-400 mb-2" data-i18n="checkout.crypto_instruction">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
                 
                 <div class="space-y-2 mb-3">
                     <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
@@ -1415,13 +1415,13 @@
 
                 <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-3">
                     <i class="fa-solid fa-circle-info mt-0.5"></i>
-                    <span data-i18n="app_auto.tras_enviar_tu_transferencia_tu_cuenta_s">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
+                    <span data-i18n="checkout.crypto_note">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
                 </div>
 
                 <!-- Botón de Simulación Sandbox Cripto -->
                 <div id="crypto-test-action" class="pt-2 border-t border-gray-800">
                     <button type="button" onclick="simulateCryptoPaymentSuccess()" class="w-full py-2.5 px-3 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-bolt text-amber-400"></i> Simular Confirmación de Transferencia (TxHash OK)
+                        <i class="fa-solid fa-bolt text-amber-400"></i> <span data-i18n="checkout.crypto_sim_btn">Simular Confirmación de Transferencia (TxHash OK)</span>
                     </button>
                 </div>
             </div>
@@ -1664,7 +1664,7 @@
             </p>
             <div class="flex items-center justify-between pt-3 border-t border-gray-800">
                 <button type="button" id="tourPrevBtn" onclick="prevTourStep()" class="text-xs font-semibold text-gray-400 hover:text-white px-3 py-1.5 rounded-lg hover:bg-gray-800 transition flex items-center gap-1.5 disabled:opacity-30 disabled:pointer-events-none">
-                    <i class="fa-solid fa-arrow-left text-[10px]"></i> Anterior
+                    <i class="fa-solid fa-arrow-left text-[10px]"></i> <span data-i18n="tour.prev">Anterior</span>
                 </button>
                 <div class="flex items-center gap-1.5" id="tourStepDots"></div>
                 <button type="button" id="tourNextBtn" onclick="nextTourStep()" class="text-xs font-bold bg-gradient-to-r from-emerald-500 to-teal-400 text-gray-950 hover:brightness-110 px-4 py-1.5 rounded-lg shadow-md transition flex items-center gap-1.5">

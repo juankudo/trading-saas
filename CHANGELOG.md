@@ -7,6 +7,30 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ## [v3.9.6] - 2026-11-20
 
+### 🌐 Auditoría y Corrección Integral de Traducción, Títulos Duplicados y Modales
+- **Corrección de Duplicación en Título de Curva de Capital (`app.html` & `js/app.js`):**
+  - Eliminado el nodo de texto fantasma adyacente al ícono del gráfico y desacoplada la manipulación de `chartIcon.nextSibling.textContent`.
+  - Ahora se actualiza exclusivamente el span `#dashboard-chart-title`, eliminando definitivamente la duplicación visual (`"Equity Curve Growth ($) Equity Curve Growth ($)"` -> `"Equity Curve Growth ($)"`).
+- **Filtro de Activos y Columnas del Diario de Trades (`js/app.js` & `js/i18n.js`):**
+  - Desplegable de activos de la tabla localizado reactivamente: `"Todos los Activos"` en español y `"All Assets"` en inglés (`table.filter_all_pairs`), actualizado tanto al iniciar como al cambiar de idioma en caliente (`languageChanged`).
+  - Celdas de tendencia y estado traducidas dinámicamente con formateadores institucionales: `"Favor"` a `"With Trend"`, `"Contra"` a `"Counter Trend"`, `"Parcial"` a `"Partial"`, `"Activa"` a `"Active"`, `"Cierre manual"` a `"Manual Close"`.
+- **Galería Visual & Comentarios Técnicos (`js/app.js` & `js/i18n.js`):**
+  - Secciones de análisis localizadas: `"Análisis ANTES"` / `"BEFORE Analysis"` y `"Análisis DESPUÉS"` / `"AFTER Analysis"`.
+  - Editor interactivo de notas y comentarios bilingüe: `"Editar comentario"` / `"Edit Comment"`, `"Añadir comentario"` / `"Add Comment"`, `"Sin comentario todavía."` / `"No comments yet."`, y `"Escribe tu comentario..."` / `"Write your comment..."`.
+  - Badges de tendencias en cabecera de las tarjetas de la galería sincronizados (`"Asia / Counter Trend"`).
+- **Modal de Registro de Trades y Asistente de Lotaje (`app.html`, `js/app.js`, `js/i18n.js`):**
+  - Encabezados de bloques de análisis traducidos: `"Captura y Análisis (ANTES)"` / `"Screenshot & Analysis (BEFORE)"` y `"Captura y Análisis (DESPUÉS)"` / `"Screenshot & Analysis (AFTER)"`.
+  - Enlaces a gráficos: `"Link (Antes)"` / `"Link (Before)"` y `"Link (Después)"` / `"Link (After)"`.
+  - Tecla rápida y texto de subida: `"Presiona Ctrl+V en la pantalla para pegar la captura"` / `"Press Ctrl+V anywhere to paste screenshot"`, `"Subir Captura(s)..."` / `"Upload Screenshot(s)..."`.
+  - Botón universal de cancelación: incorporadas claves `"btn.cancel"` (`"Cancelar"` / `"Cancel"`) y `"btn.save"` (`"Guardar"` / `"Save"`), normalizando todos los modales de la aplicación.
+  - Asistente de cálculo automático de lotaje totalmente bilingüe: `"Por cuenta"` / `"Per account"`, `"N/D"` / `"N/A"`, `"lotes"` / `"lots"`, `"Riesgo aprox."` / `"Approx. risk"`, `"No hay una especificación automática para este activo."` / `"No automatic specification for this asset."`, `"Ingresa el stop loss para calcular el tamaño."` / `"Enter stop loss to calculate lot size."`.
+  - Placeholders de inputs de stop loss, take profit y notas técnicas sincronizados (`"e.g. 15"`, `"e.g. 60"`, `"Context, confluences, why you entered..."`).
+- **Auditoría de Modales Secundarios y Pasarela de Membresía (`js/payments.js`, `app.html` & `js/i18n.js`):**
+  - Modal de suscripción y checkout completamente reactivo: selector de períodos (`1 Month`, `3 Months`, `6 Months`, `12 Months`), etiquetas de precio y ciclo (`per 1 Month`, `per 3 Months`, `per 6 Months`, `per 12 Months`), ahorros y descuentos (`Save 7%`, `Save 10%`, `Save 17%`), botones de pasarela (`Pay with Card`, `Pay with Crypto`), simulación de sandbox (`Simulate Successful Payment`, `Simulate Transfer Confirmation`) y badge de entorno (`Sandbox Mode Active`).
+  - Botón de retroceso del Tour interactivo localizado (`"Back"` / `"Anterior"`).
+  - Placeholders globales de reglas y cuentas institucionalmente traducidos: `"Sin límite"` / `"No limit"` y `"Sin mínimo"` / `"No minimum"`.
+  - Estados vacíos bilingües en cuadrícula de cuentas (`card.no_accounts`), selector de grupos (`groups.create_accounts_hint`) y tabla de diario (`table.empty`).
+
 ### 🌐 Localización Reactiva de Métricas Globales, Tabla de Balances, Guías, Pastilla de Sincronización y Tarjetas de Cuentas
 - **Pastilla de Sincronización en la Nube Reactiva (`js/cloud-storage.js`):**
   - Desacoplado el paso de cadenas literales en español (`'Sincronizado'`, `'Sincronizando...'`, `'Error de sincronización'`) en las llamadas a `updateCloudSyncIndicator`.

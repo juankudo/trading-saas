@@ -270,6 +270,9 @@
 
 
             "common.save": "Guardar",
+            "common.no_limit": "Sin límite",
+            "common.no_minimum": "Sin mínimo",
+            "modal_trade.risk_default": "1.0% (Por defecto)",
 
 
 
@@ -3861,6 +3864,9 @@
 
 
             "card.no_assigned_accounts": "Sin cuentas asignadas",
+            "card.no_accounts": "No hay cuentas creadas. Puedes crear una cuenta o un grupo.",
+            "groups.create_accounts_hint": "Crea cuentas reales para agregarlas a este grupo.",
+            "table.empty": "No se encontraron operaciones",
             "card.rules": "Reglas",
             "card.target": "Objetivo",
             "card.phase_short": "F",
@@ -3868,6 +3874,38 @@
             "card.used": "usado",
             "card.goal": "Meta",
             "card.withdrawable": "Retirable",
+            "btn.cancel": "Cancelar",
+            "btn.save": "Guardar",
+            "gallery.analysis_before": "Análisis ANTES",
+            "gallery.analysis_after": "Análisis DESPUÉS",
+            "modal_trade.capture_before": "Captura y Análisis (ANTES)",
+            "modal_trade.capture_after": "Captura y Análisis (DESPUÉS)",
+            "modal_trade.notes_before_placeholder": "Contexto, confluencias, por qué entraste...",
+            "modal_trade.notes_after_placeholder": "Gestión, emociones, qué pasó al final...",
+            "modal_trade.pips_sl_placeholder": "Ej: 15",
+            "modal_trade.pips_tp_placeholder": "Ej: 60",
+            "modal_trade.partial_result_placeholder": "Ej: 1.5",
+            "modal_trade.custom_risk_placeholder": "Riesgo personalizado, ej. 0.75",
+            "modal_trade.pair_fixed": "Activo / Par (fijo de la sesión)",
+            "modal_trade.calc_per_account": "Por cuenta",
+            "modal_trade.calc_per_account_help": "La cantidad se calcula por separado usando el balance de cada cuenta.",
+            "modal_trade.calc_na": "N/D",
+            "modal_trade.calc_no_spec": "No hay una especificación automática para este activo.",
+            "modal_trade.calc_enter_sl": "Ingresa el stop loss para calcular el tamaño.",
+            "modal_trade.calc_min_lots": "El tamaño mínimo calculado es menor a 0.01 lotes. Riesgo: $",
+            "modal_trade.calc_lots": "lotes",
+            "modal_trade.calc_risk_approx": "Riesgo aprox.",
+            "modal_trade.calc_pip_value": "valor pip asumido:",
+            "modal_trade.calc_per_lot": "/lote",
+            "modal_balance.title": "Cargar balances reales",
+            "modal_balance.apply_current": "Aplicar también estos balances al Balance Actual de las cuentas",
+            "modal_withdrawal.title": "Registrar retiro",
+            "modal_withdrawal.account_label": "Cuenta:",
+            "modal_reset.btn_backup_reset": "Respaldar (JSON) y Reiniciar",
+            "modal_reset.btn_wipe_start": "Borrar Todo y Empezar de 0",
+            "pairs.modal_title": "Gestionar Pares",
+            "pairs.input_ph": "Ej: GBPUSD",
+            "daily.modal_title": "Análisis de Operaciones",
 
 
 
@@ -5286,6 +5324,12 @@
 
 
             "checkout.month_12": "12 Meses",
+            "checkout.month_6": "6 Meses",
+            "checkout.period_semester_label": "por 6 Meses",
+            "checkout.quarter_desc": "Ahorras 7% ($23.33/mes · Ahorras $5) · Facturado cada 3 meses",
+            "checkout.semester_desc": "Ahorras 10% ($22.50/mes · Ahorras $15) · Facturado cada 6 meses",
+            "checkout.year_desc": "Ahorras 17% ($20.83/mes · Ahorras $50) · Facturado anualmente",
+            "checkout.official_production": "Producción Oficial",
 
 
 
@@ -6941,6 +6985,9 @@
 
 
             "common.save": "Save",
+            "common.no_limit": "No limit",
+            "common.no_minimum": "No minimum",
+            "modal_trade.risk_default": "1.0% (Default)",
 
 
 
@@ -10526,6 +10573,9 @@
 
 
             "card.no_assigned_accounts": "No assigned accounts",
+            "card.no_accounts": "No accounts created yet. You can create an account or a group.",
+            "groups.create_accounts_hint": "Create live accounts to add them to this group.",
+            "table.empty": "No trades found",
             "card.rules": "Rules",
             "card.target": "Target",
             "card.phase_short": "P",
@@ -10533,6 +10583,38 @@
             "card.used": "used",
             "card.goal": "Goal",
             "card.withdrawable": "Withdrawable",
+            "btn.cancel": "Cancel",
+            "btn.save": "Save",
+            "gallery.analysis_before": "BEFORE Analysis",
+            "gallery.analysis_after": "AFTER Analysis",
+            "modal_trade.capture_before": "Screenshot & Analysis (BEFORE)",
+            "modal_trade.capture_after": "Screenshot & Analysis (AFTER)",
+            "modal_trade.notes_before_placeholder": "Context, confluences, why you entered...",
+            "modal_trade.notes_after_placeholder": "Management, emotions, what happened in the end...",
+            "modal_trade.pips_sl_placeholder": "e.g. 15",
+            "modal_trade.pips_tp_placeholder": "e.g. 60",
+            "modal_trade.partial_result_placeholder": "e.g. 1.5",
+            "modal_trade.custom_risk_placeholder": "Custom risk, e.g. 0.75",
+            "modal_trade.pair_fixed": "Asset / Pair (fixed from session)",
+            "modal_trade.calc_per_account": "Per account",
+            "modal_trade.calc_per_account_help": "Position size is calculated separately using each account balance.",
+            "modal_trade.calc_na": "N/A",
+            "modal_trade.calc_no_spec": "No automatic specification for this asset.",
+            "modal_trade.calc_enter_sl": "Enter stop loss to calculate lot size.",
+            "modal_trade.calc_min_lots": "Minimum calculated size is under 0.01 lots. Risk: $",
+            "modal_trade.calc_lots": "lots",
+            "modal_trade.calc_risk_approx": "Approx. risk",
+            "modal_trade.calc_pip_value": "assumed pip value:",
+            "modal_trade.calc_per_lot": "/lot",
+            "modal_balance.title": "Load Live Balances",
+            "modal_balance.apply_current": "Also apply these balances to the Current Balance of accounts",
+            "modal_withdrawal.title": "Record Withdrawal",
+            "modal_withdrawal.account_label": "Account:",
+            "modal_reset.btn_backup_reset": "Backup (JSON) & Reset",
+            "modal_reset.btn_wipe_start": "Wipe All & Start Fresh",
+            "pairs.modal_title": "Manage Pairs",
+            "pairs.input_ph": "e.g. GBPUSD",
+            "daily.modal_title": "Trade Analysis",
 
 
 
@@ -11951,6 +12033,12 @@
 
 
             "checkout.month_12": "12 Months",
+            "checkout.month_6": "6 Months",
+            "checkout.period_semester_label": "per 6 Months",
+            "checkout.quarter_desc": "Save 7% ($23.33/mo · Save $5) · Billed every 3 months",
+            "checkout.semester_desc": "Save 10% ($22.50/mo · Save $15) · Billed every 6 months",
+            "checkout.year_desc": "Save 17% ($20.83/mo · Save $50) · Billed annually",
+            "checkout.official_production": "Official Production",
 
 
 

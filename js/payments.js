@@ -48,25 +48,33 @@ const PAYMENTS_CONFIG = {
         month: { 
             price: 25, 
             periodDays: 30, 
+            periodKey: 'checkout.period_month_label',
             periodText: 'por 1 Mes', 
+            descKey: 'checkout.trial_desc',
             desc: '7 días de prueba ($0 cobrados hoy si es primera vez)' 
         },
         quarter: { 
             price: 70, 
             periodDays: 90, 
+            periodKey: 'checkout.period_quarter_label',
             periodText: 'por 3 Meses', 
+            descKey: 'checkout.quarter_desc',
             desc: 'Ahorras 7% ($23.33/mes · Ahorras $5) · Facturado cada 3 meses' 
         },
         semester: { 
             price: 135, 
             periodDays: 180, 
+            periodKey: 'checkout.period_semester_label',
             periodText: 'por 6 Meses', 
+            descKey: 'checkout.semester_desc',
             desc: 'Ahorras 10% ($22.50/mes · Ahorras $15) · Facturado cada 6 meses' 
         },
         year: { 
             price: 250, 
             periodDays: 365, 
+            periodKey: 'checkout.period_year_label',
             periodText: 'por 12 Meses', 
+            descKey: 'checkout.year_desc',
             desc: 'Ahorras 17% ($20.83/mes · Ahorras $50) · Facturado anualmente' 
         }
     }
@@ -237,6 +245,8 @@ window.addEventListener('languageChanged', () => {
             msgEl.innerHTML = window.t('banner.readonly', msgEl.innerHTML);
         }
     }
+    updateCheckoutPricingDisplay();
+    updateSandboxModeBanner();
 });
 
 /**
@@ -296,13 +306,16 @@ function updateCheckoutPricingDisplay() {
     const descEl = document.getElementById('checkout-period-label');
     const subDescEl = document.getElementById('checkout-period-desc');
 
+    const periodText = (typeof window.t === 'function' && plan.periodKey) ? window.t(plan.periodKey, plan.periodText) : plan.periodText;
+    const descText = (typeof window.t === 'function' && plan.descKey) ? window.t(plan.descKey, plan.desc) : plan.desc;
+
     if (priceEl) priceEl.textContent = `$${plan.price} USD`;
-    if (descEl) descEl.textContent = plan.periodText;
-    if (subDescEl) subDescEl.textContent = plan.desc;
+    if (descEl) descEl.textContent = periodText;
+    if (subDescEl) subDescEl.textContent = descText;
 
     // Actualiza monto en drawers si están abiertos
     const stripeAmt = document.getElementById('stripe-sandbox-amount');
-    if (stripeAmt) stripeAmt.textContent = `$${plan.price}.00 USD (${plan.periodText})`;
+    if (stripeAmt) stripeAmt.textContent = `$${plan.price}.00 USD (${periodText})`;
 
     const cryptoAmt = document.getElementById('crypto-amount-display');
     if (cryptoAmt) cryptoAmt.textContent = `${plan.price}.00 USDT`;
@@ -311,11 +324,14 @@ function updateCheckoutPricingDisplay() {
 function updateSandboxModeBanner() {
     const badge = document.getElementById('checkout-mode-indicator');
     if (badge) {
+        const isEn = typeof window.i18n !== 'undefined' && window.i18n.getLanguage() === 'en';
         if (PAYMENTS_CONFIG.mode === 'test') {
-            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Modo Sandbox Activo`;
+            const label = (typeof window.t === 'function') ? window.t('checkout.sandbox_active', 'Modo Sandbox Activo') : (isEn ? 'Sandbox Mode Active' : 'Modo Sandbox Activo');
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> ${label}`;
             badge.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60";
         } else {
-            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> Producción Oficial`;
+            const label = (typeof window.t === 'function') ? window.t('checkout.official_production', 'Producción Oficial') : (isEn ? 'Official Production' : 'Producción Oficial');
+            badge.innerHTML = `<span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> ${label}`;
             badge.className = "inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-700/60";
         }
     }
