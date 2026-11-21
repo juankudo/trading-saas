@@ -166,9 +166,11 @@ const initialTrades = [];
 
         function openPairManager() {
             const isBacktesting = currentMode === "backtesting";
-            document.getElementById("pairManagerTitle").innerHTML = isBacktesting
-                ? '<i class="fa-solid fa-list-ul text-blue-400"></i> Pares de Backtesting'
-                : '<i class="fa-solid fa-list-ul text-amber-400"></i> Pares de Cuentas Reales';
+            const titleKey = isBacktesting ? "pairs.modal_title_bt" : "pairs.modal_title_real";
+            const defaultTitle = isBacktesting ? "Pares de Backtesting" : "Pares de Cuentas Reales";
+            const titleText = (typeof window.t === "function") ? window.t(titleKey, defaultTitle) : defaultTitle;
+            const iconColor = isBacktesting ? "text-blue-400" : "text-amber-400";
+            document.getElementById("pairManagerTitle").innerHTML = `<i class="fa-solid fa-list-ul ${iconColor}"></i> <span data-i18n="${titleKey}">${titleText}</span>`;
             document.getElementById("pairManagerModal").classList.remove("hidden");
             renderPairManagerList();
         }
@@ -180,10 +182,11 @@ const initialTrades = [];
         function renderPairManagerList() {
             const container = document.getElementById("pairListContainer");
             const pairs = getCurrentPairsList();
+            const deleteTooltip = (typeof window.t === "function") ? window.t("pairs.delete_tooltip", "Eliminar Par") : "Eliminar Par";
             container.innerHTML = pairs.map((p, i) => `
                 <div class="flex justify-between items-center bg-gray-800 px-3 py-2 rounded border border-gray-700">
                     <span class="text-white font-bold text-sm">${p}</span>
-                    <button type="button" onclick="removePair(${i})" class="text-gray-400 hover:text-red-400 transition" title="Eliminar Par"><i class="fa-solid fa-trash"></i></button>
+                    <button type="button" onclick="removePair(${i})" class="text-gray-400 hover:text-red-400 transition" title="${deleteTooltip}" data-i18n-title="pairs.delete_tooltip"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
         }
@@ -1456,7 +1459,8 @@ const initialTrades = [];
             const btn = document.getElementById("btn-submit-session");
             const sessionPairInput = document.getElementById("inputSessionPair");
             const sessionStartDateInput = document.getElementById("inputSessionStartDate");
-            btn.textContent = "Crear";
+            btn.textContent = (typeof window.t === "function") ? window.t("modal_session.btn_create", "Crear") : "Crear";
+            btn.setAttribute("data-i18n", "modal_session.btn_create");
             
             if (currentMode === 'real') {
                 document.getElementById("modalSessionTitle").textContent = (typeof window.t === "function") ? window.t("modal_session.title_new_real","Crear Nueva Cuenta") : "Crear Nueva Cuenta";
@@ -1524,6 +1528,7 @@ const initialTrades = [];
 
             const btn = document.getElementById("btn-submit-session");
             btn.textContent = (typeof window.t === "function") ? window.t("modal_session.btn_save","Guardar Cambios") : "Guardar Cambios";
+            btn.setAttribute("data-i18n", "modal_session.btn_save");
             btn.className = isBT ? "bg-blue-600 hover:bg-blue-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-lg" : "bg-green-600 hover:bg-green-500 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition shadow-lg";
             
             document.getElementById("sessionModal").classList.remove("hidden");
@@ -2054,6 +2059,16 @@ const initialTrades = [];
             
             currentUploadedImagesAntes = []; currentUploadedImagesDespues = [];
             document.getElementById("imagesPreviewAntes").innerHTML = ""; document.getElementById("imagesPreviewDespues").innerHTML = "";
+            const fnA = document.getElementById("fileNameAntes");
+            if (fnA) {
+                fnA.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnA.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
+            const fnD = document.getElementById("fileNameDespues");
+            if (fnD) {
+                fnD.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnD.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
             document.getElementById("parcialCustomContainer").classList.add("hidden");
             
             document.getElementById("inputFecha").value = currentMode === "backtesting"
@@ -2229,6 +2244,16 @@ const initialTrades = [];
 
             currentUploadedImagesAntes = []; currentUploadedImagesDespues = [];
             document.getElementById("imagesPreviewAntes").innerHTML = ""; document.getElementById("imagesPreviewDespues").innerHTML = "";
+            const fnA = document.getElementById("fileNameAntes");
+            if (fnA) {
+                fnA.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnA.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
+            const fnD = document.getElementById("fileNameDespues");
+            if (fnD) {
+                fnD.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnD.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
             document.getElementById("parcialCustomContainer").classList.add("hidden");
             
             document.getElementById("inputFecha").value = currentMode === "backtesting"
@@ -4683,6 +4708,16 @@ const initialTrades = [];
             updateMt5TradeHint(null);
             currentUploadedImagesAntes = []; currentUploadedImagesDespues = [];
             document.getElementById("imagesPreviewAntes").innerHTML = ""; document.getElementById("imagesPreviewDespues").innerHTML = "";
+            const fnA = document.getElementById("fileNameAntes");
+            if (fnA) {
+                fnA.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnA.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
+            const fnD = document.getElementById("fileNameDespues");
+            if (fnD) {
+                fnD.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnD.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
             document.getElementById("parcialCustomContainer").classList.add("hidden");
             quickTradeContextId = null;
             configureTradePairField();
@@ -4885,6 +4920,20 @@ const initialTrades = [];
             const files = e.target.files;
             for (let f of files) { const comp = await compressImage(f); currentUploadedImagesAntes.push(comp); }
             renderImagePreviewsAntes();
+            const fnA = document.getElementById("fileNameAntes");
+            if (fnA) {
+                if (currentUploadedImagesAntes.length === 0) {
+                    fnA.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                    fnA.setAttribute("data-i18n", "modal_trade.no_file_selected");
+                } else if (currentUploadedImagesAntes.length === 1) {
+                    fnA.textContent = files[0] ? files[0].name : "1 file";
+                    fnA.removeAttribute("data-i18n");
+                } else {
+                    const selText = (typeof window.t === "function") ? window.t("modal_trade.files_selected", "archivos seleccionados") : "archivos seleccionados";
+                    fnA.textContent = `${currentUploadedImagesAntes.length} ${selText}`;
+                    fnA.removeAttribute("data-i18n");
+                }
+            }
         }
         function renderImagePreviewsAntes() {
             document.getElementById("imagesPreviewAntes").innerHTML = currentUploadedImagesAntes.map((src, i) => `
@@ -4894,12 +4943,34 @@ const initialTrades = [];
                 </div>
             `).join('');
         }
-        function removeImgAntes(i) { currentUploadedImagesAntes.splice(i, 1); renderImagePreviewsAntes(); }
+        function removeImgAntes(i) {
+            currentUploadedImagesAntes.splice(i, 1);
+            renderImagePreviewsAntes();
+            const fnA = document.getElementById("fileNameAntes");
+            if (fnA && currentUploadedImagesAntes.length === 0) {
+                fnA.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnA.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
+        }
 
         async function previewImagesDespues(e) {
             const files = e.target.files;
             for (let f of files) { const comp = await compressImage(f); currentUploadedImagesDespues.push(comp); }
             renderImagePreviewsDespues();
+            const fnD = document.getElementById("fileNameDespues");
+            if (fnD) {
+                if (currentUploadedImagesDespues.length === 0) {
+                    fnD.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                    fnD.setAttribute("data-i18n", "modal_trade.no_file_selected");
+                } else if (currentUploadedImagesDespues.length === 1) {
+                    fnD.textContent = files[0] ? files[0].name : "1 file";
+                    fnD.removeAttribute("data-i18n");
+                } else {
+                    const selText = (typeof window.t === "function") ? window.t("modal_trade.files_selected", "archivos seleccionados") : "archivos seleccionados";
+                    fnD.textContent = `${currentUploadedImagesDespues.length} ${selText}`;
+                    fnD.removeAttribute("data-i18n");
+                }
+            }
         }
         function renderImagePreviewsDespues() {
             document.getElementById("imagesPreviewDespues").innerHTML = currentUploadedImagesDespues.map((src, i) => `
@@ -4909,7 +4980,15 @@ const initialTrades = [];
                 </div>
             `).join('');
         }
-        function removeImgDespues(i) { currentUploadedImagesDespues.splice(i, 1); renderImagePreviewsDespues(); }
+        function removeImgDespues(i) {
+            currentUploadedImagesDespues.splice(i, 1);
+            renderImagePreviewsDespues();
+            const fnD = document.getElementById("fileNameDespues");
+            if (fnD && currentUploadedImagesDespues.length === 0) {
+                fnD.textContent = (typeof window.t === "function") ? window.t("modal_trade.no_file_selected", "Ningún archivo seleccionado") : "Ningún archivo seleccionado";
+                fnD.setAttribute("data-i18n", "modal_trade.no_file_selected");
+            }
+        }
 
         async function saveTrade(e) {
             e.preventDefault();

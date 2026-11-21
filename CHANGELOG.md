@@ -8,6 +8,21 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 ## [v3.9.6] - 2026-11-20
 
 ### 🌐 Auditoría y Corrección Integral de Traducción, Títulos Duplicados y Modales
+- **Componente Estilizado de Subida de Archivos en Modal de Operaciones (`app.html` & `js/app.js`):**
+  - Reemplazado el control de archivos nativo del navegador (que renderizaba textos del sistema operativo como `"Elegir archivos"` y `"Ningún archivo seleccionado"`) por un componente visual desacoplado con botón estilizado (`"Choose Files"` / `"Elegir archivos"`) e indicador reactivo del estado de selección (`"No file chosen"` / `"Ningún archivo seleccionado"` y recuento de archivos seleccionados).
+- **Abreviaturas y Encabezado del Calendario Diario (`app.html`):**
+  - Enlazadas las abreviaturas de navegación lateral con `data-i18n="calendar.prev_short"` (`"Prev"` / `"Ant."`) y `data-i18n="calendar.next_short"` (`"Next"` / `"Sig."`).
+  - Encabezado del filtro mensual localizado con `data-i18n="calendar.period"` (`"PERIOD"` / `"Periodo"`).
+- **Reglas de Consistencia y Textos de Simulación de Fondeo (`app.html`, `js/app.js` & `js/i18n.js`):**
+  - Casilla de verificación vinculada a `modal_session.consistency_rule` (`"Consistency Rule"` / `"Regla de consistencia"`).
+  - Párrafo de aclaración técnica traducido: `"Drawdowns are calculated on the initial balance. Leave a drawdown blank to not apply it. Upon passing a phase, the balance resets to the base balance."` / `"Los drawdowns se calculan sobre el balance inicial. Deja un drawdown vacío para no aplicarlo. Al superar una fase, el balance vuelve al saldo base."`.
+  - Botón de submit en creación dinamizado con `modal_session.btn_create` (`"Create"` / `"Crear"`).
+- **Títulos y Acciones en Gestión de Pares (`js/app.js` & `js/i18n.js`):**
+  - Título del modal dinamizado según el modo activo: `"Backtesting Pairs"` en backtesting y `"Live Account Pairs"` en cuentas reales.
+  - Tooltip de eliminación de par traducido (`"Delete Pair"` / `"Eliminar Par"`).
+- **Ayuda y Placeholders en Creación de Cuentas Reales (`app.html`, `js/app.js` & `js/i18n.js`):**
+  - Placeholders traducidos: `"e.g. 100k Challenge"` y `"e.g. 102500"`.
+  - Textos de ayuda de balance inicial y último cierre informado totalmente traducidos al inglés y español (`modal_session.help_initial` y `modal_session.help_current`).
 - **Corrección de Duplicación en Título de Curva de Capital (`app.html` & `js/app.js`):**
   - Eliminado el nodo de texto fantasma adyacente al ícono del gráfico y desacoplada la manipulación de `chartIcon.nextSibling.textContent`.
   - Ahora se actualiza exclusivamente el span `#dashboard-chart-title`, eliminando definitivamente la duplicación visual (`"Equity Curve Growth ($) Equity Curve Growth ($)"` -> `"Equity Curve Growth ($)"`).

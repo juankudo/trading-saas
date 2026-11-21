@@ -3368,6 +3368,12 @@
 
 
             "modal_session.btn_create": "Crear",
+            "modal_session.bt_dd_help": "Los drawdowns se calculan sobre el balance inicial. Deja un drawdown vacío para no aplicarlo. Al superar una fase, el balance vuelve al saldo base.",
+            "modal_session.name_ph": "Ej: Fondeo 100k Challenge",
+            "modal_session.balance_act_ph": "Ej: 102500",
+            "modal_session.mt5_login_ph": "Ej: 5012345",
+            "modal_session.help_initial": "Si lo dejas vacío, se usa el Balance Inicial como base y se suman las operaciones registradas. El riesgo por operación siempre usa el Balance Inicial. La proyección no incluye comisiones.",
+            "modal_session.help_current": "Es el último cierre informado: al guardar se registra una captura en Seguimiento de balances.",
 
 
 
@@ -3906,6 +3912,12 @@
             "pairs.modal_title": "Gestionar Pares",
             "pairs.input_ph": "Ej: GBPUSD",
             "daily.modal_title": "Análisis de Operaciones",
+            "modal_trade.choose_files": "Elegir archivos",
+            "modal_trade.no_file_selected": "Ningún archivo seleccionado",
+            "modal_trade.files_selected": "archivos seleccionados",
+            "pairs.modal_title_bt": "Pares de Backtesting",
+            "pairs.modal_title_real": "Pares de Cuentas Reales",
+            "pairs.delete_tooltip": "Eliminar Par",
 
 
 
@@ -10077,6 +10089,12 @@
 
 
             "modal_session.btn_create": "Create",
+            "modal_session.bt_dd_help": "Drawdowns are calculated on the initial balance. Leave a drawdown blank to not apply it. Upon passing a phase, the balance resets to the base balance.",
+            "modal_session.name_ph": "e.g. 100k Challenge",
+            "modal_session.balance_act_ph": "e.g. 102500",
+            "modal_session.mt5_login_ph": "e.g. 5012345",
+            "modal_session.help_initial": "If left blank, the Initial Balance is used as the base and recorded trades are added. Risk per trade always uses the Initial Balance. Projection does not include commissions.",
+            "modal_session.help_current": "This is the last reported close: saving it records a snapshot in Balance History.",
 
 
 
@@ -10615,6 +10633,12 @@
             "pairs.modal_title": "Manage Pairs",
             "pairs.input_ph": "e.g. GBPUSD",
             "daily.modal_title": "Trade Analysis",
+            "modal_trade.choose_files": "Choose Files",
+            "modal_trade.no_file_selected": "No file chosen",
+            "modal_trade.files_selected": "files selected",
+            "pairs.modal_title_bt": "Backtesting Pairs",
+            "pairs.modal_title_real": "Live Account Pairs",
+            "pairs.delete_tooltip": "Delete Pair",
 
 
 
