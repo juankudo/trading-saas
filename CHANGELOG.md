@@ -5,6 +5,103 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.15] - 2026-11-21
+
+### ⚡ Tipografía Maximizada Mobile-First, Transición Snap Limpia y Enfoque Exclusivo en Motion Graphics — Promo #1 (TikTok & Reels)
+- **Tipografía Maximizada Mobile-First (Legibilidad Instantánea en Smartphones):**
+  - **Aumento General de Escala:** Incrementado el tamaño de todos los textos para llenar la pantalla vertical (9:16) con presencia masiva y claridad absoluta en pantallas de smartphone.
+  - **Titulares y P&L Contundentes:** Títulos principales escalados a **74px–78px** (`text-7xl font-black`) y cifras de P&L a **88px–92px** (`text-8xl font-black`), garantizando impacto visual inmediato en el feed rápido de TikTok e Instagram Reels.
+  - **Descripciones y Notas Robustas:** Textos explicativos, cápsulas de verdad y notas secundarias escalados a **42px–46px** (`text-4xl`), erradicando cualquier letra chica o difícil de leer.
+  - **Cuadrícula de Calendario Calibrada:** Cifras de ganancia diaria calibradas a **38px** (`text-[38px] tracking-tighter`) con padding optimizado, asegurando presencia visual contundente sin truncamiento ni desbordes.
+  - **Llamado a la Acción (CTA) Masivo:** Enlace del dominio `astradehub.com` elevado a **76px**, botón principal a **64px** con resplandor esmeralda y fecha de lanzamiento a **52px**.
+- **Transición Snap Cut Ultra-Rápida (0.16s — Cero Fantasmas / Cero Sensación de Render Lento):**
+  - Eliminado por completo el desvanecimiento cruzado lento (cross-fade de 0.4s) que generaba superposición de texto semitransparente ("ghosting" / doble exposición) percibido como error de renderizado.
+  - Implementado cambio instantáneo con micro-escala (`scale: 0.97` a `1.0` en 0.16s) y corte limpio de opacidad, logrando transiciones firmes, ultra-nítidas y enérgicas a 60 FPS.
+- **Enfoque Exclusivo en Motion Graphics 2D:**
+  - Poda completa del clip híbrido experimental de IA (`Cinematic_AI.mp4`), concentrando el 100% de los entregables y el pipeline de renderizado en las versiones Motion Graphics puras (`AsTrade_Promo_01_ES_Motion.mp4` y `AsTrade_Promo_01_EN_Motion.mp4` + sincronización a 60 FPS).
+- **Pipeline de Renderizado 100% Cloud en Google Colab con GPU T4:**
+  - Grabación headless con Playwright Chromium y compilación con audio ducking en FFmpeg sin consumo de CPU ni GPU local (`run_colab_render_promo_01.py`).
+  - Auditoría de cuadros en `promo_01_audit_frames/` verificando la legibilidad óptima de los textos y la ausencia de desbordes.
+
+---
+
+## [v3.9.14] - 2026-11-21
+
+### 🎯 Tipografía Equilibrada Mobile-First y Transición 2D Ejecutiva — Promo #1 (TikTok & Reels)
+- **Armonización Tipográfica Mobile-First (Cero Disparidad & Sin Textos Pequeños):**
+  - **Cierre de Brecha de Disparidad:** Se redujo la dispersión extrema entre tamaños (antiguamente 20px vs 96px) estableciendo una jerarquía uniforme de **32px a 72px** donde cada elemento complementario tiene presencia sólida y legible.
+  - **Subida Masiva de Textos Explicativos:** Descripciones narrativas, notas al pie y cápsulas de verdad elevadas a **38px – 42px** (+70% a +100% de tamaño), eliminando cualquier apariencia de "letra pequeña".
+  - **Métricas Clave de P&L:** Calibradas a **72px** (`text-7xl font-black`), manteniendo máxima contundencia visual sin opacar el contenido ni desbordar los contenedores.
+  - **Optimización de Cajas de Calendario:** Tamaño de ganancias diarias ajustado a **34px** (`text-[34px] tracking-tighter`) y contenedor con espaciado interno equilibrado, evitando el truncamiento de cifras de 7 caracteres (`+$1,150`, `+$1,420`).
+- **Eliminación Total de Animación 3D y Transición 2D Pura:**
+  - **Eliminación de Distorsiones 3D:** Suprimidas todas las propiedades de perspectiva (`perspective: 1600px`), transformaciones tridimensionales (`transform-style: preserve-3d`) y rotaciones angulares (`rotateX`, `rotateY`, `translateZ`).
+  - **Transición 2D Ejecutiva y Limpia:** Implementado *cross-dissolve* suave (`opacity`) con sutil deslizamiento vertical (`y: 20px`), logrando que las tarjetas se mantengan 100% planas, verticales, centradas y sin artefactos de captura en video a 60 FPS.
+- **Pipeline de Renderizado 100% Cloud en Google Colab con GPU T4:**
+  - Grabación headless fluida con Playwright Chromium y compilación con audio ducking en FFmpeg sin uso de CPU ni GPU local (`run_colab_render_promo_01.py`).
+  - Generación y descarga de los 6 entregables en `content/deliverables/videos/`.
+  - Auditoría de calidad cuadro a cuadro en `promo_01_audit_frames/` verificando el cumplimiento de todas las pautas de diseño.
+
+---
+
+## [v3.9.13] - 2026-11-21
+
+### 🚀 Tipografía Ultra-Móvil y Transiciones Cinemáticas 3D — Videos Promocionales TikTok & Reels
+- **Tipografía Gigante Mobile-First para Smartphones (`content/templates/promo_video_01_launch.html`):**
+  - **Titulares principales:** Escaldos a 74px–84px (`Montserrat Black 900`) con resplandor sutil para lectura instantánea en pantallas de 6 pulgadas.
+  - **Cifras clave de P&L (`+$3,450`, `-$2,800`, `+$12,850`):** Aumentadas a 88px–96px (`JetBrains Mono ExtraBold`), con contraste máximo sobre fondos oscuros.
+  - **Cápsulas de verdad y descripciones:** Escaldadas a 42px–50px en píldoras de alto contraste, eliminando cualquier texto menor a 32px en toda la pantalla.
+  - **Cuadrícula de Calendario Diaria:** Rediseñada con tarjetas amplias para los 5 días de la semana y cifras de ganancia diaria (`+$620`, `+$1,150`, `+$890`, `+$1,420`, `+$750`) en fuentes masivas.
+- **Transiciones Cinemáticas Tridimensionales y Profundidad 3D:**
+  - Incorporada perspectiva real (`perspective: 1500px`) con transformaciones tridimensionales en GSAP (`translateZ: -300px`, `rotateX: ±8deg`, `rotateY: ±6deg`, `scale: 1.05`).
+  - Solucionado el problema de aplanamiento de apilamiento (*stacking context flattening*) en Chromium mediante posicionamiento absoluto de tarjetas (`inset: 0; margin: auto`) y control dinámico de `zIndex` (1 para saliente, 10 para entrante).
+  - Micro-movimiento continuo (*ambient floating parallax*) en los orbes de luz ambiental esmeralda, cian y carmesí.
+  - Trazado dinámico de curva de equidad en SVG (`strokeDashoffset`) y barrido de luz especular continuo en el botón CTA.
+- **Pipeline de Renderizado 100% Cloud en Google Colab con GPU T4:**
+  - Ejecución remota sin consumo de CPU ni GPU local (`run_colab_render_promo_01.py`).
+  - Descarga y verificación de los 6 entregables a 60 FPS en `content/deliverables/videos/`.
+  - Auditoría cuadro a cuadro en `promo_01_audit_frames/` certificando la perfección visual en español e inglés.
+
+---
+
+## [v3.9.12] - 2026-11-21
+
+### 💎 Excelencia Visual y Tipografía Móvil — Videos Promocionales TikTok & Reels (Revisión Maestra)
+- **Restauración del Logotipo Oficial de AsTrade (`content/templates/promo_video_01_launch.html`):**
+  - Inyectado el vector SVG original y auténtico de la plataforma (`app.html`), con degradado institucional esmeralda (`#059669` ➔ `#10b981` ➔ `#34d399`), marco con iluminación perimetral y monograma estilizado, eliminando el isotipo triangular genérico temporal.
+- **Erradicación Total de Subtítulos Karaoke:**
+  - Suprimida la caja inferior de subtítulos animados tipo karaoke con palabras parpadeantes en amarillo neón, otorgando una imagen sobria, ejecutiva e institucional (estética fintech estilo Stripe / Linear / Apple).
+- **Tipografía Gigante Mobile-First para Smartphones:**
+  - Rediseño y escalado masivo de los contenedores de escena (`w-[1000px]`, `min-h-[1420px]`):
+    - **Titulares principales:** Escaldos a `text-6xl` (64px) con `Montserrat Black`.
+    - **Métricas y P&L (+3,450 USD / -2,800 USD):** Escaldos a `text-6xl` con `JetBrains Mono`.
+    - **Explicaciones narrativas:** Integradas de forma limpia en tarjetas secundarias a `text-3xl` / `text-2xl` legibles a primera vista en pantallas de 6 pulgadas.
+    - **Grid del Calendario:** Escalamiento de cajas diarias (10 a 14 Noviembre) con números nítidos y badges de porcentaje de win rate.
+- **Pipeline de Generación Dual en Google Colab (`render_promo_01.py` & `run_colab_render_promo_01.py`):**
+  - Producción y exportación de ambas opciones a 60 FPS:
+    1. **Versión A (Motion Graphics Refinado):** `AsTrade_Promo_01_ES_Motion.mp4` y `AsTrade_Promo_01_EN_Motion.mp4`.
+    2. **Versión B (Híbrido Cinemático):** `AsTrade_Promo_01_ES_Cinematic_AI.mp4` y `AsTrade_Promo_01_EN_Cinematic_AI.mp4`.
+  - Mantenimiento de compatibilidad con enlaces anteriores (`AsTrade_Promo_01_ES_60fps.mp4` y `EN_60fps.mp4`).
+
+---
+
+## [v3.9.11] - 2026-11-21
+
+### 📱 Videos Promocionales Virales para TikTok e Instagram Reels (Promo #1: Lanzamiento & Black Friday)
+- **Pipeline de Producción 100% Cloud Render en Google Colab (GPU NVIDIA T4):**
+  - Desarrollado el orquestador `scripts/cloud/run_colab_render_promo_01.py` y runner remoto `scripts/cloud/remote_runner_promo_01.py` para filmación headless con Playwright Chromium y compilación en FFmpeg a 60 FPS sin consumo de CPU ni GPU local en computadoras de bajos recursos.
+  - Paquete de despliegue ultra compacto `astrade_promo01_bundle.zip` (4.85 MB) para aprovisionamiento y renderizado en menos de 6 minutos en la nube.
+- **Plantilla Dinámica Vertical 9:16 Bilingüe (`content/templates/promo_video_01_launch.html`):**
+  - Resolución 1080x1920 optimizada para TikTok, Instagram Reels y YouTube Shorts con diseño *Zero-Blur*, física elástica *spring* de GSAP, gráficos de crecimiento de capital auditado SVG y contadores en tiempo real.
+  - Sistema de subtítulos *karaoke* de alta retención palabra por palabra con resaltado neón esmeralda y ámbar.
+  - Soporte bilingüe automático mediante query param (`?lang=es` / `?lang=en`).
+- **Entregables Finales Generados y Verificados (`content/deliverables/videos/`):**
+  - **`AsTrade_Promo_01_ES_60fps.mp4` (34.47s, 3.20 MB):** Versión en Español narrada por `JorgeNeural`, enfocada en la fuga de capital por sesiones (Londres vs Nueva York) y el uso del Calendario de Rendimiento.
+  - **`AsTrade_Promo_01_EN_60fps.mp4` (36.41s, 3.15 MB):** Versión en Inglés narrada por `ChristopherNeural` adaptada para el mercado global de traders.
+- **Kit de Publicación y Copywriting para Redes Sociales (`content/deliverables/copies/promo_01_social_media_kit.md`):**
+  - Guiones completos, copys de alta conversión para TikTok y Reels con llamados a la acción hacia `astradehub.com` y hashtags virales segmentados (#tradingjournal, #propfirm, #blackfridaytrading).
+
+---
+
 ## [v3.9.10] - 2026-11-21
 
 ### 🚀 Cuenta Regresiva de 2 Fases (Pre-Lanzamiento y Ofertas) y Experiencia de Prueba (Trial Rollover UX)
