@@ -5,6 +5,62 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.18] - 2026-11-22
+
+### 🔗 Corrección del Enlace Oficial de Instagram en Footer de la Plataforma
+- **Actualización de Enlace Social (`index.html` & `en.html`):**
+  - Actualizada la URL del perfil oficial de Instagram en la sección de canales y comunidad oficial del pie de página a `https://www.instagram.com/journalprotrading/` (reemplazando la dirección anterior).
+  - Localizado el encabezado descriptivo en `en.html` a *"Official Channels & Community:"*.
+
+---
+
+## [v3.9.17] - 2026-11-22
+
+### 🎬 Producción Audiovisual Bilingüe, Renderizado Cloud en GPU y Motor de Auditoría Visual — Promos #2, #3 y #4 (TikTok, Reels & Shorts)
+- **Producción Integral de Nuevas Promociones Audiovisuales (6 Videos Finales):**
+  - **Promo #2 — Calculadora de Lotaje & Gestión de Riesgo (`AsTrade_Promo_02_{ES,EN}_Motion.mp4`):**
+    - Enfoque en velocidad de cálculo instantánea (0.01s), gestión estricta de riesgo ante sobreapalancamiento y la ventaja de crear grupos con setups guardados para múltiples cuentas simultáneas.
+  - **Promo #3 — Bitácora Multicuenta, Metas de Fondeo & Capital Real (`AsTrade_Promo_03_{ES,EN}_Motion.mp4`):**
+    - Foco en la eliminación del caos de hojas de cálculo, panel unificado con aislamiento de cuentas reales vs cuentas de evaluación/fondeo y protección en tiempo real del colchón de drawdown.
+  - **Promo #4 — Ecosistema Integral AsTrade (All-in-One Suite) (`AsTrade_Promo_04_{ES,EN}_Motion.mp4`):**
+    - Foco en la suite unificada frente a herramientas fragmentadas: cálculo de riesgo, bitácora visual antes/después, auditoría de sesiones y control de drawdown de nivel institucional.
+- **Síntesis de Audio Bilingüe y Estándar Fonético Institucional:**
+  - **Locución en Español (`es-MX-JorgeNeural`):** Aplicación estricta de normalización fonética anglosajona mediante `to_phonetic_spanish()` (`traders` ➔ "tréiders", `trading` ➔ "tréiding", `setups` ➔ "sétaps", `AsTrade` ➔ "As Trade", `P&L` ➔ "Pé y Ele", `drawdown` ➔ "dróudaun", `Black Friday` ➔ "Black Fráidei", `hub` ➔ "jób").
+  - **Locución en Inglés (`en-US-ChristopherNeural`):** Síntesis a velocidad calibrada (+5%) para mantener cadencia comercial ejecutiva.
+  - Generación de pistas maestras bilingües con silencios inter-escena de 0.45s y estructuración de manifiestos JSON (`manifest_promo_02.json`, `manifest_promo_03.json`, `manifest_promo_04.json`) con duraciones entre 35 y 42 segundos.
+- **Plantillas HTML5 Motion Graphics 2D Mobile-First (1080x1920 @ 60 FPS):**
+  - Arquitectura visual vertical 9:16 móvil optimizada para visualización nítida en smartphones:
+    - **Títulos y titulares principales:** Escalados a **76px** (`text-7xl font-black font-heading`, >= 74px).
+    - **Cifras de P&L y métricas clave:** Escaladas a **92px y 112px** (`text-8xl` y `text-9xl font-black`, >= 88px).
+    - **Textos secundarios, etiquetas y badges:** Calibrados a un mínimo de **40px** (`text-4xl`, `text-3xl` configurado a 40px, >= 40px).
+    - **Transiciones Snap Cut ultra-rápidas:** Transiciones de 0.16s sin desvanecimientos lentos ni superposiciones de texto ("ghosting").
+    - **Isotipo/Monograma SVG Oficial:** Incorporación del monograma vectorial con gradiente esmeralda institucional (`#app_astrade_grad`: `#059669`, `#10b981`, `#34d399`) y dimensiones fijas en cabecera.
+    - **Llamado a la acción comercial:** Presentación oficial del Gran Lanzamiento el 30 de Noviembre a las 21:00 CET con 20% OFF por Black Friday hasta el 6 de Diciembre en `astradehub.com`.
+- **Pipeline de Renderizado 100% Cloud en Google Colab con GPU NVIDIA Tesla T4:**
+  - Automatización del empaquetado de paquetes livianos (`astrade_promo0{2,3,4}_bundle.zip` < 15 MB) y ejecución remota headless en máquina virtual con GPU Tesla T4 vía CLI `colab.exe`.
+  - Películas renderizadas a 60 FPS con Playwright Chromium y compiladas con audio ducking en FFmpeg sin consumir CPU ni GPU local (0% de carga de hardware local).
+  - Descarga y verificación de los 6 entregables en `content/deliverables/videos/`.
+- **Motor Determinista de Auditoría Visual Automatizada (`scripts/audit_promos.py`):**
+  - **Pass 1 (Auditoría DOM & Geometría vía Playwright):** Inspecciona de forma automatizada las 3 plantillas en ambos idiomas (6 permutaciones, 24 escenas). Comprueba programáticamente: titulares >= 74px, cifras de P&L >= 88px, textos secundarios >= 40px, contención de cajas sin desborde horizontal (`scrollWidth <= clientWidth`), cero solapamiento de cajas delimitadoras y validez del monograma SVG (116/116 comprobaciones exitosas).
+  - **Pass 2 (Extracción de Fotogramas & Auditoría de Píxeles vía FFmpeg + Pillow):** Extrae 24 fotogramas clave de alta resolución en `content/audit_frames/`, validando resolución 1080x1920, límites de luminancia media (15 < lum < 160) y presencia de píxeles con el gradiente esmeralda institucional (24/24 fotogramas superados al 100%).
+
+---
+
+## [v3.9.16] - 2026-11-21
+
+### 🎙️ Normalización Fonética de Trading Institucional en Español — Promo #1 (TikTok & Reels)
+- **Adopción Rigurosa del Estándar Fonético de Tutoriales (`to_phonetic_spanish`):**
+  - Implementado el transformador de expresiones regulares en `scripts/audio/generate_promo_01_audio.py` para la voz neuronal `es-MX-JorgeNeural`.
+  - **Términos de Trading con Dicción Anglosajona:** `traders` ➔ `tréiders`, `trading` ➔ `tréiding`, `trades` ➔ `tréids`, `setups` ➔ `sétaps`.
+  - **Identidad Institucional y Métricas:** `AsTrade` ➔ `As Trade` (pausa institucional nítida y cadencia clara), `P and L` / `P&L` ➔ `Pé y Ele`, `Black Friday` ➔ `Black Fráidei`.
+  - **Incorporación de Trading en el Hook:** Se enriqueció la primera frase (*"Pensabas que tu estrategia de trading no funcionaba..."*) para enunciar el término clave con dicción técnica impecable desde el primer segundo.
+- **Sincronización de Línea de Tiempo y Renderizado 100% Cloud (Google Colab GPU T4):**
+  - Regenerada la pista maestra `promo_01_es_master_voice.mp3` (35.41s) y actualizado `manifest_promo_01.json`.
+  - Recalibrados los puntos de transición de escena en `content/templates/promo_video_01_launch.html` (`scenesTimeline`: Hook `0.0s`, Leak `6.38s`, Calendar `13.69s`, CTA `24.73s`, duración total `35.41s`).
+  - Filmación headless fluida y ensamble con audio ducking ejecutados 100% en la nube sin consumo de CPU ni GPU local.
+
+---
+
 ## [v3.9.15] - 2026-11-21
 
 ### ⚡ Tipografía Maximizada Mobile-First, Transición Snap Limpia y Enfoque Exclusivo en Motion Graphics — Promo #1 (TikTok & Reels)
