@@ -5,6 +5,41 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.19] - 2026-11-22
+
+### 🎬 Producción Promo Evergreen Estilo Referencia (TikTok & Instagram Reels) y Renderizado 100% Cloud
+- **Producción Audiovisual Evergreen Bilingüe (2 Videos Finales a 60 FPS):**
+  - **Replicación Exacta del Estilo Visual de Referencia ([YouTube Short hnh6Vc-R570](https://www.youtube.com/shorts/hnh6Vc-R570)):**
+    - Fondo técnico ultra-limpio con cuadrícula milimetrada matemática fintech (36x36px).
+    - Tipografía geométrica gruesa *Plus Jakarta Sans* en tercio superior con **efecto karaoke sincronizado palabra por palabra** (palabras habladas en negro profundo `#0f172a`, palabras en espera en gris suave `#94a3b8`).
+    - Badges dinámicos tipo píldora (`.pill-badge`) en palabras clave: azul, verde esmeralda, naranja y rojo carmín.
+    - Componentes vectoriales 2.5D: Caja fuerte de prop firm con estantes y fajos de billetes, tarjeta 50K flotante con chip metálico dorado y alerta de cuenta quemada, matriz de 100 celdas (10x10) para consistencia estadística, calculadora interactiva con selector de grupos de setups y gráfico de drawdown con suelo fijo.
+  - **Enfoque Narrativo Evergreen / A Largo Plazo (Cero referencias a Black Friday ni lanzamientos puntuales):**
+    - **Hook (0-13s):** El 90% de los traders quema cuentas por un error de cálculo mental de 3 segundos bajo presión.
+    - **Duelo A vs B (13-27s):** Trader manual (calculadora web lenta, 45 segundos perdidos, sobreapalancamiento) vs Trader con AsTrade (grupos organizados, cálculo instantáneo de 0.8s, 1% de riesgo exacto).
+    - **Calculadora con Setups en Grupo (27-42s):** Demostración interactiva de setups preconfigurados, stop loss en pips y lotaje exacto milimétrico de 1.33 lotes con riesgo blindado.
+    - **Bitácora Multicuenta y Drawdown (42-58s):** Separación real de capital propio vs cuentas de fondeo, matriz de 84/100 trades en regla y control de drawdown en tiempo real.
+    - **Filosofía y CTA Atemporal (58-75s):** *"Menos adivinar y más matemática. Entra en astradehub.com y empieza tu prueba gratuita"*.
+- **Síntesis de Audio Neuronal y Manifiesto de Marcas de Tiempo:**
+  - **Español (`es-MX-JorgeNeural`):** Locución calibrada a +12% con normalización fonética estricta (`to_phonetic_spanish()`: *tréiders*, *tréiding*, *sétaps*, *As Trade*, *estóp los*, *dróudaun*). Duración: 75.23 segundos.
+  - **Inglés (`en-US-ChristopherNeural`):** Locución institucional a +7% de velocidad. Duración: 77.18 segundos.
+  - Manifiesto JSON estructurado (`scratch/promo_evergreen/audio/manifest_promo_evergreen.json`) con marcas de tiempo relativas por palabra para el motor de subtítulos.
+- **Plantilla HTML5 / CSS / GSAP Motion Graphics:**
+  - Creada en `content/templates/promo_evergreen_style.html` con resolución vertical 1080x1920 (9:16).
+  - Incluye hook determinista `window.seekTime(seconds)` para grabación cuadro por cuadro en Chromium.
+- **Pipeline Cloud 100% en Google Colab con GPU Tesla T4:**
+  - Empaquetado automático en `astrade_promo_evergreen_bundle.zip` (5.82 MB).
+  - Aprovisionamiento, subida y ejecución remota con `colab.exe` (0% carga de CPU/GPU local).
+  - Multiplexado en FFmpeg con audio ducking (-20dB música ambiental bajo voz principal).
+- **Entregables Finales:**
+  - `content/deliverables/videos/AsTrade_Promo_Evergreen_ES.mp4` (75s, 1080x1920 @ 60 FPS).
+  - `content/deliverables/videos/AsTrade_Promo_Evergreen_EN.mp4` (77s, 1080x1920 @ 60 FPS).
+- **Auditoría DOM y Fotogramas Visuales:**
+  - 5/5 aserciones superadas con veredicto `VICTORY CONFIRMED`.
+  - Fotogramas de auditoría almacenados en `content/audit_frames/promo_evergreen/`.
+
+---
+
 ## [v3.9.18] - 2026-11-22
 
 ### 🔗 Corrección del Enlace Oficial de Instagram en Footer de la Plataforma
