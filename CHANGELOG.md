@@ -5,6 +5,22 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.21] - 2026-11-23
+
+### 🌐 Configuración de Dominio Oficial astradehub.com, Cloudflare Pages y Correo de Soporte Corporativo
+- **Soporte de Dominio y Producción en Cloudflare Pages:**
+  - Creado archivo `CNAME` apuntando al dominio raíz `astradehub.com`.
+  - Creado archivo de configuración `_headers` con políticas de seguridad avanzadas (`X-Frame-Options: SAMEORIGIN`, `X-Content-Type-Options: nosniff`, `Referrer-Policy: strict-origin-when-cross-origin`, `Permissions-Policy`) y directivas de caché optimizadas para Cloudflare Edge (revalidación inmediata para documentos HTML y caché eficiente con `stale-while-revalidate` para assets CSS, JS y multimedia).
+- **Indexación, Canonicidad y SEO Internacional:**
+  - Creado `robots.txt` permitiendo rastreo público completo y referenciando el mapa del sitio oficial.
+  - Creado `sitemap.xml` con soporte bilingüe (`hreflang` para `es`, `en` y `x-default`) para `/`, `/en.html` y `/calculadora/`.
+  - Inyectadas meta-etiquetas canónicas, meta-descripciones profesionales, etiquetas Open Graph (Facebook/LinkedIn) y Twitter Cards en `index.html` y `en.html` con base en `https://astradehub.com/`.
+- **Identidad de Marca y Correo Oficial de Soporte:**
+  - Actualizado el canal de soporte y dudas legales en las landing pages a `soporte@astradehub.com` (`index.html` y `en.html`).
+  - Actualizada la barra simulada de navegación en el showcase interactivo a `app.astradehub.com`.
+
+---
+
 ## [v3.9.20] - 2026-11-23
 
 ### 🔐 Remoción Completa de Google OAuth y Modales de Autenticación 100% Directos
