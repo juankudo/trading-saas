@@ -1749,15 +1749,6 @@
     <script src="js/app.js?v=3.9.6"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            // Si viene retornando de OAuth (Google), procesar y sincronizar sesión antes de validar
-            if (typeof apiHandleOAuthCallback === 'function') {
-                try {
-                    await apiHandleOAuthCallback();
-                } catch (e) {
-                    console.warn("Error resolviendo callback de OAuth:", e);
-                }
-            }
-
             const user = getCurrentUser();
             if (!user) {
                 window.location.href = 'index.html';

@@ -5,6 +5,24 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.20] - 2026-11-23
+
+### 🔐 Remoción Completa de Google OAuth y Modales de Autenticación 100% Directos
+- **Limpieza de Modales de Inicio de Sesión y Registro (`index.html` & `en.html`):**
+  - Eliminados por completo los botones de autenticación con Google (*"Continuar con Google"* / *"Continue with Google"* y *"Registrarse con Google"* / *"Sign up with Google"*) en las vistas `#auth-view-login` y `#auth-view-register`.
+  - Removidos los divisores intermedios (*"o con tu correo"* / *"or with email"*), permitiendo que los usuarios accedan de forma directa, ágil y limpia a los campos de correo y contraseña.
+  - Eliminada la función JavaScript `handleGoogleSignIn()` en ambos idiomas.
+- **Depuración de Estilos CSS (`css/styles.css`):**
+  - Removidas las clases huérfanas `.btn-google-auth`, `html.light .btn-google-auth` y sus variantes `:hover`.
+  - Removidas las clases de divisores `.auth-divider-line` y `.auth-divider-text`.
+- **Desacoplamiento en Cliente Supabase y Aplicación (`js/supabase-client.js` & `app.html`):**
+  - Eliminadas las funciones `apiSignInWithGoogle()` y `apiHandleOAuthCallback()` de `js/supabase-client.js`, eliminando código muerto y dependencias no utilizadas en el frontend.
+  - Removida la rutina de resolución de OAuth callback en el listener `DOMContentLoaded` de `app.html`.
+- **Verificación Automatizada Dual-Theme & Bilingüe (Playwright):**
+  - Verificados los modales de login y registro en español e inglés, en modo oscuro y claro, confirmando la ausencia total de botones de terceros o divisores y el funcionamiento perfecto del formulario.
+
+---
+
 ## [v3.9.19] - 2026-11-22
 
 ### 🎬 Producción Promo Evergreen Estilo Referencia (TikTok & Instagram Reels) y Renderizado 100% Cloud
