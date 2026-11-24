@@ -712,12 +712,12 @@ const initialTrades = [];
             return parseOptionalBalance(document.getElementById("dashboardBalanceActual").value);
         }
 
-        // Balance Actual opcional: null, undefined, "" o valores no numéricos se tratan como "no informado".
+        // Balance Actual opcional: null, undefined, "" o valores <= 0 se tratan como "no informado" (vacío).
         function parseOptionalBalance(value) {
             if (value === null || value === undefined) return null;
             if (typeof value === "string" && value.trim() === "") return null;
             const num = parseFloat(value);
-            return Number.isFinite(num) ? num : null;
+            return Number.isFinite(num) && num > 0 ? num : null;
         }
 
         // Balance Inicial de cuenta real: referencia fija para riesgo y métricas. Nunca 0/NaN.
@@ -1491,6 +1491,7 @@ const initialTrades = [];
             if (checkExpiredLockdownBlock()) return;
             document.getElementById("sessionForm").reset();
             document.getElementById("inputIdSession").value = "";
+            document.getElementById("inputSessionBalanceActual").value = "";
             document.getElementById("sessionActualBalanceContainer").classList.toggle("hidden", currentMode === "backtesting");
             const btn = document.getElementById("btn-submit-session");
             const sessionPairInput = document.getElementById("inputSessionPair");
@@ -1501,6 +1502,7 @@ const initialTrades = [];
             if (currentMode === 'real') {
                 document.getElementById("modalSessionTitle").textContent = (typeof window.t === "function") ? window.t("modal_session.title_new_real","Crear Nueva Cuenta") : "Crear Nueva Cuenta";
                 document.getElementById("inputSessionBalance").value = 100000;
+                document.getElementById("inputSessionBalanceActual").value = "";
                 document.getElementById("sessionPairContainer").classList.add("hidden");
                 sessionPairInput.required = false;
                 document.getElementById("sessionStartDateContainer").classList.add("hidden");
@@ -2798,12 +2800,20 @@ const initialTrades = [];
 
         // Migración: las cuentas viejas con Balance Actual no tienen fecha base. Si su último
         // snapshot coincide con el actual, usamos esa fecha; si no, sellamos ahora para no duplicar.
+        // Además, si alguna cuenta tenía 0 o valor no válido como Balance Actual, se limpia a null.
         async function migrateLegacyBalanceActualDates() {
             let changed = false;
             const nowIso = new Date().toISOString();
             realAccounts = realAccounts.map(account => {
                 const actual = parseOptionalBalance(account && account.balanceActual);
-                if (actual === null || parseBalanceTimestamp(account && account.balanceActualAt) !== null) return account;
+                if (actual === null) {
+                    if (account && (account.balanceActual !== null || account.balanceActualAt !== null)) {
+                        changed = true;
+                        return { ...account, balanceActual: null, balanceActualAt: null };
+                    }
+                    return account;
+                }
+                if (parseBalanceTimestamp(account && account.balanceActualAt) !== null) return account;
                 const latest = getLatestRecordedBalance(account.id, { informedOnly: true });
                 const matchesLatest = latest && Math.abs(latest.balance - actual) < 0.01;
                 const baseAt = matchesLatest

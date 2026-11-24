@@ -132,15 +132,20 @@ async function loadFromCloud(userId) {
 
     // Reconstruir Cuentas Reales (Fusión inteligente: nube manda si tiene datos)
     if (Array.isArray(dbAccounts) && dbAccounts.length > 0) {
-        const cloudAccounts = dbAccounts.map(a => ({
-            id: isNaN(a.id) ? a.id : Number(a.id),
-            name: a.name,
-            stage: a.stage || 'real',
-            balance: Number(a.initial_balance) || 0,
-            balanceActual: Number(a.balance_actual) || 0,
-            balanceActualAt: a.balance_actual_at || null,
-            ...(a.config || {})
-        }));
+        const cloudAccounts = dbAccounts.map(a => {
+            const rawAct = a.balance_actual;
+            const parsedAct = (rawAct !== null && rawAct !== undefined && String(rawAct).trim() !== '') ? Number(rawAct) : null;
+            const validAct = (parsedAct !== null && Number.isFinite(parsedAct) && parsedAct > 0) ? parsedAct : null;
+            return {
+                id: isNaN(a.id) ? a.id : Number(a.id),
+                name: a.name,
+                stage: a.stage || 'real',
+                balance: Number(a.initial_balance) || 100000,
+                balanceActual: validAct,
+                balanceActualAt: validAct !== null ? (a.balance_actual_at || null) : null,
+                ...(a.config || {})
+            };
+        });
         realAccounts = cloudAccounts;
         await dbSet(STORAGE_KEY_REAL_ACCOUNTS, realAccounts);
     }
@@ -275,23 +280,28 @@ async function saveToCloud(userId) {
     try {
         // 1. Sincronizar Cuentas Reales
         if (Array.isArray(realAccounts) && realAccounts.length > 0) {
-            const accPayload = realAccounts.map(a => ({
-                id: String(a.id),
-                user_id: userId,
-                name: a.name || 'Cuenta',
-                stage: a.stage || 'real',
-                initial_balance: Number(a.balance) || 0,
-                balance_actual: Number(a.balanceActual) || 0,
-                balance_actual_at: a.balanceActualAt || new Date().toISOString(),
-                config: {
-                    goal: a.goal,
-                    rules: a.rules,
-                    withdrawals: a.withdrawals,
-                    phase: a.phase,
-                    celebratedPhase: a.celebratedPhase,
-                    date: a.date
-                }
-            }));
+            const accPayload = realAccounts.map(a => {
+                const rawAct = a.balanceActual;
+                const parsedAct = (rawAct !== null && rawAct !== undefined && String(rawAct).trim() !== '') ? Number(rawAct) : null;
+                const validAct = (parsedAct !== null && Number.isFinite(parsedAct) && parsedAct > 0) ? parsedAct : null;
+                return {
+                    id: String(a.id),
+                    user_id: userId,
+                    name: a.name || 'Cuenta',
+                    stage: a.stage || 'real',
+                    initial_balance: Number(a.balance) || 100000,
+                    balance_actual: validAct,
+                    balance_actual_at: validAct !== null ? (a.balanceActualAt || new Date().toISOString()) : null,
+                    config: {
+                        goal: a.goal,
+                        rules: a.rules,
+                        withdrawals: a.withdrawals,
+                        phase: a.phase,
+                        celebratedPhase: a.celebratedPhase,
+                        date: a.date
+                    }
+                };
+            });
             const { error: accErr } = await client.from('accounts').upsert(accPayload, { onConflict: 'id' });
             if (accErr) console.error("Error upsert accounts:", accErr);
         }

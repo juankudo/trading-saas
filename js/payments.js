@@ -113,6 +113,7 @@ function isSubscriptionExpired() {
  * Aplica o retira el bloqueo Paywall obligatorio (fondo desenfocado + modal obligatorio sin X)
  */
 function applyPaywallLockdown(isExpired, details = {}) {
+    const wasMandatory = isMandatoryLockdown;
     isMandatoryLockdown = Boolean(isExpired);
     const mainContent = document.getElementById('app-main-content');
     const closeBtn = document.getElementById('checkout-close-btn');
@@ -181,8 +182,10 @@ function applyPaywallLockdown(isExpired, details = {}) {
             iconContainer.innerHTML = '<i class="fa-solid fa-gem"></i>';
         }
 
-        // Cerrar modal si estaba en bloqueo
-        closeCheckoutModal(true);
+        // Cerrar modal solo si provenía de un bloqueo obligatorio paywall
+        if (wasMandatory) {
+            closeCheckoutModal(true);
+        }
     }
 }
 
@@ -374,15 +377,18 @@ function openCheckoutModal(defaultPeriod = 'month', isMandatory = false) {
     if (isMandatory) {
         isMandatoryLockdown = true;
     }
-    const savedPeriod = localStorage.getItem('preferred_billing_cycle');
-    if (savedPeriod && PAYMENTS_CONFIG.pricing[savedPeriod]) {
-        selectedCheckoutPeriod = savedPeriod;
-    } else {
+    // Si viene un período explícito válido por parámetro, priorizarlo; si no, consultar localStorage
+    if (defaultPeriod && PAYMENTS_CONFIG.pricing[defaultPeriod]) {
         selectedCheckoutPeriod = defaultPeriod;
+        try { localStorage.setItem('preferred_billing_cycle', defaultPeriod); } catch(e) {}
+    } else {
+        const savedPeriod = localStorage.getItem('preferred_billing_cycle');
+        selectedCheckoutPeriod = (savedPeriod && PAYMENTS_CONFIG.pricing[savedPeriod]) ? savedPeriod : 'month';
     }
     const modal = document.getElementById('checkoutModal');
     if (!modal) return;
 
+    selectCheckoutPeriod(selectedCheckoutPeriod);
     showCheckoutStep('plans');
     updateCheckoutPricingDisplay();
     updateSandboxModeBanner();
@@ -923,7 +929,7 @@ document.addEventListener('keydown', (e) => {
 }, true);
 
 // Inicialización automática de escuchas
-document.addEventListener('DOMContentLoaded', () => {
+function initPaymentsAutoCheckout() {
     checkUrlPaymentParams();
     initAppPromoBanner();
 
@@ -949,4 +955,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPaymentsAutoCheckout);
+} else {
+    initPaymentsAutoCheckout();
+}
+
+window.openCheckoutModal = openCheckoutModal;
+window.closeCheckoutModal = closeCheckoutModal;
+window.selectCheckoutPeriod = selectCheckoutPeriod;

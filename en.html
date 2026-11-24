@@ -3476,6 +3476,15 @@
                 <i class="fa-solid fa-xmark" aria-hidden="true"></i>
             </button>
 
+            <!-- DISTINTIVO DINÁMICO DE INTENCIÓN DE COMPRA -->
+            <div id="auth-plan-intent-badge" class="hidden mb-4 p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/50 flex items-center justify-between text-xs animate-in fade-in slide-in-from-top-2 duration-200">
+                <div class="flex items-center gap-2.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                    <span class="text-gray-200 font-medium">Purchasing: <strong id="auth-plan-intent-name" class="text-emerald-400 font-bold">Quarterly Plan</strong></span>
+                </div>
+                <span id="auth-plan-intent-price" class="font-mono font-black text-white bg-emerald-500/20 px-2.5 py-1 rounded-lg border border-emerald-500/40 text-[11px] whitespace-nowrap">$56 USD (-20%)</span>
+            </div>
+
             <!-- VIEW: LOGIN -->
             <div id="auth-view-login">
                 <div class="text-center mb-4">
@@ -5743,15 +5752,6 @@
         };
 
         
-        function selectPlanAndRegister(period) {
-            try {
-                localStorage.setItem('preferred_billing_cycle', period);
-            } catch (e) {}
-            if (typeof openAuthModal === 'function') {
-                openAuthModal('register');
-            }
-        }
-
         function selectPlanPeriod(months) {
             [1, 3, 6, 12].forEach(m => {
                 const btn = document.getElementById('plan-btn-' + m);
@@ -5848,7 +5848,12 @@
             const pass = document.getElementById('login-password').value;
             try {
                 await apiSignIn(email, pass);
-                window.location.href = 'app.html';
+                const pendingCheckout = localStorage.getItem('direct_checkout_after_login');
+                if (pendingCheckout) {
+                    window.location.href = 'app.html?open_checkout=' + encodeURIComponent(pendingCheckout);
+                } else {
+                    window.location.href = 'app.html';
+                }
             } catch (err) {
                 showAuthAlert('login-alert', err.message || "Error logging in");
             }
@@ -5876,7 +5881,12 @@
             try {
                 const res = await apiSignUp(email, pass, name);
                 if (res && res.session) {
-                    window.location.href = 'app.html';
+                    const pendingCheckout = localStorage.getItem('direct_checkout_after_login');
+                    if (pendingCheckout) {
+                        window.location.href = 'app.html?open_checkout=' + encodeURIComponent(pendingCheckout);
+                    } else {
+                        window.location.href = 'app.html';
+                    }
                 } else {
                     showAuthAlert('register-alert', "Account created successfully! We sent a confirmation email. Check your inbox to sign in.", false);
                     document.getElementById('reg-email').value = '';

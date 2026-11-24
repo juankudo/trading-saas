@@ -61,8 +61,8 @@ create table public.accounts (
     name text not null,
     stage text default 'real', -- 'real', 'prueba', 'fondeada', 'instant'
     initial_balance numeric not null default 0,
-    balance_actual numeric not null default 0,
-    balance_actual_at timestamptz default now(),
+    balance_actual numeric default null,
+    balance_actual_at timestamptz default null,
     config jsonb default '{}'::jsonb, -- Reglas de fondeo, drawdowns, fases, etc.
     created_at timestamptz default now(),
     updated_at timestamptz default now()

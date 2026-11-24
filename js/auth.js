@@ -218,9 +218,73 @@ async function loginUser(email, password) {
 }
 
 /**
+ * Catálogo y controladores de Intención de Compra Directa desde Tarjetas de Precios
+ */
+const PRICING_PLANS_DATA = {
+    month: { nameEs: 'Plan Mensual', nameEn: 'Monthly Plan', price: '$20 USD', discount: '20% OFF' },
+    quarter: { nameEs: 'Plan Trimestral', nameEn: 'Quarterly Plan', price: '$56 USD', discount: '20% OFF' },
+    semester: { nameEs: 'Plan Semestral', nameEn: 'Semi-Annual Plan', price: '$108 USD', discount: '20% OFF' },
+    year: { nameEs: 'Plan Anual', nameEn: 'Annual Plan', price: '$200 USD', discount: '20% OFF' }
+};
+
+function showAuthPlanBadge(periodKey) {
+    const badge = document.getElementById('auth-plan-intent-badge');
+    const nameEl = document.getElementById('auth-plan-intent-name');
+    const priceEl = document.getElementById('auth-plan-intent-price');
+    if (!badge || !nameEl || !priceEl) return;
+
+    const plan = PRICING_PLANS_DATA[periodKey] || PRICING_PLANS_DATA.month;
+    const isEn = (document.documentElement.lang === 'en');
+    nameEl.textContent = isEn ? plan.nameEn : plan.nameEs;
+    priceEl.textContent = `${plan.price} (${plan.discount})`;
+    badge.classList.remove('hidden');
+}
+
+function hideAuthPlanBadge() {
+    const badge = document.getElementById('auth-plan-intent-badge');
+    if (badge) badge.classList.add('hidden');
+}
+
+function openDirectCheckout(periodKey) {
+    const validPeriod = PRICING_PLANS_DATA[periodKey] ? periodKey : 'month';
+    try {
+        localStorage.setItem('direct_checkout_after_login', validPeriod);
+        localStorage.setItem('preferred_billing_cycle', validPeriod);
+    } catch(e) {}
+
+    // Si ya está autenticado con sesión activa, redirigir directo a checkout en app.html
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    if (user) {
+        window.location.href = 'app.html?open_checkout=' + encodeURIComponent(validPeriod);
+        return;
+    }
+
+    showAuthPlanBadge(validPeriod);
+    openAuthModal('register', true);
+}
+
+function selectPlanAndRegister(periodKey) {
+    const validPeriod = PRICING_PLANS_DATA[periodKey] ? periodKey : 'month';
+    try {
+        localStorage.setItem('preferred_billing_cycle', validPeriod);
+        localStorage.removeItem('direct_checkout_after_login'); // Es prueba de 7 días, no checkout forzado
+    } catch(e) {}
+
+    // Si ya está autenticado, llevarlo a su bitácora
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    if (user) {
+        window.location.href = 'app.html';
+        return;
+    }
+
+    hideAuthPlanBadge();
+    openAuthModal('register');
+}
+
+/**
  * Control visual de Modales (Registro, Login, Recuperar)
  */
-function openAuthModal(modalType = 'login') {
+function openAuthModal(modalType = 'login', keepPlanIntent = false) {
     const backdrop = document.getElementById('auth-modal-backdrop');
     if (!backdrop) return;
 
@@ -235,6 +299,14 @@ function openAuthModal(modalType = 'login') {
     if (modalType === 'login' && modalLogin) modalLogin.classList.remove('hidden');
     if (modalType === 'register' && modalRegister) modalRegister.classList.remove('hidden');
     if (modalType === 'forgot' && modalForgot) modalForgot.classList.remove('hidden');
+
+    // Sincronizar badge de intención de compra
+    const pendingPlan = localStorage.getItem('direct_checkout_after_login');
+    if (pendingPlan && (keepPlanIntent || modalType === 'login' || modalType === 'register')) {
+        showAuthPlanBadge(pendingPlan);
+    } else if (!keepPlanIntent && !pendingPlan) {
+        hideAuthPlanBadge();
+    }
 
     backdrop.scrollTop = 0;
     backdrop.classList.remove('hidden');

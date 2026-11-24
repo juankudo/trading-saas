@@ -5,6 +5,44 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.23] - 2026-11-24
+
+### 💰 Corrección de Balance Actual Opcional Vacío por Defecto y Cálculo Dinámico
+- **Campo "Actual (Opcional)" Vacío por Defecto:**
+  - Corregido `parseOptionalBalance` para tratar valores vacíos o menores/iguales a 0 como no informados (`null`).
+  - Al abrir el modal de creación de cuenta (`openSessionModal`) o de edición (`editGroup`), el campo "Actual (Opcional)" permanece completamente vacío en lugar de precargarse con 0.
+  - Al cambiar de cuenta en el dashboard (`enterGroup`), el campo `#dashboardBalanceActual` se muestra vacío (mostrando el placeholder `"Auto"`) cuando la cuenta no tiene un balance actual manual.
+- **Cálculo Dinámico del Balance Efectivo y Rendimiento:**
+  - En cuentas sin balance actual manual fijado, el balance efectivo se calcula automáticamente sumando el P&L neto de las operaciones cerradas (`Full TP`, `SL`, `Parcial`, etc.) al balance inicial configurado.
+  - El indicador de KPI "Retorno Total" refleja fielmente el rendimiento positivo o real acumulado de las operaciones cerradas sin caer en porcentajes erróneos (como -97% o -100%) por asumir balance 0.
+  - La gráfica "Evolución de la Cuenta ($)" finaliza de forma suave y continua en el balance acumulado real, eliminando la caída vertical artificial a $0.
+  - Se mantiene la prioridad del usuario: si se introduce manualmente un balance actual positivo, dicho valor prevalece sobre la proyección dinámica automática.
+- **Sincronización en la Nube y Migración Retroactiva (`js/cloud-storage.js` y `supabase_schema.sql`):**
+  - Actualizado el esquema en Supabase para que las columnas `balance_actual` y `balance_actual_at` en `public.accounts` sean anulables (`DEFAULT NULL`), eliminando la coerción automática a 0.
+  - Ajustadas las rutinas de carga y sincronización en la nube para mapear cuentas sin balance fijado a `null`.
+  - Añadida rutina en `migrateLegacyBalanceActualDates()` para sanear de inmediato cuentas preexistentes en almacenamiento local que tuvieran balance 0 residual.
+
+---
+
+## [v3.9.22] - 2026-11-24
+
+### 💳 Flujo Completo de Compra Directa desde Tarjetas de Precios y Redirección Checkout
+- **Activación de Enlaces de Compra Directa en Landing Pages (`index.html` & `en.html`):**
+  - Conectados todos los enlaces `"o comprar directamente con 20% OFF →"` / `"or purchase directly with 20% OFF →"` bajo cada tarjeta de precios (Mensual, Trimestral, Semestral y Anual) mediante la función `openDirectCheckout(periodKey)`.
+  - Mantenida la diferenciación limpia con el botón principal `"Comenzar 7 Días con 20% OFF"` (`selectPlanAndRegister`), el cual permite registrarse para la prueba gratuita de $0 sin forzar checkout.
+- **Distintivo Dinámico de Intención de Compra en Modal de Autenticación (`#auth-plan-intent-badge`):**
+  - Inyectado un badge elegante y animado en la cabecera del modal de autenticación que comunica al usuario exactamente qué plan seleccionó (ej. *"Adquiriendo: Plan Trimestral — $56 USD (20% OFF)"*).
+  - El distintivo persiste de forma inteligente al alternar entre las pestañas "Crear Cuenta" e "Iniciar Sesión" para no perder la intención de compra.
+  - Al cerrar el modal o al interactuar con el registro estándar de 7 días gratis, el distintivo se oculta y la intención de compra directa se limpia automáticamente.
+- **Apertura Automática del Modal de Pago en la Aplicación (`app.html` & `js/payments.js`):**
+  - Implementado el parámetro URL `?open_checkout=[period]` y sincronización con `localStorage` (`direct_checkout_after_login`).
+  - Al iniciar sesión o completar el registro tras hacer clic en compra directa (o si el usuario ya contaba con sesión activa), el sistema redirige instantáneamente a `app.html` y despliega de forma automática el modal de checkout (`#checkoutModal`) con el plan preseleccionado (Trimestral a $56 USD, Semestral a $108 USD, etc.) y los botones de pago listos para procesar la suscripción.
+  - Corregida la condición de cierre forzado en `applyPaywallLockdown(false)` para evitar que descarte aperturas voluntarias de checkout en cuentas con prueba activa.
+- **Verificación Integral Automatizada con Playwright:**
+  - Validados al 100% los flujos en español e inglés, la preservación del badge de intención entre pestañas, la limpieza en el flujo de prueba gratuita y la auto-apertura del checkout modal en `app.html` con precio y período exactos.
+
+---
+
 ## [v3.9.21] - 2026-11-23
 
 ### 🌐 Configuración de Dominio Oficial astradehub.com, Cloudflare Pages y Correo de Soporte Corporativo
