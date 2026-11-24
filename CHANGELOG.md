@@ -5,6 +5,17 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.26] - 2026-11-24
+
+### 📐 Reducción de Fuente en Aviso Mensual y Cache-Busting de Estilos
+- **Ajuste Tipográfico del Aviso Promocional Mensual (`css/styles.css`, `index.html`, `en.html`):**
+  - Reducido el tamaño de fuente de `.bf-monthly-note` a `9.5px` con `line-height: 1.3` y `margin-top: 3px`, añadiendo además clases utilitarias defensivas (`text-[9.5px] leading-[1.3]`) directamente sobre el contenedor en ambos idiomas para garantizar encaje perfecto tanto en vista de PC como en dispositivos móviles.
+- **Invalidación Inmediata de Caché CSS (`index.html`, `en.html`, `_headers`):**
+  - Incorporado el parámetro de versión `css/styles.css?v=3.9.26` en las páginas de aterrizaje en español e inglés para forzar a navegadores y nodos de Cloudflare CDN a descargar inmediatamente las reglas actualizadas de la baraja 3D y de `.bf-monthly-note`.
+  - Reducido el `max-age` de `/css/*` y `/js/*` en `_headers` de `86400` s (24h) a `3600` s (1h) con `stale-while-revalidate=86400`.
+
+---
+
 ## [v3.9.25] - 2026-11-24
 
 ### 🛡️ Auditoría Integral de Seguridad Pre-Lanzamiento y Endurecimiento Defensivo
