@@ -295,6 +295,12 @@ let presets = [];
             return 'USD';
         }
 
+        function escapeCalcHtml(str) {
+            return String(str || '').replace(/[&<>"']/g, c => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            })[c]);
+        }
+
         function renderPresets() {
             const container = document.getElementById('presetsGrid');
             if (presets.length === 0) {
@@ -320,12 +326,12 @@ let presets = [];
                 return `
                     <div class="col-span-full mb-1">
                         <div class="flex items-center justify-between mb-2 bg-gray-800/30 p-1.5 rounded-lg border border-main/50">
-                            <div onclick="toggleGroup('${groupName}')" class="flex items-center gap-2 cursor-pointer group">
+                            <div data-group-name="${escapeCalcHtml(groupName)}" onclick="toggleGroup(this.getAttribute('data-group-name'))" class="flex items-center gap-2 cursor-pointer group">
                                 <i class="fa-solid ${allSelected ? 'fa-square-check text-blue-500' : (someSelected ? 'fa-square-minus text-blue-400' : 'fa-square text-gray-700')} text-sm"></i>
-                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${groupName}</span>
+                                <span class="text-[10px] font-black text-gray-400 uppercase tracking-widest">${escapeCalcHtml(groupName)}</span>
                                 <span class="text-[9px] bg-gray-800 text-gray-500 px-1.5 rounded-full">${groupPresets.length}</span>
                             </div>
-                            <button onclick="toggleGroupCollapse('${groupName}', event)" class="text-gray-500 hover:text-white transition px-2">
+                            <button data-group-name="${escapeCalcHtml(groupName)}" onclick="toggleGroupCollapse(this.getAttribute('data-group-name'), event)" class="text-gray-500 hover:text-white transition px-2">
                                 <i class="fa-solid ${isCollapsed ? 'fa-chevron-down' : 'fa-chevron-up'} text-[10px]"></i>
                             </button>
                         </div>

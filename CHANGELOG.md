@@ -5,6 +5,37 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.25] - 2026-11-24
+
+### 🛡️ Auditoría Integral de Seguridad Pre-Lanzamiento y Endurecimiento Defensivo
+- **Eliminación Total de Bypasses de Monetización y Pago en Cliente (`js/payments.js`, `app.html`):**
+  - Deshabilitada la activación de suscripciones en cliente mediante manipulación de parámetros URL (`payment_success=true` / `order_status=paid`). La aplicación ahora limpia la URL de forma segura con `window.history.replaceState` y delega la verificación exclusivamente al backend mediante `apiFetchSubscription(user.id)`.
+  - Eliminadas las herramientas de prueba, botones y simulaciones en cliente (`simulateTrialExpired`, `simulateRestoreTrial`, `simulateCryptoPaymentSuccess`, `simulateCardPaymentSuccess`).
+  - Eliminadas las direcciones de prueba hardcodeadas de criptomonedas (TRC-20 / BEP-20 / Polygon) y referencias a claves API de comercios en el alcance de ventana (`window.ENV_NOWPAYMENTS_KEY`).
+  - Restringido el modo de pagos a `'live'` de forma predeterminada para producción comercial.
+- **Endurecimiento de Políticas de Base de Datos y Row Level Security (`supabase_schema.sql`):**
+  - Sustituido el DDL destructivo `DROP TABLE IF EXISTS ... CASCADE;` por sentencias seguras e idempotentes `CREATE TABLE IF NOT EXISTS`.
+  - Añadida restricción `UNIQUE` en la columna `user_id` de la tabla `public.subscriptions` para prevenir inconsistencias y condiciones de carrera en suscripciones.
+  - Asegurada la función con privilegios elevados `public.handle_new_user()` configurando explícitamente `SET search_path = public` y revocando permisos de ejecución de roles públicos no confiables (`REVOKE EXECUTE FROM PUBLIC`).
+  - Implementada la función de seguridad con privilegios `public.has_active_subscription(check_user_id)` con `search_path = public` fijado.
+  - Optimizadas todas las cláusulas RLS envolviendo las llamadas de contexto en subconsultas escalares `(SELECT auth.uid())` para maximizar el rendimiento en PostgreSQL.
+  - Separadas las políticas de lectura (`SELECT`) de las de modificación (`INSERT`, `UPDATE`, `DELETE`) en `trades` y `accounts`, aplicando estrictamente la verificación de suscripción activa o período de prueba vigente a nivel de base de datos antes de permitir cualquier mutación.
+  - Endurecida la política de carga en el bucket de almacenamiento `trade-screenshots`, forzando que la ruta del archivo comience con el UUID autenticado del usuario `(name LIKE (SELECT auth.uid())::text || '/%')`.
+- **Protección contra Cross-Site Scripting (XSS) y Sanitización del DOM (`js/app.js`, `calculadora/js/app.js`):**
+  - Reemplazada la interpolación de cadenas en manejadores `onclick` de imágenes (`openLightbox('${src}')`) por el acceso directo a la propiedad del DOM `onclick="openLightbox(this.src)"` con atributos `src` sanitizados mediante `escapeGalleryHtml()`, eliminando vectores de inyección por comillas o payloads maliciosos.
+  - Sanitizadas e indexadas de forma segura las variables de la tabla y galería de trades (`t.hora`, `t.par`, `t.sesion`, `formatTradeTrend(t.tendencia)`, etc.).
+  - Corregida la calculadora de presets (`calculadora/js/app.js`) implementando `escapeCalcHtml()` y cambiando los atributos inline a selectores DOM seguros `data-group-name` con `this.getAttribute()`.
+  - Añadida validación de tipo y restricción estricta de tamaño máximo (50 MB) en la rutina de importación de respaldos JSON (`importData`), mapeando y sanitizando cada cuenta individualmente antes de asignarla al estado global.
+- **Cabeceras HTTP de Seguridad en Servidor (`_headers`):**
+  - Configurada la cabecera `Strict-Transport-Security` (HSTS) con `max-age=31536000; includeSubDomains; preload`.
+  - Implementada una directiva robusta de `Content-Security-Policy` (CSP) que restringe los orígenes de conexión y script autorizados (Supabase, Stripe, NOWPayments, APIs de tipos de cambio).
+- **Suite de Pruebas y Herramientas Automatizadas de Auditoría Offline:**
+  - Creado el informe maestro `SECURITY_AUDIT_REPORT.md` (24 vulnerabilidades categorizadas con matrices de riesgo CVSS v3.1).
+  - Desarrollada la herramienta de análisis estático `scripts/offline_security_scanner.py` para auditorías recurrentes pre-despliegue con 0 dependencias externas.
+  - Diseñado el conjunto de reglas Semgrep `semgrep_rules.yml` y la suite de pruebas pgTAP `tests/test_rls_subscriptions.sql` para validación de políticas PostgreSQL.
+
+---
+
 ## [v3.9.24] - 2026-11-24
 
 ### 📐 Corrección de Desbordamiento en Tarjetas de Precios y Optimización Móvil

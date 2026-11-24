@@ -9,7 +9,7 @@
 const PAYMENTS_CONFIG = {
     // 'test': Modo Sandbox interactivo para pruebas seguras sin cobros reales
     // 'live': Modo Producción oficial con cobros reales
-    mode: 'test',
+    mode: 'live',
 
     // Lemon Squeezy (Merchant of Record oficial — opera desde Argentina para todo el mundo)
     lemonsqueezy: {
@@ -34,14 +34,8 @@ const PAYMENTS_CONFIG = {
     },
 
     nowpayments: {
-        apiKey: window.ENV_NOWPAYMENTS_KEY || "", // Tu API Key de NOWPayments
-        apiBase: "https://api.nowpayments.io/v1",
-        // Billeteras oficiales para depósitos directos en USDT
-        fallbackWallets: {
-            "USDT_TRC20": "TYDzsYUb93ExampleTRC20AddressPlaceholder77",
-            "USDT_BEP20": "0x71C69446B92ExampleBEP20AddressPlaceholder",
-            "USDT_POLYGON": "0x71C69446B92ExampleBEP20AddressPlaceholder"
-        }
+        // En producción el checkout de criptomonedas se procesa mediante Supabase Edge Functions y webhooks seguros
+        apiBase: "https://api.nowpayments.io/v1"
     },
 
     pricing: {
@@ -520,16 +514,6 @@ function hideCardSandbox() {
 const hideStripeSandbox = hideCardSandbox;
 
 /**
- * Simula la aprobación exitosa de un pago con Tarjeta (Stripe) en Sandbox
- */
-async function simulateCardPaymentSuccess() {
-    const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
-    const transId = 'stripe_sub_test_' + Date.now().toString(36);
-    await completeSubscriptionPayment(selectedCheckoutPeriod, 'stripe', transId);
-}
-const simulateStripePaymentSuccess = simulateCardPaymentSuccess;
-
-/**
  * Muestra las opciones y factura para pago con Criptomonedas (USDT)
  */
 function showCryptoCheckout() {
@@ -550,17 +534,13 @@ function hideCryptoInvoice() {
 }
 
 /**
- * Simula la confirmación de una transferencia USDT en blockchain
- */
-async function simulateCryptoPaymentSuccess() {
-    const transId = 'np_tx_test_' + Date.now().toString(36);
-    await completeSubscriptionPayment(selectedCheckoutPeriod, 'nowpayments', transId);
-}
-
-/**
- * Ejecuta la activación final de la suscripción (Persistencia en LocalStorage + Supabase)
+ * Procesa la activación de suscripción autorizada
  */
 async function completeSubscriptionPayment(periodKey, provider, transactionId) {
+    if (PAYMENTS_CONFIG.mode === 'live') {
+        console.warn("[AsTrade Security] Las activaciones de suscripción en cliente están deshabilitadas en producción. Se gestionan exclusivamente por webhooks autenticados.");
+        return;
+    }
     const plan = PAYMENTS_CONFIG.pricing[periodKey] || PAYMENTS_CONFIG.pricing.month;
     const now = new Date();
 
@@ -610,25 +590,7 @@ async function completeSubscriptionPayment(periodKey, provider, transactionId) {
         localStorage.setItem('trading_saas_user_session', JSON.stringify(user));
     }
 
-    // 2. Sincronizar en Supabase si está disponible
-    if (typeof supabase !== 'undefined' && supabase && supabase.from) {
-        try {
-            await supabase.from('subscriptions').upsert({
-                user_id: user.id,
-                provider: provider,
-                status: 'active',
-                plan_interval: periodKey,
-                current_period_end: expiresAt.toISOString(),
-                stripe_subscription_id: transactionId,
-                updated_at: now.toISOString()
-            });
-            console.log("Suscripción sincronizada en Supabase con éxito.");
-        } catch (e) {
-            console.warn("No se pudo sincronizar con Supabase (modo offline/local):", e);
-        }
-    }
-
-    // 3. Actualizar interfaz y permisos
+    // 2. Actualizar interfaz y permisos
     applyPaywallLockdown(false);
     closeCheckoutModal(true);
     checkSubscriptionAccess();
@@ -680,69 +642,48 @@ function triggerConfettiEffect() {
 }
 
 /**
- * HELPERS PARA DESARROLLO Y PRUEBAS (Sandbox Toolkit)
+ * Escucha parámetros en la URL tras retorno de pasarela de pago
+ * Verifica el estado real con el backend en lugar de activar en cliente
  */
-function simulateTrialExpired() {
-    let user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    if (!user) {
-        user = { id: 'usr_test', email: 'trader@email.com', name: 'Trader Test' };
-    }
-
-    user.trial_ends_at = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
-    user.subscription = { status: 'expired' };
-
-    if (typeof saveUserSession === 'function') {
-        saveUserSession(user);
-    } else {
-        localStorage.setItem('trading_saas_user_session', JSON.stringify(user));
-    }
-
-    checkSubscriptionAccess();
-}
-
-function simulateRestoreTrial() {
-    let user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    if (!user) {
-        user = { id: 'usr_test', email: 'trader@email.com', name: 'Trader Test' };
-    }
-
-    user.trial_ends_at = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
-    user.subscription = { status: 'trial', plan: 'Pro Trial (7 días)' };
-
-    if (typeof saveUserSession === 'function') {
-        saveUserSession(user);
-    } else {
-        localStorage.setItem('trading_saas_user_session', JSON.stringify(user));
-    }
-
-    applyPaywallLockdown(false);
-    closeCheckoutModal(true);
-    checkSubscriptionAccess();
-    if (typeof showToast === 'function') {
-        showToast("Prueba de 7 días restablecida con éxito");
-    }
-}
-
-function togglePaymentsMode() {
-    PAYMENTS_CONFIG.mode = (PAYMENTS_CONFIG.mode === 'test') ? 'live' : 'test';
-    updateSandboxModeBanner();
-}
-
-/**
- * Escucha parámetros en la URL (ej. tras redirección de Stripe Checkout)
- */
-function checkUrlPaymentParams() {
+async function checkUrlPaymentParams() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        // Soporta redirección exitosa de Lemon Squeezy y Stripe
-        if (urlParams.get('payment_success') === 'true' || urlParams.get('order_status') === 'paid') {
-            const period = urlParams.get('period') || 'month';
-            const provider = urlParams.get('provider') || 'lemonsqueezy';
-            const sessionId = urlParams.get('order_id') || urlParams.get('session_id') || ('ls_live_' + Date.now());
-            completeSubscriptionPayment(period, provider, sessionId);
-
-            // Limpiar la URL sin recargar
+        const searchStr = window.location.search || '';
+        const isPaymentReturn = searchStr.includes('payment_success=true') || 
+                                searchStr.includes('order_status=paid') ||
+                                urlParams.has('session_id') ||
+                                urlParams.get('checkout') === 'success';
+        if (isPaymentReturn) {
+            // Limpiar la URL sin recargar para prevenir re-ejecución
             window.history.replaceState({}, document.title, window.location.pathname);
+
+            const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+            if (user && typeof apiFetchSubscription === 'function') {
+                if (typeof showToast === 'function') {
+                    showToast("Verificando confirmación de suscripción...", false);
+                }
+                const sub = await apiFetchSubscription(user.id);
+                if (sub && (sub.status === 'active' || sub.status === 'paid')) {
+                    user.subscription = sub;
+                    if (typeof saveUserSession === 'function') {
+                        saveUserSession(user);
+                    }
+                    if (typeof applyPaywallLockdown === 'function') {
+                        applyPaywallLockdown(false);
+                    }
+                    if (typeof closeCheckoutModal === 'function') {
+                        closeCheckoutModal(true);
+                    }
+                    checkSubscriptionAccess();
+                    if (typeof showToast === 'function') {
+                        showToast("¡Membresía Pro verificada con éxito!", true);
+                    }
+                } else {
+                    if (typeof showToast === 'function') {
+                        showToast("El pago está siendo procesado por la pasarela. Tu cuenta se activará automáticamente.", false);
+                    }
+                }
+            }
         }
     } catch (e) {
         console.warn("Error leyendo parámetros de pago en URL:", e);

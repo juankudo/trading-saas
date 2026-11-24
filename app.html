@@ -28,9 +28,7 @@
     <script src="js/cloud-storage.js"></script>
     <script>
         (function() {
-            const isOAuthRedirect = (window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('error='))) ||
-                                  (window.location.search && (window.location.search.includes('code=') || window.location.search.includes('error=')));
-            if (!isOAuthRedirect && !getCurrentUser()) {
+            if (!getCurrentUser()) {
                 window.location.href = 'index.html';
             }
         })();
@@ -1395,18 +1393,6 @@
                         <i class="fa-solid fa-shield-halved text-emerald-400 text-xs"></i> <span data-i18n="paywall.safe_data_badge">Datos seguros en la nube</span>
                     </span>
                 </div>
-
-                <!-- Sandbox Developer Testing Strip -->
-                <div class="pt-2 border-t border-gray-800/80 flex flex-wrap items-center justify-between gap-2 text-[10px] text-gray-400 font-mono">
-                    <span class="flex items-center gap-1 text-gray-300">
-                        <i class="fa-solid fa-vial text-emerald-400"></i> Herramientas de Prueba:
-                    </span>
-                    <div class="flex items-center gap-2">
-                        <button type="button" onclick="simulateTrialExpired()" class="text-amber-400 hover:underline" title="Fuerza el vencimiento para comprobar el bloqueo de Solo Lectura" data-i18n-title="checkout.simulate_expired_tooltip" data-i18n="app_auto.simular_prueba_vencida">Simular Prueba Vencida</button>
-                        <span>·</span>
-                        <button type="button" onclick="simulateRestoreTrial()" class="text-emerald-400 hover:underline" title="Restablece la prueba gratuita a 7 días" data-i18n-title="checkout.simulate_restore_tooltip" data-i18n="app_auto.restablecer_7_d_as">Restablecer 7 Días</button>
-                    </div>
-                </div>
             </div>
 
             <!-- PASO 2: VISTA DE PAGO DIRECTA (ZERO SCROLL) -->
@@ -1421,28 +1407,18 @@
                     </span>
                 </div>
 
-                <!-- Stripe Card Sandbox Simulation Drawer -->
+                <!-- Stripe Card Payment Confirmation Drawer -->
                 <div id="checkout-stripe-sandbox" class="hidden bg-gray-900 border border-emerald-500/50 rounded-xl p-4 text-xs animate-in fade-in">
                     <div class="flex items-center justify-between mb-2.5 border-b border-gray-800 pb-2">
                         <span class="font-bold text-white flex items-center gap-1.5">
-                            <i class="fa-solid fa-flask text-emerald-400"></i> <span data-i18n="checkout.card_sandbox_title">Simulación Stripe Checkout (Sandbox)</span>
+                            <i class="fa-solid fa-lock text-emerald-400"></i> <span data-i18n="checkout.card_secure_title">Pago Seguro con Tarjeta</span>
                         </span>
-                        <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-amber-950 text-amber-400 border border-amber-700/60" data-i18n="app_auto.test_mode">TEST MODE</span>
+                        <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-700/60">STRIPE ENCRYPTED</span>
                     </div>
-                    <p class="text-gray-300 mb-2 leading-relaxed" data-i18n="checkout.card_sandbox_desc">Prueba el flujo de suscripción sin tarjeta real. La cuenta se actualizará a Pro de inmediato:</p>
-                    <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800 mb-3 space-y-1 font-mono text-[11px]">
-                        <div class="flex justify-between text-gray-400">
-                            <span data-i18n="checkout.sim_card">Tarjeta simulada:</span>
-                            <span class="text-white font-bold">4242 •••• •••• 4242 (Visa Test)</span>
-                        </div>
-                        <div class="flex justify-between text-gray-400">
-                            <span data-i18n="checkout.plan_amount">Monto del plan:</span>
-                            <span id="stripe-sandbox-amount" class="text-emerald-400 font-bold">$25.00 USD</span>
-                        </div>
-                    </div>
+                    <p class="text-gray-300 mb-3 leading-relaxed" data-i18n="checkout.card_redirect_desc">Serás redirigido a la pasarela cifrada de Stripe para completar tu suscripción de forma 100% segura.</p>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <button type="button" onclick="simulateCardPaymentSuccess()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-circle-check"></i> <span data-i18n="checkout.sim_success_btn">Simular Pago Exitoso</span>
+                        <button type="button" onclick="handleStripeCheckout()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-lock"></i> <span data-i18n="checkout.go_stripe_btn">Continuar a Stripe Seguro</span>
                         </button>
                         <button type="button" onclick="backToCheckoutPlans()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
                     </div>
@@ -1460,33 +1436,19 @@
                     <p class="text-gray-400 mb-2" data-i18n="checkout.crypto_instruction">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
                     
                     <div class="space-y-2 mb-3">
-                        <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
-                            <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                                <span class="text-emerald-300 font-bold" data-i18n="app_auto.red_tron_trc_20">Red TRON (TRC-20)</span>
-                                <button id="copy-btn-trc" onclick="copyToClipboard('TYDzsYUb93ExampleTRC20AddressPlaceholder77', 'copy-btn-trc')" class="text-emerald-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
-                            </div>
-                            <span class="font-mono text-gray-300 text-[10px] break-all block select-all">TYDzsYUb93ExampleTRC20AddressPlaceholder77</span>
-                        </div>
-
-                        <div class="bg-gray-950 p-2.5 rounded-lg border border-gray-800">
-                            <div class="flex justify-between text-[11px] text-gray-400 mb-1">
-                                <span class="text-blue-300 font-bold" data-i18n="app_auto.red_bsc_bep_20_binance">Red BSC (BEP-20 / Binance)</span>
-                                <button id="copy-btn-bsc" onclick="copyToClipboard('0x71C69446B92ExampleBEP20AddressPlaceholder', 'copy-btn-bsc')" class="text-blue-400 hover:underline" data-i18n="app_auto.copiar">Copiar</button>
-                            </div>
-                            <span class="font-mono text-gray-300 text-[10px] break-all block select-all">0x71C69446B92ExampleBEP20AddressPlaceholder</span>
+                        <div class="bg-gray-950 p-3 rounded-lg border border-gray-800 text-center">
+                            <i class="fa-solid fa-qrcode text-emerald-400 text-2xl mb-2"></i>
+                            <p class="text-xs text-gray-300 font-semibold mb-1" data-i18n="checkout.crypto_invoice_notice">Facturación Cripto Automatizada</p>
+                            <p class="text-[11px] text-gray-400 leading-relaxed mb-3" data-i18n="checkout.crypto_invoice_desc">Para garantizar pagos 100% seguros y asignación automática instantánea, tu orden se procesa a través de la pasarela oficial NOWPayments con dirección única generada para tu cuenta.</p>
+                            <a href="https://t.me/astradesupport" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition">
+                                <i class="fa-brands fa-telegram"></i> <span>Solicitar Factura Cripto en Soporte</span>
+                            </a>
                         </div>
                     </div>
 
-                    <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-3">
+                    <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-1">
                         <i class="fa-solid fa-circle-info mt-0.5"></i>
                         <span data-i18n="checkout.crypto_note">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
-                    </div>
-
-                    <!-- Botón de Simulación Sandbox Cripto -->
-                    <div id="crypto-test-action" class="pt-2 border-t border-gray-800">
-                        <button type="button" onclick="simulateCryptoPaymentSuccess()" class="w-full py-2.5 px-3 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-400 border border-emerald-500/40 font-bold text-xs transition flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-bolt text-amber-400"></i> <span data-i18n="checkout.crypto_sim_btn">Simular Confirmación de Transferencia (TxHash OK)</span>
-                        </button>
                     </div>
                 </div>
 

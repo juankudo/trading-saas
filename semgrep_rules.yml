@@ -1,0 +1,133 @@
+# ==============================================================================
+# AsTrade Trading Journal SaaS — Offline Semgrep Security Rulepack
+# Ruleset: Offline Static Security Auditing & Pattern Detection
+# ==============================================================================
+rules:
+  - id: ast-payment-url-param-tampering
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: >-
+      CRITICAL: Client-side subscription activation triggered by unverified URL
+      parameters ('payment_success', 'order_status'). Attackers can forge URLs
+      to bypass payment gates and activate Pro subscriptions without paying.
+    metadata:
+      cwe: "CWE-602: Client-Side Enforcement of Server-Side Security"
+      owasp: "A01:2021 - Broken Access Control"
+      cvss: "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H (9.8)"
+    patterns:
+      - pattern-either:
+          - pattern: $PARAMS.get('payment_success')
+          - pattern: $PARAMS.get('order_status')
+          - pattern: window.location.search.includes('payment_success')
+
+  - id: ast-client-side-subscription-upsert
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: >-
+      CRITICAL: Untrusted client directly attempting to upsert or update the
+      'subscriptions' database table. Subscriptions must be updated strictly on
+      the backend via webhook handlers using the service_role key.
+    metadata:
+      cwe: "CWE-285: Improper Authorization"
+      owasp: "A01:2021 - Broken Access Control"
+    patterns:
+      - pattern-either:
+          - pattern: $CLIENT.from('subscriptions').upsert(...)
+          - pattern: $CLIENT.from('subscriptions').update(...)
+          - pattern: $CLIENT.from('subscriptions').insert(...)
+
+  - id: ast-localstorage-auth-bypass
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: >-
+      HIGH: Authorization decisions (paywall lockdown, feature gating) rely on
+      unsigned localStorage data. Any user can manipulate localStorage to elevate privileges.
+    metadata:
+      cwe: "CWE-285: Improper Authorization"
+      owasp: "A01:2021 - Broken Access Control"
+    patterns:
+      - pattern-either:
+          - pattern: $USER.subscription.status === 'active'
+          - pattern: $USER.subscription.status === $STATUS
+          - pattern: localStorage.getItem('trading_saas_user_session')
+          - pattern: localStorage.getItem(AUTH_STORAGE_KEY)
+          - pattern: localStorage.setItem(AUTH_STORAGE_KEY, ...)
+
+  - id: ast-exposed-nowpayments-key
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: >-
+      HIGH: NOWPayments private API key exposed or referenced in client-side scope
+      (window.ENV_NOWPAYMENTS_KEY). Merchant API keys must remain strictly in backend secrets.
+    metadata:
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+      owasp: "A07:2021 - Identification and Authentication Failures"
+    patterns:
+      - pattern-either:
+          - pattern: window.ENV_NOWPAYMENTS_KEY
+          - pattern: "({ apiKey: $KEY, ... })"
+
+  - id: ast-sandbox-tools-in-production
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: >-
+      MEDIUM: Sandbox payment simulation or trial restoration functions exposed in
+      client code. Ensure simulation tools are excluded or gated out in production builds.
+    metadata:
+      cwe: "CWE-489: Active Debug Code in Production"
+      owasp: "A05:2021 - Security Misconfiguration"
+    patterns:
+      - pattern-either:
+          - pattern: function simulateTrialExpired(...) { ... }
+          - pattern: function simulateRestoreTrial(...) { ... }
+          - pattern: function simulateCardPaymentSuccess(...) { ... }
+          - pattern: function simulateCryptoPaymentSuccess(...) { ... }
+
+  - id: ast-dom-xss-innerhtml-interpolation
+    languages: [javascript, typescript]
+    severity: ERROR
+    message: >-
+      HIGH: Potential Stored Cross-Site Scripting (XSS). Direct interpolation of
+      user trade properties (par, hora, sesion, tendencia, orden, or screenshot URLs) into innerHTML sinks.
+    metadata:
+      cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation"
+      owasp: "A03:2021 - Injection"
+    pattern-either:
+      - patterns:
+          - pattern-inside: "`...`"
+          - pattern-regex: '\$\{[^}]*\b(?:t|trade)\.(?:par|hora|sesion|tendencia|orden)\b[^}]*\}'
+      - patterns:
+          - pattern-either:
+              - pattern: "$ELEM.innerHTML += $HTML"
+              - pattern: "$ELEM.innerHTML = $HTML"
+          - metavariable-regex:
+              metavariable: $HTML
+              regex: '.*\$\{[^}]*\b(?:t|trade)\.(?:par|hora|sesion|tendencia|orden)\b.*'
+
+  - id: ast-inline-onclick-unescaped-attribute
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: >-
+      HIGH: Unescaped string interpolated into inline onclick event handler.
+      Can lead to JavaScript execution if parameter contains quotes or parentheses.
+    metadata:
+      cwe: "CWE-79: Improper Neutralization of Input During Web Page Generation"
+      owasp: "A03:2021 - Injection"
+    patterns:
+      - pattern-inside: "`...`"
+      - pattern-regex: 'onclick\s*=\s*["''](?:openLightbox|toggleGroup|toggleGroupCollapse)\([^)\n]*\$\{[^}]+\}'
+
+  - id: ast-unsanitized-json-import
+    languages: [javascript, typescript]
+    severity: WARNING
+    message: >-
+      MEDIUM: Insecure Deserialization / Unsanitized JSON Import. User-provided JSON
+      is assigned directly to application state without schema validation or type checking.
+    metadata:
+      cwe: "CWE-20: Improper Input Validation"
+      owasp: "A08:2021 - Software and Data Integrity Failures"
+    patterns:
+      - pattern-inside: |
+          const $DATA = JSON.parse($EV.target.result);
+          ...
+      - pattern: realAccounts = $DATA.accounts;

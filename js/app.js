@@ -2349,8 +2349,13 @@ const initialTrades = [];
         function importDataTrigger() { document.getElementById("importInput").click(); }
         
         function importData(e) {
-            const file = e.target.files[0];
+            const file = e && e.target && e.target.files && e.target.files[0];
             if (!file) return;
+            // Validación de seguridad: límite de 50MB y verificación de tipo
+            if (file.size > 50 * 1024 * 1024) {
+                alert("El archivo excede el tamaño máximo permitido (50 MB).");
+                return;
+            }
             const r = new FileReader();
             r.onload = async (ev) => {
                 try {
@@ -2363,7 +2368,12 @@ const initialTrades = [];
                         trades = trades.concat(mappedTrades);
                     } else {
                         if (Array.isArray(data.accounts)) {
-                            realAccounts = data.accounts;
+                            realAccounts = data.accounts.map(acc => ({
+                                id: acc.id,
+                                name: escapeGalleryHtml(acc.name || "Cuenta"),
+                                balance: Number(acc.balance) || 0,
+                                date: String(acc.date || new Date().toLocaleString())
+                            }));
                             accountGroups = Array.isArray(data.accountGroups) ? data.accountGroups : [];
                         } else if (Array.isArray(data.accountGroups)) {
                             accountGroups = data.accountGroups;
@@ -4996,7 +5006,7 @@ const initialTrades = [];
         function renderImagePreviewsAntes() {
             document.getElementById("imagesPreviewAntes").innerHTML = currentUploadedImagesAntes.map((src, i) => `
                 <div class="relative inline-block mt-2 group">
-                    <img src="${src}" class="w-16 h-16 object-cover rounded border border-gray-600 cursor-pointer" onclick="openLightbox('${src}')">
+                    <img src="${escapeGalleryHtml(src)}" class="w-16 h-16 object-cover rounded border border-gray-600 cursor-pointer" onclick="openLightbox(this.src)">
                     <button type="button" onclick="removeImgAntes(${i})" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             `).join('');
@@ -5033,7 +5043,7 @@ const initialTrades = [];
         function renderImagePreviewsDespues() {
             document.getElementById("imagesPreviewDespues").innerHTML = currentUploadedImagesDespues.map((src, i) => `
                 <div class="relative inline-block mt-2 group">
-                    <img src="${src}" class="w-16 h-16 object-cover rounded border border-gray-600 cursor-pointer" onclick="openLightbox('${src}')">
+                    <img src="${escapeGalleryHtml(src)}" class="w-16 h-16 object-cover rounded border border-gray-600 cursor-pointer" onclick="openLightbox(this.src)">
                     <button type="button" onclick="removeImgDespues(${i})" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-xmark"></i></button>
                 </div>
             `).join('');
@@ -6351,13 +6361,14 @@ function renderMonthlyPerformance() {
             }, 50);
         }
 
-        function formatTendencia(tendencia) {
+        function formatTradeTrend(tendencia) {
             if (!tendencia) return "-";
             if (tendencia === "Favor") return (typeof window.t === "function") ? window.t("app_auto.favor", "Favor") : "Favor";
             if (tendencia === "Contra") return (typeof window.t === "function") ? window.t("app_auto.contra", "Contra") : "Contra";
             if (tendencia === "Sin clasificar") return (typeof window.t === "function") ? window.t("app_auto.sin_clasificar_mt5", "Sin clasificar") : "Sin clasificar";
-            return tendencia;
+            return escapeGalleryHtml(tendencia);
         }
+        const formatTendencia = formatTradeTrend;
 
         function formatTradeStatus(estado) {
             if (!estado) return (typeof window.t === "function") ? window.t("app_auto.sin_activar", "Sin Activar") : "Sin Activar";
@@ -6442,15 +6453,16 @@ function renderMonthlyPerformance() {
                 const risk = Number(t.riesgo);
                 const rr = Number(t.rr);
                 const tradeKey = isGlobalMetricsView ? Number(t.globalId) : Number(t.id);
+                const safeTendencia = escapeGalleryHtml(formatTradeTrend(t.tendencia));
 
                 return `
                     <tr class="bg-card-hover transition">
-                        <td class="px-2 py-2 font-mono whitespace-nowrap">${displayDate}<br><span class="text-gray-500 text-[11px]">${t.hora}</span></td>
-                        <td class="px-2 py-2 text-gray-300 capitalize">${dayName}</td>
-                        ${showPairColumn ? `<td class="px-2 py-2 font-bold text-white"><span class="bg-gray-800 px-2 py-0.5 rounded border border-main">${(t.par || '-').toUpperCase()}</span></td>` : ""}
-                        <td class="px-2 py-2"><span class="bg-gray-900 text-gray-400 px-2 py-0.5 rounded border border-gray-800">${normalizeSessionName(t.sesion) || '-'}</span></td>
-                        <td class="px-2 py-2 text-gray-400">${formatTendencia(t.tendencia)}</td>
-                        <td class="px-2 py-2 font-mono whitespace-nowrap"><span class="text-red-400">${t.pipsSL}</span> / <span class="text-emerald-400">${t.pipsTP}</span></td>
+                        <td class="px-2 py-2 font-mono whitespace-nowrap">${escapeGalleryHtml(displayDate)}<br><span class="text-gray-500 text-[11px]">${escapeGalleryHtml(t.hora)}</span></td>
+                        <td class="px-2 py-2 text-gray-300 capitalize">${escapeGalleryHtml(dayName)}</td>
+                        ${showPairColumn ? `<td class="px-2 py-2 font-bold text-white"><span class="bg-gray-800 px-2 py-0.5 rounded border border-main">${escapeGalleryHtml((t.par || '-').toUpperCase())}</span></td>` : ""}
+                        <td class="px-2 py-2"><span class="bg-gray-900 text-gray-400 px-2 py-0.5 rounded border border-gray-800">${escapeGalleryHtml(normalizeSessionName(t.sesion) || '-')}</span></td>
+                        <td class="px-2 py-2 text-gray-400">${safeTendencia}</td>
+                        <td class="px-2 py-2 font-mono whitespace-nowrap"><span class="text-red-400">${escapeGalleryHtml(t.pipsSL)}</span> / <span class="text-emerald-400">${escapeGalleryHtml(t.pipsTP)}</span></td>
                         <td class="px-2 py-2 whitespace-nowrap">${ord}</td>
                         <td class="px-2 py-2 font-bold text-yellow-400 font-mono whitespace-nowrap">1:${Number.isFinite(rr) ? rr.toFixed(1) : '0.0'}</td>
                         <td class="px-2 py-2 font-mono whitespace-nowrap">${Number.isFinite(risk) ? risk.toFixed(1) : '0.0'}%</td>
@@ -6597,8 +6609,9 @@ function renderMonthlyPerformance() {
 
                 let html = `<div id="gallery-card-${galleryKey}" class="bg-card border ${borderColor} rounded-xl p-5 shadow-lg relative transition-all">`;
                 
+                const safeGalTendencia = escapeGalleryHtml(formatTradeTrend(t.tendencia));
                 html += `<div class="flex flex-wrap justify-between items-center mb-4 border-b border-main pb-2">
-                    <div class="flex items-center gap-3"><span class="font-bold text-white">${t.par}</span><span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> ${t.fecha} ${t.hora}</span><span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-gray-300 border border-gray-700">${normalizeSessionName(t.sesion)} / ${formatTendencia(t.tendencia)}</span></div>
+                    <div class="flex items-center gap-3"><span class="font-bold text-white">${escapeGalleryHtml(t.par)}</span><span class="text-xs text-gray-400"><i class="fa-regular fa-clock"></i> ${escapeGalleryHtml(t.fecha)} ${escapeGalleryHtml(t.hora)}</span><span class="text-[10px] bg-gray-800 px-2 py-0.5 rounded text-gray-300 border border-gray-700">${escapeGalleryHtml(normalizeSessionName(t.sesion))} / ${safeGalTendencia}</span></div>
                     <div class="font-bold font-mono px-3 py-1 rounded ${badgeColor}">${out > 0 ? '+' : ''}${out.toFixed(2)}%</div>
                 </div>`;
                 
@@ -6610,7 +6623,7 @@ function renderMonthlyPerformance() {
                     ${renderGalleryCommentEditor(t, "antes")}
                     ${renderTradingViewButton(t.linkAntes, true)}
                     <div class="flex flex-wrap gap-2 mt-2">
-                        ${(t.imagenesAntes || []).map(src => `<img src="${src}" class="h-24 w-auto rounded cursor-pointer border border-gray-600 hover:border-gray-400 transition" onclick="openLightbox('${src}')">`).join('')}
+                        ${(t.imagenesAntes || []).map(src => `<img src="${escapeGalleryHtml(src)}" class="h-24 w-auto rounded cursor-pointer border border-gray-600 hover:border-gray-400 transition" onclick="openLightbox(this.src)">`).join('')}
                     </div>
                 </div>`;
                 
@@ -6620,7 +6633,7 @@ function renderMonthlyPerformance() {
                     ${renderGalleryCommentEditor(t, "despues")}
                     ${renderTradingViewButton(t.linkDespues, false)}
                     <div class="flex flex-wrap gap-2 mt-2">
-                        ${(t.imagenesDespues || []).map(src => `<img src="${src}" class="h-24 w-auto rounded cursor-pointer border border-gray-600 hover:border-gray-400 transition" onclick="openLightbox('${src}')">`).join('')}
+                        ${(t.imagenesDespues || []).map(src => `<img src="${escapeGalleryHtml(src)}" class="h-24 w-auto rounded cursor-pointer border border-gray-600 hover:border-gray-400 transition" onclick="openLightbox(this.src)">`).join('')}
                     </div>
                 </div>`;
 
@@ -8471,7 +8484,7 @@ function renderMonthlyPerformance() {
                             ${renderTradingViewButton(t.linkAntes, true)}
                             ${(t.imagenesAntes && t.imagenesAntes.length > 0) ? `
                                 <div class="flex flex-wrap gap-2 mt-2">
-                                    ${t.imagenesAntes.map(src => `<img src="${src}" class="h-24 w-auto rounded cursor-pointer border border-gray-700 hover:border-gray-400 transition" onclick="openLightbox('${src}')">`).join('')}
+                                    ${t.imagenesAntes.map(src => `<img src="${escapeGalleryHtml(src)}" class="h-24 w-auto rounded cursor-pointer border border-gray-700 hover:border-gray-400 transition" onclick="openLightbox(this.src)">`).join('')}
                                 </div>
                             ` : ''}
                         </div>
@@ -8489,7 +8502,7 @@ function renderMonthlyPerformance() {
                             ${renderTradingViewButton(t.linkDespues, false)}
                             ${(t.imagenesDespues && t.imagenesDespues.length > 0) ? `
                                 <div class="flex flex-wrap gap-2 mt-2">
-                                    ${t.imagenesDespues.map(src => `<img src="${src}" class="h-24 w-auto rounded cursor-pointer border border-gray-700 hover:border-gray-400 transition" onclick="openLightbox('${src}')">`).join('')}
+                                    ${t.imagenesDespues.map(src => `<img src="${escapeGalleryHtml(src)}" class="h-24 w-auto rounded cursor-pointer border border-gray-700 hover:border-gray-400 transition" onclick="openLightbox(this.src)">`).join('')}
                                 </div>
                             ` : ''}
                         </div>

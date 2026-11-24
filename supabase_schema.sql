@@ -29,13 +29,13 @@ create table if not exists public.profiles (
 -- 3. TABLA DE SUSCRIPCIONES Y ESTADO DE PRUEBA
 create table if not exists public.subscriptions (
     id uuid primary key default gen_random_uuid(),
-    user_id uuid not null references public.profiles(id) on delete cascade,
+    user_id uuid not null unique references public.profiles(id) on delete cascade,
     provider text not null default 'stripe', -- 'stripe' o 'nowpayments'
     stripe_customer_id text,
     stripe_subscription_id text,
     nowpayments_payment_id text,
     status text not null default 'trialing', -- 'trialing', 'active', 'past_due', 'canceled', 'read_only'
-    plan_interval text default 'month',     -- 'month', 'quarter', 'year'
+    plan_interval text default 'month',     -- 'month', 'quarter', 'semester', 'year'
     trial_ends_at timestamptz,
     current_period_end timestamptz,
     cancel_at_period_end boolean default false,
@@ -47,15 +47,8 @@ create table if not exists public.subscriptions (
 -- 4. TABLAS DE LA BITÁCORA CON COMPATIBILIDAD TEXT (IDs nativos de la Bitácora)
 -- ==============================================================================
 
--- Si las tablas previas tenían tipo UUID, las recreamos limpiamente
-drop table if exists public.balance_snapshots cascade;
-drop table if exists public.trades cascade;
-drop table if exists public.backtest_sessions cascade;
-drop table if exists public.account_groups cascade;
-drop table if exists public.accounts cascade;
-
 -- 4.1. CUENTAS DE TRADING (REALES, EVALUACIONES, FONDEADAS)
-create table public.accounts (
+create table if not exists public.accounts (
     id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
     name text not null,
@@ -69,7 +62,7 @@ create table public.accounts (
 );
 
 -- 4.2. GRUPOS DE CUENTAS REALES
-create table public.account_groups (
+create table if not exists public.account_groups (
     id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
     name text not null,
@@ -77,7 +70,7 @@ create table public.account_groups (
 );
 
 -- 4.3. SESIONES DE BACKTESTING
-create table public.backtest_sessions (
+create table if not exists public.backtest_sessions (
     id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
     name text not null,
@@ -89,7 +82,7 @@ create table public.backtest_sessions (
 );
 
 -- 4.4. OPERACIONES (TRADES) — SOPORTA REAL Y BACKTESTING
-create table public.trades (
+create table if not exists public.trades (
     id text primary key,
     user_id uuid not null references public.profiles(id) on delete cascade,
     account_id text references public.accounts(id) on delete set null,
@@ -121,7 +114,7 @@ create table public.trades (
 );
 
 -- 4.5. HISTORIAL DE INSTANTÁNEAS DE BALANCE
-create table public.balance_snapshots (
+create table if not exists public.balance_snapshots (
     id text primary key default gen_random_uuid()::text,
     user_id uuid not null references public.profiles(id) on delete cascade,
     date text not null,
@@ -149,7 +142,11 @@ on conflict (id) do update set public = true;
 -- Cuando un usuario se registra en Supabase Auth, se crea automáticamente su
 -- perfil y se le asigna su suscripción de prueba de 7 días.
 create or replace function public.handle_new_user()
-returns trigger as $$
+returns trigger
+language plpgsql
+security definer
+set search_path = public
+as $$
 begin
     insert into public.profiles (id, email, full_name)
     values (
@@ -167,17 +164,47 @@ begin
         now() + interval '7 days',
         now() + interval '7 days'
     )
-    on conflict do nothing;
+    on conflict (user_id) do nothing;
 
     return new;
 end;
-$$ language plpgsql security definer;
+$$;
+
+revoke all on function public.handle_new_user() from public, anon;
+grant execute on function public.handle_new_user() to authenticated, service_role;
 
 -- Activar trigger tras registro
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
     after insert on auth.users
     for each row execute procedure public.handle_new_user();
+
+-- Función de seguridad para verificar suscripción activa o período de prueba
+create or replace function public.has_active_subscription(check_user_id uuid default auth.uid())
+returns boolean
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+    -- Prevenir oráculos o enumeración de UUIDs ajenos
+    if check_user_id is null or check_user_id <> (select auth.uid()) then
+        return false;
+    end if;
+
+    return exists (
+        select 1 from public.subscriptions
+        where user_id = check_user_id
+          and (
+              (status = 'active' and current_period_end > now())
+              or (status = 'trialing' and trial_ends_at > now())
+          )
+    );
+end;
+$$;
+
+revoke all on function public.has_active_subscription(uuid) from public;
+grant execute on function public.has_active_subscription(uuid) to authenticated, service_role;
 
 -- ==============================================================================
 -- 7. SEGURIDAD ROW LEVEL SECURITY (RLS)
@@ -195,47 +222,91 @@ alter table public.balance_snapshots enable row level security;
 -- Políticas para Profiles
 drop policy if exists "Usuarios ven su propio perfil" on public.profiles;
 create policy "Usuarios ven su propio perfil" on public.profiles
-    for select using (auth.uid() = id);
+    for select using ((select auth.uid()) = id);
 
 drop policy if exists "Usuarios insertan su propio perfil" on public.profiles;
 create policy "Usuarios insertan su propio perfil" on public.profiles
-    for insert with check (auth.uid() = id);
+    for insert with check ((select auth.uid()) = id);
 
 drop policy if exists "Usuarios actualizan su propio perfil" on public.profiles;
 create policy "Usuarios actualizan su propio perfil" on public.profiles
-    for update using (auth.uid() = id);
+    for update using ((select auth.uid()) = id);
 
 -- Políticas para Subscriptions
 drop policy if exists "Usuarios ven su suscripción" on public.subscriptions;
 create policy "Usuarios ven su suscripción" on public.subscriptions
-    for select using (auth.uid() = user_id);
+    for select using ((select auth.uid()) = user_id);
 
--- Políticas para Accounts
+-- Políticas para Accounts (Lectura permitida; mutaciones requieren suscripción activa)
 drop policy if exists "Usuarios gestionan sus cuentas" on public.accounts;
-create policy "Usuarios gestionan sus cuentas" on public.accounts
-    for all using (auth.uid() = user_id);
+drop policy if exists "Usuarios ven sus cuentas" on public.accounts;
+create policy "Usuarios ven sus cuentas" on public.accounts
+    for select using ((select auth.uid()) = user_id);
+
+drop policy if exists "Usuarios activos insertan cuentas" on public.accounts;
+create policy "Usuarios activos insertan cuentas" on public.accounts
+    for insert with check (
+        (select auth.uid()) = user_id 
+        and public.has_active_subscription((select auth.uid()))
+    );
+
+drop policy if exists "Usuarios activos actualizan cuentas" on public.accounts;
+create policy "Usuarios activos actualizan cuentas" on public.accounts
+    for update using (
+        (select auth.uid()) = user_id 
+        and public.has_active_subscription((select auth.uid()))
+    );
+
+drop policy if exists "Usuarios activos eliminan cuentas" on public.accounts;
+create policy "Usuarios activos eliminan cuentas" on public.accounts
+    for delete using (
+        (select auth.uid()) = user_id 
+        and public.has_active_subscription((select auth.uid()))
+    );
 
 -- Políticas para Account Groups
 drop policy if exists "Usuarios gestionan sus grupos de cuentas" on public.account_groups;
 create policy "Usuarios gestionan sus grupos de cuentas" on public.account_groups
-    for all using (auth.uid() = user_id);
+    for all using ((select auth.uid()) = user_id);
 
 -- Políticas para Backtest Sessions
 drop policy if exists "Usuarios gestionan sus sesiones de backtest" on public.backtest_sessions;
 create policy "Usuarios gestionan sus sesiones de backtest" on public.backtest_sessions
-    for all using (auth.uid() = user_id);
+    for all using ((select auth.uid()) = user_id);
 
--- Políticas para Trades
+-- Políticas para Trades (Lectura permitida; mutaciones requieren suscripción activa)
 drop policy if exists "Usuarios ven y gestionan sus trades" on public.trades;
-create policy "Usuarios ven y gestionan sus trades" on public.trades
-    for all using (auth.uid() = user_id);
+drop policy if exists "Usuarios ven sus trades" on public.trades;
+create policy "Usuarios ven sus trades" on public.trades
+    for select using ((select auth.uid()) = user_id);
+
+drop policy if exists "Usuarios activos insertan trades" on public.trades;
+create policy "Usuarios activos insertan trades" on public.trades
+    for insert with check (
+        (select auth.uid()) = user_id 
+        and public.has_active_subscription((select auth.uid()))
+    );
+
+drop policy if exists "Usuarios activos actualizan trades" on public.trades;
+create policy "Usuarios activos actualizan trades" on public.trades
+    for update using (
+        (select auth.uid()) = user_id 
+        and public.has_active_subscription((select auth.uid()))
+    );
+
+drop policy if exists "Usuarios activos eliminan trades" on public.trades;
+create policy "Usuarios activos eliminan trades" on public.trades
+    for delete using (
+        (select auth.uid()) = user_id 
+        and public.has_active_subscription((select auth.uid()))
+    );
 
 -- Políticas para Balance Snapshots
 drop policy if exists "Usuarios ven y gestionan sus instantáneas" on public.balance_snapshots;
 create policy "Usuarios ven y gestionan sus instantáneas" on public.balance_snapshots
-    for all using (auth.uid() = user_id);
+    for all using ((select auth.uid()) = user_id);
 
--- Políticas para Storage (Capturas de trades)
+-- Políticas para Storage (Capturas de trades aisladas por usuario)
 drop policy if exists "Capturas visibles para todos o autenticados" on storage.objects;
 create policy "Capturas visibles para todos o autenticados" on storage.objects
     for select using (bucket_id = 'trade-screenshots');
@@ -244,14 +315,18 @@ drop policy if exists "Usuarios autenticados suben capturas" on storage.objects;
 create policy "Usuarios autenticados suben capturas" on storage.objects
     for insert with check (
         bucket_id = 'trade-screenshots' 
-        and auth.role() = 'authenticated'
+        and (select auth.role()) = 'authenticated'
+        and (name like (select auth.uid())::text || '/%')
     );
 
 drop policy if exists "Usuarios eliminan sus capturas" on storage.objects;
 create policy "Usuarios eliminan sus capturas" on storage.objects
     for delete using (
         bucket_id = 'trade-screenshots' 
-        and auth.uid() = owner
+        and (
+            (select auth.uid()) = owner
+            or name like (select auth.uid())::text || '/%'
+        )
     );
 
 -- ==============================================================================

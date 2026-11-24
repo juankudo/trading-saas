@@ -5,6 +5,8 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://cdnjs.cloudflare.com https://fonts.gstatic.com; img-src 'self' data: blob: https://*.supabase.co https://astradehub.com; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.nowpayments.io https://open.er-api.com http://127.0.0.1:*; frame-src 'none'; object-src 'none';
 
 # HTML Documents: Ensure immediate updates upon new deployments
 /*.html
