@@ -317,10 +317,19 @@ html.light .bf-timer-box {
 }
 
 .bf-monthly-note {
+    font-size: 10px;
+    line-height: 1.35;
     color: #fbbf24;
+    background: rgba(251, 191, 36, 0.08);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 6px;
+    padding: 3px 6px;
+    margin-top: 4px;
 }
 html.light .bf-monthly-note {
     color: #b45309 !important;
+    background: #fef3c7 !important;
+    border-color: #fde68a !important;
 }
 
 /* Announcement Bar in Light Mode */
@@ -687,7 +696,7 @@ html.light .app-promo-urgent strong {
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 460px;
+            min-height: 505px;
             padding: 16px 0 16px 0;
         }
 
@@ -695,7 +704,7 @@ html.light .app-promo-urgent strong {
             position: relative;
             width: 100%;
             max-width: 380px;
-            height: 415px;
+            height: 470px;
             perspective: 1200px;
             transform-style: preserve-3d;
         }
@@ -771,7 +780,7 @@ html.light .app-promo-urgent strong {
         @media (max-width: 860px) {
             .pricing-stack-viewport {
                 max-width: 350px;
-                height: 420px;
+                height: 470px;
             }
             .stack-pos-right {
                 transform: translate3d(65px, 0, -50px) rotateY(-10deg) scale(0.88);
@@ -790,8 +799,8 @@ html.light .app-promo-urgent strong {
 
         @media (max-width: 480px) {
             .pricing-stack-viewport {
-                max-width: 315px;
-                height: 420px;
+                max-width: 325px;
+                height: 470px;
             }
             .stack-pos-right {
                 transform: translate3d(40px, 0, -40px) rotateY(-8deg) scale(0.88);
@@ -800,6 +809,15 @@ html.light .app-promo-urgent strong {
             .stack-pos-left {
                 transform: translate3d(-40px, 0, -40px) rotateY(8deg) scale(0.88);
                 opacity: 0.35;
+            }
+            .pricing-tab-btn {
+                padding: 5px 8px !important;
+                font-size: 11px !important;
+                gap: 4px !important;
+            }
+            .pricing-tab-btn span.text-\[10px\] {
+                font-size: 9px !important;
+                padding: 1px 4px !important;
             }
         }
 
@@ -810,6 +828,7 @@ html.light .app-promo-urgent strong {
             border: 1px solid transparent;
             overflow: hidden;
             position: relative;
+            flex-shrink: 0;
         }
         .pricing-tab-btn:hover {
             color: #ffffff;

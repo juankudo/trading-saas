@@ -2606,26 +2606,26 @@
 
                 <!-- 4 Pricing Cards Row (Desktop: 4 cols, Tablet: 2 cols, Mobile: Stacked) -->
                 <!-- Segmented Tabs Selector with Auto-Rotate Progress Bar -->
-                <div class="flex items-center justify-center mb-6 sm:mb-8 px-2">
-                    <div class="inline-flex p-1.5 rounded-2xl bg-[#111726]/90 border border-gray-800 shadow-xl backdrop-blur-md max-w-full overflow-x-auto gap-1 sm:gap-1.5" id="pricing-tabs-container">
-                        <button onclick="setPricingActiveCard(0, true)" id="pricing-tab-0" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                <div class="flex items-center justify-center mb-5 sm:mb-8 px-1 sm:px-2">
+                    <div class="inline-flex p-1 sm:p-1.5 rounded-2xl bg-[#111726]/90 border border-gray-800 shadow-xl backdrop-blur-md max-w-full overflow-x-auto gap-0.5 sm:gap-1.5" id="pricing-tabs-container">
+                        <button onclick="setPricingActiveCard(0, true)" id="pricing-tab-0" class="pricing-tab-btn px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0">
                             <span>Mensual</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-700/60">$20 (-20%)</span>
+                            <span class="hidden sm:inline-flex text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-700/60">$20 (-20%)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
-                        <button onclick="setPricingActiveCard(1, true)" id="pricing-tab-1" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                        <button onclick="setPricingActiveCard(1, true)" id="pricing-tab-1" class="pricing-tab-btn px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0">
                             <span>Trimestral</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-700/60">$56 (-20%)</span>
+                            <span class="hidden sm:inline-flex text-[10px] py-0.5 px-1.5 rounded bg-emerald-950 text-emerald-400 font-bold border border-emerald-700/60">$56 (-20%)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
-                        <button onclick="setPricingActiveCard(2, true)" id="pricing-tab-2" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap active is-auto-rotating cursor-pointer">
+                        <button onclick="setPricingActiveCard(2, true)" id="pricing-tab-2" class="pricing-tab-btn px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap active is-auto-rotating cursor-pointer shrink-0">
                             <span>Semestral</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-emerald-500 text-gray-950 font-black">$108 (-20% ⭐)</span>
+                            <span class="hidden sm:inline-flex text-[10px] py-0.5 px-1.5 rounded bg-emerald-500 text-gray-950 font-black">$108 (-20% ⭐)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
-                        <button onclick="setPricingActiveCard(3, true)" id="pricing-tab-3" class="pricing-tab-btn px-3 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer">
+                        <button onclick="setPricingActiveCard(3, true)" id="pricing-tab-3" class="pricing-tab-btn px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 flex items-center gap-1.5 whitespace-nowrap cursor-pointer shrink-0">
                             <span>Anual</span>
-                            <span class="text-[10px] py-0.5 px-1.5 rounded bg-amber-500 text-gray-950 font-black">$200 (-20% 🚀)</span>
+                            <span class="hidden sm:inline-flex text-[10px] py-0.5 px-1.5 rounded bg-amber-500 text-gray-950 font-black">$200 (-20% 🚀)</span>
                             <div class="tab-progress-bar"></div>
                         </button>
                     </div>
@@ -2643,30 +2643,30 @@
                     <div id="pricing-stack-viewport" class="pricing-stack-viewport">
 
                         <!-- Plan 0: Mensual -->
-                        <div id="pricing-card-month" class="stack-card pricing-glass-card stack-pos-back p-5 sm:p-6 flex flex-col justify-between text-left">
+                        <div id="pricing-card-month" class="stack-card pricing-glass-card stack-pos-back p-4 sm:p-5 flex flex-col justify-between text-left">
                             <div>
-                                <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center justify-between mb-1.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Mensual</span>
-                                    <span class="text-[10px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">20% OFF Lanzamiento</span>
+                                    <span class="text-[9.5px] font-bold text-emerald-400 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">20% OFF Lanzamiento</span>
                                 </div>
-                                <div class="mb-2">
-                                    <div class="flex items-center gap-2 mb-1">
+                                <div class="mb-1.5">
+                                    <div class="flex items-center gap-2 mb-0.5">
                                         <span class="bf-original-price">$25 USD</span>
-                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded">20% OFF</span>
+                                        <span class="text-[9.5px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded">20% OFF</span>
                                     </div>
                                     <div class="flex items-baseline gap-1.5">
-                                        <span class="text-gray-400 text-xl font-bold">$</span>
+                                        <span class="text-gray-400 text-lg font-bold">$</span>
                                         <span class="text-3xl sm:text-4xl font-black text-white">20</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-gray-400 font-bold block mt-0.5">por 1 Mes</span>
-                                    <p class="text-[11px] text-gray-400 mt-0.5 font-medium">$20.00/mes · Facturado mensualmente</p>
+                                    <p class="text-[10.5px] text-gray-400 mt-0.5 font-medium">$20.00/mes · Facturado mensualmente</p>
                                     <div class="bf-monthly-note">
-                                        * 20% OFF exclusivo en el 1er mes ($20.00/mes). Renovaciones posteriores al precio habitual de $25/mes.
+                                        * 20% OFF exclusivo en 1er mes ($20.00/mes). Renovaciones posteriores al precio habitual de $25/mes.
                                     </div>
                                 </div>
 
-                                <div class="border-t border-gray-800/60 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
+                                <div class="border-t border-gray-800/60 pt-2 mb-2 space-y-1 text-[11px] sm:text-xs text-gray-300">
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
                                         <span>Cuentas Reales y Fondeo <strong>Ilimitadas</strong></span>
@@ -2691,40 +2691,40 @@
                             </div>
 
                             <div class="pt-1">
-                                <button onclick="selectPlanAndRegister('month')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gray-800/90 hover:bg-gray-700 text-white border border-gray-700/80 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <button onclick="selectPlanAndRegister('month')" class="w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gray-800/90 hover:bg-gray-700 text-white border border-gray-700/80 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
                                     <span>Comenzar 7 Días con 20% OFF</span>
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
-                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 hoy · Cancela cuando quieras</span>
-                                <button onclick="openDirectCheckout('month')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-1">o comprar directamente con 20% OFF &rarr;</button>
+                                <span class="text-[9.5px] sm:text-[10px] text-gray-500 block text-center mt-1">$0 hoy · Cancela cuando quieras</span>
+                                <button onclick="openDirectCheckout('month')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-0.5">o comprar directamente con 20% OFF &rarr;</button>
                             </div>
                         </div>
 
                         <!-- Plan 1: Trimestral -->
-                        <div id="pricing-card-quarter" class="stack-card pricing-glass-card stack-pos-left p-5 sm:p-6 flex flex-col justify-between text-left">
+                        <div id="pricing-card-quarter" class="stack-card pricing-glass-card stack-pos-left p-4 sm:p-5 flex flex-col justify-between text-left">
                             <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider bg-gray-800 text-emerald-400 border border-emerald-500/40 shadow-md whitespace-nowrap">
                                 20% OFF Black Friday
                             </span>
                             <div>
-                                <div class="flex items-center justify-between mb-2 pt-0.5">
+                                <div class="flex items-center justify-between mb-1.5 pt-0.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Trimestral</span>
-                                    <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">Ahorras $14 USD</span>
+                                    <span class="text-[9.5px] font-bold text-emerald-300 bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-700/60">Ahorras $14 USD</span>
                                 </div>
-                                <div class="mb-2">
-                                    <div class="flex items-center gap-2 mb-1">
+                                <div class="mb-1.5">
+                                    <div class="flex items-center gap-2 mb-0.5">
                                         <span class="bf-original-price">$70 USD</span>
-                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded">20% OFF</span>
+                                        <span class="text-[9.5px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 px-1.5 py-0.5 rounded">20% OFF</span>
                                     </div>
                                     <div class="flex items-baseline gap-1.5">
-                                        <span class="text-gray-400 text-xl font-bold">$</span>
+                                        <span class="text-gray-400 text-lg font-bold">$</span>
                                         <span class="text-3xl sm:text-4xl font-black text-white">56</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-emerald-400 font-bold block mt-0.5">por 3 Meses</span>
-                                    <p class="text-[11px] text-emerald-400 mt-0.5 font-semibold">Equivalente a $18.67/mes · Ahorro congelado: $14 USD</p>
+                                    <p class="text-[10.5px] text-emerald-400 mt-0.5 font-semibold">Equivalente a $18.67/mes · Ahorro congelado: $14 USD</p>
                                 </div>
 
-                                <div class="border-t border-gray-800/60 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
+                                <div class="border-t border-gray-800/60 pt-2 mb-2 space-y-1 text-[11px] sm:text-xs text-gray-300">
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
                                         <span>Cuentas Reales y Fondeo <strong>Ilimitadas</strong></span>
@@ -2749,40 +2749,40 @@
                             </div>
 
                             <div class="pt-1">
-                                <button onclick="selectPlanAndRegister('quarter')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gray-800/90 hover:bg-gray-700 text-white border border-gray-700/80 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <button onclick="selectPlanAndRegister('quarter')" class="w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gray-800/90 hover:bg-gray-700 text-white border border-gray-700/80 hover:border-emerald-500/50 shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
                                     <span>Comenzar 7 Días con 20% OFF</span>
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
-                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 hoy · Ahorras $14 USD vs precio regular</span>
-                                <button onclick="openDirectCheckout('quarter')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-1">o comprar directamente con 20% OFF &rarr;</button>
+                                <span class="text-[9.5px] sm:text-[10px] text-gray-500 block text-center mt-1">$0 hoy · Ahorras $14 USD vs precio regular</span>
+                                <button onclick="openDirectCheckout('quarter')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-0.5">o comprar directamente con 20% OFF &rarr;</button>
                             </div>
                         </div>
 
                         <!-- Plan 2: Semestral (HERO / Estrella) -->
-                        <div id="pricing-card-semester" class="stack-card stack-pos-center p-5 sm:p-6 flex flex-col justify-between text-left">
+                        <div id="pricing-card-semester" class="stack-card stack-pos-center p-4 sm:p-5 flex flex-col justify-between text-left">
                             <span class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-lg shadow-emerald-500/30 whitespace-nowrap flex items-center gap-1">
                                 <i class="fa-solid fa-star text-[9px]"></i> Más Popular · 20% OFF
                             </span>
                             <div>
-                                <div class="flex items-center justify-between mb-2 pt-0.5">
+                                <div class="flex items-center justify-between mb-1.5 pt-0.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-emerald-400">Semestral</span>
-                                    <span class="text-[10px] font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-700/60 shadow-sm">Ahorras $27 USD</span>
+                                    <span class="text-[9.5px] font-bold text-emerald-300 bg-emerald-950/80 px-2.5 py-0.5 rounded border border-emerald-700/60 shadow-sm">Ahorras $27 USD</span>
                                 </div>
-                                <div class="mb-2">
-                                    <div class="flex items-center gap-2 mb-1">
+                                <div class="mb-1.5">
+                                    <div class="flex items-center gap-2 mb-0.5">
                                         <span class="bf-original-price">$135 USD</span>
-                                        <span class="text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 px-1.5 py-0.5 rounded font-extrabold">20% OFF</span>
+                                        <span class="text-[9.5px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 px-1.5 py-0.5 rounded font-extrabold">20% OFF</span>
                                     </div>
                                     <div class="flex items-baseline gap-1.5">
-                                        <span class="text-gray-400 text-xl font-bold">$</span>
+                                        <span class="text-gray-400 text-lg font-bold">$</span>
                                         <span class="text-3xl sm:text-4xl font-black text-white">108</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-emerald-400 font-bold block mt-0.5">por 6 Meses</span>
-                                    <p class="text-[11px] text-emerald-400 mt-0.5 font-semibold">Equivalente a $18.00/mes · Ahorro congelado: $27 USD</p>
+                                    <p class="text-[10.5px] text-emerald-400 mt-0.5 font-semibold">Equivalente a $18.00/mes · Ahorro congelado: $27 USD</p>
                                 </div>
 
-                                <div class="border-t border-emerald-500/30 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
+                                <div class="border-t border-emerald-500/30 pt-2 mb-2 space-y-1 text-[11px] sm:text-xs text-gray-300">
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
                                         <span>Cuentas Reales y Fondeo <strong>Ilimitadas</strong></span>
@@ -2807,40 +2807,40 @@
                             </div>
 
                             <div class="pt-1">
-                                <button onclick="selectPlanAndRegister('semester')" class="w-full py-2.5 sm:py-3 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 hover:brightness-110 text-gray-950 shadow-lg shadow-emerald-500/25 transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <button onclick="selectPlanAndRegister('semester')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-extrabold bg-gradient-to-r from-emerald-500 via-emerald-400 to-teal-400 hover:brightness-110 text-gray-950 shadow-lg shadow-emerald-500/25 transition flex items-center justify-center gap-1.5 cursor-pointer">
                                     <i class="fa-solid fa-rocket text-xs"></i>
                                     <span>Comenzar 7 Días con 20% OFF</span>
                                 </button>
-                                <span class="text-[10px] text-emerald-400/90 font-medium block text-center mt-1.5">$0 hoy · Acceso Pro total inmediato</span>
-                                <button onclick="openDirectCheckout('semester')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-1">o comprar directamente con 20% OFF &rarr;</button>
+                                <span class="text-[9.5px] sm:text-[10px] text-emerald-400/90 font-medium block text-center mt-1">$0 hoy · Acceso Pro total inmediato</span>
+                                <button onclick="openDirectCheckout('semester')" class="bf-direct-buy-link text-emerald-400 hover:text-emerald-300 block text-center mx-auto mt-0.5">o comprar directamente con 20% OFF &rarr;</button>
                             </div>
                         </div>
 
                         <!-- Plan 4: Anual (Mejor Valor) -->
-                        <div id="pricing-card-year" class="stack-card pricing-glass-card stack-pos-right p-5 sm:p-6 flex flex-col justify-between text-left">
+                        <div id="pricing-card-year" class="stack-card pricing-glass-card stack-pos-right p-4 sm:p-5 flex flex-col justify-between text-left">
                             <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 shadow-md whitespace-nowrap">
                                 🚀 Mejor Valor · 20% OFF
                             </span>
                             <div>
-                                <div class="flex items-center justify-between mb-2 pt-0.5">
+                                <div class="flex items-center justify-between mb-1.5 pt-0.5">
                                     <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Anual</span>
-                                    <span class="text-[10px] font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-700/60">Ahorras $50 USD</span>
+                                    <span class="text-[9.5px] font-bold text-amber-300 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-700/60">Ahorras $50 USD</span>
                                 </div>
-                                <div class="mb-2">
-                                    <div class="flex items-center gap-2 mb-1">
+                                <div class="mb-1.5">
+                                    <div class="flex items-center gap-2 mb-0.5">
                                         <span class="bf-original-price">$250 USD</span>
-                                        <span class="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 px-1.5 py-0.5 rounded font-extrabold">20% OFF</span>
+                                        <span class="text-[9.5px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 px-1.5 py-0.5 rounded font-extrabold">20% OFF</span>
                                     </div>
                                     <div class="flex items-baseline gap-1.5">
-                                        <span class="text-gray-400 text-xl font-bold">$</span>
+                                        <span class="text-gray-400 text-lg font-bold">$</span>
                                         <span class="text-3xl sm:text-4xl font-black text-white">200</span>
                                         <span class="text-xs sm:text-sm font-bold text-gray-400">USD</span>
                                     </div>
                                     <span class="text-xs text-amber-400 font-bold block mt-0.5">por 12 Meses</span>
-                                    <p class="text-[11px] text-amber-400 mt-0.5 font-semibold">Equivalente a $16.67/mes · Máximo ahorro congelado: $50 USD</p>
+                                    <p class="text-[10.5px] text-amber-400 mt-0.5 font-semibold">Equivalente a $16.67/mes · Máximo ahorro congelado: $50 USD</p>
                                 </div>
 
-                                <div class="border-t border-gray-800/60 pt-2.5 mb-3 space-y-1.5 text-xs text-gray-300">
+                                <div class="border-t border-gray-800/60 pt-2 mb-2 space-y-1 text-[11px] sm:text-xs text-gray-300">
                                     <div class="benefit-item flex items-center gap-2">
                                         <i class="fa-solid fa-circle-check text-emerald-400 text-xs shrink-0"></i>
                                         <span>Cuentas Reales y Fondeo <strong>Ilimitadas</strong></span>
@@ -2865,12 +2865,12 @@
                             </div>
 
                             <div class="pt-1">
-                                <button onclick="selectPlanAndRegister('year')" class="w-full py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-110 text-gray-950 font-bold shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
+                                <button onclick="selectPlanAndRegister('year')" class="w-full py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-gradient-to-r from-amber-500 to-amber-600 hover:brightness-110 text-gray-950 font-bold shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer">
                                     <span>Comenzar 7 Días con 20% OFF</span>
                                     <i class="fa-solid fa-arrow-right text-[11px]"></i>
                                 </button>
-                                <span class="text-[10px] text-gray-500 block text-center mt-1.5">$0 hoy · Máximo ahorro ($50 USD)</span>
-                                <button onclick="openDirectCheckout('year')" class="bf-direct-buy-link text-amber-400 hover:text-amber-300 block text-center mx-auto mt-1">o comprar directamente con 20% OFF &rarr;</button>
+                                <span class="text-[9.5px] sm:text-[10px] text-gray-500 block text-center mt-1">$0 hoy · Máximo ahorro ($50 USD)</span>
+                                <button onclick="openDirectCheckout('year')" class="bf-direct-buy-link text-amber-400 hover:text-amber-300 block text-center mx-auto mt-0.5">o comprar directamente con 20% OFF &rarr;</button>
                             </div>
                         </div>
 

@@ -5,6 +5,23 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.24] - 2026-11-24
+
+### 📐 Corrección de Desbordamiento en Tarjetas de Precios y Optimización Móvil
+- **Eliminación Total del Desbordamiento en Tarjeta Mensual y Baraja 3D (`css/styles.css`):**
+  - Calibrada la altura del viewport de tarjetas (`.pricing-stack-viewport`) a `470px` (y stage a `min-height: 505px;`) en todas las resoluciones (móvil, tablet y escritorio).
+  - Rediseñado el aviso legal de renovación (`.bf-monthly-note`) a micro-pill tipográfico compacto (`font-size: 10px; line-height: 1.35; padding: 3px 6px; border-radius: 6px;`) con fondo y bordes armónicos para Modo Oscuro (`rgba(251, 191, 36, 0.08)`) y Modo Claro (`#fef3c7`).
+  - Compactado el espaciado interno de las 4 tarjetas (`p-4 sm:p-5`, lista de beneficios `pt-2 mb-2 space-y-1 text-[11px] sm:text-xs`, botón `py-2 sm:py-2.5`, notas inferiores `text-[9.5px]`).
+  - Todo el contenido (título, precio con descuento, aviso de renovación, beneficios, botón CTA, subtítulo "$0 hoy" y enlace de compra directa) queda 100% resguardado dentro del marco redondeado de la tarjeta con más de 17px de margen interior y 22.4px de separación limpia respecto a los puntos de navegación (`#pricing-stack-dots`).
+- **Selector Segmentado de Pestañas Móvil-First (`index.html` & `en.html`):**
+  - Ajustados los botones del selector segmentado superior con `flex-shrink: 0;` para prevenir compresión y corte de texto.
+  - En móviles (`< sm`), las etiquetas de las 4 pestañas muestran limpiamente el nombre del plan (`Mensual`, `Trimestral`, `Semestral`, `Anual` / `Monthly`, `Quarterly`, `Semi-Annual`, `Annual`) con los badges de descuento desplegados en tablet y escritorio (`hidden sm:inline-flex`), garantizando que las 4 opciones encajen sin scroll ni cortes en pantallas de 360px a 375px.
+- **Sincronización Bilingüe y Dual-Theme:**
+  - Cambios aplicados simétricamente a la landing en español (`index.html`) y en inglés (`en.html`).
+  - Verificado visual y programáticamente en Modo Oscuro y Modo Claro (`html.light`).
+
+---
+
 ## [v3.9.23] - 2026-11-24
 
 ### 💰 Corrección de Balance Actual Opcional Vacío por Defecto y Cálculo Dinámico
