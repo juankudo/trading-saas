@@ -45,32 +45,50 @@ function getCurrentUser() {
  */
 function getTrialInfo(user) {
     if (!user) return { isTrial: false, daysRemaining: 0, expired: true };
-    
-    // Si tiene suscripción activa de pago (Stripe / NOWPayments)
-    if (user.subscription && user.subscription.status === 'active') {
-        const expDate = new Date(user.subscription.current_period_end || (Date.now() + 365 * 86400000));
-        const daysLeft = Math.ceil((expDate - new Date()) / (1000 * 60 * 60 * 24));
+
+    const sub = user.subscription;
+    const subStatus = sub && typeof sub.status === 'string' ? sub.status.toLowerCase() : null;
+
+    // 1. Suscripción activa de pago (Stripe / NOWPayments)
+    if (sub && subStatus === 'active') {
+        const expDate = new Date(sub.current_period_end || (Date.now() + 365 * 86400000));
+        const msLeft = expDate.getTime() - Date.now();
+        const daysLeft = Math.ceil(msLeft / (1000 * 60 * 60 * 24));
         return {
             isTrial: false,
             isPaid: true,
-            provider: user.subscription.provider,
-            plan: user.subscription.plan || 'Pro',
+            provider: sub.provider,
+            plan: sub.plan_interval || sub.plan || 'Pro',
             daysRemaining: Math.max(0, daysLeft),
-            expired: daysLeft < 0
+            expired: msLeft <= 0
         };
     }
 
-    // Período de prueba
-    const trialEndsAt = new Date(user.trial_ends_at || (new Date().getTime() + TRIAL_DURATION_DAYS * 86400000));
+    // 2. Estados explícitos vencidos / bloqueados
+    if (subStatus && ['expired', 'past_due', 'canceled', 'read_only'].includes(subStatus)) {
+        return {
+            isTrial: false,
+            isPaid: false,
+            provider: sub.provider,
+            plan: sub.plan_interval || sub.plan || 'Pro',
+            daysRemaining: 0,
+            expired: true,
+            status: subStatus
+        };
+    }
+
+    // 3. Período de prueba
+    const rawTrialEnd = (sub && sub.trial_ends_at) || user.trial_ends_at;
+    const trialEndsAt = new Date(rawTrialEnd || (new Date().getTime() + TRIAL_DURATION_DAYS * 86400000));
     const now = new Date();
-    const diffTime = trialEndsAt - now;
+    const diffTime = trialEndsAt.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
     return {
         isTrial: true,
         isPaid: false,
         daysRemaining: Math.max(0, diffDays),
-        expired: diffDays <= 0
+        expired: diffTime <= 0
     };
 }
 

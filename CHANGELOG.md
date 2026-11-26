@@ -5,6 +5,45 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.28] - 2026-11-26
+
+### 💳 Infraestructura de Pasarelas de Pago Live (Stripe Mixed Cart + NOWPayments) y Endurecimiento RLS
+- **Edge Functions y Webhooks Autenticados (`supabase/functions/`):**
+  - Desplegadas 4 Supabase Edge Functions en el proyecto (`create-stripe-checkout`, `stripe-webhook`, `create-nowpayments-invoice`, `nowpayments-webhook`) junto a utilidades compartidas de precios autoritativos (`_shared/pricing.ts`) y CORS estricto (`_shared/cors.ts`).
+  - **Stripe "Mixed Cart" con transición mensual automática:** El plan Mensual (`$25/mes` con cupón del 20% "Once" a `$20` hasta el `06/12/2026`) y los packs iniciales (3M `$56`/`$70`, 6M `$108`/`$135`, 12M `$200`/`$250`) cobran el período inicial hoy —acumulando días restantes de prueba gratuita en `trial_period_days`— y transicionan automáticamente a `$25 USD/mes`.
+  - **NOWPayments Hosted Invoice + IPN HMAC SHA-512:** Generación server-side de facturas oficiales USDT/Crypto (`invoice_url`) con verificación criptográfica estricta `x-nowpayments-sig`, tolerancia anti-underpayment y protección de idempotencia mediante tabla `public.payment_events`.
+- **Seguridad PostgreSQL y Políticas RLS (`supabase/migrations/20261126003000_payments_webhooks_and_rls.sql`, `supabase_schema.sql`):**
+  - Añadida unicidad `uq_subscriptions_user_id`, bloqueos restrictivos `AS RESTRICTIVE` para escritura sobre cuentas/trades/grupos/backtests/snapshots cuando `has_active_subscription(auth.uid())` (`SECURITY INVOKER`) es falso, tabla `public.payment_events` solo para `service_role`, fijación de `search_path = public` en `handle_new_user()` y aislamiento estricto por carpeta en `storage.objects`.
+- **Checkout Live, Paywall Completo, Transparencia y Recordatorios (`js/payments.js`, `js/auth.js`, `js/cloud-storage.js`, `app.html`, `index.html`, `en.html`, `js/i18n.js`):**
+  - Integración directa con las Edge Functions (JWT + spinners + manejo de errores + polling post-checkout en retorno Stripe/NOWPayments).
+  - Endurecido el Paywall obligatorio para bloquear estados `past_due`, `canceled`, `expired` y `read_only` y refrescar suscripción en cada carga desde nube (`initCloudSync`).
+  - Añadidas notas transparentes de continuación mensual a `$25 USD/mes` en las tarjetas de precios (`index.html`, `en.html`, `#checkoutModal`), banner colapsable y descartable de aviso de renovación/transición (`#renewal-reminder-banner` / `#renewal-reminder-pill`), y corregido el `ReferenceError` de `updateUserNavBadge` al cambiar de idioma.
+
+---
+
+## [v3.9.27] - 2026-11-25
+
+### 🎬 Lanzamiento de YouTube Short Publicitario Bilingüe "Market VS Trader" (100% Cloud Render en Google Colab GPU T4)
+- **Producción y Renderizado Automatizado en la Nube (`scripts/cloud/`, `scripts/render/`):**
+  - Desarrollado el pipeline de renderizado 100% en la nube a través de Google Colab CLI (`colab.exe`) con aceleración GPU Tesla T4, garantizando cero carga de CPU/RAM en la máquina local.
+  - Generado el empaquetador ligero `package_short_market_vs_trader_bundle.zip` (5.33 MB, 49 archivos) que transfiere a la nube el escenario HTML, logos, tipografías y audios sin dependencias pesadas locales.
+  - Ejecución remota automatizada mediante `remote_runner_short_market_vs_trader.py` con Playwright headless (Chromium 60 FPS determinista), entorno virtual Xvfb y codificación con FFmpeg.
+- **Entregables Bilingües Finales 9:16 (`content/deliverables/videos/`):**
+  - `AsTrade_Short_MarketVsTrader_ES.mp4`: Video vertical en español (1080x1920, 60 FPS, 34.37s, 3.37 MB) con voz ultra-natural `es-MX-JorgeNeural` (+12% de velocidad), subtítulos dinámicos estilo karaoke por palabra, efectos de sonido sincronizados (golpes Kenney y campana de ring) y música de fondo con audio-ducking y normalización loudnorm (`I=-15`, `TP=-1.5`).
+  - `AsTrade_Short_MarketVsTrader_EN.mp4`: Video vertical en inglés (1080x1920, 60 FPS, 34.54s, 3.32 MB) con voz nativa `en-US-ChristopherNeural` (+8% de velocidad) y paridad visual total.
+  - Paquete de fotogramas de auditoría QA en `content/deliverables/videos/audit_frames/` verificando zonas seguras (safe zone 9:16: `x: 60..940px, y: 180..1310px`) y cero-blur visual (`filter: none !important`).
+- **Concepto Creativo Viral "Market VS Trader" (`content/templates/short_market_vs_trader.html`):**
+  - Adaptación del meme viral del mercado golpeando al trader novato ("New Account" en bucle), pasando de la frustración al dominio técnico gracias a los 4 pilares de AsTrade:
+    1. Control de Drawdown y Reglas de Cuentas de Fondeo en Vivo.
+    2. Calculadora de Lotaje Profesional con gestión de riesgo precisa.
+    3. Trade Journal Analytics y detección de fugas emocionales.
+    4. Laboratorio de Backtesting Pro para validar estrategias antes de arriesgar capital.
+- **Suite de Auditoría y Verificación Fonética (`scripts/audit/`, `scripts/audio/`):**
+  - Suite de pruebas fonéticas `short_mvt_phonetics.py` (11/11 tests PASS) que garantiza la pronunciación nativa de términos de trading en español (`tréider`, `tréiding`, `dróudaun`, `stóp-los`, `téik-prófit`, `bák-tésting`, `prófit-split`, `As Trade`).
+  - Script de auditoría técnica `audit_short_market_vs_trader.py` validando resolución 1080x1920, 60 FPS, códecs H.264/AAC y ausencia de nombres de empresas de fondeo de terceros (marca blanca estricta).
+
+---
+
 ## [v3.9.26] - 2026-11-24
 
 ### 📐 Reducción de Fuente en Aviso Mensual y Cache-Busting de Estilos

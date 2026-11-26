@@ -43,6 +43,18 @@ create table if not exists public.subscriptions (
     updated_at timestamptz default now()
 );
 
+-- 3.1. REGISTRO DE IDEMPOTENCIA DE WEBHOOKS (Exclusivo service_role)
+create table if not exists public.payment_events (
+    event_key text primary key,
+    provider text not null,
+    event_type text not null,
+    user_id uuid references public.profiles(id) on delete set null,
+    status text,
+    amount_usd numeric,
+    raw_payload jsonb default '{}'::jsonb,
+    processed_at timestamptz not null default now()
+);
+
 -- ==============================================================================
 -- 4. TABLAS DE LA BITÁCORA CON COMPATIBILIDAD TEXT (IDs nativos de la Bitácora)
 -- ==============================================================================
@@ -183,7 +195,7 @@ create trigger on_auth_user_created
 create or replace function public.has_active_subscription(check_user_id uuid default auth.uid())
 returns boolean
 language plpgsql
-security definer
+security invoker
 set search_path = public
 as $$
 begin
@@ -213,6 +225,7 @@ grant execute on function public.has_active_subscription(uuid) to authenticated,
 
 alter table public.profiles enable row level security;
 alter table public.subscriptions enable row level security;
+alter table public.payment_events enable row level security;
 alter table public.accounts enable row level security;
 alter table public.account_groups enable row level security;
 alter table public.backtest_sessions enable row level security;
@@ -312,21 +325,32 @@ create policy "Capturas visibles para todos o autenticados" on storage.objects
     for select using (bucket_id = 'trade-screenshots');
 
 drop policy if exists "Usuarios autenticados suben capturas" on storage.objects;
-create policy "Usuarios autenticados suben capturas" on storage.objects
-    for insert with check (
-        bucket_id = 'trade-screenshots' 
-        and (select auth.role()) = 'authenticated'
-        and (name like (select auth.uid())::text || '/%')
+drop policy if exists "Usuarios suben capturas en su carpeta" on storage.objects;
+create policy "Usuarios suben capturas en su carpeta" on storage.objects
+    for insert to authenticated
+    with check (
+        bucket_id = 'trade-screenshots'
+        and (storage.foldername(name))[1] = (select auth.uid())::text
+    );
+
+drop policy if exists "Usuarios actualizan sus capturas" on storage.objects;
+create policy "Usuarios actualizan sus capturas" on storage.objects
+    for update to authenticated
+    using (
+        bucket_id = 'trade-screenshots'
+        and (storage.foldername(name))[1] = (select auth.uid())::text
+    )
+    with check (
+        bucket_id = 'trade-screenshots'
+        and (storage.foldername(name))[1] = (select auth.uid())::text
     );
 
 drop policy if exists "Usuarios eliminan sus capturas" on storage.objects;
 create policy "Usuarios eliminan sus capturas" on storage.objects
-    for delete using (
-        bucket_id = 'trade-screenshots' 
-        and (
-            (select auth.uid()) = owner
-            or name like (select auth.uid())::text || '/%'
-        )
+    for delete to authenticated
+    using (
+        bucket_id = 'trade-screenshots'
+        and (storage.foldername(name))[1] = (select auth.uid())::text
     );
 
 -- ==============================================================================

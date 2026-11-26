@@ -17,15 +17,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=3.9.6">
+    <link rel="stylesheet" href="css/styles.css?v=3.9.28">
     <script src="js/theme.js"></script>
-    <script src="js/i18n.js?v=3.9.6"></script>
-    <script src="js/auth.js?v=3.9.6"></script>
+    <script src="js/i18n.js?v=3.9.28"></script>
+    <script src="js/auth.js?v=3.9.28"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js"></script>
-    <script src="js/payments.js"></script>
-    <script src="js/cloud-storage.js"></script>
+    <script src="js/supabase-client.js?v=3.9.28"></script>
+    <script src="js/payments.js?v=3.9.28"></script>
+    <script src="js/cloud-storage.js?v=3.9.28"></script>
     <script>
         (function() {
             if (!getCurrentUser()) {
@@ -198,6 +198,34 @@
         <span id="readonly-banner-msg" data-i18n-html="banner.readonly">Tu prueba de 7 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
         <button onclick="openCheckoutModal()" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-black shadow-md transition ml-1">
             <i class="fa-solid fa-credit-card mr-1"></i> <span data-i18n="banner.renew">Renovar Acceso Pro</span>
+        </button>
+    </div>
+
+    <!-- Recordatorio Suave y Colapsable de Vencimiento / Transición Mensual -->
+    <div id="renewal-reminder-banner" class="hidden bg-amber-950/75 border-b border-amber-700/50 px-4 py-2 text-xs text-amber-100 flex flex-wrap items-center justify-between gap-2 backdrop-blur-sm transition-all duration-200">
+        <div class="flex items-center gap-2 min-w-0">
+            <span id="renewal-reminder-icon" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 shrink-0">
+                <i class="fa-solid fa-bell text-[11px]"></i>
+            </span>
+            <span id="renewal-reminder-text" class="leading-snug"></span>
+        </div>
+        <div class="flex items-center gap-1.5 shrink-0">
+            <button type="button" id="renewal-reminder-cta" onclick="openCheckoutModal()" class="px-2.5 py-1 rounded-md bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-[11px] shadow-sm transition whitespace-nowrap">
+                <span data-i18n="reminder.renew_btn">Renovar ahora</span>
+            </button>
+            <button type="button" onclick="toggleRenewalReminderCollapse(true)" class="p-1.5 rounded hover:bg-amber-900/60 text-amber-300 hover:text-white transition" title="Minimizar" data-i18n-title="reminder.minimize_tip">
+                <i class="fa-solid fa-chevron-up text-[11px]"></i>
+            </button>
+            <button type="button" onclick="dismissRenewalReminder()" class="p-1.5 rounded hover:bg-amber-900/60 text-amber-300 hover:text-white transition" title="Ocultar" data-i18n-title="reminder.close_tip">
+                <i class="fa-solid fa-xmark text-xs"></i>
+            </button>
+        </div>
+    </div>
+    <div id="renewal-reminder-pill" class="hidden fixed bottom-4 right-4 z-40">
+        <button type="button" onclick="toggleRenewalReminderCollapse(false)" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900/95 hover:bg-amber-950 text-amber-300 border border-amber-600/60 shadow-lg backdrop-blur-md text-[11px] font-bold transition">
+            <i class="fa-solid fa-bell text-amber-400 animate-pulse"></i>
+            <span id="renewal-reminder-pill-text">Recordatorio Pro</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-amber-400/80"></i>
         </button>
     </div>
 
@@ -1341,7 +1369,7 @@
                 <!-- Selector de Períodos -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-gray-900/90 border border-gray-800 p-1.5 rounded-xl text-center">
                     <button type="button" id="checkout-period-month" onclick="selectCheckoutPeriod('month')" class="px-2.5 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition">
-                        <span data-i18n="checkout.month_1">1 Mes</span>
+                        <span data-i18n="checkout.month_1">1 Mes</span> <span id="checkout-month-promo-badge" class="text-[9px] bg-gray-950/20 text-gray-950 px-1 py-0.2 rounded ml-0.5 font-black">-20%</span>
                     </button>
                     <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
                         <span data-i18n="checkout.month_3">3 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
@@ -1356,15 +1384,16 @@
 
                 <!-- Precio Seleccionado -->
                 <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3.5 text-center">
-                    <span id="checkout-price-amount" class="text-3xl font-black text-white block">$25 USD</span>
+                    <span id="checkout-price-amount" class="text-3xl font-black text-white block">$20 USD</span>
                     <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="checkout.period_month_label">por 1 Mes</span>
-                    <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">7 días de prueba ($0 cobrados hoy si es primera vez)</span>
+                    <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">Oferta Lanzamiento (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.</span>
+                    <span id="checkout-trial-bonus-badge" class="hidden mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/90 text-emerald-300 border border-emerald-700/60"></span>
                 </div>
 
                 <!-- Opciones de Pago (Pasarela Dual) -->
                 <div class="space-y-2.5">
                     <!-- Opción 1: Tarjetas Globales (Stripe) -->
-                    <button onclick="handleStripeCheckout()" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
+                    <button type="button" onclick="showCardCheckoutStep()" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 shadow-lg shadow-emerald-500/20 flex items-center justify-between transition group">
                         <span class="flex items-center gap-2.5">
                             <i class="fa-solid fa-credit-card text-base"></i> <span data-i18n="checkout.pay_card">Pagar con Tarjeta (Visa, Mastercard, Apple Pay vía Stripe)</span>
                         </span>
@@ -1372,7 +1401,7 @@
                     </button>
 
                     <!-- Opción 2: Criptomonedas (NOWPayments USDT) -->
-                    <button onclick="showCryptoCheckout()" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white flex items-center justify-between transition">
+                    <button type="button" onclick="showCryptoCheckout()" class="w-full py-3 px-4 rounded-xl text-sm font-bold bg-gray-900 hover:bg-gray-800 border border-gray-700 text-white flex items-center justify-between transition">
                         <span class="flex items-center gap-2.5">
                             <i class="fa-solid fa-coins text-emerald-400 text-base"></i> <span data-i18n="checkout.pay_crypto">Pagar con Criptomonedas (USDT / Crypto)</span>
                         </span>
@@ -1381,7 +1410,7 @@
                 </div>
 
                 <div class="text-center text-[11px] text-gray-500 pt-1">
-                    <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
+                    <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados vía Stripe & NOWPayments.</span>
                 </div>
 
                 <!-- Botón de Cerrar Sesión en Modo Bloqueo (Solo visible si está vencido) -->
@@ -1403,7 +1432,7 @@
                         <i class="fa-solid fa-arrow-left"></i> <span data-i18n="checkout.back_to_plans">← Cambiar método / Volver</span>
                     </button>
                     <span id="checkout-step2-plan-badge" class="px-2.5 py-1 rounded-lg text-xs font-black bg-gray-900 border border-gray-700 text-white font-mono">
-                        $25.00 USD
+                        $20.00 USD
                     </span>
                 </div>
 
@@ -1415,45 +1444,52 @@
                         </span>
                         <span class="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-emerald-950 text-emerald-400 border border-emerald-700/60">STRIPE ENCRYPTED</span>
                     </div>
-                    <p class="text-gray-300 mb-3 leading-relaxed" data-i18n="checkout.card_redirect_desc">Serás redirigido a la pasarela cifrada de Stripe para completar tu suscripción de forma 100% segura.</p>
+                    <div class="bg-gray-950/70 border border-gray-800 rounded-lg p-3 mb-3 flex items-center justify-between gap-2">
+                        <span class="text-gray-400" data-i18n="checkout.total_today_label">Total a abonar hoy</span>
+                        <span id="stripe-sandbox-amount" class="font-mono font-black text-white text-sm">$20.00 USD</span>
+                    </div>
+                    <p id="stripe-card-recurring-note" class="text-gray-300 mb-3 leading-relaxed text-[11px]" data-i18n="checkout.card_redirect_desc">Serás redirigido a la pasarela cifrada de Stripe para completar tu suscripción de forma 100% segura. Al finalizar tu período inicial, tu membresía continúa automáticamente a $25 USD/mes.</p>
+                    <div id="checkout-stripe-error" class="hidden mb-3 p-2.5 rounded-lg bg-rose-950/80 border border-rose-700/70 text-rose-200 text-[11px] flex items-start gap-2"></div>
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <button type="button" onclick="handleStripeCheckout()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                        <button type="button" id="btn-stripe-checkout-submit" onclick="handleStripeCheckout()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 disabled:cursor-not-allowed text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-lock"></i> <span data-i18n="checkout.go_stripe_btn">Continuar a Stripe Seguro</span>
                         </button>
                         <button type="button" onclick="backToCheckoutPlans()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
                     </div>
                 </div>
 
-                <!-- Crypto Drawer / Factura USDT -->
+                <!-- Crypto Drawer / Factura NOWPayments -->
                 <div id="checkout-crypto-invoice" class="hidden bg-gray-900 border border-emerald-600/40 rounded-xl p-4 text-xs">
                     <div class="flex items-center justify-between mb-3 border-b border-gray-800 pb-2">
                         <span class="font-bold text-emerald-400 flex items-center gap-1.5">
                             <i class="fa-brands fa-ethereum"></i> <span data-i18n="checkout.crypto_invoice_title">Transferencia USDT / USDC</span>
                         </span>
-                        <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">25.00 USDT</span>
+                        <span id="crypto-amount-display" class="font-mono font-black text-white text-sm">20.00 USDT</span>
                     </div>
-                    
-                    <p class="text-gray-400 mb-2" data-i18n="checkout.crypto_instruction">Envía el monto exacto a una de nuestras billeteras oficiales:</p>
-                    
-                    <div class="space-y-2 mb-3">
-                        <div class="bg-gray-950 p-3 rounded-lg border border-gray-800 text-center">
-                            <i class="fa-solid fa-qrcode text-emerald-400 text-2xl mb-2"></i>
-                            <p class="text-xs text-gray-300 font-semibold mb-1" data-i18n="checkout.crypto_invoice_notice">Facturación Cripto Automatizada</p>
-                            <p class="text-[11px] text-gray-400 leading-relaxed mb-3" data-i18n="checkout.crypto_invoice_desc">Para garantizar pagos 100% seguros y asignación automática instantánea, tu orden se procesa a través de la pasarela oficial NOWPayments con dirección única generada para tu cuenta.</p>
-                            <a href="https://t.me/astradesupport" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 py-1.5 px-3 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 text-xs font-bold hover:bg-emerald-500/30 transition">
-                                <i class="fa-brands fa-telegram"></i> <span>Solicitar Factura Cripto en Soporte</span>
-                            </a>
-                        </div>
+
+                    <div class="bg-gray-950 p-3 rounded-lg border border-gray-800 text-center mb-3">
+                        <i class="fa-solid fa-qrcode text-emerald-400 text-2xl mb-1.5"></i>
+                        <p class="text-xs text-gray-200 font-semibold mb-1" data-i18n="checkout.crypto_invoice_notice">Facturación Cripto Automatizada (NOWPayments)</p>
+                        <p class="text-[11px] text-gray-400 leading-relaxed" data-i18n="checkout.crypto_invoice_desc">Generamos una factura oficial en NOWPayments con dirección única para tu cuenta (USDT TRC20/BEP20/ERC20 y principales redes). Activación automática sin renovación automática en tarjeta.</p>
+                    </div>
+
+                    <div id="checkout-crypto-error" class="hidden mb-3 p-2.5 rounded-lg bg-rose-950/80 border border-rose-700/70 text-rose-200 text-[11px] flex items-start gap-2"></div>
+
+                    <div class="flex flex-col sm:flex-row gap-2 mb-3">
+                        <button type="button" id="btn-crypto-checkout-submit" onclick="handleCryptoCheckout()" class="flex-1 py-2.5 px-3 rounded-lg bg-emerald-500 hover:bg-emerald-400 disabled:opacity-60 disabled:cursor-not-allowed text-gray-950 font-black text-xs shadow-md transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-coins"></i> <span data-i18n="checkout.crypto_pay_btn">Ir a Pagar con NOWPayments</span>
+                        </button>
+                        <button type="button" onclick="backToCheckoutPlans()" class="py-2.5 px-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-xs transition" data-i18n="btn.cancel">Cancelar</button>
                     </div>
 
                     <div class="bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-emerald-300 text-[11px] flex items-start gap-2 mb-1">
                         <i class="fa-solid fa-circle-info mt-0.5"></i>
-                        <span data-i18n="checkout.crypto_note">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.</span>
+                        <span data-i18n="checkout.crypto_note">Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red.</span>
                     </div>
                 </div>
 
                 <div class="text-center text-[11px] text-gray-500 pt-1">
-                    <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.</span>
+                    <span data-i18n="checkout.security_badge">🔒 Pagos 100% seguros y encriptados vía Stripe & NOWPayments.</span>
                 </div>
 
                 <!-- Botón de Cerrar Sesión en Modo Bloqueo (Solo visible si está vencido) -->
@@ -1708,7 +1744,7 @@
     </div>
 
 
-    <script src="js/app.js?v=3.9.6"></script>
+    <script src="js/app.js?v=3.9.28"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const user = getCurrentUser();

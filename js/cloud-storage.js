@@ -18,6 +18,24 @@ async function initCloudSync() {
     updateCloudSyncIndicator('syncing');
 
     try {
+        // Refrescar estado real de suscripción desde PostgreSQL antes de sincronizar
+        if (typeof apiFetchSubscription === 'function') {
+            try {
+                const freshSub = await apiFetchSubscription(user.id);
+                if (freshSub) {
+                    user.subscription = freshSub;
+                    if (freshSub.trial_ends_at) {
+                        user.trial_ends_at = freshSub.trial_ends_at;
+                    }
+                    if (typeof saveUserSession === 'function') {
+                        saveUserSession(user);
+                    }
+                }
+            } catch (subErr) {
+                console.warn("Aviso al refrescar suscripción desde la nube:", subErr);
+            }
+        }
+
         await loadFromCloud(user.id);
         
         // Si hay datos locales que no estaban en la nube (ej. importación previa o recién migrado), sincronizarlos
@@ -31,9 +49,12 @@ async function initCloudSync() {
         updateCloudSyncIndicator('error');
     }
 
-    // Verificar estado de suscripción y modo solo lectura
+    // Verificar estado de suscripción, bloqueo paywall y recordatorios no invasivos
     if (typeof checkSubscriptionAccess === 'function') {
         checkSubscriptionAccess();
+    }
+    if (typeof initRenewalReminderBanner === 'function') {
+        initRenewalReminderBanner();
     }
 }
 

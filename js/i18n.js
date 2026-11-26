@@ -5354,12 +5354,37 @@
             "checkout.month_12": "12 Meses",
             "checkout.month_6": "6 Meses",
             "checkout.period_semester_label": "por 6 Meses",
-            "checkout.quarter_desc": "Ahorras 7% ($23.33/mes · Ahorras $5) · Facturado cada 3 meses",
-            "checkout.semester_desc": "Ahorras 10% ($22.50/mes · Ahorras $15) · Facturado cada 6 meses",
-            "checkout.year_desc": "Ahorras 17% ($20.83/mes · Ahorras $50) · Facturado anualmente",
+            "checkout.quarter_desc": "Oferta Lanzamiento (-20% pack inicial): $56 USD hoy ($18.67/mes). Luego continúa a $25 USD/mes.",
+            "checkout.semester_desc": "Oferta Lanzamiento (-20% pack inicial): $108 USD hoy ($18.00/mes). Luego continúa a $25 USD/mes.",
+            "checkout.year_desc": "Oferta Lanzamiento (-20% pack inicial): $200 USD hoy ($16.67/mes). Luego continúa a $25 USD/mes.",
+            "checkout.month_regular_desc": "Cobro mensual recurrente de $25 USD/mes.",
+            "checkout.quarter_regular_desc": "Pack inicial de 3 meses por $70 USD ($23.33/mes). Luego continúa a $25 USD/mes.",
+            "checkout.semester_regular_desc": "Pack inicial de 6 meses por $135 USD ($22.50/mes). Luego continúa a $25 USD/mes.",
+            "checkout.year_regular_desc": "Pack inicial de 12 meses por $250 USD ($20.83/mes). Luego continúa a $25 USD/mes.",
             "checkout.official_production": "Producción Oficial",
             "checkout.back_to_plans": "← Cambiar método / Volver",
             "checkout.selected_plan": "Plan seleccionado",
+            "checkout.total_today_label": "Total a abonar hoy",
+            "checkout.card_secure_title": "Pago Seguro con Tarjeta",
+            "checkout.card_redirect_desc": "Serás redirigido a la pasarela cifrada de Stripe para completar tu suscripción de forma 100% segura. Al finalizar tu período inicial, tu membresía continúa automáticamente a $25 USD/mes.",
+            "checkout.card_redirect_month_promo": "Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.",
+            "checkout.card_redirect_month_reg": "Serás redirigido a Stripe seguro para activar tu suscripción mensual recurrente de $25 USD/mes.",
+            "checkout.card_redirect_pack": "Serás redirigido a Stripe seguro para abonar ${0} USD por tu pack inicial ({1}). Al finalizar tu período inicial, tu membresía continúa automáticamente a $25 USD/mes.",
+            "checkout.go_stripe_btn": "Continuar a Stripe Seguro",
+            "checkout.crypto_invoice_notice": "Facturación Cripto Automatizada (NOWPayments)",
+            "checkout.crypto_invoice_desc": "Generamos una factura oficial en NOWPayments con dirección única para tu cuenta (USDT TRC20/BEP20/ERC20 y principales redes). Activación automática sin renovación automática en tarjeta.",
+            "checkout.crypto_pay_btn": "Ir a Pagar con NOWPayments",
+            "checkout.loading_stripe": "Conectando con Stripe...",
+            "checkout.loading_crypto": "Generando factura segura...",
+            "checkout.relogin_required": "Tu sesión expiró. Inicia sesión nuevamente para continuar al pago.",
+            "checkout.canceled_toast": "Pago cancelado. Puedes intentarlo nuevamente cuando quieras.",
+            "checkout.polling_msg": "Verificando confirmación de suscripción...",
+            "checkout.verified_toast": "¡Membresía Pro verificada con éxito!",
+            "checkout.payment_pending_msg": "El pago está siendo procesado por Stripe. Tu cuenta se activará automáticamente en segundos.",
+            "checkout.crypto_pending_msg": "Tu pago cripto está confirmándose en la red. Tu acceso Pro se activará automáticamente en unos momentos.",
+            "checkout.gateway_not_ready": "La pasarela Stripe está pendiente de activación de credenciales Live en el servidor.",
+            "checkout.gateway_not_ready_crypto": "La pasarela NOWPayments está pendiente de activación de credenciales Live en el servidor.",
+            "checkout.trial_bonus_note": "+{0}d restantes de tu prueba gratis incluidos",
             "paywall.title_trial_expired": "Tu Período de Prueba ha Finalizado",
             "paywall.title_pro_expired": "Tu Membresía Pro ha Vencido",
             "paywall.subtitle": "Tus cuentas y métricas están a salvo. Renueva tu membresía Pro para desbloquear la bitácora completa y continuar operando.",
@@ -5367,7 +5392,16 @@
             "paywall.safe_data_badge": "Datos seguros en la nube",
             "paywall.locked_toast": "Acceso bloqueado: renueva tu membresía Pro para acceder a esta función.",
             "paywall.badge_expired": "Suscripción Vencida",
+            "paywall.badge_past_due": "Pago Pendiente",
+            "paywall.badge_canceled": "Suscripción Cancelada",
             "paywall.badge_trial_ended": "Prueba Vencida",
+            "reminder.renew_btn": "Renovar ahora",
+            "reminder.minimize_tip": "Minimizar",
+            "reminder.close_tip": "Ocultar",
+            "reminder.pill_label": "Aviso Pro ({0}d)",
+            "reminder.crypto_msg": "Tu membresía cripto vence en {0} día(s) ({1}). Como USDT no se renueva automáticamente, renueva cuando quieras para mantener tu acceso.",
+            "reminder.canceled_msg": "Tu suscripción está cancelada y finalizará en {0} día(s) ({1}). Renueva antes para conservar acceso ininterrumpido.",
+            "reminder.stripe_switch_msg": "Recordatorio: Tu pack inicial termina en {0} día(s) ({1}) y tu suscripción continuará automáticamente a $25 USD/mes.",
 
 
 
@@ -5415,7 +5449,7 @@
 
 
 
-            "checkout.trial_desc": "7 días de prueba ($0 cobrados hoy si es primera vez)",
+            "checkout.trial_desc": "Oferta Lanzamiento (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.",
 
 
 
@@ -5495,7 +5529,7 @@
 
 
 
-            "checkout.crypto_note": "Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red. También puedes adjuntar el hash a soporte.",
+            "checkout.crypto_note": "Tras enviar tu transferencia, tu cuenta se activará automáticamente al confirmarse en la red.",
 
 
 
@@ -5511,7 +5545,7 @@
 
 
 
-            "checkout.security_badge": "🔒 Pagos 100% seguros y encriptados. Cancela cuando quieras con un solo clic.",
+            "checkout.security_badge": "🔒 Pagos 100% seguros y encriptados vía Stripe & NOWPayments.",
 
 
 
@@ -12101,12 +12135,37 @@
             "checkout.month_12": "12 Months",
             "checkout.month_6": "6 Months",
             "checkout.period_semester_label": "per 6 Months",
-            "checkout.quarter_desc": "Save 7% ($23.33/mo · Save $5) · Billed every 3 months",
-            "checkout.semester_desc": "Save 10% ($22.50/mo · Save $15) · Billed every 6 months",
-            "checkout.year_desc": "Save 17% ($20.83/mo · Save $50) · Billed annually",
+            "checkout.quarter_desc": "Launch Offer (-20% initial pack): $56 USD today ($18.67/mo). Continues at $25 USD/mo thereafter.",
+            "checkout.semester_desc": "Launch Offer (-20% initial pack): $108 USD today ($18.00/mo). Continues at $25 USD/mo thereafter.",
+            "checkout.year_desc": "Launch Offer (-20% initial pack): $200 USD today ($16.67/mo). Continues at $25 USD/mo thereafter.",
+            "checkout.month_regular_desc": "Recurring monthly subscription at $25 USD/mo.",
+            "checkout.quarter_regular_desc": "Initial 3-month pack for $70 USD ($23.33/mo). Continues at $25 USD/mo thereafter.",
+            "checkout.semester_regular_desc": "Initial 6-month pack for $135 USD ($22.50/mo). Continues at $25 USD/mo thereafter.",
+            "checkout.year_regular_desc": "Initial 12-month pack for $250 USD ($20.83/mo). Continues at $25 USD/mo thereafter.",
             "checkout.official_production": "Official Production",
             "checkout.back_to_plans": "← Change method / Back",
             "checkout.selected_plan": "Selected plan",
+            "checkout.total_today_label": "Total due today",
+            "checkout.card_secure_title": "Secure Card Payment",
+            "checkout.card_redirect_desc": "You will be redirected to Stripe encrypted checkout to complete your subscription safely. After your initial term ends, your membership continues automatically at $25 USD/mo.",
+            "checkout.card_redirect_month_promo": "You will be redirected to Stripe checkout. Pay $20 USD today (20% OFF 1st month), then automatically continue at $25 USD/mo from month 2.",
+            "checkout.card_redirect_month_reg": "You will be redirected to Stripe checkout to start your recurring monthly subscription at $25 USD/mo.",
+            "checkout.card_redirect_pack": "You will be redirected to Stripe checkout to pay ${0} USD for your initial pack ({1}). Once your initial period ends, your membership continues automatically at $25 USD/mo.",
+            "checkout.go_stripe_btn": "Continue to Secure Stripe",
+            "checkout.crypto_invoice_notice": "Automated Crypto Checkout (NOWPayments)",
+            "checkout.crypto_invoice_desc": "We generate an official NOWPayments invoice with a unique address for your account (USDT TRC20/BEP20/ERC20 & major networks). Instant automatic activation with no auto-renewal.",
+            "checkout.crypto_pay_btn": "Proceed to NOWPayments",
+            "checkout.loading_stripe": "Connecting to Stripe...",
+            "checkout.loading_crypto": "Generating secure invoice...",
+            "checkout.relogin_required": "Your session expired. Please log in again to proceed with payment.",
+            "checkout.canceled_toast": "Payment canceled. You can try again whenever you want.",
+            "checkout.polling_msg": "Verifying subscription confirmation...",
+            "checkout.verified_toast": "Pro membership verified successfully!",
+            "checkout.payment_pending_msg": "Payment is being processed by Stripe. Your account will activate automatically in seconds.",
+            "checkout.crypto_pending_msg": "Your crypto payment is confirming on the network. Your Pro access will activate automatically shortly.",
+            "checkout.gateway_not_ready": "Stripe checkout is waiting for Live credentials to be configured on the server.",
+            "checkout.gateway_not_ready_crypto": "NOWPayments checkout is waiting for Live credentials to be configured on the server.",
+            "checkout.trial_bonus_note": "+{0}d remaining free trial included",
             "paywall.title_trial_expired": "Your Free Trial Has Ended",
             "paywall.title_pro_expired": "Your Pro Membership Has Expired",
             "paywall.subtitle": "Your accounts and metrics are safe. Renew your Pro membership to unlock the full journal and continue trading.",
@@ -12114,7 +12173,16 @@
             "paywall.safe_data_badge": "Cloud-secured data",
             "paywall.locked_toast": "Access locked: renew your Pro membership to access this feature.",
             "paywall.badge_expired": "Subscription Expired",
+            "paywall.badge_past_due": "Payment Past Due",
+            "paywall.badge_canceled": "Subscription Canceled",
             "paywall.badge_trial_ended": "Trial Ended",
+            "reminder.renew_btn": "Renew now",
+            "reminder.minimize_tip": "Minimize",
+            "reminder.close_tip": "Dismiss",
+            "reminder.pill_label": "Pro Notice ({0}d)",
+            "reminder.crypto_msg": "Your crypto membership expires in {0} day(s) ({1}). Since USDT payments do not auto-renew, renew anytime to keep full access.",
+            "reminder.canceled_msg": "Your subscription has been canceled and ends in {0} day(s) ({1}). Renew beforehand to avoid any interruption.",
+            "reminder.stripe_switch_msg": "Reminder: Your initial multi-month pack ends in {0} day(s) ({1}) and will continue automatically at $25 USD/mo.",
 
 
 
@@ -12162,7 +12230,7 @@
 
 
 
-            "checkout.trial_desc": "7-day free trial ($0 charged today if first time)",
+            "checkout.trial_desc": "Launch Offer (-20% 1st month): $20 USD today. Continues at $25 USD/mo thereafter.",
 
 
 
@@ -12242,7 +12310,7 @@
 
 
 
-            "checkout.crypto_note": "Upon transfer confirmation on network, your account activates automatically. You can also send the transaction hash to support.",
+            "checkout.crypto_note": "Once confirmed on the blockchain network, your Pro account activates automatically.",
 
 
 
@@ -12258,7 +12326,7 @@
 
 
 
-            "checkout.security_badge": "🔒 100% secure encrypted payments. Cancel anytime with a single click.",
+            "checkout.security_badge": "🔒 100% secure encrypted payments powered by Stripe & NOWPayments.",
 
 
 

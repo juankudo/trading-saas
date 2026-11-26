@@ -6,79 +6,85 @@
  */
 
 // Configuración de Pasarelas y Precios
+const PROMO_END_MS = Date.parse('2026-12-06T23:59:59+01:00');
+
+function isLaunchPromoActive() {
+    return Date.now() <= PROMO_END_MS;
+}
+
+function getEdgeFunctionsBase() {
+    if (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.url) {
+        return `${SUPABASE_CONFIG.url}/functions/v1`;
+    }
+    return 'https://pwkesbkoqrvfrzyjolla.supabase.co/functions/v1';
+}
+
 const PAYMENTS_CONFIG = {
-    // 'test': Modo Sandbox interactivo para pruebas seguras sin cobros reales
-    // 'live': Modo Producción oficial con cobros reales
     mode: 'live',
 
-    // Lemon Squeezy (Merchant of Record oficial — opera desde Argentina para todo el mundo)
-    lemonsqueezy: {
-        storeSlug: "tradingjournalpro",
-        // URLs directas de checkout configuradas en Lemon Squeezy Dashboard
-        checkoutUrls: {
-            month: "https://tradingjournalpro.lemonsqueezy.com/buy/test_month_plan",
-            quarter: "https://tradingjournalpro.lemonsqueezy.com/buy/test_quarter_plan",
-            year: "https://tradingjournalpro.lemonsqueezy.com/buy/test_year_plan"
-        }
-    },
-
-    // Respaldo / Compatibilidad Stripe
-    stripe: {
-        publishableKey: window.ENV_STRIPE_KEY || "pk_test_sample",
-        paymentLinks: {
-            month: "https://buy.stripe.com/test_month_7days_trial",
-            quarter: "https://buy.stripe.com/test_quarter_plan",
-            semester: "https://buy.stripe.com/test_semester_plan",
-            year: "https://buy.stripe.com/test_year_plan"
-        }
-    },
-
-    nowpayments: {
-        // En producción el checkout de criptomonedas se procesa mediante Supabase Edge Functions y webhooks seguros
-        apiBase: "https://api.nowpayments.io/v1"
-    },
-
     pricing: {
-        month: { 
-            price: 20, 
+        month: {
+            promoPrice: 20,
+            regularPrice: 25,
+            get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 25,
-            periodDays: 30, 
+            periodDays: 30,
             periodKey: 'checkout.period_month_label',
-            periodText: 'por 1 Mes', 
+            periodText: 'por 1 Mes',
             descKey: 'checkout.trial_desc',
-            desc: 'Oferta Black Friday (-20% 1er mes): $20 USD · 7 días gratis ($0 hoy)' 
+            regularDescKey: 'checkout.month_regular_desc',
+            desc: 'Oferta Lanzamiento (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.',
+            regularDesc: 'Cobro mensual recurrente de $25 USD/mes.'
         },
-        quarter: { 
-            price: 56, 
+        quarter: {
+            promoPrice: 56,
+            regularPrice: 70,
+            get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 70,
-            periodDays: 90, 
+            periodDays: 90,
             periodKey: 'checkout.period_quarter_label',
-            periodText: 'por 3 Meses', 
+            periodText: 'por 3 Meses',
             descKey: 'checkout.quarter_desc',
-            desc: 'Oferta Black Friday (Ahorro congelado $14): $56 USD por 3 meses ($18.67/mes)' 
+            regularDescKey: 'checkout.quarter_regular_desc',
+            desc: 'Oferta Lanzamiento (-20% pack inicial): $56 USD hoy ($18.67/mes). Luego continúa a $25 USD/mes.',
+            regularDesc: 'Pack inicial de 3 meses por $70 USD ($23.33/mes). Luego continúa a $25 USD/mes.'
         },
-        semester: { 
-            price: 108, 
+        semester: {
+            promoPrice: 108,
+            regularPrice: 135,
+            get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 135,
-            periodDays: 180, 
+            periodDays: 180,
             periodKey: 'checkout.period_semester_label',
-            periodText: 'por 6 Meses', 
+            periodText: 'por 6 Meses',
             descKey: 'checkout.semester_desc',
-            desc: 'Oferta Black Friday (Ahorro congelado $27): $108 USD por 6 meses ($18.00/mes)' 
+            regularDescKey: 'checkout.semester_regular_desc',
+            desc: 'Oferta Lanzamiento (-20% pack inicial): $108 USD hoy ($18.00/mes). Luego continúa a $25 USD/mes.',
+            regularDesc: 'Pack inicial de 6 meses por $135 USD ($22.50/mes). Luego continúa a $25 USD/mes.'
         },
-        year: { 
-            price: 200, 
+        year: {
+            promoPrice: 200,
+            regularPrice: 250,
+            get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 250,
-            periodDays: 365, 
+            periodDays: 365,
             periodKey: 'checkout.period_year_label',
-            periodText: 'por 12 Meses', 
+            periodText: 'por 12 Meses',
             descKey: 'checkout.year_desc',
-            desc: 'Oferta Black Friday (Máximo Ahorro congelado $50): $200 USD por 12 meses ($16.67/mes)' 
+            regularDescKey: 'checkout.year_regular_desc',
+            desc: 'Oferta Lanzamiento (-20% pack inicial): $200 USD hoy ($16.67/mes). Luego continúa a $25 USD/mes.',
+            regularDesc: 'Pack inicial de 12 meses por $250 USD ($20.83/mes). Luego continúa a $25 USD/mes.'
         }
     }
 };
 
-let selectedCheckoutPeriod = 'month';
+function getEffectivePlanPrice(periodKey) {
+    const plan = PAYMENTS_CONFIG.pricing[periodKey] || PAYMENTS_CONFIG.pricing.month;
+    return isLaunchPromoActive() ? plan.promoPrice : plan.regularPrice;
+}
+
+let selectedCheckoutPeriod = localStorage.getItem('preferred_billing_cycle') || 'month';
+if (!PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod]) selectedCheckoutPeriod = 'month';
 let selectedCryptoCurrency = 'usdttrc20';
 let isMandatoryLockdown = false;
 
@@ -89,16 +95,17 @@ function isSubscriptionExpired() {
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
     if (!user) return false;
 
-    // 1. Suscripción de pago (Stripe / NOWPayments)
-    if (user.subscription && user.subscription.status === 'active') {
-        const expDate = new Date(user.subscription.current_period_end || Date.now());
-        return expDate.getTime() <= Date.now();
-    }
-    if (user.subscription && user.subscription.status === 'expired') {
-        return true;
+    const sub = user.subscription;
+    if (sub) {
+        if (sub.status === 'active') {
+            const expMs = new Date(sub.current_period_end || 0).getTime();
+            return !Number.isFinite(expMs) || expMs <= Date.now();
+        }
+        if (sub.status === 'expired' || sub.status === 'past_due' || sub.status === 'canceled' || sub.status === 'read_only') {
+            return true;
+        }
     }
 
-    // 2. Período de prueba
     const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 7 };
     return Boolean(trial.expired);
 }
@@ -190,38 +197,42 @@ function checkSubscriptionAccess() {
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
     if (!user) return { canEdit: false, isReadOnly: true, reason: 'unauthenticated' };
 
+    const sub = user.subscription;
+
     // 1. Si tiene suscripción de pago (Stripe / NOWPayments)
-    if (user.subscription && user.subscription.status === 'active') {
-        const expDate = new Date(user.subscription.current_period_end || Date.now());
-        const isStillValid = expDate.getTime() > Date.now();
+    if (sub && sub.status === 'active') {
+        const expDate = new Date(sub.current_period_end || 0);
+        const isStillValid = Number.isFinite(expDate.getTime()) && expDate.getTime() > Date.now();
 
         if (isStillValid) {
             applyPaywallLockdown(false);
             updateAppSubscriptionUI({
                 isPaid: true,
                 isTrial: false,
-                plan: user.subscription.plan_name || 'Membresía Pro',
+                plan: sub.plan_name || 'Membresía Pro',
                 expiresAt: expDate
             });
             return { canEdit: true, isReadOnly: false, isPaid: true, expiresAt: expDate };
         } else {
-            applyPaywallLockdown(true, { isProExpired: true, reason: 'subscription_expired' });
+            applyPaywallLockdown(true, { isProExpired: true, reason: 'subscription_expired', subStatus: 'expired' });
             updateAppSubscriptionUI({
                 isPaid: false,
                 isTrial: false,
                 expired: true,
+                subStatus: 'expired',
                 plan: 'Membresía Vencida'
             });
             return { canEdit: false, isReadOnly: true, reason: 'subscription_expired' };
         }
     }
 
-    if (user.subscription && user.subscription.status === 'expired') {
-        applyPaywallLockdown(true, { isProExpired: true, reason: 'subscription_expired' });
+    if (sub && (sub.status === 'expired' || sub.status === 'past_due' || sub.status === 'canceled' || sub.status === 'read_only')) {
+        applyPaywallLockdown(true, { isProExpired: true, reason: 'subscription_expired', subStatus: sub.status });
         updateAppSubscriptionUI({
             isPaid: false,
             isTrial: false,
             expired: true,
+            subStatus: sub.status,
             plan: 'Membresía Vencida'
         });
         return { canEdit: false, isReadOnly: true, reason: 'subscription_expired' };
@@ -229,7 +240,7 @@ function checkSubscriptionAccess() {
 
     // 2. Si está en período de prueba gratuito (7 días)
     const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { expired: false, daysRemaining: 7 };
-    
+
     if (trial.expired) {
         applyPaywallLockdown(true, { isTrialExpired: true, reason: 'trial_expired' });
         updateAppSubscriptionUI({
@@ -278,8 +289,8 @@ function updateAppSubscriptionUI(subState) {
         let colorClasses = "bg-emerald-950/90 text-emerald-400 border-emerald-800";
 
         if (subState.isPaid) {
-            const expDateStr = subState.expiresAt instanceof Date 
-                ? subState.expiresAt.toLocaleDateString() 
+            const expDateStr = subState.expiresAt instanceof Date
+                ? subState.expiresAt.toLocaleDateString()
                 : new Date(subState.expiresAt).toLocaleDateString();
             iconHtml = '<i class="fa-solid fa-crown text-amber-400 text-xs shrink-0"></i>';
             badgeText = (typeof window.t === 'function')
@@ -288,14 +299,20 @@ function updateAppSubscriptionUI(subState) {
             colorClasses = "bg-emerald-950/90 text-emerald-300 border-emerald-700/80 shadow-sm";
         } else if (subState.expired) {
             iconHtml = '<i class="fa-solid fa-lock text-rose-400 text-xs shrink-0"></i>';
-            badgeText = (typeof window.t === 'function') ? window.t('paywall.badge_expired', 'Suscripción Vencida') : `Suscripción Vencida`;
+            if (subState.subStatus === 'past_due') {
+                badgeText = (typeof window.t === 'function') ? window.t('paywall.badge_past_due', 'Pago Pendiente') : 'Pago Pendiente';
+            } else if (subState.subStatus === 'canceled') {
+                badgeText = (typeof window.t === 'function') ? window.t('paywall.badge_canceled', 'Suscripción Cancelada') : 'Suscripción Cancelada';
+            } else {
+                badgeText = (typeof window.t === 'function') ? window.t('paywall.badge_expired', 'Suscripción Vencida') : 'Suscripción Vencida';
+            }
             colorClasses = "bg-rose-950/90 text-rose-300 border-rose-700/80 shadow-sm animate-pulse";
         } else if (subState.isTrial) {
             iconHtml = '<i class="fa-solid fa-clock text-amber-400 text-xs shrink-0"></i>';
             badgeText = (typeof window.t === 'function')
                 ? window.t('nav.trial_badge', 'Prueba: {0}d').replace('{0}', subState.daysRemaining)
                 : `Prueba: ${subState.daysRemaining}d`;
-            colorClasses = subState.daysRemaining <= 3 
+            colorClasses = subState.daysRemaining <= 3
                 ? "bg-amber-950/90 text-amber-400 border-amber-700 animate-pulse"
                 : "bg-emerald-950/90 text-emerald-400 border-emerald-800";
         }
@@ -321,12 +338,14 @@ function applyReadOnlyMode(isReadOnly, message = "") {
 }
 
 window.addEventListener('languageChanged', () => {
-    updateUserNavBadge();
+    checkSubscriptionAccess();
     if (isMandatoryLockdown) {
         applyPaywallLockdown(true);
     }
     updateCheckoutPricingDisplay();
     updateSandboxModeBanner();
+    initAppPromoBanner();
+    initRenewalReminderBanner();
 });
 
 /**
@@ -340,16 +359,7 @@ function showCheckoutStep(step) {
     if (step === 'payment') {
         stepPlans.classList.add('hidden');
         stepPayment.classList.remove('hidden');
-
-        // Actualizar resumen del plan en la barra del Paso 2
-        const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
-        if (plan) {
-            const periodText = (typeof window.t === 'function' && plan.periodKey) ? window.t(plan.periodKey, plan.periodText) : plan.periodText;
-            const badge = document.getElementById('checkout-step2-plan-badge');
-            if (badge) {
-                badge.textContent = `${periodText} · $${plan.price}.00 USD`;
-            }
-        }
+        updateCheckoutPricingDisplay();
     } else {
         stepPayment.classList.add('hidden');
         stepPlans.classList.remove('hidden');
@@ -357,6 +367,8 @@ function showCheckoutStep(step) {
         if (sandboxCard) sandboxCard.classList.add('hidden');
         const invoiceDiv = document.getElementById('checkout-crypto-invoice');
         if (invoiceDiv) invoiceDiv.classList.add('hidden');
+        setCheckoutDrawerError('checkout-stripe-error', '');
+        setCheckoutDrawerError('checkout-crypto-error', '');
     }
 }
 
@@ -370,6 +382,12 @@ function backToCheckoutPlans() {
 function openCheckoutModal(defaultPeriod = 'month', isMandatory = false) {
     if (isMandatory) {
         isMandatoryLockdown = true;
+    }
+    if (typeof closeAppTour === 'function') {
+        const tourOverlay = document.getElementById('tourOverlay');
+        if (tourOverlay && !tourOverlay.classList.contains('hidden')) {
+            closeAppTour();
+        }
     }
     // Si viene un período explícito válido por parámetro, priorizarlo; si no, consultar localStorage
     if (defaultPeriod && PAYMENTS_CONFIG.pricing[defaultPeriod]) {
@@ -401,44 +419,85 @@ function closeCheckoutModal(force = false) {
 }
 
 function selectCheckoutPeriod(period) {
-    selectedCheckoutPeriod = period;
+    selectedCheckoutPeriod = PAYMENTS_CONFIG.pricing[period] ? period : 'month';
+    try { localStorage.setItem('preferred_billing_cycle', selectedCheckoutPeriod); } catch(e) {}
     ['month', 'quarter', 'semester', 'year'].forEach(p => {
         const btn = document.getElementById('checkout-period-' + p);
         if (btn) {
-            if (p === period) {
-                btn.className = "px-3 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition";
+            if (p === selectedCheckoutPeriod) {
+                btn.className = "px-2.5 py-2 text-xs font-extrabold rounded-lg bg-emerald-500 text-gray-950 shadow transition";
             } else {
-                btn.className = "px-3 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition";
+                btn.className = "px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition";
             }
         }
     });
 
     updateCheckoutPricingDisplay();
-    hideStripeSandbox();
-    hideCryptoInvoice();
 }
 
 function updateCheckoutPricingDisplay() {
     const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
     if (!plan) return;
 
+    const promoActive = isLaunchPromoActive();
+    const effectivePrice = getEffectivePlanPrice(selectedCheckoutPeriod);
+    const periodText = (typeof window.t === 'function' && plan.periodKey) ? window.t(plan.periodKey, plan.periodText) : plan.periodText;
+    const descKey = promoActive ? plan.descKey : plan.regularDescKey;
+    const descFallback = promoActive ? plan.desc : plan.regularDesc;
+    const descText = (typeof window.t === 'function' && descKey) ? window.t(descKey, descFallback) : descFallback;
+
     const priceEl = document.getElementById('checkout-price-amount');
     const descEl = document.getElementById('checkout-period-label');
     const subDescEl = document.getElementById('checkout-period-desc');
+    const monthPromoBadge = document.getElementById('checkout-month-promo-badge');
+    const trialBonusBadge = document.getElementById('checkout-trial-bonus-badge');
 
-    const periodText = (typeof window.t === 'function' && plan.periodKey) ? window.t(plan.periodKey, plan.periodText) : plan.periodText;
-    const descText = (typeof window.t === 'function' && plan.descKey) ? window.t(plan.descKey, plan.desc) : plan.desc;
-
-    if (priceEl) priceEl.textContent = `$${plan.price} USD`;
+    if (priceEl) priceEl.textContent = `$${effectivePrice} USD`;
     if (descEl) descEl.textContent = periodText;
     if (subDescEl) subDescEl.textContent = descText;
+    if (monthPromoBadge) monthPromoBadge.classList.toggle('hidden', !promoActive);
 
-    // Actualiza monto en drawers si están abiertos
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    const trial = (user && typeof getTrialInfo === 'function') ? getTrialInfo(user) : null;
+    if (trialBonusBadge) {
+        const hasCarryover = Boolean(trial && trial.isTrial && !trial.expired && trial.daysRemaining > 0 && (!user.subscription || user.subscription.status !== 'active'));
+        if (hasCarryover) {
+            const tpl = (typeof window.t === 'function')
+                ? window.t('checkout.trial_bonus_note', '+{0}d restantes de tu prueba gratis incluidos')
+                : `+{0}d restantes de tu prueba gratis incluidos`;
+            trialBonusBadge.innerHTML = `<i class="fa-solid fa-gift text-[9px]"></i> ${tpl.replace('{0}', trial.daysRemaining)}`;
+            trialBonusBadge.classList.remove('hidden');
+        } else {
+            trialBonusBadge.classList.add('hidden');
+        }
+    }
+
+    const step2Badge = document.getElementById('checkout-step2-plan-badge');
+    if (step2Badge) step2Badge.textContent = `${periodText} · $${effectivePrice}.00 USD`;
+
     const stripeAmt = document.getElementById('stripe-sandbox-amount');
-    if (stripeAmt) stripeAmt.textContent = `$${plan.price}.00 USD (${periodText})`;
+    if (stripeAmt) stripeAmt.textContent = `$${effectivePrice}.00 USD (${periodText})`;
+
+    const recurringNoteEl = document.getElementById('stripe-card-recurring-note');
+    if (recurringNoteEl) {
+        if (selectedCheckoutPeriod === 'month') {
+            recurringNoteEl.textContent = promoActive
+                ? ((typeof window.t === 'function')
+                    ? window.t('checkout.card_redirect_month_promo', 'Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.')
+                    : 'Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.')
+                : ((typeof window.t === 'function')
+                    ? window.t('checkout.card_redirect_month_reg', 'Serás redirigido a Stripe seguro para activar tu suscripción mensual recurrente de $25 USD/mes.')
+                    : 'Serás redirigido a Stripe seguro para activar tu suscripción mensual recurrente de $25 USD/mes.');
+        } else {
+            const baseText = (typeof window.t === 'function')
+                ? window.t('checkout.card_redirect_pack', 'Serás redirigido a Stripe seguro para abonar ${0} USD por tu pack inicial ({1}). Al finalizar tu período inicial, tu membresía continúa automáticamente a $25 USD/mes.')
+                : 'Serás redirigido a Stripe seguro para abonar ${0} USD por tu pack inicial ({1}). Al finalizar tu período inicial, tu membresía continúa automáticamente a $25 USD/mes.';
+            recurringNoteEl.textContent = baseText.replace('{0}', effectivePrice).replace('{1}', periodText);
+        }
+    }
 
     const cryptoAmt = document.getElementById('crypto-amount-display');
-    if (cryptoAmt) cryptoAmt.textContent = `${plan.price}.00 USDT`;
+    if (cryptoAmt) cryptoAmt.textContent = `${effectivePrice}.00 USDT`;
 }
 
 function updateSandboxModeBanner() {
@@ -457,81 +516,179 @@ function updateSandboxModeBanner() {
     }
 }
 
-/**
- * Procesa el pago con Tarjeta (Stripe como pasarela principal)
- */
-function handleStripeCheckout() {
-    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    hideCryptoInvoice();
-
-    if (PAYMENTS_CONFIG.mode === 'test') {
-        // En Sandbox: abre el panel interactivo de prueba
-        showCardSandbox();
-        return;
+async function getCheckoutAuthToken() {
+    if (typeof getSupabase !== 'function') return null;
+    const sb = getSupabase();
+    if (!sb || !sb.auth) return null;
+    try {
+        const { data } = await sb.auth.getSession();
+        let token = data && data.session && data.session.access_token;
+        if (!token) {
+            const { data: refreshed } = await sb.auth.refreshSession();
+            token = refreshed && refreshed.session && refreshed.session.access_token;
+        }
+        return token || null;
+    } catch (err) {
+        console.warn('[AsTrade Payments] Error obteniendo token de sesión:', err);
+        return null;
     }
+}
 
-    // En Producción: Redirige al Checkout oficial de Stripe
-    const stripeLink = PAYMENTS_CONFIG.stripe && PAYMENTS_CONFIG.stripe.paymentLinks[selectedCheckoutPeriod];
-    if (stripeLink && stripeLink.startsWith('http')) {
-        const userEmail = encodeURIComponent((user && user.email) || '');
-        const clientRef = encodeURIComponent((user && user.id) || '');
-        const sep = stripeLink.includes('?') ? '&' : '?';
-        window.open(`${stripeLink}${sep}prefilled_email=${userEmail}&client_reference_id=${clientRef}`, '_blank');
+function setCheckoutBtnLoading(btnId, isLoading, loadingText) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    if (isLoading) {
+        if (!btn.dataset.originalHtml) {
+            btn.dataset.originalHtml = btn.innerHTML;
+        }
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i> <span>${loadingText}</span>`;
     } else {
-        // Fallback Lemon Squeezy si estuviese configurado
-        const url = PAYMENTS_CONFIG.lemonsqueezy && PAYMENTS_CONFIG.lemonsqueezy.checkoutUrls[selectedCheckoutPeriod];
-        if (url && url.startsWith('http')) {
-            const userEmail = encodeURIComponent((user && user.email) || '');
-            const userId = encodeURIComponent((user && user.id) || '');
-            const sep = url.includes('?') ? '&' : '?';
-            const targetUrl = `${url}${sep}checkout[email]=${userEmail}&checkout[custom][user_id]=${userId}`;
-            window.open(targetUrl, '_blank');
-        } else {
-            alert("Enlace de Stripe en configuración. Asigna tus URLs en js/payments.js");
+        btn.disabled = false;
+        if (btn.dataset.originalHtml) {
+            btn.innerHTML = btn.dataset.originalHtml;
         }
     }
+}
+
+function setCheckoutDrawerError(boxId, message) {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    if (!message) {
+        box.classList.add('hidden');
+        box.innerHTML = '';
+        return;
+    }
+    box.innerHTML = `<i class="fa-solid fa-circle-exclamation text-rose-400 mt-0.5 shrink-0"></i><span>${message}</span>`;
+    box.classList.remove('hidden');
+}
+
+function openPaymentMethodDrawer(method) {
+    showCheckoutStep('payment');
+    const stripeDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
+    const invoiceDiv = document.getElementById('checkout-crypto-invoice');
+
+    setCheckoutDrawerError('checkout-stripe-error', '');
+    setCheckoutDrawerError('checkout-crypto-error', '');
+
+    if (method === 'stripe') {
+        if (invoiceDiv) invoiceDiv.classList.add('hidden');
+        if (stripeDiv) stripeDiv.classList.remove('hidden');
+    } else {
+        if (stripeDiv) stripeDiv.classList.add('hidden');
+        if (invoiceDiv) invoiceDiv.classList.remove('hidden');
+    }
+
+    updateCheckoutPricingDisplay();
+}
+
+function showCardCheckoutStep() {
+    openPaymentMethodDrawer('stripe');
+}
+
+function showCryptoCheckout() {
+    openPaymentMethodDrawer('crypto');
+}
+
+function hideCardSandbox() {
+    backToCheckoutPlans();
+}
+const showCardSandbox = showCardCheckoutStep;
+const showStripeSandbox = showCardCheckoutStep;
+const hideStripeSandbox = hideCardSandbox;
+
+function hideCryptoInvoice() {
+    backToCheckoutPlans();
+}
+
+async function startHostedCheckout({ endpoint, btnId, loadingKey, defaultLoading, errorBoxId, urlField, notConfiguredKey, notConfiguredFallback }) {
+    setCheckoutDrawerError(errorBoxId, '');
+    const loadingText = (typeof window.t === 'function') ? window.t(loadingKey, defaultLoading) : defaultLoading;
+    setCheckoutBtnLoading(btnId, true, loadingText);
+
+    try {
+        const token = await getCheckoutAuthToken();
+        if (!token) {
+            const reloginMsg = (typeof window.t === 'function')
+                ? window.t('checkout.relogin_required', 'Tu sesión expiró. Inicia sesión nuevamente para continuar al pago.')
+                : 'Tu sesión expiró. Inicia sesión nuevamente para continuar al pago.';
+            setCheckoutDrawerError(errorBoxId, reloginMsg);
+            if (typeof showToast === 'function') showToast(reloginMsg, false);
+            return;
+        }
+
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+        if (typeof SUPABASE_CONFIG !== 'undefined' && SUPABASE_CONFIG.anonKey) {
+            headers['apikey'] = SUPABASE_CONFIG.anonKey;
+        }
+
+        const res = await fetch(`${getEdgeFunctionsBase()}/${endpoint}`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ plan_interval: selectedCheckoutPeriod })
+        });
+
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data[urlField]) {
+            let errMsg = data.message || data.error || 'Error iniciando checkout';
+            if (res.status === 503 && notConfiguredKey) {
+                errMsg = (typeof window.t === 'function')
+                    ? window.t(notConfiguredKey, notConfiguredFallback)
+                    : notConfiguredFallback;
+            }
+            setCheckoutDrawerError(errorBoxId, errMsg);
+            if (typeof showToast === 'function') showToast(errMsg, false);
+            return;
+        }
+
+        window.location.assign(data[urlField]);
+    } catch (err) {
+        const netMsg = (err && err.message) ? err.message : 'Error de conexión con el servidor de pagos.';
+        setCheckoutDrawerError(errorBoxId, netMsg);
+        if (typeof showToast === 'function') showToast(netMsg, false);
+    } finally {
+        setCheckoutBtnLoading(btnId, false);
+    }
+}
+
+/**
+ * Procesa el pago con Tarjeta via Supabase Edge Function -> Stripe Checkout Session
+ */
+function handleStripeCheckout() {
+    return startHostedCheckout({
+        endpoint: 'create-stripe-checkout',
+        btnId: 'btn-stripe-checkout-submit',
+        loadingKey: 'checkout.loading_stripe',
+        defaultLoading: 'Conectando con Stripe...',
+        errorBoxId: 'checkout-stripe-error',
+        urlField: 'url',
+        notConfiguredKey: 'checkout.gateway_not_ready',
+        notConfiguredFallback: 'La pasarela Stripe está pendiente de activación de credenciales Live en el servidor.'
+    });
+}
+
+/**
+ * Procesa el pago con Criptomonedas via Supabase Edge Function -> NOWPayments Hosted Invoice
+ */
+function handleCryptoCheckout() {
+    return startHostedCheckout({
+        endpoint: 'create-nowpayments-invoice',
+        btnId: 'btn-crypto-checkout-submit',
+        loadingKey: 'checkout.loading_crypto',
+        defaultLoading: 'Generando factura segura...',
+        errorBoxId: 'checkout-crypto-error',
+        urlField: 'invoice_url',
+        notConfiguredKey: 'checkout.gateway_not_ready_crypto',
+        notConfiguredFallback: 'La pasarela NOWPayments está pendiente de activación de credenciales Live en el servidor.'
+    });
 }
 
 // Aliases para compatibilidad completa
 const handleCardCheckout = handleStripeCheckout;
 const handleLemonSqueezyCheckout = handleStripeCheckout;
-
-function showCardSandbox() {
-    showCheckoutStep('payment');
-    const invoiceDiv = document.getElementById('checkout-crypto-invoice');
-    if (invoiceDiv) invoiceDiv.classList.add('hidden');
-    const sandboxDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
-    if (sandboxDiv) {
-        sandboxDiv.classList.remove('hidden');
-        updateCheckoutPricingDisplay();
-    }
-}
-const showStripeSandbox = showCardSandbox;
-
-function hideCardSandbox() {
-    backToCheckoutPlans();
-}
-const hideStripeSandbox = hideCardSandbox;
-
-/**
- * Muestra las opciones y factura para pago con Criptomonedas (USDT)
- */
-function showCryptoCheckout() {
-    showCheckoutStep('payment');
-    const sandboxDiv = document.getElementById('checkout-card-sandbox') || document.getElementById('checkout-stripe-sandbox');
-    if (sandboxDiv) sandboxDiv.classList.add('hidden');
-    const invoiceDiv = document.getElementById('checkout-crypto-invoice');
-    if (invoiceDiv) {
-        invoiceDiv.classList.remove('hidden');
-        const plan = PAYMENTS_CONFIG.pricing[selectedCheckoutPeriod];
-        const amountSpan = document.getElementById('crypto-amount-display');
-        if (amountSpan && plan) amountSpan.textContent = `${plan.price}.00 USDT`;
-    }
-}
-
-function hideCryptoInvoice() {
-    backToCheckoutPlans();
-}
 
 /**
  * Procesa la activación de suscripción autorizada
@@ -641,49 +798,117 @@ function triggerConfettiEffect() {
     }
 }
 
+async function sleepMs(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 /**
  * Escucha parámetros en la URL tras retorno de pasarela de pago
- * Verifica el estado real con el backend en lugar de activar en cliente
+ * Verifica el estado real con el backend haciendo polling breve hasta que el webhook confirme
  */
 async function checkUrlPaymentParams() {
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        const searchStr = window.location.search || '';
-        const isPaymentReturn = searchStr.includes('payment_success=true') || 
-                                searchStr.includes('order_status=paid') ||
-                                urlParams.has('session_id') ||
-                                urlParams.get('checkout') === 'success';
-        if (isPaymentReturn) {
-            // Limpiar la URL sin recargar para prevenir re-ejecución
-            window.history.replaceState({}, document.title, window.location.pathname);
+        const checkoutParam = urlParams.get('checkout');
+        const providerParam = urlParams.get('provider') || '';
+        const hasSessionId = urlParams.has('session_id');
 
-            const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-            if (user && typeof apiFetchSubscription === 'function') {
-                if (typeof showToast === 'function') {
-                    showToast("Verificando confirmación de suscripción...", false);
-                }
-                const sub = await apiFetchSubscription(user.id);
-                if (sub && (sub.status === 'active' || sub.status === 'paid')) {
-                    user.subscription = sub;
-                    if (typeof saveUserSession === 'function') {
-                        saveUserSession(user);
-                    }
-                    if (typeof applyPaywallLockdown === 'function') {
-                        applyPaywallLockdown(false);
-                    }
-                    if (typeof closeCheckoutModal === 'function') {
-                        closeCheckoutModal(true);
-                    }
-                    checkSubscriptionAccess();
-                    if (typeof showToast === 'function') {
-                        showToast("¡Membresía Pro verificada con éxito!", true);
-                    }
-                } else {
-                    if (typeof showToast === 'function') {
-                        showToast("El pago está siendo procesado por la pasarela. Tu cuenta se activará automáticamente.", false);
-                    }
+        if (checkoutParam === 'canceled') {
+            window.history.replaceState({}, document.title, window.location.pathname);
+            if (typeof showToast === 'function') {
+                const cancelMsg = (typeof window.t === 'function')
+                    ? window.t('checkout.canceled_toast', 'Pago cancelado. Puedes intentarlo nuevamente cuando quieras.')
+                    : 'Pago cancelado. Puedes intentarlo nuevamente cuando quieras.';
+                showToast(cancelMsg, false);
+            }
+            return;
+        }
+
+        const isPaymentReturn = checkoutParam === 'success' || hasSessionId;
+        if (!isPaymentReturn) return;
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+
+        const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+        if (!user || typeof apiFetchSubscription !== 'function') return;
+
+        const prevUpdatedAt = user.subscription && user.subscription.updated_at ? user.subscription.updated_at : null;
+        const wasAlreadyActive = Boolean(
+            user.subscription &&
+            user.subscription.status === 'active' &&
+            new Date(user.subscription.current_period_end || 0).getTime() > Date.now()
+        );
+
+        if (typeof showToast === 'function') {
+            const pollMsg = (typeof window.t === 'function')
+                ? window.t('checkout.polling_msg', 'Verificando confirmación de suscripción...')
+                : 'Verificando confirmación de suscripción...';
+            showToast(pollMsg, false);
+        }
+
+        let confirmedSub = null;
+        const maxAttempts = 10;
+        for (let attempt = 0; attempt < maxAttempts; attempt++) {
+            const sub = await apiFetchSubscription(user.id);
+            const isSubActive = Boolean(
+                sub &&
+                sub.status === 'active' &&
+                new Date(sub.current_period_end || 0).getTime() > Date.now()
+            );
+
+            if (isSubActive) {
+                if (!wasAlreadyActive || (prevUpdatedAt && sub.updated_at && sub.updated_at !== prevUpdatedAt) || attempt >= 3) {
+                    confirmedSub = sub;
+                    break;
                 }
             }
+            if (attempt < maxAttempts - 1) {
+                await sleepMs(2500);
+            }
+        }
+
+        if (confirmedSub) {
+            user.subscription = confirmedSub;
+            if (typeof saveUserSession === 'function') {
+                saveUserSession(user);
+            }
+            if (typeof applyPaywallLockdown === 'function') {
+                applyPaywallLockdown(false);
+            }
+            if (typeof closeCheckoutModal === 'function') {
+                closeCheckoutModal(true);
+            }
+            checkSubscriptionAccess();
+            if (typeof initRenewalReminderBanner === 'function') {
+                initRenewalReminderBanner();
+            }
+            if (typeof initAppPromoBanner === 'function') {
+                initAppPromoBanner();
+            }
+            if (typeof showSubscriptionCelebration === 'function') {
+                const planKey = confirmedSub.plan_interval || confirmedSub.plan || 'month';
+                const planObj = PAYMENTS_CONFIG.pricing[planKey];
+                const periodLabel = planObj
+                    ? ((typeof window.t === 'function' && planObj.periodKey) ? window.t(planObj.periodKey, planObj.periodText) : planObj.periodText)
+                    : planKey;
+                const celebrationData = Object.assign({}, confirmedSub, {
+                    plan_name: confirmedSub.plan_name || `AsTrade Pro (${periodLabel})`,
+                    transaction_id: confirmedSub.stripe_subscription_id || confirmedSub.nowpayments_payment_id || (providerParam ? providerParam.toUpperCase() : 'PRO')
+                });
+                showSubscriptionCelebration(celebrationData);
+            }
+            if (typeof showToast === 'function') {
+                const okMsg = (typeof window.t === 'function')
+                    ? window.t('checkout.verified_toast', '¡Membresía Pro verificada con éxito!')
+                    : '¡Membresía Pro verificada con éxito!';
+                showToast(okMsg, true);
+            }
+        } else if (typeof showToast === 'function') {
+            const pendingKey = providerParam === 'nowpayments' ? 'checkout.crypto_pending_msg' : 'checkout.payment_pending_msg';
+            const fallbackMsg = providerParam === 'nowpayments'
+                ? 'Tu pago cripto está confirmándose en la red. Tu acceso Pro se activará automáticamente en unos momentos.'
+                : 'El pago está siendo procesado por Stripe. Tu cuenta se activará automáticamente en segundos.';
+            showToast((typeof window.t === 'function') ? window.t(pendingKey, fallbackMsg) : fallbackMsg, false);
         }
     } catch (e) {
         console.warn("Error leyendo parámetros de pago en URL:", e);
@@ -861,6 +1086,124 @@ function dismissAppPromoBanner() {
     } catch(e) {}
 }
 
+/**
+ * Calcula si corresponde mostrar el recordatorio suave y colapsable de renovación / transición mensual
+ */
+function getRenewalReminderMeta(user) {
+    const sub = user && user.subscription;
+    if (!sub || sub.status !== 'active' || !sub.current_period_end) return null;
+
+    const expMs = new Date(sub.current_period_end).getTime();
+    if (!Number.isFinite(expMs) || expMs <= Date.now()) return null;
+
+    const daysLeft = Math.ceil((expMs - Date.now()) / 86400000);
+    if (daysLeft < 0 || daysLeft > 7) return null;
+
+    const provider = sub.provider || 'stripe';
+    const planKey = sub.plan_interval || sub.plan || 'month';
+    const expDateStr = new Date(expMs).toLocaleDateString();
+
+    if (provider === 'nowpayments') {
+        return { type: 'crypto', daysLeft, expDateStr, expKey: String(sub.current_period_end).slice(0, 10), showRenewCta: true };
+    }
+    if (sub.cancel_at_period_end === true) {
+        return { type: 'canceled', daysLeft, expDateStr, expKey: String(sub.current_period_end).slice(0, 10), showRenewCta: true };
+    }
+    if (provider === 'stripe' && ['quarter', 'semester', 'year'].includes(planKey)) {
+        return { type: 'stripe_switch', daysLeft, expDateStr, expKey: String(sub.current_period_end).slice(0, 10), showRenewCta: false };
+    }
+    return null;
+}
+
+function getRenewalStorageKey(user, meta) {
+    return `astrade_reminder_state_${(user && user.id) || 'anon'}_${meta.type}_${meta.expKey}`;
+}
+
+function initRenewalReminderBanner() {
+    const banner = document.getElementById('renewal-reminder-banner');
+    const pill = document.getElementById('renewal-reminder-pill');
+    if (!banner || !pill) return;
+
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    const meta = getRenewalReminderMeta(user);
+    if (!meta || isSubscriptionExpired()) {
+        banner.classList.add('hidden');
+        pill.classList.add('hidden');
+        return;
+    }
+
+    const storageKey = getRenewalStorageKey(user, meta);
+    const savedState = localStorage.getItem(storageKey);
+    if (savedState === 'dismissed') {
+        banner.classList.add('hidden');
+        pill.classList.add('hidden');
+        return;
+    }
+
+    const textEl = document.getElementById('renewal-reminder-text');
+    const ctaBtn = document.getElementById('renewal-reminder-cta');
+    const pillTextEl = document.getElementById('renewal-reminder-pill-text');
+
+    let msgKey = 'reminder.crypto_msg';
+    let msgFallback = 'Tu membresía cripto vence en {0} día(s) ({1}). Como USDT no se renueva automáticamente, renueva cuando quieras para mantener tu acceso.';
+    if (meta.type === 'canceled') {
+        msgKey = 'reminder.canceled_msg';
+        msgFallback = 'Tu suscripción está cancelada y finalizará en {0} día(s) ({1}). Renueva antes para conservar acceso ininterrumpido.';
+    } else if (meta.type === 'stripe_switch') {
+        msgKey = 'reminder.stripe_switch_msg';
+        msgFallback = 'Recordatorio: Tu pack inicial termina en {0} día(s) ({1}) y tu suscripción continuará automáticamente a $25 USD/mes.';
+    }
+
+    const msgTemplate = (typeof window.t === 'function') ? window.t(msgKey, msgFallback) : msgFallback;
+    if (textEl) {
+        textEl.textContent = msgTemplate.replace('{0}', String(meta.daysLeft)).replace('{1}', meta.expDateStr);
+    }
+    if (ctaBtn) {
+        ctaBtn.classList.toggle('hidden', !meta.showRenewCta);
+    }
+    if (pillTextEl) {
+        const pillTpl = (typeof window.t === 'function') ? window.t('reminder.pill_label', 'Aviso Pro ({0}d)') : 'Aviso Pro ({0}d)';
+        pillTextEl.textContent = pillTpl.replace('{0}', String(meta.daysLeft));
+    }
+
+    if (savedState === 'minimized') {
+        banner.classList.add('hidden');
+        pill.classList.remove('hidden');
+    } else {
+        pill.classList.add('hidden');
+        banner.classList.remove('hidden');
+    }
+}
+
+function toggleRenewalReminderCollapse(minimize) {
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    const meta = getRenewalReminderMeta(user);
+    if (!meta) return;
+    const storageKey = getRenewalStorageKey(user, meta);
+    try {
+        if (minimize) {
+            localStorage.setItem(storageKey, 'minimized');
+        } else {
+            localStorage.removeItem(storageKey);
+        }
+    } catch (e) {}
+    initRenewalReminderBanner();
+}
+
+function dismissRenewalReminder() {
+    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
+    const meta = getRenewalReminderMeta(user);
+    if (meta) {
+        try {
+            localStorage.setItem(getRenewalStorageKey(user, meta), 'dismissed');
+        } catch (e) {}
+    }
+    const banner = document.getElementById('renewal-reminder-banner');
+    const pill = document.getElementById('renewal-reminder-pill');
+    if (banner) banner.classList.add('hidden');
+    if (pill) pill.classList.add('hidden');
+}
+
 // Prevenir cierre del modal por Escape durante Bloqueo Paywall
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && isMandatoryLockdown) {
@@ -873,6 +1216,7 @@ document.addEventListener('keydown', (e) => {
 function initPaymentsAutoCheckout() {
     checkUrlPaymentParams();
     initAppPromoBanner();
+    initRenewalReminderBanner();
 
     // Auto-abrir checkout si se solicitó compra directa tras login/registro
     try {
@@ -907,3 +1251,13 @@ if (document.readyState === 'loading') {
 window.openCheckoutModal = openCheckoutModal;
 window.closeCheckoutModal = closeCheckoutModal;
 window.selectCheckoutPeriod = selectCheckoutPeriod;
+window.showCardCheckoutStep = showCardCheckoutStep;
+window.handleStripeCheckout = handleStripeCheckout;
+window.showCryptoCheckout = showCryptoCheckout;
+window.handleCryptoCheckout = handleCryptoCheckout;
+window.backToCheckoutPlans = backToCheckoutPlans;
+window.toggleRenewalReminderCollapse = toggleRenewalReminderCollapse;
+window.dismissRenewalReminder = dismissRenewalReminder;
+window.initRenewalReminderBanner = initRenewalReminderBanner;
+window.checkSubscriptionAccess = checkSubscriptionAccess;
+window.openDirectCheckout = openDirectCheckout;

@@ -7513,6 +7513,9 @@ function renderMonthlyPerformance() {
         ];
 
         function startAppTour() {
+            if (typeof isSubscriptionExpired === 'function' && isSubscriptionExpired()) return;
+            const checkoutModal = document.getElementById('checkoutModal');
+            if (checkoutModal && !checkoutModal.classList.contains('hidden')) return;
             const overlay = document.getElementById('tourOverlay');
             if (!overlay) return;
 
