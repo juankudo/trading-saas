@@ -5,6 +5,26 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.29] - 2026-11-26
+
+### 🛠️ Flujo de Autenticación, Modal Black Friday y Ofertas No Invasivas
+- **Flujo de Inicio de Sesión y Activación del Modal de Membresía (`js/auth.js`, `js/payments.js`, `index.html`, `en.html`):**
+  - Separada la intención explícita de compra directa (`openDirectCheckout`) del inicio de sesión y registro normal (`openAuthModal(..., false)`), limpiando `direct_checkout_after_login` y ocultando `#auth-plan-intent-badge` al abrir el modal normalmente o al cerrarlo (`closeAuthModal`, clic en backdrop o `Escape`).
+  - Preservada la intención de plan únicamente al cambiar de vista dentro del modal de autenticación (`openAuthModal(..., 'preserve')`), y limpiado el parámetro `?open_checkout=` de la URL mediante `history.replaceState` tras consumirse en `initPaymentsAutoCheckout()`.
+  - Corregido el espaciado de `#auth-plan-intent-badge` (`mt-9 sm:mt-8` y `flex-wrap gap-2`) para evitar que el botón de cerrar (`.auth-close-btn` / `X`) se superponga sobre el banner en escritorio y móvil, manteniendo el diseño compacto cuando el banner está oculto.
+  - Garantizado que cuentas vigentes sin intención de compra previa ingresen directamente a `app.html` sin abrir `#checkoutModal`, mientras cuentas vencidas activan el bloqueo Paywall obligatorio (`applyPaywallLockdown`).
+- **Anuncio Explícito de Black Friday y Descuentos por Plan (`app.html`, `js/payments.js`, `js/i18n.js`, `css/styles.css`):**
+  - Añadido el anuncio explícito de **Black Friday** (`#checkout-black-friday-banner`) y el distintivo `-20% Black Friday` dentro de `#checkoutModal` en español e inglés.
+  - Reemplazadas todas las menciones residuales de `"Oferta Lanzamiento"` / `"Launch Offer"` dentro del modal de membresía (`app.html`, `js/payments.js`, `js/i18n.js`) por textos explícitos de **Black Friday**.
+  - Actualizados dinámicamente los 4 selectores de plan (`1 Mes`, `3 Meses`, `6 Meses`, `12 Meses`) para reflejar `-20%` durante Black Friday y mostrar en la tarjeta de precio el descuento aplicado, el ahorro en USD, el precio promocional (`$20`, `$56`, `$108`, `$200 USD`) y el precio regular/de referencia tachado (`$25`, `$70`, `$135`, `$250 USD`).
+- **Eliminación de Banners Promocionales y Avisos Invasivos Dentro de la App (`app.html`, `js/payments.js`, `js/cloud-storage.js`, `css/styles.css`, `js/i18n.js`):**
+  - Eliminado el banner promocional superior dentro de la app (`#app-promo-banner`, `initAppPromoBanner`, `dismissAppPromoBanner` y estilos `.app-promo-*`), manteniendo las ofertas visibles únicamente al abrir el modal de membresía.
+  - Eliminados dentro de la app los avisos y píldoras flotantes de vencimiento/renovación a 7 días y 1 día (`#renewal-reminder-banner`, `#renewal-reminder-pill`, `getRenewalReminderMeta`, `initRenewalReminderBanner`, `toggleRenewalReminderCollapse`, `dismissRenewalReminder` y claves `reminder.*`), sin alterar la landing pública ni las Edge Functions de `supabase/`.
+- **Cache-Busting (`index.html`, `en.html`, `app.html`):**
+  - Actualizados los parámetros de versión de estilos y scripts a `?v=3.9.29`.
+
+---
+
 ## [v3.9.28] - 2026-11-26
 
 ### 💳 Infraestructura de Pasarelas de Pago Live (Stripe Mixed Cart + NOWPayments) y Endurecimiento RLS

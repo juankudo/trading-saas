@@ -9,6 +9,9 @@ const TRIAL_DURATION_DAYS = 7;
 
 // Estado del usuario en memoria
 let currentUser = null;
+// Intención explícita de compra directa dentro del modal de auth actual
+let currentAuthPlanIntent = null;
+let authModalListenersBound = false;
 
 /**
  * Inicializa el estado de autenticación al cargar la página
@@ -22,6 +25,26 @@ function initAuth() {
     } catch (e) {
         console.error("Error leyendo sesión:", e);
         currentUser = null;
+    }
+
+    if (!authModalListenersBound && typeof document !== 'undefined') {
+        authModalListenersBound = true;
+        const backdrop = document.getElementById('auth-modal-backdrop');
+        if (backdrop) {
+            backdrop.addEventListener('click', (e) => {
+                if (e.target === backdrop) {
+                    closeAuthModal();
+                }
+            });
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const bd = document.getElementById('auth-modal-backdrop');
+                if (bd && !bd.classList.contains('hidden')) {
+                    closeAuthModal();
+                }
+            }
+        });
     }
 
     updateNavbarUserUI();
@@ -263,8 +286,23 @@ function hideAuthPlanBadge() {
     if (badge) badge.classList.add('hidden');
 }
 
+function clearAuthPlanIntent() {
+    currentAuthPlanIntent = null;
+    try {
+        localStorage.removeItem('direct_checkout_after_login');
+    } catch (e) {}
+    hideAuthPlanBadge();
+}
+
+function getActiveAuthPlanIntent() {
+    return (currentAuthPlanIntent && PRICING_PLANS_DATA[currentAuthPlanIntent])
+        ? currentAuthPlanIntent
+        : null;
+}
+
 function openDirectCheckout(periodKey) {
     const validPeriod = PRICING_PLANS_DATA[periodKey] ? periodKey : 'month';
+    currentAuthPlanIntent = validPeriod;
     try {
         localStorage.setItem('direct_checkout_after_login', validPeriod);
         localStorage.setItem('preferred_billing_cycle', validPeriod);
@@ -285,8 +323,8 @@ function selectPlanAndRegister(periodKey) {
     const validPeriod = PRICING_PLANS_DATA[periodKey] ? periodKey : 'month';
     try {
         localStorage.setItem('preferred_billing_cycle', validPeriod);
-        localStorage.removeItem('direct_checkout_after_login'); // Es prueba de 7 días, no checkout forzado
     } catch(e) {}
+    clearAuthPlanIntent(); // Es prueba de 7 días, no checkout forzado
 
     // Si ya está autenticado, llevarlo a su bitácora
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
@@ -295,14 +333,13 @@ function selectPlanAndRegister(periodKey) {
         return;
     }
 
-    hideAuthPlanBadge();
-    openAuthModal('register');
+    openAuthModal('register', false);
 }
 
 /**
  * Control visual de Modales (Registro, Login, Recuperar)
  */
-function openAuthModal(modalType = 'login', keepPlanIntent = false) {
+function openAuthModal(modalType = 'login', intentMode = false) {
     const backdrop = document.getElementById('auth-modal-backdrop');
     if (!backdrop) return;
 
@@ -318,12 +355,27 @@ function openAuthModal(modalType = 'login', keepPlanIntent = false) {
     if (modalType === 'register' && modalRegister) modalRegister.classList.remove('hidden');
     if (modalType === 'forgot' && modalForgot) modalForgot.classList.remove('hidden');
 
-    // Sincronizar badge de intención de compra
-    const pendingPlan = localStorage.getItem('direct_checkout_after_login');
-    if (pendingPlan && (keepPlanIntent || modalType === 'login' || modalType === 'register')) {
-        showAuthPlanBadge(pendingPlan);
-    } else if (!keepPlanIntent && !pendingPlan) {
-        hideAuthPlanBadge();
+    // Sincronizar badge de intención de compra únicamente cuando es explícito o se preserva dentro del modal
+    if (intentMode === true) {
+        if (!currentAuthPlanIntent) {
+            const storedPlan = localStorage.getItem('direct_checkout_after_login');
+            if (storedPlan && PRICING_PLANS_DATA[storedPlan]) {
+                currentAuthPlanIntent = storedPlan;
+            }
+        }
+        if (currentAuthPlanIntent) {
+            showAuthPlanBadge(currentAuthPlanIntent);
+        } else {
+            hideAuthPlanBadge();
+        }
+    } else if (intentMode === 'preserve') {
+        if (currentAuthPlanIntent) {
+            showAuthPlanBadge(currentAuthPlanIntent);
+        } else {
+            hideAuthPlanBadge();
+        }
+    } else {
+        clearAuthPlanIntent();
     }
 
     backdrop.scrollTop = 0;
@@ -339,6 +391,7 @@ function closeAuthModal() {
     backdrop.classList.remove('flex');
     document.body.classList.remove('overflow-hidden');
     clearAuthAlerts();
+    clearAuthPlanIntent();
 }
 
 function clearAuthAlerts() {

@@ -49,12 +49,9 @@ async function initCloudSync() {
         updateCloudSyncIndicator('error');
     }
 
-    // Verificar estado de suscripción, bloqueo paywall y recordatorios no invasivos
+    // Verificar estado de suscripción y bloqueo paywall
     if (typeof checkSubscriptionAccess === 'function') {
         checkSubscriptionAccess();
-    }
-    if (typeof initRenewalReminderBanner === 'function') {
-        initRenewalReminderBanner();
     }
 }
 

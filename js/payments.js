@@ -26,6 +26,8 @@ const PAYMENTS_CONFIG = {
         month: {
             promoPrice: 20,
             regularPrice: 25,
+            discountPct: 20,
+            standardBadge: null,
             get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 25,
             periodDays: 30,
@@ -33,12 +35,14 @@ const PAYMENTS_CONFIG = {
             periodText: 'por 1 Mes',
             descKey: 'checkout.trial_desc',
             regularDescKey: 'checkout.month_regular_desc',
-            desc: 'Oferta Lanzamiento (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.',
+            desc: 'Black Friday (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.',
             regularDesc: 'Cobro mensual recurrente de $25 USD/mes.'
         },
         quarter: {
             promoPrice: 56,
             regularPrice: 70,
+            discountPct: 20,
+            standardBadge: '-7%',
             get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 70,
             periodDays: 90,
@@ -46,12 +50,14 @@ const PAYMENTS_CONFIG = {
             periodText: 'por 3 Meses',
             descKey: 'checkout.quarter_desc',
             regularDescKey: 'checkout.quarter_regular_desc',
-            desc: 'Oferta Lanzamiento (-20% pack inicial): $56 USD hoy ($18.67/mes). Luego continúa a $25 USD/mes.',
+            desc: 'Black Friday (-20% pack inicial): $56 USD hoy ($18.67/mes). Luego continúa a $25 USD/mes.',
             regularDesc: 'Pack inicial de 3 meses por $70 USD ($23.33/mes). Luego continúa a $25 USD/mes.'
         },
         semester: {
             promoPrice: 108,
             regularPrice: 135,
+            discountPct: 20,
+            standardBadge: '-10%',
             get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 135,
             periodDays: 180,
@@ -59,12 +65,14 @@ const PAYMENTS_CONFIG = {
             periodText: 'por 6 Meses',
             descKey: 'checkout.semester_desc',
             regularDescKey: 'checkout.semester_regular_desc',
-            desc: 'Oferta Lanzamiento (-20% pack inicial): $108 USD hoy ($18.00/mes). Luego continúa a $25 USD/mes.',
+            desc: 'Black Friday (-20% pack inicial): $108 USD hoy ($18.00/mes). Luego continúa a $25 USD/mes.',
             regularDesc: 'Pack inicial de 6 meses por $135 USD ($22.50/mes). Luego continúa a $25 USD/mes.'
         },
         year: {
             promoPrice: 200,
             regularPrice: 250,
+            discountPct: 20,
+            standardBadge: '-17%',
             get price() { return isLaunchPromoActive() ? this.promoPrice : this.regularPrice; },
             originalPrice: 250,
             periodDays: 365,
@@ -72,7 +80,7 @@ const PAYMENTS_CONFIG = {
             periodText: 'por 12 Meses',
             descKey: 'checkout.year_desc',
             regularDescKey: 'checkout.year_regular_desc',
-            desc: 'Oferta Lanzamiento (-20% pack inicial): $200 USD hoy ($16.67/mes). Luego continúa a $25 USD/mes.',
+            desc: 'Black Friday (-20% pack inicial): $200 USD hoy ($16.67/mes). Luego continúa a $25 USD/mes.',
             regularDesc: 'Pack inicial de 12 meses por $250 USD ($20.83/mes). Luego continúa a $25 USD/mes.'
         }
     }
@@ -344,8 +352,6 @@ window.addEventListener('languageChanged', () => {
     }
     updateCheckoutPricingDisplay();
     updateSandboxModeBanner();
-    initAppPromoBanner();
-    initRenewalReminderBanner();
 });
 
 /**
@@ -446,16 +452,60 @@ function updateCheckoutPricingDisplay() {
     const descFallback = promoActive ? plan.desc : plan.regularDesc;
     const descText = (typeof window.t === 'function' && descKey) ? window.t(descKey, descFallback) : descFallback;
 
+    const bfBannerEl = document.getElementById('checkout-black-friday-banner');
+    if (bfBannerEl) {
+        bfBannerEl.classList.toggle('hidden', !promoActive);
+    }
+
+    ['month', 'quarter', 'semester', 'year'].forEach(p => {
+        const badgeEl = document.getElementById(`checkout-${p}-promo-badge`);
+        const pConfig = PAYMENTS_CONFIG.pricing[p];
+        if (!badgeEl || !pConfig) return;
+
+        const isSelected = (p === selectedCheckoutPeriod);
+        if (promoActive) {
+            badgeEl.textContent = `-${pConfig.discountPct || 20}%`;
+            badgeEl.classList.remove('hidden');
+            badgeEl.className = isSelected
+                ? 'text-[9px] bg-gray-950/20 text-gray-950 px-1 py-0.2 rounded ml-0.5 font-black'
+                : 'text-[9px] bg-amber-500/15 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded ml-0.5 font-black';
+        } else if (pConfig.standardBadge) {
+            badgeEl.textContent = pConfig.standardBadge;
+            badgeEl.classList.remove('hidden');
+            badgeEl.className = isSelected
+                ? 'text-[9px] bg-gray-950/20 text-gray-950 px-1 py-0.2 rounded ml-0.5 font-black'
+                : 'text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5';
+        } else {
+            badgeEl.classList.add('hidden');
+        }
+    });
+
     const priceEl = document.getElementById('checkout-price-amount');
     const descEl = document.getElementById('checkout-period-label');
     const subDescEl = document.getElementById('checkout-period-desc');
-    const monthPromoBadge = document.getElementById('checkout-month-promo-badge');
+    const promoRowEl = document.getElementById('checkout-promo-row');
+    const savingsPillEl = document.getElementById('checkout-savings-pill');
+    const regularWrapEl = document.getElementById('checkout-regular-price-wrap');
+    const regularPriceEl = document.getElementById('checkout-regular-price');
     const trialBonusBadge = document.getElementById('checkout-trial-bonus-badge');
 
     if (priceEl) priceEl.textContent = `$${effectivePrice} USD`;
     if (descEl) descEl.textContent = periodText;
     if (subDescEl) subDescEl.textContent = descText;
-    if (monthPromoBadge) monthPromoBadge.classList.toggle('hidden', !promoActive);
+
+    const savingsAmount = Math.max(0, (plan.regularPrice || 0) - (plan.promoPrice || 0));
+    const showDiscountBreakdown = promoActive && savingsAmount > 0;
+    if (promoRowEl) promoRowEl.classList.toggle('hidden', !showDiscountBreakdown);
+    if (regularWrapEl) regularWrapEl.classList.toggle('hidden', !showDiscountBreakdown);
+    if (regularPriceEl && plan.regularPrice) {
+        regularPriceEl.textContent = `$${plan.regularPrice} USD`;
+    }
+    if (savingsPillEl && showDiscountBreakdown) {
+        const savingsTpl = (typeof window.t === 'function')
+            ? window.t('checkout.savings_label', 'Ahorras ${0} USD')
+            : 'Ahorras ${0} USD';
+        savingsPillEl.textContent = savingsTpl.replace('{0}', String(savingsAmount));
+    }
 
     const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
     const trial = (user && typeof getTrialInfo === 'function') ? getTrialInfo(user) : null;
@@ -483,8 +533,8 @@ function updateCheckoutPricingDisplay() {
         if (selectedCheckoutPeriod === 'month') {
             recurringNoteEl.textContent = promoActive
                 ? ((typeof window.t === 'function')
-                    ? window.t('checkout.card_redirect_month_promo', 'Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.')
-                    : 'Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.')
+                    ? window.t('checkout.card_redirect_month_promo', 'Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF Black Friday 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.')
+                    : 'Serás redirigido a Stripe seguro. Hoy abonas $20 USD (20% OFF Black Friday 1er mes) y a partir del mes 2 continúa automáticamente a $25 USD/mes.')
                 : ((typeof window.t === 'function')
                     ? window.t('checkout.card_redirect_month_reg', 'Serás redirigido a Stripe seguro para activar tu suscripción mensual recurrente de $25 USD/mes.')
                     : 'Serás redirigido a Stripe seguro para activar tu suscripción mensual recurrente de $25 USD/mes.');
@@ -879,12 +929,6 @@ async function checkUrlPaymentParams() {
                 closeCheckoutModal(true);
             }
             checkSubscriptionAccess();
-            if (typeof initRenewalReminderBanner === 'function') {
-                initRenewalReminderBanner();
-            }
-            if (typeof initAppPromoBanner === 'function') {
-                initAppPromoBanner();
-            }
             if (typeof showSubscriptionCelebration === 'function') {
                 const planKey = confirmedSub.plan_interval || confirmedSub.plan || 'month';
                 const planObj = PAYMENTS_CONFIG.pricing[planKey];
@@ -953,255 +997,11 @@ function openDirectCheckout(periodKey) {
             localStorage.setItem('direct_checkout_after_login', periodKey || 'month');
         } catch (e) {}
         if (typeof openAuthModal === 'function') {
-            openAuthModal('register');
+            openAuthModal('register', true);
         } else {
             window.location.href = 'index.html?action=register';
         }
     }
-}
-
-/**
- * Inicializa el banner promocional dismissible dentro de app.html para usuarios en prueba gratuita
- */
-function initAppPromoBanner() {
-    const banner = document.getElementById('app-promo-banner');
-    if (!banner) return;
-
-    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    if (!user) {
-        banner.classList.add('hidden');
-        return;
-    }
-
-    const trial = (typeof getTrialInfo === 'function') ? getTrialInfo(user) : { isTrial: false };
-    // Solo se muestra si el usuario está en prueba gratuita activa y no vencida
-    if (!trial.isTrial || trial.expired) {
-        banner.classList.add('hidden');
-        return;
-    }
-
-    const LAUNCH_START = new Date('2026-11-30T21:00:00+01:00').getTime();
-    const PROMO_END = new Date('2026-12-06T23:59:59+01:00').getTime();
-    const now = Date.now();
-
-    // Si ya terminó la promoción
-    if (now >= PROMO_END) {
-        banner.classList.add('hidden');
-        return;
-    }
-
-    const isLastDay = (now >= PROMO_END - 24 * 60 * 60 * 1000);
-    const dismissedAt = localStorage.getItem('astrade_promo_banner_dismissed');
-
-    // Si fue descartado hace menos de 24 horas y NO es el último día, respetar la decisión
-    if (dismissedAt && !isLastDay) {
-        const timeSinceDismiss = now - parseInt(dismissedAt, 10);
-        if (timeSinceDismiss < 24 * 60 * 60 * 1000) {
-            banner.classList.add('hidden');
-            return;
-        }
-    }
-
-    const isEn = (localStorage.getItem('astrade_lang') === 'en') || (document.documentElement.lang === 'en');
-
-    if (now < LAUNCH_START) {
-        // Fase 1: Pre-lanzamiento
-        banner.className = "app-promo-banner py-2 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-md transition-all duration-300";
-        banner.innerHTML = `
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
-                    <i class="fa-solid fa-rocket text-[9px]"></i> ${isEn ? 'Launch Deal' : 'Lanzamiento'}
-                </span>
-                <span class="font-medium">
-                    ${isEn 
-                        ? 'Official Launch on Nov 30 at 21:00 CET. Your 7-day trial is active and you can lock in <strong>20% OFF</strong> before your trial ends!'
-                        : 'Gran Lanzamiento el 30 de Noviembre a las 21:00hs. ¡Tu prueba de 7 días está activa y podrás asegurar tu <strong>20% OFF</strong> antes de que termine!'}
-                </span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <button onclick="openCheckoutModal('semester')" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow transition whitespace-nowrap">
-                    ${isEn ? 'Preview Offers &rarr;' : 'Ver Ofertas &rarr;'}
-                </button>
-                <button onclick="dismissAppPromoBanner()" class="text-gray-400 hover:text-white p-1 transition" title="${isEn ? 'Dismiss' : 'Ocultar'}">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-        `;
-    } else if (isLastDay) {
-        // Fase 2 - Último día (Urgencia)
-        banner.className = "app-promo-banner app-promo-urgent py-2.5 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-lg transition-all duration-300";
-        banner.innerHTML = `
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950 shadow-sm animate-bounce">
-                    <i class="fa-solid fa-triangle-exclamation text-[9px]"></i> ${isEn ? 'Last Day' : 'Último Día'}
-                </span>
-                <span class="font-bold">
-                    ${isEn
-                        ? '⚠️ <strong>Final Hours!</strong> Today at midnight (23:59 CET) the 20% Black Friday discounts expire. If you upgrade today, your remaining trial days are added to your subscription!'
-                        : '⚠️ <strong>¡Últimas horas!</strong> Hoy a medianoche (23:59hs) finalizan los descuentos del 20% de Black Friday. ¡Tus días restantes de prueba se sumarán a tu suscripción!'}
-                </span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <button onclick="openCheckoutModal('semester')" class="px-3 py-1 rounded-md text-[11px] font-black bg-amber-500 hover:bg-amber-400 text-gray-950 shadow-md transition whitespace-nowrap">
-                    ${isEn ? 'Claim 20% OFF Now &rarr;' : 'Aprovechar 20% OFF Ahora &rarr;'}
-                </button>
-                <button onclick="dismissAppPromoBanner()" class="text-amber-300 hover:text-white p-1 transition" title="${isEn ? 'Dismiss' : 'Ocultar'}">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-        `;
-    } else {
-        // Fase 2 - Promo Activa Regular (30/11 a 05/12)
-        banner.className = "app-promo-banner py-2 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-md transition-all duration-300";
-        banner.innerHTML = `
-            <div class="flex items-center gap-2 flex-wrap">
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-500 text-gray-950 shadow-sm animate-pulse">
-                    <i class="fa-solid fa-fire text-[9px]"></i> Black Friday
-                </span>
-                <span class="font-medium">
-                    ${isEn
-                        ? '🔥 <strong>Launch Deals Active:</strong> 20% OFF on all plans. Lock in your discount today; your remaining trial days are added to your plan!'
-                        : '🔥 <strong>Ofertas de Lanzamiento Activas:</strong> 20% OFF en todos los planes. Asegura tu descuento; ¡tus días restantes de prueba se sumarán a tu plan!'}
-                </span>
-            </div>
-            <div class="flex items-center gap-2 shrink-0">
-                <button onclick="openCheckoutModal('semester')" class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-500 hover:bg-emerald-400 text-gray-950 shadow transition whitespace-nowrap">
-                    ${isEn ? 'Lock In 20% OFF &rarr;' : 'Asegurar 20% OFF &rarr;'}
-                </button>
-                <button onclick="dismissAppPromoBanner()" class="text-gray-400 hover:text-white p-1 transition" title="${isEn ? 'Dismiss' : 'Ocultar'}">
-                    <i class="fa-solid fa-xmark text-xs"></i>
-                </button>
-            </div>
-        `;
-    }
-
-    banner.classList.remove('hidden');
-}
-
-function dismissAppPromoBanner() {
-    const banner = document.getElementById('app-promo-banner');
-    if (banner) banner.classList.add('hidden');
-    try {
-        localStorage.setItem('astrade_promo_banner_dismissed', Date.now().toString());
-    } catch(e) {}
-}
-
-/**
- * Calcula si corresponde mostrar el recordatorio suave y colapsable de renovación / transición mensual
- */
-function getRenewalReminderMeta(user) {
-    const sub = user && user.subscription;
-    if (!sub || sub.status !== 'active' || !sub.current_period_end) return null;
-
-    const expMs = new Date(sub.current_period_end).getTime();
-    if (!Number.isFinite(expMs) || expMs <= Date.now()) return null;
-
-    const daysLeft = Math.ceil((expMs - Date.now()) / 86400000);
-    if (daysLeft < 0 || daysLeft > 7) return null;
-
-    const provider = sub.provider || 'stripe';
-    const planKey = sub.plan_interval || sub.plan || 'month';
-    const expDateStr = new Date(expMs).toLocaleDateString();
-
-    if (provider === 'nowpayments') {
-        return { type: 'crypto', daysLeft, expDateStr, expKey: String(sub.current_period_end).slice(0, 10), showRenewCta: true };
-    }
-    if (sub.cancel_at_period_end === true) {
-        return { type: 'canceled', daysLeft, expDateStr, expKey: String(sub.current_period_end).slice(0, 10), showRenewCta: true };
-    }
-    if (provider === 'stripe' && ['quarter', 'semester', 'year'].includes(planKey)) {
-        return { type: 'stripe_switch', daysLeft, expDateStr, expKey: String(sub.current_period_end).slice(0, 10), showRenewCta: false };
-    }
-    return null;
-}
-
-function getRenewalStorageKey(user, meta) {
-    return `astrade_reminder_state_${(user && user.id) || 'anon'}_${meta.type}_${meta.expKey}`;
-}
-
-function initRenewalReminderBanner() {
-    const banner = document.getElementById('renewal-reminder-banner');
-    const pill = document.getElementById('renewal-reminder-pill');
-    if (!banner || !pill) return;
-
-    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    const meta = getRenewalReminderMeta(user);
-    if (!meta || isSubscriptionExpired()) {
-        banner.classList.add('hidden');
-        pill.classList.add('hidden');
-        return;
-    }
-
-    const storageKey = getRenewalStorageKey(user, meta);
-    const savedState = localStorage.getItem(storageKey);
-    if (savedState === 'dismissed') {
-        banner.classList.add('hidden');
-        pill.classList.add('hidden');
-        return;
-    }
-
-    const textEl = document.getElementById('renewal-reminder-text');
-    const ctaBtn = document.getElementById('renewal-reminder-cta');
-    const pillTextEl = document.getElementById('renewal-reminder-pill-text');
-
-    let msgKey = 'reminder.crypto_msg';
-    let msgFallback = 'Tu membresía cripto vence en {0} día(s) ({1}). Como USDT no se renueva automáticamente, renueva cuando quieras para mantener tu acceso.';
-    if (meta.type === 'canceled') {
-        msgKey = 'reminder.canceled_msg';
-        msgFallback = 'Tu suscripción está cancelada y finalizará en {0} día(s) ({1}). Renueva antes para conservar acceso ininterrumpido.';
-    } else if (meta.type === 'stripe_switch') {
-        msgKey = 'reminder.stripe_switch_msg';
-        msgFallback = 'Recordatorio: Tu pack inicial termina en {0} día(s) ({1}) y tu suscripción continuará automáticamente a $25 USD/mes.';
-    }
-
-    const msgTemplate = (typeof window.t === 'function') ? window.t(msgKey, msgFallback) : msgFallback;
-    if (textEl) {
-        textEl.textContent = msgTemplate.replace('{0}', String(meta.daysLeft)).replace('{1}', meta.expDateStr);
-    }
-    if (ctaBtn) {
-        ctaBtn.classList.toggle('hidden', !meta.showRenewCta);
-    }
-    if (pillTextEl) {
-        const pillTpl = (typeof window.t === 'function') ? window.t('reminder.pill_label', 'Aviso Pro ({0}d)') : 'Aviso Pro ({0}d)';
-        pillTextEl.textContent = pillTpl.replace('{0}', String(meta.daysLeft));
-    }
-
-    if (savedState === 'minimized') {
-        banner.classList.add('hidden');
-        pill.classList.remove('hidden');
-    } else {
-        pill.classList.add('hidden');
-        banner.classList.remove('hidden');
-    }
-}
-
-function toggleRenewalReminderCollapse(minimize) {
-    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    const meta = getRenewalReminderMeta(user);
-    if (!meta) return;
-    const storageKey = getRenewalStorageKey(user, meta);
-    try {
-        if (minimize) {
-            localStorage.setItem(storageKey, 'minimized');
-        } else {
-            localStorage.removeItem(storageKey);
-        }
-    } catch (e) {}
-    initRenewalReminderBanner();
-}
-
-function dismissRenewalReminder() {
-    const user = (typeof getCurrentUser === 'function') ? getCurrentUser() : null;
-    const meta = getRenewalReminderMeta(user);
-    if (meta) {
-        try {
-            localStorage.setItem(getRenewalStorageKey(user, meta), 'dismissed');
-        } catch (e) {}
-    }
-    const banner = document.getElementById('renewal-reminder-banner');
-    const pill = document.getElementById('renewal-reminder-pill');
-    if (banner) banner.classList.add('hidden');
-    if (pill) pill.classList.add('hidden');
 }
 
 // Prevenir cierre del modal por Escape durante Bloqueo Paywall
@@ -1215,13 +1015,18 @@ document.addEventListener('keydown', (e) => {
 // Inicialización automática de escuchas
 function initPaymentsAutoCheckout() {
     checkUrlPaymentParams();
-    initAppPromoBanner();
-    initRenewalReminderBanner();
 
     // Auto-abrir checkout si se solicitó compra directa tras login/registro
     try {
         const urlParams = new URLSearchParams(window.location.search);
-        const directPlan = urlParams.get('open_checkout') || localStorage.getItem('direct_checkout_after_login');
+        const openCheckoutParam = urlParams.get('open_checkout');
+        const directPlan = openCheckoutParam || localStorage.getItem('direct_checkout_after_login');
+        if (openCheckoutParam) {
+            urlParams.delete('open_checkout');
+            const remainingSearch = urlParams.toString();
+            const cleanUrl = window.location.pathname + (remainingSearch ? '?' + remainingSearch : '') + window.location.hash;
+            window.history.replaceState({}, document.title, cleanUrl);
+        }
         if (directPlan) {
             localStorage.removeItem('direct_checkout_after_login');
             setTimeout(() => {
@@ -1256,8 +1061,5 @@ window.handleStripeCheckout = handleStripeCheckout;
 window.showCryptoCheckout = showCryptoCheckout;
 window.handleCryptoCheckout = handleCryptoCheckout;
 window.backToCheckoutPlans = backToCheckoutPlans;
-window.toggleRenewalReminderCollapse = toggleRenewalReminderCollapse;
-window.dismissRenewalReminder = dismissRenewalReminder;
-window.initRenewalReminderBanner = initRenewalReminderBanner;
 window.checkSubscriptionAccess = checkSubscriptionAccess;
 window.openDirectCheckout = openDirectCheckout;

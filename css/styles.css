@@ -355,35 +355,21 @@ html.light #top-announcement-bar .bg-emerald-500\/20 {
     border-color: #6ee7b7 !important;
 }
 
-/* In-App Promotional Banner (app.html) */
-.app-promo-banner {
-    background: linear-gradient(90deg, rgba(6, 78, 59, 0.85) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(6, 78, 59, 0.85) 100%);
-    border-bottom: 1px solid rgba(16, 185, 129, 0.4);
-    color: #e2e8f0;
-}
-html.light .app-promo-banner {
-    background: linear-gradient(90deg, #ecfdf5 0%, #f0fdf4 50%, #eff6ff 100%) !important;
-    border-bottom: 1px solid #a7f3d0 !important;
-    color: #065f46 !important;
-}
-html.light .app-promo-banner span,
-html.light .app-promo-banner strong {
-    color: #065f46 !important;
-}
-
-.app-promo-urgent {
-    background: linear-gradient(90deg, rgba(120, 53, 15, 0.9) 0%, rgba(15, 23, 42, 0.95) 50%, rgba(120, 53, 15, 0.9) 100%) !important;
-    border-bottom: 1px solid rgba(245, 158, 11, 0.6) !important;
-    color: #fef3c7 !important;
-}
-html.light .app-promo-urgent {
-    background: linear-gradient(90deg, #fffbeb 0%, #fef3c7 50%, #fff7ed 100%) !important;
-    border-bottom: 1px solid #fcd34d !important;
+/* Checkout Black Friday Banner in Light Mode */
+html.light #checkout-black-friday-banner {
+    background: linear-gradient(90deg, #fffbeb 0%, #ecfdf5 50%, #fffbeb 100%) !important;
+    border-color: #f59e0b !important;
     color: #92400e !important;
 }
-html.light .app-promo-urgent span,
-html.light .app-promo-urgent strong {
+html.light #checkout-bf-discount-pill {
+    background-color: #fef3c7 !important;
+    border-color: #f59e0b !important;
     color: #92400e !important;
+}
+html.light #checkout-savings-pill {
+    background-color: #d1fae5 !important;
+    border-color: #10b981 !important;
+    color: #065f46 !important;
 }
 
 .bf-direct-buy-link {

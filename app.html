@@ -17,15 +17,15 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="css/styles.css?v=3.9.28">
-    <script src="js/theme.js"></script>
-    <script src="js/i18n.js?v=3.9.28"></script>
-    <script src="js/auth.js?v=3.9.28"></script>
+    <link rel="stylesheet" href="css/styles.css?v=3.9.29">
+    <script src="js/theme.js?v=3.9.29"></script>
+    <script src="js/i18n.js?v=3.9.29"></script>
+    <script src="js/auth.js?v=3.9.29"></script>
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabase-client.js?v=3.9.28"></script>
-    <script src="js/payments.js?v=3.9.28"></script>
-    <script src="js/cloud-storage.js?v=3.9.28"></script>
+    <script src="js/supabase-client.js?v=3.9.29"></script>
+    <script src="js/payments.js?v=3.9.29"></script>
+    <script src="js/cloud-storage.js?v=3.9.29"></script>
     <script>
         (function() {
             if (!getCurrentUser()) {
@@ -43,11 +43,6 @@
 
     <!-- CONTENEDOR PRINCIPAL INTERACTIVO DE LA APP (Atenuado en Paywall Lockdown) -->
     <div id="app-main-content" class="min-h-screen flex flex-col flex-grow w-full max-w-full transition-all duration-300">
-
-        <!-- Banner Promocional Dismissible para Usuarios en Prueba (Black Friday / Lanzamiento) -->
-        <div id="app-promo-banner" class="hidden app-promo-banner py-2 px-4 text-xs flex flex-wrap items-center justify-between gap-2 shadow-md transition-all duration-300">
-            <!-- Inyectado dinámicamente por initAppPromoBanner() -->
-        </div>
 
         <header class="bg-card border-b border-main px-6 py-3.5 flex flex-col gap-3 sticky top-0 z-40">
         <!-- FILA 1: Encabezado Principal (Logo a la izquierda, Modo Centrado, Registro de Usuario a la derecha) -->
@@ -198,34 +193,6 @@
         <span id="readonly-banner-msg" data-i18n-html="banner.readonly">Tu prueba de 7 días ha finalizado. Tu cuenta está en <strong>Modo Solo Lectura</strong>. Tus datos están a salvo.</span>
         <button onclick="openCheckoutModal()" class="px-3 py-1 rounded bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-gray-950 font-black shadow-md transition ml-1">
             <i class="fa-solid fa-credit-card mr-1"></i> <span data-i18n="banner.renew">Renovar Acceso Pro</span>
-        </button>
-    </div>
-
-    <!-- Recordatorio Suave y Colapsable de Vencimiento / Transición Mensual -->
-    <div id="renewal-reminder-banner" class="hidden bg-amber-950/75 border-b border-amber-700/50 px-4 py-2 text-xs text-amber-100 flex flex-wrap items-center justify-between gap-2 backdrop-blur-sm transition-all duration-200">
-        <div class="flex items-center gap-2 min-w-0">
-            <span id="renewal-reminder-icon" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-amber-500/20 text-amber-400 shrink-0">
-                <i class="fa-solid fa-bell text-[11px]"></i>
-            </span>
-            <span id="renewal-reminder-text" class="leading-snug"></span>
-        </div>
-        <div class="flex items-center gap-1.5 shrink-0">
-            <button type="button" id="renewal-reminder-cta" onclick="openCheckoutModal()" class="px-2.5 py-1 rounded-md bg-amber-500 hover:bg-amber-400 text-gray-950 font-black text-[11px] shadow-sm transition whitespace-nowrap">
-                <span data-i18n="reminder.renew_btn">Renovar ahora</span>
-            </button>
-            <button type="button" onclick="toggleRenewalReminderCollapse(true)" class="p-1.5 rounded hover:bg-amber-900/60 text-amber-300 hover:text-white transition" title="Minimizar" data-i18n-title="reminder.minimize_tip">
-                <i class="fa-solid fa-chevron-up text-[11px]"></i>
-            </button>
-            <button type="button" onclick="dismissRenewalReminder()" class="p-1.5 rounded hover:bg-amber-900/60 text-amber-300 hover:text-white transition" title="Ocultar" data-i18n-title="reminder.close_tip">
-                <i class="fa-solid fa-xmark text-xs"></i>
-            </button>
-        </div>
-    </div>
-    <div id="renewal-reminder-pill" class="hidden fixed bottom-4 right-4 z-40">
-        <button type="button" onclick="toggleRenewalReminderCollapse(false)" class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900/95 hover:bg-amber-950 text-amber-300 border border-amber-600/60 shadow-lg backdrop-blur-md text-[11px] font-bold transition">
-            <i class="fa-solid fa-bell text-amber-400 animate-pulse"></i>
-            <span id="renewal-reminder-pill-text">Recordatorio Pro</span>
-            <i class="fa-solid fa-chevron-down text-[10px] text-amber-400/80"></i>
         </button>
     </div>
 
@@ -1359,10 +1326,16 @@
                     </div>
                     <h3 id="checkout-modal-title" class="text-xl font-black text-white" data-i18n="checkout.title">Membresía Pro Ilimitada</h3>
                     <p id="checkout-modal-subtitle" class="text-xs text-gray-400 mt-1" data-i18n="checkout.subtitle">Desbloquea todas las funciones, cuentas ilimitadas y respaldo en la nube</p>
-                    <div class="mt-2">
+                    <div class="mt-2 flex flex-col items-center gap-2">
                         <span id="checkout-mode-indicator" class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-amber-950/80 text-amber-300 border border-amber-700/60">
                             <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span> Modo Sandbox Activo
                         </span>
+                        <div id="checkout-black-friday-banner" class="inline-flex flex-wrap items-center justify-center gap-1.5 px-3 py-1.5 rounded-xl bg-gradient-to-r from-amber-500/15 via-emerald-500/15 to-amber-500/15 border border-amber-500/40 text-xs font-bold text-amber-300 shadow-sm">
+                            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500 text-gray-950">
+                                <i class="fa-solid fa-fire text-[9px]"></i> Black Friday
+                            </span>
+                            <span id="checkout-bf-banner-text" data-i18n="checkout.bf_banner_text">20% OFF en todos los planes por tiempo limitado</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1372,21 +1345,35 @@
                         <span data-i18n="checkout.month_1">1 Mes</span> <span id="checkout-month-promo-badge" class="text-[9px] bg-gray-950/20 text-gray-950 px-1 py-0.2 rounded ml-0.5 font-black">-20%</span>
                     </button>
                     <button type="button" id="checkout-period-quarter" onclick="selectCheckoutPeriod('quarter')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                        <span data-i18n="checkout.month_3">3 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-7%</span>
+                        <span data-i18n="checkout.month_3">3 Meses</span> <span id="checkout-quarter-promo-badge" class="text-[9px] bg-amber-500/15 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded ml-0.5 font-black">-20%</span>
                     </button>
                     <button type="button" id="checkout-period-semester" onclick="selectCheckoutPeriod('semester')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                        <span data-i18n="checkout.month_6">6 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-10%</span>
+                        <span data-i18n="checkout.month_6">6 Meses</span> <span id="checkout-semester-promo-badge" class="text-[9px] bg-amber-500/15 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded ml-0.5 font-black">-20%</span>
                     </button>
                     <button type="button" id="checkout-period-year" onclick="selectCheckoutPeriod('year')" class="px-2.5 py-2 text-xs font-semibold rounded-lg text-gray-400 hover:text-white transition">
-                        <span data-i18n="checkout.month_12">12 Meses</span> <span class="text-[9px] bg-emerald-950 text-emerald-400 border border-emerald-700 px-1 py-0.2 rounded ml-0.5">-17%</span>
+                        <span data-i18n="checkout.month_12">12 Meses</span> <span id="checkout-year-promo-badge" class="text-[9px] bg-amber-500/15 text-amber-300 border border-amber-500/40 px-1 py-0.2 rounded ml-0.5 font-black">-20%</span>
                     </button>
                 </div>
 
                 <!-- Precio Seleccionado -->
                 <div class="bg-gray-900/60 border border-gray-800 rounded-xl p-3.5 text-center">
-                    <span id="checkout-price-amount" class="text-3xl font-black text-white block">$20 USD</span>
+                    <div id="checkout-promo-row" class="flex items-center justify-center gap-2 mb-1.5 flex-wrap">
+                        <span id="checkout-bf-discount-pill" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40">
+                            <i class="fa-solid fa-fire text-[9px]"></i> <span data-i18n="checkout.bf_discount_badge">-20% Black Friday</span>
+                        </span>
+                        <span id="checkout-savings-pill" class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-300 border border-emerald-500/40">
+                            Ahorras $5 USD
+                        </span>
+                    </div>
+                    <div class="flex items-baseline justify-center gap-2.5 flex-wrap">
+                        <span id="checkout-price-amount" class="text-3xl font-black text-white">$20 USD</span>
+                        <span id="checkout-regular-price-wrap" class="inline-flex items-baseline gap-1 text-xs text-gray-400">
+                            <span data-i18n="checkout.regular_price_label">Precio regular:</span>
+                            <span id="checkout-regular-price" class="bf-original-price">$25 USD</span>
+                        </span>
+                    </div>
                     <span id="checkout-period-label" class="text-xs text-emerald-400 font-bold block mt-0.5" data-i18n="checkout.period_month_label">por 1 Mes</span>
-                    <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">Oferta Lanzamiento (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.</span>
+                    <span id="checkout-period-desc" class="text-[11px] text-gray-400 block mt-1" data-i18n="checkout.trial_desc">Black Friday (-20% 1er mes): $20 USD hoy. Luego continúa a $25 USD/mes.</span>
                     <span id="checkout-trial-bonus-badge" class="hidden mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/90 text-emerald-300 border border-emerald-700/60"></span>
                 </div>
 
@@ -1744,7 +1731,7 @@
     </div>
 
 
-    <script src="js/app.js?v=3.9.28"></script>
+    <script src="js/app.js?v=3.9.29"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const user = getCurrentUser();
