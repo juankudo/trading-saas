@@ -5,6 +5,20 @@ El formato se basa en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/
 
 ---
 
+## [v3.9.30] - 2026-11-27
+
+### 📱 Corrección de Nombre PWA en Android ("astrade-mark" → "AsTrade") e Íconos en Raíz
+- **Corrección del Web App Manifest (`site.webmanifest`, `assets/logo/dist/site.webmanifest`):**
+  - Reemplazado `"name": "astrade-mark"` (nombre heredado del archivo de isotipo) por `"short_name": "AsTrade"` y `"name": "AsTrade — Trading Journal"`, evitando el agregado `"mark"` en el lanzador de Android e iOS.
+  - Configurados `"id": "/"`, `"start_url": "/app.html"` y `"scope": "/"` para abrir directamente el Dashboard Pro al iniciar la PWA instalada.
+- **Publicación de Íconos PWA en Raíz (`icon-192.png`, `icon-512.png`, `maskable-512.png`):**
+  - Copiados desde `assets/logo/dist/` hacia la raíz pública del sitio para eliminar errores 404 al instalar la aplicación en Android.
+- **Metadatos Móviles y Revalidación de Caché (`index.html`, `en.html`, `app.html`, `calculadora/index.html`, `_headers`):**
+  - Añadidas etiquetas `application-name`, `apple-mobile-web-app-title` (`AsTrade`), `apple-mobile-web-app-capable` y parámetro de caché `site.webmanifest?v=3.9.30`.
+  - Actualizado `_headers` para servir `/site.webmanifest` con `Cache-Control: public, max-age=0, must-revalidate`.
+
+---
+
 ## [v3.9.29] - 2026-11-26
 
 ### 🛠️ Flujo de Autenticación, Modal Black Friday y Ofertas No Invasivas

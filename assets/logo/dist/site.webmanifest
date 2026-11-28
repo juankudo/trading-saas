@@ -1,5 +1,9 @@
 {
-  "name": "astrade-mark",
+  "id": "/",
+  "name": "AsTrade — Trading Journal",
+  "short_name": "AsTrade",
+  "start_url": "/app.html",
+  "scope": "/",
   "icons": [
     {
       "src": "/icon-192.png",
